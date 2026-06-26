@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeSim — Descubre tu tiempo restante</title>
+<meta name="description" content="Calcula cuánto tiempo te queda de vida, qué has hecho con él y cuánto desperdiciaste. La herramienta más inquietante de internet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07070F;
+    --bg2: #0E0E1C;
+    --bg3: #161628;
+    --cyan: #00FFB2;
+    --cyan-dim: #00FFB230;
+    --red: #FF4E6A;
+    --red-dim: #FF4E6A20;
+    --yellow: #FFD166;
+    --purple: #9B8EFF;
+    --text: #E8E6F4;
+    --text-muted: #7A7A9A;
+    --border: #1E1E38;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 4px; z-index: 999;
+    background: var(--bg3);
+  }
+  .topbar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--cyan), var(--purple), var(--red));
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 6rem 1.5rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, #00FFB210 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(3rem, 9vw, 7rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 span { color: var(--cyan); }
+  .hero h1 .red { color: var(--red); }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--text-muted);
+    max-width: 520px;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+  }
+
+  /* ── HEARTBEAT ── */
+  .heartbeat-wrap {
+    display: flex; align-items: center; gap: 0.75rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.6rem 1.2rem;
+    margin-bottom: 3rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .heartbeat-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 1s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  #live-timer {
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    max-width: 540px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .form-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--cyan-dim), transparent, var(--red-dim));
+    z-index: -1;
+  }
+
+  .form-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  input, select {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  input[type="date"] { color-scheme: dark; }
+  input:focus, select:focus { border-color: var(--cyan); }
+  select option { background: var(--bg3); }
+
+  .cta {
+    width: 100%;
+    background: var(--cyan);
+    color: var(--bg);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 1rem;
+    cursor: pointer;
+    margin-top: 1.25rem;
+    transition: all 0.2s;
+    letter-spacing: -0.01em;
+  }
+  .cta:hover { background: #00e8a0; transform: translateY(-1px); box-shadow: 0 8px 30px #00FFB240; }
+  .cta:active { transform: translateY(0); }
+
+  /* ── RESULTS ── */
+  #results { display: none; padding: 4rem 1.5rem; }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  .results-wrap { max-width: 900px; margin: 0 auto; }
+
+  /* BIG STAT */
+  .big-stat {
+    text-align: center;
+    margin-bottom: 3rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .big-stat::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+  }
+  .big-stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    font-family: 'Space Mono', monospace;
+  }
+  .big-stat-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 700;
+    color: var(--cyan);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .big-stat-sub {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+  }
+
+  /* LIFE BAR */
+  .life-bar-wrap {
+    margin-bottom: 3rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+  .life-bar-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 1.5rem;
+  }
+  .life-bar-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .life-bar-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.2rem;
+    color: var(--cyan);
+  }
+  .life-bar-track {
+    height: 28px;
+    background: var(--bg3);
+    border-radius: 100px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 0.75rem;
+  }
+  .life-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple), var(--red));
+    position: relative;
+    transition: width 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+    width: 0;
+  }
+  .life-bar-fill::after {
+    content: '▶';
+    position: absolute; right: 8px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: white;
+    opacity: 0.8;
+  }
+  .life-bar-labels {
+    display: flex; justify-content: space-between;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+  }
+
+  /* STATS GRID */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .stat-card:hover {
+    border-color: var(--cyan);
+    transform: translateY(-2px);
+  }
+  .stat-card-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .stat-card-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.25rem;
+  }
+  .stat-card-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* WASTED */
+  .wasted-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+  .wasted-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--red);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .wasted-row {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .wasted-label { flex: 1; font-size: 0.9rem; color: var(--text-muted); }
+  .wasted-bar-track {
+    flex: 2; height: 8px;
+    background: var(--bg3);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .wasted-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: var(--red);
+    transition: width 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+    width: 0;
+  }
+  .wasted-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--red);
+    width: 38px;
+    text-align: right;
+  }
+
+  /* COUNTDOWN CLOCKS */
+  .clocks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .clock-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .clock-card-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 0.75rem;
+  }
+  .clock-card-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--yellow);
+    letter-spacing: 0.05em;
+  }
+  .clock-card-unit {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+
+  /* QUOTE */
+  .quote-card {
+    border-left: 3px solid var(--cyan);
+    padding: 1.5rem 2rem;
+    background: var(--cyan-dim);
+    border-radius: 0 16px 16px 0;
+    margin-bottom: 3rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--text);
+    font-style: italic;
+  }
+  .quote-card span { color: var(--cyan); font-style: normal; font-weight: 600; }
+
+  /* SHARE BUTTON */
+  .share-row {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 3rem;
+  }
+  .share-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .share-btn:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: var(--cyan-dim);
+  }
+  .retry-btn {
+    border-color: var(--purple);
+    color: var(--purple);
+  }
+  .retry-btn:hover { border-color: var(--purple); color: var(--purple); background: #9B8EFF20; }
+
+  /* ── MINI GAMES ── */
+  #minigames { padding: 2rem 1.5rem 4rem; }
+
+  .tabs {
+    max-width: 900px; margin: 0 auto;
+  }
+  .tabs-nav {
+    display: flex; gap: 0.5rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0.4rem;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn.active {
+    background: var(--cyan);
+    color: var(--bg);
+    font-weight: 700;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* REFLECTION GAME */
+  .reflection-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    text-align: center;
+  }
+  .reflection-q {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 2rem;
+    min-height: 80px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .answers-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .answer-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    line-height: 1.4;
+  }
+  .answer-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+  .answer-btn.selected { background: var(--cyan-dim); border-color: var(--cyan); color: var(--cyan); }
+  #reflection-insight {
+    background: var(--bg3);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    text-align: left;
+    display: none;
+    margin-bottom: 1rem;
+  }
+  .next-q-btn {
+    background: var(--bg3);
+    border: 1px solid var(--cyan);
+    border-radius: 10px;
+    color: var(--cyan);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.7rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+  }
+  .next-q-btn:hover { background: var(--cyan-dim); }
+
+  /* LEGACY BUILDER */
+  .legacy-wrap { max-width: 600px; margin: 0 auto; }
+  .legacy-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .legacy-item:hover { border-color: var(--purple); }
+  .legacy-item.done { border-color: var(--cyan); background: var(--cyan-dim); }
+  .legacy-check {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .legacy-item.done .legacy-check {
+    background: var(--cyan); border-color: var(--cyan); color: var(--bg);
+  }
+  .legacy-text { font-size: 0.95rem; }
+  .legacy-item.done .legacy-text { color: var(--cyan); }
+  .legacy-score {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--purple);
+    text-align: center;
+    margin: 1.5rem 0 0.5rem;
+  }
+  .legacy-score-label { text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+
+  /* RANDOM FACTS */
+  .fact-display {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .fact-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .fact-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    font-weight: 500;
+    min-height: 80px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fact-text span { color: var(--yellow); font-weight: 700; }
+  .fact-source { color: var(--text-muted); font-size: 0.75rem; margin-top: 1rem; }
+  .shuffle-btn {
+    background: var(--purple);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.9rem 2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.5rem;
+    margin: 0 auto;
+  }
+  .shuffle-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* AD PLACEHOLDER */
+  .ad-slot {
+    background: var(--bg2);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    min-height: 90px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 2rem auto;
+    max-width: 900px;
+  }
+  .ad-slot-rect {
+    min-height: 250px; max-width: 300px;
+    margin: 0 auto 2rem;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    line-height: 1.8;
+  }
+  footer a { color: var(--cyan); text-decoration: none; }
+
+  /* PARTICLE CANVAS */
+  #particle-canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+    opacity: 0.3;
+  }
+
+  .container-inner { position: relative; z-index: 1; }
+
+  /* REVEAL ANIMATION */
+  .reveal {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* TOOLTIP */
+  .tooltip { position: relative; }
+  .tooltip-text {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%; transform: translateX(-50%);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .tooltip:hover .tooltip-text { opacity: 1; }
+
+  @media (max-width: 640px) {
+    .form-row { grid-template-columns: 1fr; }
+    .answers-grid { grid-template-columns: 1fr; }
+    .clocks-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero h1 { font-size: 2.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+
+<!-- TOP LIFE DRAIN BAR -->
+<div class="topbar"><div class="topbar-fill" id="page-life-bar"></div></div>
+
+<div class="container-inner">
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <p class="hero-eyebrow">⏳ Herramienta de consciencia temporal</p>
+  <h1>Life<span>Sim</span><br><span class="red">Tu tiempo</span> real.</h1>
+  <p class="hero-sub">
+    Ingresa tu fecha de nacimiento y descubre cuánto tiempo has vivido, cuánto has desperdiciado y cuánto te queda — en tiempo real.
+  </p>
+
+  <div class="heartbeat-wrap">
+    <div class="heartbeat-dot"></div>
+    <span>Tiempo consumido desde que abriste esta página:&nbsp;</span>
+    <span id="live-timer">0s</span>
+  </div>
+
+  <div class="form-card">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="birthdate">Fecha de nacimiento</label>
+        <input type="date" id="birthdate" max="">
+      </div>
+      <div class="form-group">
+        <label for="sex">Sexo biológico</label>
+        <select id="sex">
+          <option value="male">Masculino</option>
+          <option value="female">Femenino</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="country">País</label>
+        <select id="country">
+          <option value="74">México</option>
+          <option value="76">España</option>
+          <option value="76">Argentina</option>
+          <option value="76">Colombia</option>
+          <option value="78">Chile</option>
+          <option value="79">Costa Rica</option>
+          <option value="78">Venezuela</option>
+          <option value="76">Perú</option>
+          <option value="77">Ecuador</option>
+          <option value="73">Bolivia</option>
+          <option value="73">Guatemala</option>
+          <option value="73">Honduras</option>
+          <option value="75">Paraguay</option>
+          <option value="75">El Salvador</option>
+          <option value="76">Cuba</option>
+          <option value="76">Uruguay</option>
+          <option value="78">Panamá</option>
+          <option value="78">Puerto Rico</option>
+          <option value="75">Rep. Dominicana</option>
+          <option value="73">Nicaragua</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="sleep">Horas de sueño/día</label>
+        <select id="sleep">
+          <option value="5">Menos de 6h</option>
+          <option value="7" selected>6–8 horas</option>
+          <option value="9">Más de 8h</option>
+        </select>
+      </div>
+    </div>
+    <button class="cta" onclick="calculate()">⚡ Calcular mi tiempo restante</button>
+  </div>
+</section>
+
+<!-- AD SLOT HERO -->
+<div class="ad-slot" style="max-width:900px; margin: 0 auto 1rem;">
+  <!-- Google AdSense / Ad Network slot 728x90 -->
+  [Publicidad — Banner 728x90]
+</div>
+
+<!-- ═══════════════ RESULTS ═══════════════ -->
+<section id="results">
+  <div class="results-wrap reveal">
+    <p class="section-label">Tu diagnóstico vital</p>
+
+    <!-- MAIN BIG NUMBER -->
+    <div class="big-stat">
+      <p class="big-stat-label">Días que llevas vivo</p>
+      <div class="big-stat-number" id="res-days">0</div>
+      <p class="big-stat-sub" id="res-days-sub">— calculando —</p>
+    </div>
+
+    <!-- LIFE BAR -->
+    <div class="life-bar-wrap">
+      <div class="life-bar-header">
+        <span class="life-bar-title">⚡ Tu barra de vida</span>
+        <span class="life-bar-pct" id="life-pct">0%</span>
+      </div>
+      <div class="life-bar-track">
+        <div class="life-bar-fill" id="life-bar-fill"></div>
+      </div>
+      <div class="life-bar-labels">
+        <span>Nacimiento</span>
+        <span id="life-bar-now">Hoy ◀</span>
+        <span>Esperanza de vida</span>
+      </div>
+    </div>
+
+    <!-- STATS GRID -->
+    <p class="section-label">Lo que has consumido</p>
+    <div class="stats-grid" id="stats-grid">
+      <!-- Filled by JS -->
+    </div>
+
+    <!-- AD SLOT RECTANGLE -->
+    <div class="ad-slot ad-slot-rect">
+      <!-- Google AdSense / Ad Network slot 300x250 -->
+      [Publicidad — Rectángulo 300x250]
+    </div>
+
+    <!-- WASTED TIME -->
+    <div class="wasted-section reveal">
+      <div class="wasted-title">😴 Tiempo "perdido" en actividades pasivas</div>
+      <div id="wasted-rows"><!-- JS fills --></div>
+      <p style="font-size:0.75rem; color: var(--text-muted); margin-top:1rem;">
+        * Estimaciones basadas en promedios mundiales. La culpa es opcional.
+      </p>
+    </div>
+
+    <!-- REAL-TIME COUNTDOWN CLOCKS -->
+    <p class="section-label">Contadores en tiempo real</p>
+    <div class="clocks-grid" id="clocks-grid">
+      <!-- JS fills -->
+    </div>
+
+    <!-- QUOTE -->
+    <div class="quote-card reveal" id="life-quote">
+      <!-- JS fills -->
+    </div>
+
+    <!-- SHARE -->
+    <div class="share-row">
+      <button class="share-btn" onclick="shareResult()">
+        🔗 Compartir mi resultado
+      </button>
+      <button class="share-btn" onclick="copyText()">
+        📋 Copiar estadísticas
+      </button>
+      <button class="share-btn retry-btn" onclick="resetForm()">
+        🔄 Recalcular
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ MINI GAMES ═══════════════ -->
+<section id="minigames">
+  <div class="tabs">
+    <p class="section-label" style="max-width:900px; margin: 0 auto 1.5rem;">
+      Herramientas y juegos
+    </p>
+
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('reflection', this)">🪞 Reflexión</button>
+      <button class="tab-btn" onclick="switchTab('legacy', this)">🏆 Mi Legado</button>
+      <button class="tab-btn" onclick="switchTab('facts', this)">🧠 Datos Impactantes</button>
+      <button class="tab-btn" onclick="switchTab('bucket', this)">📋 Bucket List</button>
+    </div>
+
+    <!-- REFLECTION GAME -->
+    <div class="tab-content active" id="tab-reflection">
+      <div class="reflection-card">
+        <p style="color:var(--text-muted); font-size:0.8rem; margin-bottom:1rem; font-family:'Space Mono',monospace; letter-spacing:0.05em; text-transform:uppercase;">Pregunta <span id="q-num">1</span> de <span id="q-total">8</span></p>
+        <div class="reflection-q" id="reflection-question">Cargando pregunta...</div>
+        <div class="answers-grid" id="answers-grid"><!-- JS fills --></div>
+        <div id="reflection-insight"></div>
+        <button class="next-q-btn" id="next-q-btn" onclick="nextReflection()">Siguiente pregunta →</button>
+      </div>
+    </div>
+
+    <!-- LEGACY BUILDER -->
+    <div class="tab-content" id="tab-legacy">
+      <div class="legacy-wrap">
+        <p style="color:var(--text-muted); margin-bottom:1.5rem; font-size:0.9rem;">Marca lo que ya has logrado. Tu puntuación de legado se actualiza al instante.</p>
+        <div id="legacy-list"><!-- JS fills --></div>
+        <div class="legacy-score" id="legacy-score">0%</div>
+        <p class="legacy-score-label" id="legacy-label">Comienza marcando tus logros</p>
+      </div>
+    </div>
+
+    <!-- FACTS ROULETTE -->
+    <div class="tab-content" id="tab-facts">
+      <div class="fact-display">
+        <div class="fact-icon" id="fact-icon">🌍</div>
+        <div class="fact-text" id="fact-text">Haz clic abajo para descubrir un dato impactante sobre el tiempo y la vida humana.</div>
+        <p class="fact-source" id="fact-source"></p>
+      </div>
+      <button class="shuffle-btn" onclick="shuffleFact()">🎲 Nuevo dato impactante</button>
+    </div>
+
+    <!-- BUCKET LIST -->
+    <div class="tab-content" id="tab-bucket">
+      <div class="legacy-wrap">
+        <p style="color:var(--text-muted); margin-bottom:1.5rem; font-size:0.9rem;">Tu lista de cosas por hacer antes de morir. Guarda tus items añadidos.</p>
+        <div style="display:flex; gap:0.75rem; margin-bottom:1rem;">
+          <input type="text" id="bucket-input" placeholder="Ej: Ver la aurora boreal..." style="flex:1;" onkeydown="if(event.key==='Enter') addBucket()">
+          <button onclick="addBucket()" style="background:var(--cyan);border:none;border-radius:10px;color:var(--bg);font-family:'Space Grotesk',sans-serif;font-weight:700;padding:0.75rem 1.25rem;cursor:pointer;">+ Añadir</button>
+        </div>
+        <div id="bucket-list"><!-- JS fills --></div>
+        <div id="bucket-empty" style="text-align:center; color:var(--text-muted); padding:2rem; display:none; font-size:0.9rem;">
+          Tu lista está vacía. ¿Qué quieres hacer antes de morir?
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- AD SLOT BOTTOM -->
+<div class="ad-slot" style="max-width:900px; margin: 0 auto 2rem;">
+  <!-- Google AdSense / Ad Network slot 728x90 -->
+  [Publicidad — Banner inferior 728x90]
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong style="color:var(--cyan); font-family:'Space Grotesk',sans-serif;">LifeSim</strong> — Una herramienta de consciencia temporal<br>
+  Los datos de esperanza de vida se basan en estadísticas de la <a href="#">OMS 2024</a>.<br>
+  No somos médicos. Somos solo el espejo que nadie quiere ver.<br><br>
+  <span style="font-size:0.7rem;">© 2025 LifeSim · <a href="#">Privacidad</a> · <a href="#">Términos</a> · <a href="#">Contacto</a></span>
+</footer>
+
+</div><!-- /container-inner -->
+
+<script>
+// ═══════════════════════════════════════
+// PARTICLES
+// ═══════════════════════════════════════
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+for (let i = 0; i < 60; i++) {
+  particles.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.3,
+    r: Math.random() * 1.5 + 0.5,
+    alpha: Math.random() * 0.5 + 0.1
+  });
+}
+
+function animParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = canvas.width;
+    if (p.x > canvas.width) p.x = 0;
+    if (p.y < 0) p.y = canvas.height;
+    if (p.y > canvas.height) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0, 255, 178, ${p.alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+
+// ═══════════════════════════════════════
+// LIVE TIMER & PAGE BAR
+// ═══════════════════════════════════════
+const pageStart = Date.now();
+let resultsData = null;
+let clockInterval = null;
+
+setInterval(() => {
+  const secs = Math.floor((Date.now() - pageStart) / 1000);
+  const m = Math.floor(secs / 60), s = secs % 60;
+  document.getElementById('live-timer').textContent =
+    m > 0 ? `${m}m ${s}s` : `${s}s`;
+
+  // Slowly drain the top bar (60 min = full)
+  const pct = Math.min((secs / 3600) * 100, 100);
+  document.getElementById('page-life-bar').style.width = pct + '%';
+
+  // Update real-time clocks if results visible
+  if (resultsData) updateClocks();
+}, 1000);
+
+// ═══════════════════════════════════════
+// CALCULATE
+// ═══════════════════════════════════════
+function calculate() {
+  const birthStr = document.getElementById('birthdate').value;
+  if (!birthStr) { alert('Por favor ingresa tu fecha de nacimiento.'); return; }
+
+  const birth = new Date(birthStr);
+  const now = new Date();
+  if (birth >= now) { alert('La fecha no puede ser en el futuro.'); return; }
+
+  const lifeExp = parseInt(document.getElementById('country').value);
+  const sex = document.getElementById('sex').value;
+  const sleepH = parseInt(document.getElementById('sleep').value);
+  const sexBonus = sex === 'female' ? 3 : 0;
+  const adjustedLife = lifeExp + sexBonus;
+
+  const msAlive = now - birth;
+  const secAlive = msAlive / 1000;
+  const minAlive = secAlive / 60;
+  const hrsAlive = minAlive / 60;
+  const daysAlive = hrsAlive / 24;
+  const weeksAlive = daysAlive / 7;
+  const monthsAlive = daysAlive / 30.44;
+  const yearsAlive = daysAlive / 365.25;
+
+  const daysTotal = adjustedLife * 365.25;
+  const daysLeft = daysTotal - daysAlive;
+  const pctUsed = (daysAlive / daysTotal) * 100;
+
+  resultsData = {
+    birth, now, secAlive, daysAlive, weeksAlive, monthsAlive, yearsAlive,
+    daysLeft, daysTotal, pctUsed, sleepH, adjustedLife
+  };
+
+  // Days counter
+  document.getElementById('res-days').textContent = formatNum(Math.floor(daysAlive));
+  document.getElementById('res-days-sub').textContent =
+    `${formatNum(Math.floor(weeksAlive))} semanas · ${formatNum(Math.floor(monthsAlive))} meses · ${yearsAlive.toFixed(1)} años vividos`;
+
+  // Life bar
+  setTimeout(() => {
+    document.getElementById('life-bar-fill').style.width = Math.min(pctUsed, 100) + '%';
+  }, 300);
+  document.getElementById('life-pct').textContent = pctUsed.toFixed(1) + '% consumido';
+  document.getElementById('life-bar-now').textContent =
+    `← Tú (${yearsAlive.toFixed(0)} años)`;
+
+  // Stats grid
+  const awakeH = 24 - sleepH;
+  const stats = [
+    { icon: '🌅', value: formatNum(Math.floor(daysAlive)), label: 'Amaneceres que has visto' },
+    { icon: '😴', value: formatNum(Math.floor(daysAlive * sleepH / 24)), label: 'Días durmiendo' },
+    { icon: '🍽️', value: formatNum(Math.floor(yearsAlive * 365 * 3)), label: 'Comidas consumidas' },
+    { icon: '💓', value: formatNum(Math.floor(secAlive * 1.17)), label: 'Latidos de tu corazón' },
+    { icon: '🌬️', value: formatNum(Math.floor(secAlive * 0.27)), label: 'Respiraciones tomadas' },
+    { icon: '👁️', value: formatNum(Math.floor(secAlive / 4)), label: 'Veces que has parpadeado' },
+    { icon: '📅', value: formatNum(Math.floor(daysLeft)), label: `Días que te quedan (est.)` },
+    { icon: '⚡', value: formatNum(Math.floor(daysLeft * awakeH / 24)), label: 'Horas despiertas restantes' },
+  ];
+
+  const grid = document.getElementById('stats-grid');
+  grid.innerHTML = stats.map(s => `
+    <div class="stat-card">
+      <div class="stat-card-icon">${s.icon}</div>
+      <div class="stat-card-value">${s.value}</div>
+      <div class="stat-card-label">${s.label}</div>
+    </div>
+  `).join('');
+
+  // Wasted time
+  const wasted = [
+    { label: 'Durmiendo', pct: (sleepH / 24 * 100).toFixed(0) },
+    { label: 'Redes sociales (prom. 2.5h/día)', pct: ((2.5 / awakeH) * 100).toFixed(0) },
+    { label: 'TV / Streaming (prom. 3h/día)', pct: ((3 / awakeH) * 100).toFixed(0) },
+    { label: 'Commute / Transporte (prom. 1h/día)', pct: ((1 / awakeH) * 100).toFixed(0) },
+    { label: 'Tareas domésticas (prom. 1h/día)', pct: ((1 / awakeH) * 100).toFixed(0) },
+  ];
+  document.getElementById('wasted-rows').innerHTML = wasted.map(w => `
+    <div class="wasted-row">
+      <span class="wasted-label">${w.label}</span>
+      <div class="wasted-bar-track">
+        <div class="wasted-bar-fill" style="width:${w.pct}%" data-pct="${w.pct}"></div>
+      </div>
+      <span class="wasted-pct">${w.pct}%</span>
+    </div>
+  `).join('');
+
+  setTimeout(() => {
+    document.querySelectorAll('.wasted-bar-fill').forEach(el => {
+      el.style.width = el.dataset.pct + '%';
+    });
+  }, 500);
+
+  // Clocks
+  document.getElementById('clocks-grid').innerHTML = `
+    <div class="clock-card">
+      <div class="clock-card-label">⏱ Segundos restantes</div>
+      <div class="clock-card-value" id="clock-secs">—</div>
+      <div class="clock-card-unit">aprox.</div>
+    </div>
+    <div class="clock-card">
+      <div class="clock-card-label">🌙 Noches restantes</div>
+      <div class="clock-card-value" id="clock-nights">—</div>
+      <div class="clock-card-unit">noches por dormir</div>
+    </div>
+    <div class="clock-card">
+      <div class="clock-card-label">☀️ Lunes restantes</div>
+      <div class="clock-card-value" id="clock-mondays">—</div>
+      <div class="clock-card-unit">lunes por afrontar</div>
+    </div>
+    <div class="clock-card">
+      <div class="clock-card-label">🎂 Cumpleaños</div>
+      <div class="clock-card-value" id="clock-bdays">—</div>
+      <div class="clock-card-unit">cumpleaños que faltan</div>
+    </div>
+  `;
+  updateClocks();
+
+  // Quote
+  const quotes = [
+    `Llevas <span>${Math.floor(yearsAlive)}</span> años en este planeta. El universo tiene 13,800 millones. Cada segundo que lees esto es un regalo estadísticamente improbable.`,
+    `En los <span>${formatNum(Math.floor(daysAlive))}</span> días que llevas vivo, la humanidad ha dado más pasos al frente que en los mil años anteriores. ¿Has avanzado tú también?`,
+    `Tu corazón ha latido <span>${formatNum(Math.floor(secAlive * 1.17))}</span> veces sin que tú lo pidieras. Quizás merece que tu mente coopere un poco.`,
+    `Te quedan aproximadamente <span>${formatNum(Math.floor(daysLeft))}</span> días. No para asustarte — para recordarte que tienes permiso de empezar hoy.`,
+  ];
+  document.getElementById('life-quote').innerHTML = quotes[Math.floor(yearsAlive * 7) % quotes.length];
+
+  // Show results
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('minigames').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  }, 100);
+}
+
+function updateClocks() {
+  if (!resultsData) return;
+  const { birth, adjustedLife, sleepH } = resultsData;
+  const now = new Date();
+  const death = new Date(birth);
+  death.setFullYear(birth.getFullYear() + adjustedLife);
+  const msLeft = death - now;
+  if (msLeft < 0) return;
+
+  const secsLeft = Math.floor(msLeft / 1000);
+  const daysLeft = Math.floor(msLeft / 86400000);
+
+  document.getElementById('clock-secs').textContent = formatNum(secsLeft);
+  document.getElementById('clock-nights').textContent = formatNum(daysLeft);
+  document.getElementById('clock-mondays').textContent = formatNum(Math.floor(daysLeft / 7));
+  document.getElementById('clock-bdays').textContent = formatNum(adjustedLife - Math.floor((now - birth) / (365.25 * 86400000)));
+}
+
+function formatNum(n) {
+  return Math.max(0, n).toLocaleString('es-MX');
+}
+
+// ═══════════════════════════════════════
+// SHARE
+// ═══════════════════════════════════════
+function shareResult() {
+  if (!resultsData) return;
+  const { daysAlive, daysLeft, pctUsed, yearsAlive } = resultsData;
+  const text = `🕐 Mi LifeSim:\n• ${Math.floor(yearsAlive)} años vividos\n• ${formatNum(Math.floor(daysAlive))} días consumidos\n• ${pctUsed.toFixed(1)}% de vida usada\n• ${formatNum(Math.floor(daysLeft))} días restantes\n\n¿Cuánto te queda a ti? → lifesim.app`;
+
+  if (navigator.share) {
+    navigator.share({ title: 'Mi LifeSim', text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => alert('¡Copiado al portapapeles!'));
+  }
+}
+
+function copyText() {
+  if (!resultsData) return;
+  const { daysAlive, daysLeft, pctUsed, yearsAlive } = resultsData;
+  const text = `LifeSim — ${Math.floor(yearsAlive)} años | ${formatNum(Math.floor(daysAlive))} días vividos | ${pctUsed.toFixed(1)}% consumido | ${formatNum(Math.floor(daysLeft))} días restantes`;
+  navigator.clipboard.writeText(text).then(() => alert('¡Estadísticas copiadas!'));
+}
+
+function resetForm() {
+  document.getElementById('results').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// REFLECTION GAME
+// ═══════════════════════════════════════
+const reflections = [
+  {
+    q: '¿Con qué frecuencia haces algo por primera vez?',
+    opts: ['Casi nunca', 'Una vez al año', 'Cada mes', 'Constantemente'],
+    insights: [
+      'Tu cerebro envejece más rápido cuando deja de explorar. Los nuevos estímulos forman nuevas conexiones neuronales.',
+      'Un poco mejor que nada. Considera desafíos mensuales pequeños para mantener tu mente activa.',
+      'Excelente ritmo. La novedad activa la dopamina y hace que el tiempo se perciba más largo y rico.',
+      'Eres un explorador nato. Las personas que se exponen a experiencias nuevas reportan mayor bienestar subjetivo.'
+    ]
+  },
+  {
+    q: '¿Cuántas personas podrías llamar en una crisis real?',
+    opts: ['Ninguna', '1 persona', '2–3 personas', 'Más de 3'],
+    insights: [
+      'La soledad crónica reduce la esperanza de vida tanto como fumar 15 cigarrillos diarios. Considera dar el primer paso.',
+      'Tener aunque sea una persona de confianza es poderoso. Cuida esa relación como un tesoro.',
+      'Estás en la media saludable. Las relaciones profundas son el predictor #1 de felicidad a largo plazo (Estudio Harvard, 85 años).',
+      'Eres socialmente rico. Las personas con redes fuertes viven en promedio 7 años más.'
+    ]
+  },
+  {
+    q: '¿Cuándo fue la última vez que perdiste la noción del tiempo por algo que amabas?',
+    opts: ['No recuerdo', 'Hace más de 1 año', 'Este mes', 'Esta semana'],
+    insights: [
+      'Eso se llama "flow" y es uno de los estados más gratificantes que existe. Tu próxima misión: encontrar qué lo activa en ti.',
+      'El flow se puede recuperar. Pregúntate qué hacías de niño que te absorbía por completo.',
+      'Lo tienes. El flow regular se asocia con mayor productividad, creatividad y bienestar.',
+      'Estás en tu mejor versión. El flow frecuente es el secreto de las personas más realizadas del mundo.'
+    ]
+  },
+  {
+    q: '¿Cuánto de tu día controlas realmente tú?',
+    opts: ['Casi nada', 'Menos del 25%', 'Entre 25% y 50%', 'Más de la mitad'],
+    insights: [
+      'La autonomía es una necesidad psicológica básica. Aunque sea un pequeño ritual diario propio puede cambiar tu percepción.',
+      'La mayoría de personas en trabajos típicos están aquí. Pequeños actos de elección consciente suman.',
+      'Tienes un balance razonable. Cada hora que eliges en vez de reaccionar es una hora verdaderamente vivida.',
+      'Eres dueño de tu tiempo. Eso es riqueza real, más que el dinero.'
+    ]
+  },
+  {
+    q: '¿Tienes algo que terminar antes de morir?',
+    opts: ['No, no pienso en eso', 'Sí, pero no empecé', 'Sí y ya empecé', 'Ya lo terminé / en camino'],
+    insights: [
+      'Los estudios sobre personas en sus últimas horas muestran que la mayor parte de sus arrepentimientos no son sobre lo que hicieron, sino lo que no hicieron.',
+      'Tener la visión es el 40% del camino. El único momento para empezar es ahora.',
+      'Eres de los que actúan. El movimiento, aunque imperfecto, es lo único que convierte sueños en realidad.',
+      'Pocas personas pueden decir esto. Es una forma de vivir sin deudas con uno mismo.'
+    ]
+  },
+  {
+    q: '¿Qué tan presente estás cuando comes o caminas?',
+    opts: ['Siempre en el celular', 'Casi siempre distraído', 'A veces presente', 'Generalmente presente'],
+    insights: [
+      'El 47% del tiempo los humanos piensan en algo distinto a lo que hacen. Ese tiempo no se vive, se consume.',
+      'La distracción crónica fragmenta la memoria y hace que los años parezcan cortos. El presente es donde ocurre la vida.',
+      'Tienes momentos de mindfulness natural. Con práctica consciente, pueden multiplicarse.',
+      'Estás en el top de consciencia. Las personas presentes perciben más momentos significativos en el mismo tiempo.'
+    ]
+  },
+  {
+    q: '¿Tienes miedo a la muerte?',
+    opts: ['Sí, mucho', 'Un poco', 'No realmente', 'Me ayuda a vivir mejor'],
+    insights: [
+      'El miedo a la muerte es universal y sano en dosis moderadas. La terapia de aceptación y compromiso (ACT) ha demostrado reducirlo notablemente.',
+      'La ambigüedad sobre la muerte es el estado más común. Puede ser un motor positivo si se canaliza.',
+      'La ecuanimidad ante la muerte se asocia con mayor bienestar. Suele venir de vivir con propósito.',
+      'La "consciencia de la mortalidad" (Terror Management Theory) usada constructivamente es uno de los mejores motivadores que existen.'
+    ]
+  },
+  {
+    q: '¿A quién le dirías "gracias" si supieras que es tu último día?',
+    opts: ['A nadie me viene a la mente', 'A 1–2 personas', 'A varios', 'Ya se lo he dicho'],
+    insights: [
+      'El aislamiento afectivo es una señal importante. Considera qué relaciones quieres cultivar desde hoy.',
+      'Esas 1-2 personas son tu red de apoyo más profunda. ¿Sabes que lo son?',
+      'Eres agradecido con la vida. La gratitud se correlaciona fuertemente con la satisfacción vital en estudios longitudinales.',
+      'Esta es la práctica de las personas más realizadas: expresar gratitud sin esperar el último momento.'
+    ]
+  }
+];
+
+let currentQ = 0;
+let answered = false;
+
+function loadReflection() {
+  const q = reflections[currentQ];
+  document.getElementById('q-num').textContent = currentQ + 1;
+  document.getElementById('q-total').textContent = reflections.length;
+  document.getElementById('reflection-question').textContent = q.q;
+  document.getElementById('reflection-insight').style.display = 'none';
+  document.getElementById('next-q-btn').style.display = 'none';
+  answered = false;
+
+  const grid = document.getElementById('answers-grid');
+  grid.innerHTML = q.opts.map((opt, i) => `
+    <button class="answer-btn" onclick="selectAnswer(${i})">${opt}</button>
+  `).join('');
+}
+
+function selectAnswer(i) {
+  if (answered) return;
+  answered = true;
+  const btns = document.querySelectorAll('.answer-btn');
+  btns.forEach((b, idx) => { if (idx === i) b.classList.add('selected'); });
+
+  const insight = document.getElementById('reflection-insight');
+  insight.textContent = reflections[currentQ].insights[i];
+  insight.style.display = 'block';
+
+  const nextBtn = document.getElementById('next-q-btn');
+  if (currentQ < reflections.length - 1) {
+    nextBtn.textContent = 'Siguiente pregunta →';
+    nextBtn.style.display = 'inline-block';
+  } else {
+    nextBtn.textContent = '🔄 Volver al inicio';
+    nextBtn.style.display = 'inline-block';
+  }
+}
+
+function nextReflection() {
+  if (currentQ < reflections.length - 1) {
+    currentQ++;
+    loadReflection();
+  } else {
+    currentQ = 0;
+    loadReflection();
+  }
+}
+
+loadReflection();
+
+// ═══════════════════════════════════════
+// LEGACY BUILDER
+// ═══════════════════════════════════════
+const legacyItems = [
+  'He vivido en otro país o ciudad',
+  'He aprendido un segundo idioma',
+  'He leído más de 50 libros en mi vida',
+  'He iniciado un negocio o proyecto propio',
+  'He creado algo con mis manos que alguien usa',
+  'He ayudado a alguien en un momento crítico',
+  'He tenido una relación profunda y honesta',
+  'He enfrentado un miedo que evitaba',
+  'He viajado a otro continente',
+  'He aprendido un instrumento o habilidad artística',
+  'He practicado un deporte o actividad física regularmente',
+  'He perdonado a alguien que me hizo daño',
+  'He dicho "te amo" sin esperar que lo digan primero',
+  'He vivido sin celular por más de una semana',
+  'He donado tiempo o dinero de forma genuina',
+  'He creado un recuerdo imborrable con alguien',
+];
+
+let legacyState = {};
+
+function renderLegacy() {
+  const list = document.getElementById('legacy-list');
+  list.innerHTML = legacyItems.map((item, i) => `
+    <div class="legacy-item ${legacyState[i] ? 'done' : ''}" onclick="toggleLegacy(${i})">
+      <div class="legacy-check">${legacyState[i] ? '✓' : ''}</div>
+      <span class="legacy-text">${item}</span>
+    </div>
+  `).join('');
+  const done = Object.values(legacyState).filter(Boolean).length;
+  const pct = Math.round((done / legacyItems.length) * 100);
+  document.getElementById('legacy-score').textContent = pct + '%';
+  const labels = ['Comienza marcando tus logros', 'Buen comienzo — sigue adelante', 'Ya tienes historia que contar', 'Vida bien vivida', '¡Legado completo! Eres inspiración'];
+  document.getElementById('legacy-label').textContent = labels[Math.floor(pct / 25)] || labels[4];
+}
+
+function toggleLegacy(i) {
+  legacyState[i] = !legacyState[i];
+  renderLegacy();
+}
+
+renderLegacy();
+
+// ═══════════════════════════════════════
+// FACTS ROULETTE
+// ═══════════════════════════════════════
+const facts = [
+  { icon: '💤', text: 'Si vives <span>80 años</span>, pasarás aproximadamente <span>26 años durmiendo</span> — un tercio de tu existencia.', src: 'National Sleep Foundation' },
+  { icon: '📱', text: 'El usuario promedio toca su celular <span>2,617 veces al día</span>. En 10 años, eso son más de <span>9 millones de toques</span> en pantallas.', src: 'Dscout Research' },
+  { icon: '💓', text: 'Tu corazón latirá aproximadamente <span>2,500 millones de veces</span> durante tu vida, sin que tú hagas nada.', src: 'NIH' },
+  { icon: '🌍', text: 'Si eres del 10% más rico del mundo (ganando más de USD $38/día), has ganado la lotería de nacimiento de <span>8,000 millones de personas</span>.', src: 'Our World in Data' },
+  { icon: '📚', text: 'Una persona que lee 30 minutos diarios durante 80 años habrá leído el equivalente a <span>más de 2,000 libros</span>.', src: 'National Reading Study' },
+  { icon: '🧠', text: 'El cerebro humano genera en un día <span>más pensamientos</span> que las estrellas visibles del cielo nocturno a simple vista.', src: 'Neuroscience' },
+  { icon: '⏰', text: 'El 95% de las personas no puede nombrar lo que hizo exactamente hace <span>3 años</span> en esta misma semana. El tiempo no recordado, ¿fue vivido?', src: 'Memory Research' },
+  { icon: '👁️', text: 'Parpadeas unas <span>15-20 veces por minuto</span>. En 80 años, habrás cerrado los ojos por casi <span>2 años</span> solo de parpadeos.', src: 'Ophthalmology Journals' },
+  { icon: '🚶', text: 'El ser humano promedio camina el equivalente a <span>3 veces alrededor de la Tierra</span> durante su vida.', src: 'Harvard Medical School' },
+  { icon: '😂', text: 'Los niños se ríen <span>400 veces al día</span>. Los adultos, solo <span>15 veces</span>. ¿Cuándo lo perdiste?', src: 'Psychology Today' },
+  { icon: '✉️', text: 'Si recibes 50 emails al día durante 40 años de carrera, habrás procesado <span>730,000 emails</span> — muchos sin cambiar nada.', src: 'McKinsey & Co.' },
+  { icon: '🌅', text: 'En 80 años verás aproximadamente <span>29,000 amaneceres</span>. ¿Cuántos has notado realmente?', src: 'Cálculo LifeSim' },
+];
+
+let lastFact = -1;
+function shuffleFact() {
+  let idx;
+  do { idx = Math.floor(Math.random() * facts.length); } while (idx === lastFact);
+  lastFact = idx;
+  const f = facts[idx];
+  document.getElementById('fact-icon').textContent = f.icon;
+  document.getElementById('fact-text').innerHTML = f.text;
+  document.getElementById('fact-source').textContent = '— Fuente: ' + f.src;
+}
+
+// ═══════════════════════════════════════
+// BUCKET LIST
+// ═══════════════════════════════════════
+let bucketItems = JSON.parse(localStorage.getItem('lifesim_bucket') || '[]');
+
+function renderBucket() {
+  const list = document.getElementById('bucket-list');
+  const empty = document.getElementById('bucket-empty');
+
+  if (bucketItems.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = bucketItems.map((item, i) => `
+    <div class="legacy-item ${item.done ? 'done' : ''}" onclick="toggleBucket(${i})">
+      <div class="legacy-check">${item.done ? '✓' : ''}</div>
+      <span class="legacy-text" style="flex:1">${item.text}</span>
+      <span onclick="event.stopPropagation(); deleteBucket(${i})" style="color:var(--text-muted); font-size:1.1rem; padding:0 0.25rem; cursor:pointer;">×</span>
+    </div>
+  `).join('');
+  saveBucket();
+}
+
+function addBucket() {
+  const input = document.getElementById('bucket-input');
+  const val = input.value.trim();
+  if (!val) return;
+  bucketItems.push({ text: val, done: false });
+  input.value = '';
+  renderBucket();
+}
+
+function toggleBucket(i) {
+  bucketItems[i].done = !bucketItems[i].done;
+  renderBucket();
+}
+
+function deleteBucket(i) {
+  bucketItems.splice(i, 1);
+  renderBucket();
+}
+
+function saveBucket() {
+  try { localStorage.setItem('lifesim_bucket', JSON.stringify(bucketItems)); } catch(e) {}
+}
+
+renderBucket();
+
+// ═══════════════════════════════════════
+// SET MAX DATE
+// ═══════════════════════════════════════
+document.getElementById('birthdate').max = new Date().toISOString().split('T')[0];
+
+// ═══════════════════════════════════════
+// REVEAL ON SCROLL
+// ═══════════════════════════════════════
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
