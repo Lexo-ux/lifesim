@@ -24,6 +24,10 @@
   --sombra: 0 10px 30px rgba(20,33,61,0.25);
 }
 
+html{
+  color-scheme: light;
+}
+
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
@@ -131,6 +135,11 @@ main{
   border: 1px dashed rgba(255,248,236,0.35);
   border-radius: 16px;
   text-align:center;
+  overflow: hidden;
+  min-height: 90px;
+}
+.zona-ad .adsbygoogle{
+  max-width: 100%;
 }
 .zona-ad-etiqueta{
   margin: 0 0 8px;
