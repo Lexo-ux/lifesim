@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeSim — Vive una vida random</title>
+<meta name="description" content="Nace, crece y toma decisiones absurdas en LifeSim: un simulador de vida random y con humor. Cada clic es un año nuevo. ¿Cuánto vas a durar?">
+
+<meta property="og:title" content="LifeSim — Vive una vida random">
+<meta property="og:description" content="Un simulador de vida con humor. Cada clic es un año nuevo. Juega gratis.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://lifesim.dpdns.org/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<!-- ============================================================
+     PUBLICIDAD (Google AdSense)
+     Reemplaza ca-pub-XXXXXXXXXXXXXXXX por tu ID de cliente real
+     (lo encuentras en tu panel de AdSense, arriba a la derecha).
+     ============================================================ -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header class="marca">
+  <div class="marca-nombre">
+    <svg class="marca-icono" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2C12 2 6 9 6 14a6 6 0 0 0 12 0c0-5-6-12-6-12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    </svg>
+    <span>LifeSim</span>
+  </div>
+  <p class="marca-slogan">un simulador de vida random</p>
+</header>
+
+<main>
+
+  <!-- ================= PANTALLA 1: INICIO ================= -->
+  <section id="pantalla-inicio" class="pantalla activa">
+    <div class="inicio-tarjeta">
+      <h1>Vive una vida random y absurda</h1>
+      <p class="inicio-pitch">Cada clic es un año nuevo. Naces, creces, tomas decisiones que no siempre son buenas idea, y en algún punto todo se acaba. Así de simple, así de real.</p>
+
+      <div class="senda" aria-hidden="true">
+        <span>👶</span><span class="senda-linea"></span>
+        <span>🧒</span><span class="senda-linea"></span>
+        <span>🧑</span><span class="senda-linea"></span>
+        <span>🧓</span>
+      </div>
+
+      <button id="btn-nacer" class="boton boton-grande">Nacer</button>
+
+      <p id="mejor-vida" class="mejor-vida" hidden></p>
+    </div>
+
+    <div class="zona-ad" data-zona="inicio">
+      <p class="zona-ad-etiqueta">Publicidad</p>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+  </section>
+
+  <!-- ================= PANTALLA 2: JUEGO ================= -->
+  <section id="pantalla-juego" class="pantalla">
+
+    <div class="ficha">
+      <div class="ficha-avatar" id="avatar" aria-hidden="true">👶</div>
+      <div class="ficha-info">
+        <p class="ficha-nombre" id="nombre-jugador">—</p>
+        <p class="ficha-detalle" id="detalle-jugador">Recién nacido/a en algún lugar del mundo</p>
+      </div>
+      <div class="ficha-edad">
+        <span id="edad-numero">0</span>
+        <span class="ficha-edad-label">años</span>
+      </div>
+    </div>
+
+    <div class="stats" id="stats">
+      <div class="stat" data-stat="salud">
+        <div class="stat-cabeza"><span>❤️ Salud</span><span class="stat-valor" id="valor-salud">50</span></div>
+        <div class="stat-barra"><div class="stat-relleno" id="barra-salud" style="width:50%"></div></div>
+      </div>
+      <div class="stat" data-stat="felicidad">
+        <div class="stat-cabeza"><span>😄 Felicidad</span><span class="stat-valor" id="valor-felicidad">50</span></div>
+        <div class="stat-barra"><div class="stat-relleno" id="barra-felicidad" style="width:50%"></div></div>
+      </div>
+      <div class="stat" data-stat="inteligencia">
+        <div class="stat-cabeza"><span>🧠 Inteligencia</span><span class="stat-valor" id="valor-inteligencia">50</span></div>
+        <div class="stat-barra"><div class="stat-relleno" id="barra-inteligencia" style="width:50%"></div></div>
+      </div>
+      <div class="stat" data-stat="dinero">
+        <div class="stat-cabeza"><span>💰 Dinero</span><span class="stat-valor" id="valor-dinero">50</span></div>
+        <div class="stat-barra"><div class="stat-relleno" id="barra-dinero" style="width:50%"></div></div>
+      </div>
+    </div>
+
+    <div class="diario-envoltorio">
+      <p class="diario-titulo">Tu diario de vida</p>
+      <div class="diario" id="diario" aria-live="polite"></div>
+    </div>
+
+    <button id="btn-envejecer" class="boton boton-grande boton-envejecer">Cumplir años</button>
+  </section>
+
+  <!-- ================= MODAL: DECISIÓN ================= -->
+  <div id="modal-decision" class="modal-fondo" hidden>
+    <div class="modal-tarjeta" role="dialog" aria-modal="true" aria-labelledby="modal-prompt">
+      <p id="modal-prompt" class="modal-prompt"></p>
+      <div id="modal-opciones" class="modal-opciones"></div>
+    </div>
+  </div>
+
+  <!-- ================= PANTALLA 3: FINAL ================= -->
+  <section id="pantalla-final" class="pantalla">
+    <div class="final-tarjeta">
+      <p class="final-cruz" aria-hidden="true">✦</p>
+      <h2 id="final-titulo">Fin de la partida</h2>
+      <p id="final-resumen" class="final-resumen"></p>
+
+      <div class="final-stats" id="final-stats"></div>
+
+      <div class="compartir-caja">
+        <p id="compartir-texto" class="compartir-texto"></p>
+        <button id="btn-copiar" class="boton boton-secundario">Copiar para compartir</button>
+      </div>
+
+      <div class="zona-ad" data-zona="final">
+        <p class="zona-ad-etiqueta">Publicidad</p>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="0000000001"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </div>
+
+      <button id="btn-reiniciar" class="boton boton-grande">Vivir otra vez</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pie">
+  <p>LifeSim es ficticio y con fines de entretenimiento — ningún evento es un consejo real de vida, salud o dinero.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
