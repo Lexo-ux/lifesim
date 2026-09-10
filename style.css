@@ -367,6 +367,21 @@ main{
   color: rgba(36,31,24,0.8);
   text-align: left;
 }
+.compartir-botones{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content:center;
+}
+.boton-compartir{
+  padding: 11px 18px;
+  font-size: 0.92rem;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+}
+.boton-whatsapp{ background:#25D366; color:#0b3b22; }
+.boton-x{ background:var(--navy); color:var(--crema); }
 
 /* -------- pie -------- */
 .pie{

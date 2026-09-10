@@ -375,6 +375,10 @@ function terminarJuego(mensajeMuerte){
 
   $("compartir-texto").textContent = `🎮 Viví como ${jugador.nombre} de ${jugador.ciudad} hasta los ${jugador.edad} años. Terminé siendo "${titulo}". ¿Tú cuánto durarías? Juega gratis en lifesim.dpdns.org`;
 
+  const textoCompartir = $("compartir-texto").textContent;
+  $("btn-whatsapp").href = `https://wa.me/?text=${encodeURIComponent(textoCompartir)}`;
+  $("btn-x").href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(textoCompartir)}`;
+
   mostrarPantalla("pantalla-final");
   activarAd(document.querySelector('.zona-ad[data-zona="final"] .adsbygoogle'));
 }
@@ -392,7 +396,7 @@ btnCopiar.addEventListener("click", async () => {
   }catch(e){
     btnCopiar.textContent = "Selecciona el texto de arriba";
   }
-  setTimeout(() => { btnCopiar.textContent = "Copiar para compartir"; }, 2200);
+  setTimeout(() => { btnCopiar.textContent = "Copiar texto"; }, 2200);
 });
 
 modalFondo.addEventListener("click", (e) => {
