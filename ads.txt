@@ -1,1 +1,5 @@
-google.com, pub-4857607953427161, DIRECT, f08c47fec0942fa0
+# Este archivo es obligatorio para que Google AdSense verifique
+# tu dominio propio (lifesim.dpdns.org) como vendedor autorizado.
+# Reemplaza pub-XXXXXXXXXXXXXXXX por tu ID de editor real
+# (el mismo número que usas en ca-pub-XXXXXXXXXXXXXXXX, sin el "ca-").
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
