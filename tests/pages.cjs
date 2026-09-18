@@ -1,0 +1,68 @@
+const { chromium } = require("playwright");
+const { spawn } = require("node:child_process");
+const assert = require("node:assert/strict");
+const base = "http://127.0.0.1:4175/lifesim/";
+const server = spawn(process.execPath, ["tools/serve.mjs"], {
+  env: { ...process.env, PORT: "4175", BASE_PATH: "/lifesim" },
+  stdio: "ignore",
+  windowsHide: true,
+});
+let browser;
+(async () => {
+  let ready = false;
+  for (let i = 0; i < 50; i++) {
+    try {
+      if ((await fetch(base)).ok) {
+        ready = true;
+        break;
+      }
+    } catch {
+      /* Starting the server. */
+    }
+    await new Promise((r) => setTimeout(r, 100));
+  }
+  assert.ok(ready, "Subpath server ready");
+  browser = await chromium.launch({
+    headless: true,
+    ...(process.env.BROWSER_CHANNEL
+      ? { channel: process.env.BROWSER_CHANNEL }
+      : {}),
+  });
+  const page = await browser.newPage();
+  const failures = [];
+  page.on("pageerror", (e) => failures.push(e.message));
+  page.on("response", (r) => {
+    if (r.status() >= 400) failures.push(`${r.status()}: ${r.url()}`);
+  });
+  await page.goto(base);
+  await page.getByRole("button", { name: "Sorpréndeme" }).click();
+  await page.locator("[data-action=choice]").first().click();
+  await page.getByRole("button", { name: "Vivir otro año" }).click();
+  await page.evaluate(() => document.fonts.ready);
+  assert.ok(
+    await page
+      .locator(".scene-character img")
+      .evaluate((img) => img.complete && img.naturalWidth > 0),
+  );
+  for (const file of [
+    "CNAME",
+    "robots.txt",
+    "sitemap.xml",
+    "ads.txt",
+    "google7b775f78d3f57642.html",
+    "og-image.png",
+  ])
+    assert.equal((await fetch(base + file)).status, 200, file);
+  assert.deepEqual(failures, []);
+  console.log(
+    "GitHub Pages subpath QA passed: /lifesim/, ES modules, fonts, images, a playable year and publication files.",
+  );
+})()
+  .catch((e) => {
+    console.error(e);
+    process.exitCode = 1;
+  })
+  .finally(async () => {
+    await browser?.close();
+    server.kill();
+  });
