@@ -49,7 +49,7 @@ export function settleYear(s) {
   const ledger = forecast(s);
   const savingsReturn = Math.round(s.savings * 0.025);
   const rate = random(s) * 0.24 - 0.08 + s.skills.finance * 0.0004;
-  const investmentReturn = Math.round(s.investments * rate);
+  const investmentReturn = Math.round(s.investments * rate) || 0;
   s.savings += savingsReturn;
   s.investments = Math.max(0, s.investments + investmentReturn);
   apply(s, { cash: ledger.balance });

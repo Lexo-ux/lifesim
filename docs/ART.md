@@ -1,5 +1,7 @@
 # Dirección artística y recursos
 
+La presentación V3 añade retratos de NPCs, variantes por edad y nuevos contextos; ver [arte de V3](ART-V3.md). Este documento conserva los prompts del protagonista y del barrio que siguen utilizándose.
+
 Pixel art urbano nocturno: personajes humanos de proporciones naturales, expresiones sobrias y ropa cotidiana. Paleta de azul eléctrico, rojo coral e índigo sobre fondos oscuros. Recursos generados con la herramienta integrada de imágenes, sin API externa ni claves. Todos los assets viven en el proyecto.
 
 ## Recursos finales

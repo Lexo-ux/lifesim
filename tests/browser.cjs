@@ -9,281 +9,285 @@ const BASE = process.env.BASE_URL || "http://127.0.0.1:4173";
       ? { channel: process.env.BROWSER_CHANNEL }
       : {}),
   });
-  const page = await browser.newPage({
-    viewport: { width: 1440, height: 1080 },
-    deviceScaleFactor: 1,
-  });
-  const errors = [],
-    failed = [];
-  page.on("pageerror", (e) => errors.push(e.message));
-  page.on("response", (r) => {
-    if (r.status() >= 400) failed.push(`${r.status()} ${r.url()}`);
-  });
-  await fs.mkdir("output/qa", { recursive: true });
-  await page.goto(BASE);
-  await page.evaluate(() => document.fonts.ready);
-  await page.screenshot({
-    path: "output/qa/desktop-welcome.png",
-    fullPage: true,
-  });
-  await page.getByRole("button", { name: /Empezar mi historia/ }).click();
-  await page.locator("input[name=name]").fill("Valentina");
-  await page.getByRole("button", { name: "Estilo 2", exact: true }).click();
-  await page.locator("[data-action=trait][data-value=curious]").click();
-  await page.locator("[data-action=trait][data-value=social]").click();
-  await page.getByRole("button", { name: /Que empiece mi vida/ }).click();
-  assert.equal(await page.locator("#creator-form").count(), 1);
-  await page.locator("[data-action=trait][data-value=curious]").click();
-  await page.locator("[data-action=trait][data-value=social]").click();
-  await page.screenshot({
-    path: "output/qa/desktop-creator.png",
-    fullPage: true,
-  });
-  await page.getByRole("button", { name: /Que empiece mi vida/ }).click();
-  await page.locator("[data-action=choice]").first().click();
-  await page.locator("[data-action=activity][data-value=read]").click();
-  const readState = () =>
-    page.evaluate(() => JSON.parse(localStorage.getItem("lifesim.v2")).state);
-  const before = await readState();
-  assert.equal(before.points, 2);
-  assert.equal(before.name, "Valentina");
-  await page.reload();
-  assert.deepEqual(await readState(), before);
-  await page.getByRole("button", { name: "Vivir otro año" }).click();
-  assert.equal((await readState()).age, 1);
-  await page.locator("[data-action=choice]:not([disabled])").first().click();
-  await page.getByRole("button", { name: "Vivir otro año" }).click();
-  await page.locator("[data-action=choice]:not([disabled])").first().click();
-  await page.getByRole("button", { name: "Vivir otro año" }).click();
-  assert.match(
-    await page.locator(".scene-character img").getAttribute("src"),
-    /child/,
-  );
-  await page.screenshot({
-    path: "output/qa/desktop-child.png",
-    fullPage: true,
-  });
-  for (const id of ["career", "relationships", "money", "profile", "life"]) {
-    await page.locator(`nav [data-value=${id}]`).click();
-    assert.equal(await page.locator("#page-title").count(), 1);
-  }
-  const { newLife } = await import("../js/game.js");
-  const { emptyMeta, updateAchievements } =
-    await import("../js/achievements.js");
-  const { drawEvent } = await import("../js/events.js");
-  const { log } = await import("../js/state.js");
-  const meta = emptyMeta();
-  const state = newLife(
-    {
-      name: "Alex Rivera",
-      appearance: 0,
-      traits: ["curious", "creative"],
-      city: "Medellín",
-      origin: "balanced",
-    },
-    meta,
-    143,
-  );
-  state.age = 24;
-  state.cash = 18450;
-  state.savings = 6000;
-  state.stats = {
-    health: 86,
-    happiness: 78,
-    intelligence: 72,
-    fitness: 64,
-    energy: 85,
-    stress: 22,
-  };
-  state.skills = {
-    technology: 62,
-    creativity: 46,
-    charisma: 38,
-    strength: 44,
-    discipline: 55,
-    finance: 34,
-  };
-  state.education.degrees = ["school", "university"];
-  state.career = { id: "developer", level: 1, experience: 2, years: 2 };
-  state.relationships.push(
-    { id: "friend1", name: "Mateo", type: "friend", bond: 75, since: 13 },
-    { id: "partner1", name: "Lucía", type: "partner", bond: 82, since: 22 },
-  );
-  state.age = 18;
-  log(
-    state,
-    "Entraste a la universidad. Una nueva ciudad, un nuevo comienzo.",
-    true,
-    "graduation",
-  );
-  state.age = 22;
-  log(
-    state,
-    "Te graduaste de la universidad. Todo ese esfuerzo ya tiene nombre.",
-    true,
-    "graduation",
-  );
-  log(
-    state,
-    "Conociste a Lucía. Hay conversaciones que cambian el rumbo.",
-    true,
-    "heart",
-  );
-  state.age = 23;
-  log(
-    state,
-    "Conseguiste tu primer empleo como desarrollador de software.",
-    true,
-    "briefcase",
-  );
-  state.age = 24;
-  drawEvent(state);
-  state.eventId = "startup";
-  updateAchievements(state, meta);
-  const fixture = { version: 2, state, meta, settings: { sound: false } };
-  await page.evaluate(
-    (data) => localStorage.setItem("lifesim.v2", JSON.stringify(data)),
-    fixture,
-  );
-  await page.reload();
-  await page.screenshot({ path: "output/qa/desktop-game.png", fullPage: true });
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.screenshot({
-    path: "output/qa/mobile-decision.png",
-    fullPage: true,
-  });
-  await page.setViewportSize({ width: 1440, height: 1080 });
-  assert.equal(
-    await page
-      .locator(".scene-character img")
-      .evaluate((img) => img.complete && img.naturalWidth > 0),
-    true,
-  );
-  await page.locator("[data-action=choice]").nth(1).click();
-  await page.locator("nav [data-value=money]").click();
-  const cash = (await readState()).cash;
-  await page.locator("[data-action=finance][data-value=save]").click();
-  assert.equal((await readState()).cash, cash - 1000);
-  await page.screenshot({
-    path: "output/qa/desktop-money.png",
-    fullPage: true,
-  });
-  await page.locator("nav [data-value=career]").click();
-  await page.screenshot({
-    path: "output/qa/desktop-career.png",
-    fullPage: true,
-  });
-  await page.locator("nav [data-value=relationships]").click();
-  await page.locator("[data-action=visit]").first().click();
-  await page.screenshot({
-    path: "output/qa/desktop-relationships.png",
-    fullPage: true,
-  });
-  await page.locator("nav [data-value=profile]").click();
-  await page.screenshot({
-    path: "output/qa/desktop-profile.png",
-    fullPage: true,
-  });
-  await page.getByRole("button", { name: "Ver mi historia" }).click();
-  assert.equal(await page.locator("dialog[open]").count(), 1);
-  await page.keyboard.press("Escape");
-  await page.locator("nav [data-value=life]").click();
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.waitForFunction(
-    () => document.querySelector("#toasts").children.length === 0,
-  );
-  await page.screenshot({ path: "output/qa/mobile-game.png", fullPage: true });
-  for (const id of ["life", "career", "relationships", "money", "profile"]) {
-    await page.locator(`nav [data-value=${id}]`).click();
-    assert.ok(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= window.innerWidth,
-      ),
-      `mobile overflow: ${id}`,
-    );
-  }
-  for (const width of [320, 360, 768, 1024]) {
-    await page.setViewportSize({ width, height: 900 });
-    for (const id of ["life", "relationships", "money", "profile"]) {
-      await page.locator(`nav [data-value=${id}]`).click();
-      assert.ok(
-        await page.evaluate(
-          () => document.documentElement.scrollWidth <= window.innerWidth,
-        ),
-        `overflow ${id} at ${width}`,
+  try {
+    const page = await browser.newPage({
+        viewport: { width: 390, height: 844 },
+      }),
+      errors = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    page.on("response", (r) => {
+      if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`);
+    });
+    await fs.mkdir("output/qa", { recursive: true });
+    await page.goto(BASE);
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({ path: "output/qa/v3-title.png" });
+    await page.locator("[data-action=creator]").click();
+    await page.locator('[data-action=appearance][data-value="1"]').click();
+    await page.locator("[name=name]").fill("Valentina");
+    await page.screenshot({ path: "output/qa/v3-creation.png" });
+    await page.locator("button[type=submit]").click();
+    const read = () =>
+      page.evaluate(() => JSON.parse(localStorage.getItem("lifesim.v3")));
+    const waitCount = async (n) =>
+      page.waitForFunction(
+        (n) =>
+          JSON.parse(localStorage.getItem("lifesim.v3")).state.story.count ===
+          n,
+        n,
       );
-    }
-  }
-  await page.setViewportSize({ width: 390, height: 844 });
-  const { finishLife } = await import("../js/game.js");
-  const finalState = await readState();
-  finalState.age = 91;
-  finishLife(
-    finalState,
-    "Te fuiste en paz, dejando historias que otras personas seguirán contando.",
-  );
-  updateAchievements(finalState, meta);
-  await page.evaluate(
-    (data) => localStorage.setItem("lifesim.v2", JSON.stringify(data)),
-    { ...fixture, state: finalState, meta },
-  );
-  await page.reload();
-  await page.screenshot({
-    path: "output/qa/mobile-ending.png",
-    fullPage: true,
-  });
-  assert.match(await page.locator("h1").innerText(), /permanece/);
-  await page.getByRole("button", { name: "Vivir otra historia" }).click();
-  await page.getByRole("button", { name: /Que empiece mi vida/ }).click();
-  assert.equal((await readState()).age, 0);
-  await page.getByRole("button", { name: "Abrir ajustes" }).click();
-  await page.getByRole("button", { name: "Reiniciar", exact: true }).click();
-  await page.getByRole("button", { name: "Borrar todo el progreso" }).click();
-  assert.equal(
-    await page.evaluate(() => localStorage.getItem("lifesim.v2")),
-    null,
-  );
-  await page.screenshot({
-    path: "output/qa/mobile-welcome.png",
-    fullPage: true,
-  });
-  await page.getByRole("button", { name: "Sorpréndeme" }).click();
-  assert.equal((await readState()).age, 0);
-  await page.getByRole("button", { name: "Abrir ajustes" }).click();
-  await page.getByRole("button", { name: "Nueva vida", exact: true }).click();
-  await page.screenshot({
-    path: "output/qa/mobile-creator.png",
-    fullPage: true,
-  });
-  await page.getByRole("button", { name: /Que empiece mi vida/ }).click();
-  assert.equal(
+    const stable = () =>
+      page.waitForFunction(() =>
+        document
+          .getAnimations()
+          .every(
+            (a) =>
+              a.effect?.getTiming().iterations === Infinity ||
+              a.playState === "finished",
+          ),
+      );
+    const screenshot = async (name) => {
+      await stable();
+      await page.screenshot({ path: `output/qa/${name}.png` });
+    };
+    const snapshot = await read();
+    assert.equal(snapshot.state.name, "Valentina");
+    assert.equal(snapshot.state.appearance, 1);
+    assert.equal(await page.locator("[role=progressbar]").count(), 4);
+    assert.equal(
+      await page.locator(".sidebar,.dashboard,.activity-grid").count(),
+      0,
+    );
+    const bounds = await page.locator(".narrative-card").boundingBox();
+    assert.ok(bounds.height > 400);
+    await screenshot("v3-mobile-card");
+    const restore = async (data) => {
+      await page.evaluate(
+        (d) => localStorage.setItem("lifesim.v3", JSON.stringify(d)),
+        data,
+      );
+      await page.reload();
+      await page.locator("[data-action=continue]").click();
+      await stable();
+    };
+    const drag = async (dx, dy = 0) => {
+      const b = await page.locator(".narrative-card").boundingBox(),
+        x = b.x + b.width / 2,
+        y = b.y + 100;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x + dx, y + dy, { steps: 8 });
+      await page.mouse.up();
+    };
+    await drag(25);
+    assert.equal((await read()).state.story.count, 0);
+    await drag(10, 100);
+    assert.equal((await read()).state.story.count, 0);
+    await drag(-120);
+    await waitCount(1);
+    await page.waitForSelector("[data-card=first_steps]");
+    assert.equal(
+      (await read()).state.story.npcs.elena.memories[0].side,
+      "left",
+    );
+    assert.equal(await page.locator(".onboarding").innerText(), "");
+    await restore(snapshot);
+    await drag(120);
+    await waitCount(1);
+    await stable();
+    assert.equal(
+      (await read()).state.story.npcs.elena.memories[0].side,
+      "right",
+    );
+    await page.keyboard.press("ArrowLeft");
+    await waitCount(2);
+    await stable();
+    const saved = await read();
+    await page.reload();
+    await page.locator("[data-action=continue]").click();
+    assert.deepEqual((await read()).state, saved.state);
+    // Actual touch input through Chromium's input pipeline.
+    await restore(snapshot);
+    const cdp = await page.context().newCDPSession(page),
+      b = await page.locator(".narrative-card").boundingBox(),
+      x = b.x + b.width / 2,
+      y = b.y + 100;
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchStart",
+      touchPoints: [{ x, y }],
+    });
+    for (let dx = 20; dx <= 120; dx += 20)
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchMove",
+        touchPoints: [{ x: x + dx, y }],
+      });
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchEnd",
+      touchPoints: [],
+    });
+    await waitCount(1);
+    await stable();
+    await cdp.detach();
+    // Cancelled touch drag must not commit.
+    await restore(snapshot);
+    const cancelBox = await page.locator(".narrative-card").boundingBox();
+    await page.mouse.move(cancelBox.x + 150, cancelBox.y + 100);
+    await page.mouse.down();
     await page
-      .getByRole("heading", { name: "¿Empezar otra historia?" })
-      .count(),
-    1,
-  );
-  await page.getByRole("button", { name: "Seguir mi vida actual" }).click();
-  assert.deepEqual(errors, []);
-  assert.deepEqual(failed, []);
-  const gallery = await browser.newPage({
-    viewport: { width: 1200, height: 650 },
-  });
-  await gallery.setContent(
-    `<html lang="es"><head><title>Character asset QA</title><style>body{margin:0;padding:20px;background:#f5f4ee;color:#283d34;font:14px system-ui}h1{font-size:25px}main{display:grid;grid-template-columns:repeat(6,1fr);gap:15px}figure{margin:0;background:#e4ead6;border-radius:15px;text-align:center;padding:15px;height:235px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}img{max-height:185px;max-width:130px}img.baby{height:110px}img.child{height:150px}figcaption{margin-top:14px;font-size:12px}</style></head><body><h1>LifeSim · 2 apariencias, 6 etapas de vida</h1><main>${[0, 1].flatMap((row) => ["baby", "child", "teen", "young", "adult", "elder"].map((stage) => `<figure><img class="${stage}" src="${BASE}/assets/characters/${row}-${stage}.webp" alt="${row}-${stage}"><figcaption>${row + 1} · ${stage}</figcaption></figure>`)).join("")}</main></body></html>`,
-  );
-  await gallery.waitForFunction(() =>
-    [...document.images].every((img) => img.complete && img.naturalWidth),
-  );
-  await gallery.screenshot({
-    path: "output/qa/characters.png",
-    fullPage: true,
-  });
-  console.log(
-    "Browser QA passed: creation, choices, activities, reload, 6 navigation views, money, relationships, history, death, new life, reset, random life, 5 responsive widths. No JS errors or failed assets.",
-  );
-  await browser.close();
+      .locator(".narrative-card")
+      .dispatchEvent("pointercancel", { pointerId: 1 });
+    await page.mouse.up();
+    assert.equal((await read()).state.story.count, 0);
+    // Repeated clicks while the outgoing card is animating apply exactly once.
+    await page
+      .locator("[data-action=choose][data-value=right]")
+      .evaluate((el) => {
+        el.click();
+        el.click();
+      });
+    await waitCount(1);
+    await stable();
+    assert.equal((await read()).state.story.count, 1);
+    for (const action of ["profile", "history", "legacy"]) {
+      await page.locator(`[data-action=${action}]`).click();
+      assert.ok(await page.locator("dialog").isVisible());
+      await screenshot(`v3-${action}`);
+      await page.keyboard.press("Escape");
+      assert.equal(await page.locator("dialog").isVisible(), false);
+    }
+    await page.locator("[data-action=settings]").click();
+    await page.locator("[data-action=toggle-sound]").click();
+    assert.equal((await read()).settings.sound, true);
+    await page.keyboard.press("Escape");
+    await page.reload();
+    await page.locator("[data-action=continue]").click();
+    assert.equal((await read()).settings.sound, true);
+    // Real narrative fixture, no production debug controls.
+    const { startLife, choose } = await import("../js/narrative/engine.js");
+    const { extendMeta } = await import("../js/narrative/meta.js");
+    const { emptyMeta } = await import("../js/achievements.js");
+    const { meet } = await import("../js/narrative/npc.js");
+    const meta = extendMeta(emptyMeta()),
+      adult = startLife({ name: "Alex Rivera" }, meta, 872);
+    adult.age = 24;
+    adult.cash = 9000;
+    adult.story.current = "vera_move";
+    meet(adult, "vera");
+    adult.relationships.find((r) => r.id === "vera").bond = 80;
+    const fixture = {
+      state: adult,
+      meta,
+      settings: { sound: false, onboarded: true },
+      version: 3,
+    };
+    await restore(fixture);
+    for (const [width, height] of [
+      [360, 640],
+      [390, 844],
+      [430, 932],
+      [768, 1024],
+      [1440, 900],
+      [812, 375],
+    ]) {
+      await page.setViewportSize({ width, height });
+      await stable();
+      const overflow = await page.evaluate(() => ({
+        width: innerWidth,
+        scroll: document.documentElement.scrollWidth,
+        items: [...document.querySelectorAll("body *")]
+          .filter((el) => {
+            const r = el.getBoundingClientRect();
+            return r.width && r.right > innerWidth + 1;
+          })
+          .map((el) => ({
+            tag: el.tagName,
+            cls: el.className,
+            right: el.getBoundingClientRect().right,
+          })),
+      }));
+      assert.ok(
+        overflow.scroll <= width,
+        `horizontal overflow ${JSON.stringify(overflow)}`,
+      );
+      if (height >= 640)
+        assert.ok(
+          await page.evaluate(
+            () => document.documentElement.scrollHeight <= innerHeight + 1,
+          ),
+          `primary loop scroll ${width}`,
+        );
+      for (const button of await page.locator(".decision").all()) {
+        const r = await button.boundingBox();
+        assert.ok(r.width > 100 && r.height >= 44);
+      }
+      await screenshot(`v3-${width}x${height}`);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    // Both branches load another card immediately, and retain the delayed future.
+    await page.locator("[data-action=choose][data-value=right]").click();
+    await waitCount(1);
+    await stable();
+    assert.ok(
+      (await read()).state.story.queue.some((q) => q.id === "vera_newcity"),
+    );
+    for (const [age, id] of [
+      [0, "baby"],
+      [3, "child"],
+      [13, "teen"],
+      [18, "young"],
+      [30, "adult"],
+      [60, "elder"],
+    ]) {
+      const d = structuredClone(fixture);
+      d.state.age = age;
+      d.state.story.current = "quiet_day";
+      await restore(d);
+      await page.locator("[data-action=profile]").click();
+      assert.match(
+        await page.locator(".profile-head img").getAttribute("src"),
+        new RegExp(`${id}\\.webp$`),
+      );
+      await page.keyboard.press("Escape");
+    }
+    const dead = structuredClone(fixture);
+    dead.state.age = 80;
+    dead.state.stats.health = 0;
+    dead.state.story.current = "quiet_day";
+    choose(dead.state, dead.meta, "left");
+    await restore(dead);
+    assert.ok(await page.locator(".death-screen").isVisible());
+    await screenshot("v3-death");
+    await page.locator("[data-action=remember]").click();
+    assert.ok(await page.locator(".final-story").isVisible());
+    await page.locator("[data-action=creator]").click();
+    await page.locator("button[type=submit]").click();
+    assert.equal((await read()).state.age, 0);
+    assert.equal((await read()).meta.completed, 1);
+    // New life confirmation is scoped to replacing an active life.
+    await page.locator("[data-action=home]").click();
+    await page.locator("[data-action=random]").click();
+    assert.ok(await page.locator("[data-action=confirm-new]").isVisible());
+    await page.locator("[data-action=confirm-new]").click();
+    assert.equal((await read()).state.age, 0);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.keyboard.press("ArrowRight");
+    await waitCount(1);
+    assert.ok(await page.locator(".narrative-card").isVisible());
+    await page.locator("[data-action=settings]").click();
+    await page.locator("[data-action=ask-reset]").click();
+    await page.locator("[data-action=reset]").click();
+    assert.equal(
+      await page.evaluate(() => localStorage.getItem("lifesim.v3")),
+      null,
+    );
+    assert.deepEqual(errors, []);
+    console.log(
+      "V3 browser QA passed: creation/random/continue, buttons/keyboard/mouse/touch/cancellation, double input, next card, secondary screens, sound, stages/death/replay/reset, six viewport sizes, zero JS errors or missing assets.",
+    );
+  } finally {
+    await browser.close();
+  }
 })().catch((e) => {
   console.error(e);
   process.exitCode = 1;
-  process.exit(1);
 });

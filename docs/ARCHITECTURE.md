@@ -1,49 +1,78 @@
-# LifeSim 2.0 · arquitectura
+# LifeSim III · arquitectura
 
-Sitio estático con módulos ES. No hay backend, compilación obligatoria, SDK de anuncios activo ni dependencias de ejecución. `index.html` carga `js/ui.js`. Las rutas son relativas para funcionar tanto en el dominio propio como en `/lifesim/` de GitHub Pages.
+Sitio estático con módulos ES y recursos locales. No requiere build, framework ni backend. `index.html → js/ui.js → js/ui/app.js`. La presentación V2 se eliminó: no existe el dashboard oculto bajo una nueva capa de CSS.
 
 ## Capas
 
-- `data/catalog.js`: etapas, rasgos, actividades, carreras, estudios, bienes y logros.
-- `data/events.js`: eventos con condiciones de elegibilidad, opciones, efectos, probabilidades y consecuencias diferidas.
-- `js/state.js`: estado serializable, generador aleatorio reproducible, cambios de estadísticas e historial.
-- `js/game.js`: única puerta de entrada para acciones de interfaz; controla decisiones pendientes, actividades, paso del año y muerte.
-- `js/economy.js`, `career.js`, `relationships.js`, `events.js`: sistemas independientes del DOM.
-- `js/achievements.js`: récords y logros globales; registrar un final es idempotente.
-- `js/storage.js`: validación y guardado de partida, ajustes y legado en una única escritura de localStorage.
-- `js/ui.js`: vistas, diálogos nativos, navegación, feedback y eventos delegados. Nunca confía en HTML de nombres o guardados.
-- `js/icons.js`, `audio.js`, `ads.js`: iconos SVG propios, tonos sintetizados y anuncios opcionales.
+- `js/state.js`, `economy.js`, `career.js`, `relationships.js`, `achievements.js`: simulación V2 reutilizada. `game.advanceYear({draw:false})` permite liquidar el año sin extraer un evento antiguo.
+- `js/narrative/engine.js`: nueva vida, elección transaccional, cuatro indicadores derivados y avance automático del tiempo.
+- `conditions.js`: edad, banderas, títulos, empleo, pareja/hijos, dinero, habilidades, personalidad, relación, tiempo desde otro evento y condiciones entre vidas.
+- `deck.js`: selección ponderada, rareza, enfriamientos, disponibilidad de estudios/trabajos, contenido ya visto, cola de consecuencias y repetición de interlocutores.
+- `npc.js`: identidades estables, vínculos compartidos con la simulación, memorias por decisión, roles, envejecimiento y fallecimiento.
+- `meta.js`: descubrimientos, finales, nombres de vidas anteriores, capítulos del Archivo y registro idempotente de cada vida terminada.
+- `narrative/storage.js`: validación V3 y migración no destructiva desde V2.
+- `js/ui/`: aplicación y diálogos, vistas secundarias, tarjeta, indicadores, gestos y transiciones. El DOM no contiene reglas de elegibilidad ni mutaciones económicas.
+- `data/narrative/`: schema, infancia, cadenas, vida adulta/vejez, profesiones/estudios y misterio. `data/npcs.js` define doce identidades y sus contextos.
 
-## Contrato de un año
+## Contrato de una decisión
 
-1. Se selecciona y guarda un evento elegible. La recarga conserva ese evento y la semilla.
-2. El jugador resuelve una opción. Costes y requisitos se validan antes de aplicar efectos.
-3. Hay tres momentos anuales. Estudiar reserva uno; una actividad no puede repetirse ese año. Buscar empleo, inscribirse o visitar a alguien también consume tiempo.
-4. Avanzar liquida ingresos, gastos, matrícula e intereses; después avanza carrera y educación, desgasta vínculos y aplica envejecimiento y estrés.
-5. Se cumple un año, se resuelven consecuencias pendientes, se evalúa la mortalidad, se recupera energía y se prepara el siguiente evento.
+1. La baraja guarda el ID de una tarjeta elegible. Recargar conserva la tarjeta y la semilla; una nueva vida utiliza una semilla aleatoria nueva.
+2. El gesto elige izquierda/derecha al superar el umbral. El motor comprueba el ID esperado para rechazar entradas antiguas o duplicadas.
+3. Aplica efectos, operación de simulación, vínculo, personalidad, banderas y consecuencias sobre una copia. Un error no deja cambios parciales.
+4. Cada tarjeta consume meses (normalmente seis; primeros años, doce). Cada cruce de año liquida ingresos/gastos, carrera, estudios, relaciones, envejecimiento, mortalidad y consecuencias V2 pendientes.
+5. Registra hitos y logros. Elige primero una consecuencia narrativa vencida y elegible; en otro caso extrae una tarjeta ponderada. Descubre su personaje.
+6. Guarda partida, metaprogreso y ajustes en una escritura. La tarjeta sale desde su posición de arrastre; entra la siguiente y se animan los indicadores. No hay confirmación ni botón de siguiente año.
 
-Los gastos de necesidades básicas pueden generar deuda; las compras y decisiones opcionales exigen efectivo. Ahorros e inversiones no se liquidan automáticamente: el jugador debe decidir cuándo retirarlos. La vivienda propia es una compra permanente, y el transporte se puede reemplazar recuperando su valor de reventa.
+Los gestos verticales, cancelados o inferiores al umbral vuelven al centro. La pantalla conserva botones y flechas de teclado. Durante la salida se bloquean entradas duplicadas. Las animaciones se suprimen con movimiento reducido.
 
-El colegio mejora habilidades entre 6 y 17 años. Las carreras especializadas comprueban títulos o habilidades. Abandonar un programa conserva conocimientos pero pierde el progreso hacia el título. Las promociones exigen experiencia y disciplina. La jubilación se desbloquea a los 65 años y detiene el estrés laboral.
+## Estado
 
-## Cómo añadir contenido
+Se conserva el núcleo validado `state.version = 2` para reutilizar sus sistemas. La extensión `state.story.version = 3` contiene mes, tarjeta actual, contador, eventos vistos, cola temporal, NPCs, personalidad, arcos y último resultado. La envoltura de persistencia es versión 3. Los cuatro indicadores se derivan, nunca se guardan duplicados.
 
-Un evento tiene `id`, `category`, `icon`, `title`, `text`, `when(state)` y `choices`. La opción puede incluir `cost`, `requires`, `effects`, `flag`, `delayed` y `chance` con `success` / `failure`. Las consecuencias diferidas llevan `years`, `text`, `effects` y opcionalmente `flag`. Nunca se guardan funciones: se persiste el ID del evento y las consecuencias como datos.
+`meta` conserva los récords/logros V2 y añade `discovered`, `characters`, `secrets`, `endings`, `flags`, `chapter`, `lastChapterLife` y `echoes`. Los nombres y los finales de las últimas veinte vidas sirven a la metanarrativa. Los demás descubrimientos no se limitan a veinte vidas.
 
-Una carrera nueva se añade a `JOBS`; especifica salario anual inicial, estrés, satisfacción, requisitos, título opcional y capital opcional. Un programa nuevo se añade a `COURSES`; define edad, duración, coste anual y beneficios por año.
+## Escribir una tarjeta
 
-## Persistencia
+```js
+card(
+  "id_unico",
+  "vera",
+  "Una situación breve, con su voz.",
+  choice("Quedarme", { discipline: 4 }, { flags: ["meQuedo"] }),
+  choice(
+    "Acompañarla",
+    { cash: -800 },
+    {
+      bond: 12,
+      behavior: "social",
+      follow: [{ id: "reencuentro", months: 36 }],
+      milestone: "Te mudaste con Vera.",
+    },
+  ),
+  {
+    requires: { min: 22, bond: { vera: 65 } },
+    arc: "amistad",
+    pool: "friendship",
+  },
+);
+```
 
-Clave `lifesim.v2`, versión 2. Guarda `{version, state, meta, settings}`. La mejor edad del juego antiguo (`lifesim_mejor_vida`) se importa al no existir guardado nuevo. El juego anterior no guardaba partidas en curso. Un JSON ilegible muestra un aviso y permanece intacto hasta que se inicia otra vida o se confirma borrar el progreso. Los fallos de almacenamiento no bloquean el motor.
+Las tarjetas de seguimiento usan `queued:true`; no entran espontáneamente en la baraja. La cola guarda meses absolutos y solo consume la tarjeta al poder presentarla. Si su NPC murió, la consecuencia no se presenta. Las tarjetas únicas se marcan al resolverlas; las rutinas usan `once:false` y `cooldown` en meses. La rareza afecta al peso, nunca se muestra una etiqueta de rareza.
 
-No se escucha el evento `storage` para coordinar varias pestañas: juega una partida desde una sola pestaña. Al borrar datos del navegador se elimina el progreso. Se puede jugar sin red después de cargar los recursos, pero no hay instalación PWA ni arranque offline garantizado.
+`operation` adapta las funciones existentes para contratar, estudiar, comprar, ahorrar, retirarse o formar una familia. Los requisitos deben permitir ambas respuestas; las pruebas de vidas completas detectan opciones que quedarían bloqueadas. Algunas necesidades o compromisos narrativos permiten endeudarse; compras de catálogo requieren efectivo.
 
-## Arte y rendimiento
+Los arcos definidos son radio, Vera, taller, Noa, educación, cartas, vivienda, cuaderno, negocio, Luz, mentoría, salud, techo, deuda y liderazgo. No todos son lineales ni aparecen en todas las vidas.
 
-Doce sprites WebP reales, dos apariencias por seis edades, con transparencia. Se cargan solo los personajes visibles. Un escenario WebP compartido, fuentes variables locales con sus licencias y SVG en línea. No hay solicitudes esenciales a terceros. `prefers-reduced-motion` desactiva animaciones; el sonido comienza desactivado y solo se sintetiza tras una interacción.
+## Archivo (spoilers)
 
-## Publicación y anuncios
+El sobre introduce un detalle extraño en una vida normal. En otra vida Iria recuerda la decisión; una libreta muestra el nombre real de una vida anterior. Más adelante se descubre un archivo de recuerdos y se decide custodiar sus nombres o abrirlo. La quinta vida permite observar el desenlace. Los mínimos usan **vidas terminadas**, no partidas abandonadas; reiniciar una vida repetidamente no desbloquea el misterio.
 
-Conservar `CNAME`, `ads.txt`, `robots.txt` y la verificación de Google. La imagen social está en `/og-image.png`, coincidiendo con los metadatos. `.nojekyll` evita el procesamiento innecesario de Jekyll. La raíz del repositorio se publica directamente.
+## Migración y límites
 
-`data/ads.js` conserva el publisher real de `ads.txt`. El código anterior tenía un cliente y unidades de ejemplo. Por eso `enabled` está desactivado y los slots vacíos: no se genera tráfico ni espacio publicitario hasta configurar unidades válidas. Los únicos emplazamientos disponibles son bienvenida y final; nunca se insertan anuncios entre decisiones.
+La primera carga sin V3 intenta leer V2 con su validador original. Conserva los efectos diferidos, relaciones y progreso; conecta la primera amistad/pareja/hija a las identidades narrativas y conserva sus nombres. Sustituye el evento pendiente V2 por uno V3 sin cobrar ni resolver la elección anterior. Las vidas terminadas muestran su memorial. La clave V2 no se modifica hasta un reinicio explícito.
+
+No existe coordinación entre pestañas ni sincronización remota. Un fallo de almacenamiento avisa y deja seguir en memoria. No hay PWA ni arranque offline garantizado. Las dependencias de desarrollo solo se usan en pruebas y preparación del arte.
+
+## Publicación
+
+Conservar dominio, SEO, verificación y `ads.txt`. Los espacios publicitarios se limitan al inicio y al final, desactivados por defecto. `npm run check` recorre los módulos recursivamente y verifica recursos. El workflow ejecuta motor, navegador, axe y la prueba de subruta de Pages; no despliega ni integra ramas.
