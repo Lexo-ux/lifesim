@@ -1,24 +1,26 @@
-# LifeSim 2.0
+# LifeSim III
 
-**Una vida. Mil posibilidades.** Un simulador de vida estático, en español, con personajes ilustrados, decisiones con memoria y una historia diferente en cada partida.
+**Una vida. Miles de decisiones.** Juego narrativo estático, en español. Una persona, una tarjeta y dos respuestas: desliza, arrastra, usa las flechas o pulsa una decisión. El tiempo avanza al elegir.
 
-## Jugar
+La pantalla principal muestra solo salud, ánimo, desarrollo y economía. Educación, carrera, deudas y vínculos funcionan por debajo de la historia; sus oportunidades llegan en la baraja. Perfil, Historia y Legado son pantallas secundarias breves.
 
-Crea tu personaje o genera una vida aleatoria. Cada año toma una decisión, dedica tus momentos a aprender, trabajar, cuidarte o compartir con los demás y elige **Vivir otro año**. Tus ingresos y gastos se liquidan al avanzar; algunas decisiones vuelven años después.
+## Contenido
 
-Hay seis etapas de vida, dos apariencias, siete rasgos, seis habilidades, ocho carreras, seis programas educativos y doce logros persistentes. La economía incluye efectivo, ahorro, inversiones, vivienda, transporte y deuda. Familia, amistades, pareja e hijos crean nuevos eventos. Al final, una biografía y una cronología reúnen tu historia.
+- 130 tarjetas originales con dos opciones y requisitos narrativos.
+- 12 personajes recurrentes, 20 retratos locales, seis etapas del protagonista.
+- 15 líneas argumentales: amistades, romance, familia, aprendizaje, trabajo, salud y dinero; algunas decisiones vuelven hasta quince años después.
+- El Archivo: ocho encuentros, siete capítulos y dos desenlaces centrales que se descubren a través de al menos cinco vidas.
+- Ocho profesiones, seis programas educativos, vivienda, ahorro, inversiones, deuda, relaciones, doce logros y recuerdos entre vidas.
 
-El juego guarda automáticamente en este navegador. El sonido es opcional. En Ajustes puedes empezar otra vida conservando el legado o confirmar el reinicio de todo el progreso.
+## Ejecutar
 
-## Ejecutar localmente
-
-Necesitas Node.js 22 o posterior. El juego no necesita instalar dependencias para funcionar:
+Node.js 22 o posterior. Sin compilación ni dependencias de producción:
 
 ```sh
 npm start
 ```
 
-Abre `http://127.0.0.1:4173`. También puedes servir la carpeta con cualquier servidor estático. Los módulos ES requieren HTTP; no abras el HTML mediante `file://`.
+Abre `http://127.0.0.1:4173`. Los módulos ES necesitan HTTP; también sirve cualquier servidor de archivos estáticos.
 
 ## Verificar
 
@@ -30,18 +32,20 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-Las dependencias de desarrollo solo sirven para QA, formato y preparación de assets. Ninguna se incluye en el navegador. Las pruebas cubren el motor, cien vidas completas y un recorrido de interfaz en escritorio y móvil. [Detalle de validación](docs/VALIDATION.md).
+En Windows puedes usar Edge instalado: `$env:BROWSER_CHANNEL='msedge'; npm run test:browser`.
 
-## Publicar en GitHub Pages
+Las pruebas incluyen 100 vidas completas de V3, 100 del motor V2 conservado, cadenas, migración, cinco vidas de metanarrativa, controles táctiles/ratón/teclado, accesibilidad, seis tamaños de pantalla y publicación bajo `/lifesim/`. [Validación](docs/VALIDATION.md).
 
-Publica la raíz `/` de la rama elegida. No se requiere build ni backend. Se conservan `CNAME` (`lifesim.dpdns.org`), `ads.txt`, `robots.txt`, `sitemap.xml` y la verificación de Google. El sitio utiliza rutas relativas para funcionar también bajo `/lifesim/`.
+## Guardados
 
-La rama `lifesim-2.0` permite revisar la transformación antes de integrarla en `main`. El workflow de calidad ejecuta las pruebas y adjunta capturas; no cambia automáticamente la rama de producción.
+V3 utiliza `lifesim.v3`. Importa una partida válida de `lifesim.v2` conservando edad, estudios, trabajo, dinero, relaciones, logros y efectos pendientes. La tarjeta pendiente de V2 se sustituye por una tarjeta V3 adecuada a la edad. El original V2 permanece intacto. Un guardado ilegible se conserva y muestra un aviso. Reiniciar requiere confirmar y borra ambas versiones. Sonido opcional, desactivado inicialmente.
 
-## Ampliar el juego
+## GitHub Pages
 
-Los catálogos viven en `data/`; el motor, separado del DOM, en `js/`. Consulta [arquitectura y contratos](docs/ARCHITECTURE.md) para añadir eventos, carreras, estudios y consecuencias. [Arte, fuentes y prompts](docs/ART.md).
+La raíz se publica directamente: sin backend ni build. Las rutas relativas funcionan en dominio propio y en `/lifesim/`. Se mantienen `CNAME`, `robots.txt`, `sitemap.xml`, `ads.txt`, verificación de Google y `.nojekyll`. La rama **lifesim-v3-card-first** queda para revisión; no se integra automáticamente en `main`.
 
-La configuración publicitaria está en `data/ads.js`. El publisher real se conserva; añade IDs válidos de unidades y activa `enabled` para utilizar los espacios de bienvenida/final. Los IDs de ejemplo anteriores no se ejecutan.
+Los anuncios siguen configurables en `data/ads.js`, únicamente en inicio y final. No hay anuncios entre decisiones. Los slots permanecen desactivados hasta configurar unidades válidas.
 
-Simulación ficticia para entretenimiento. Las cantidades, probabilidades y profesiones son mecánicas de juego.
+[Arquitectura](docs/ARCHITECTURE.md) · [Arte y prompts V3](docs/ART-V3.md) · [Arte del protagonista](docs/ART.md).
+
+Límites: guardado local sin sincronización entre pestañas/dispositivos, sin PWA, retratos estáticos sin expresiones alternativas y tiempo medido en meses/años. Las rutinas pueden repetirse tras su enfriamiento. La siguiente iteración recomendada es probar el ritmo con jugadores y ampliar las ramas que eligen menos, especialmente en la vejez.

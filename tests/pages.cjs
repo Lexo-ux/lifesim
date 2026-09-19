@@ -35,13 +35,13 @@ let browser;
     if (r.status() >= 400) failures.push(`${r.status()}: ${r.url()}`);
   });
   await page.goto(base);
-  await page.getByRole("button", { name: "Sorpréndeme" }).click();
-  await page.locator("[data-action=choice]").first().click();
-  await page.getByRole("button", { name: "Vivir otro año" }).click();
+  await page.getByRole("button", { name: "Vida al azar" }).click();
+  await page.locator("[data-action=choose]").first().click();
+  await page.waitForSelector("[data-card=first_steps]");
   await page.evaluate(() => document.fonts.ready);
   assert.ok(
     await page
-      .locator(".scene-character img")
+      .locator(".npc-portrait")
       .evaluate((img) => img.complete && img.naturalWidth > 0),
   );
   for (const file of [
