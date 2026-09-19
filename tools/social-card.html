@@ -65,16 +65,19 @@
         height: 510px;
         flex-shrink: 0;
         border-radius: 24px;
-        background: url("../assets/backgrounds/neighborhood.webp") center/cover;
+        background:
+          linear-gradient(transparent, #101a30),
+          url("../assets/backgrounds/park.webp") center/cover;
         display: flex;
         align-items: flex-end;
         justify-content: center;
-        padding-bottom: 53px;
+        padding-bottom: 0;
         gap: 5px;
         box-shadow: inset 0 0 0 5px #ffffff55;
       }
       .world img {
-        height: 255px;
+        width: 100%;
+        height: auto;
         filter: drop-shadow(0 8px 4px #1e352d55);
       }
       .world img + img {
@@ -84,16 +87,13 @@
   </head>
   <body>
     <div class="copy">
-      <div class="brand"><img src="../favicon.svg" alt="" />LifeSim</div>
-      <h1>Una vida.<br />Mil <em>posibilidades.</em></h1>
-      <p>Tu vida, tus decisiones.<br />Escribe una historia irrepetible.</p>
+      <div class="brand"><img src="../favicon.svg" alt="" />LifeSim III</div>
+      <h1>Una vida.<br />Miles de <em>decisiones.</em></h1>
+      <p>Una persona. Una tarjeta.<br />El resto depende de ti.</p>
       <div class="link">LIFESIM.DPDNS.ORG · JUEGA GRATIS</div>
     </div>
     <div class="world">
-      <img src="../assets/characters/0-young.webp" alt="" /><img
-        src="../assets/characters/1-young.webp"
-        alt=""
-      />
+      <img src="../assets/npcs/vera.webp" alt="" />
     </div>
   </body>
 </html>
