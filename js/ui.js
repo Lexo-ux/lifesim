@@ -24,6 +24,7 @@ import { load, save, reset } from "./storage.js";
 import { icon } from "./icons.js";
 import { sound } from "./audio.js";
 import { mountAd } from "./ads.js";
+import { mountDecisionDeck } from "./decision-deck.js";
 
 const app = document.querySelector("#app"),
   modal = document.querySelector("#modal");
@@ -100,8 +101,8 @@ function persist() {
 }
 function shell(content) {
   const s = data.state;
-  app.innerHTML = `<aside class="sidebar"><a href="./" class="brand" aria-label="LifeSim, inicio">${icon("sprout")}<span>Life<span class="brand-light">Sim</span><small>EL ARTE DE VIVIR</small></span></a>
-    <p class="nav-caption">TU PEQUEÑO UNIVERSO</p><nav aria-label="Navegación principal">${navItems.map(([id, label, glyph]) => `<button data-action="tab" data-value="${id}" class="nav-item ${tab === id ? "active" : ""}" ${s ? "" : "disabled"} ${tab === id && s ? 'aria-current="page"' : ""}>${icon(glyph)}<span>${label}</span>${id === "life" && s?.alive && !s.eventDone ? '<i class="nav-dot"></i>' : ""}</button>`).join("")}</nav>
+  app.innerHTML = `<aside class="sidebar"><a href="./" class="brand" aria-label="LifeSim, inicio">${icon("sprout")}<span>Life<span class="brand-light">Sim</span><small>TU VIDA. TUS REGLAS.</small></span></a>
+    <p class="nav-caption">ELIGE TU PRÓXIMO CAPÍTULO</p><nav aria-label="Navegación principal">${navItems.map(([id, label, glyph]) => `<button data-action="tab" data-value="${id}" class="nav-item ${tab === id ? "active" : ""}" ${s ? "" : "disabled"} ${tab === id && s ? 'aria-current="page"' : ""}>${icon(glyph)}<span>${label}</span>${id === "life" && s?.alive && !s.eventDone ? '<i class="nav-dot"></i>' : ""}</button>`).join("")}</nav>
     <div class="sidebar-bottom"><div class="legacy-teaser">${icon("trophy")}<span>Tu legado<strong>${data.meta.unlocked.length} / ${ACHIEVEMENTS.length} logros</strong></span></div>${btn(`${icon("settings")} Ajustes`, "settings", "", "nav-item")}<div class="version"><span>Hecho para vivirlo.</span><span>v2.0</span></div></div></aside>
     <div class="app-body"><header class="topbar"><div class="breadcrumb"><span>LifeSim</span>${icon("chevron")}<strong>${s ? navItems.find((n) => n[0] === tab)[1] : "Tu próxima historia"}</strong></div><div class="top-actions"><span class="save-status ${!saved ? "unsaved" : ""}"><i></i>${saved ? (s ? "Partida guardada" : "Sin prisa. A tu ritmo.") : "Guardado no disponible"}</span>${btn(icon(data.settings.sound ? "volume" : "mute"), "sound", "", "icon-button sound-toggle")}${btn(icon("settings"), "settings", "", "icon-button mobile-settings")}</div></header>
     <main id="main" class="main" tabindex="-1">${content}</main><footer class="footer"><span>Una vida. Mil posibilidades.</span><span>Simulación ficticia · Tu partida vive en este navegador</span></footer></div>`;
@@ -134,12 +135,13 @@ function render(focus = false) {
     );
   if (focus)
     document.querySelector("#page-title")?.focus({ preventScroll: true });
+  mountDecisionDeck(app, (value) => perform("choice", value), toast);
   if (!s || (!s.alive && tab === "life"))
     mountAd(s ? "ending" : "welcome", document.querySelector("#main"));
 }
 function landing() {
   return `<section class="welcome"><div class="welcome-copy"><span class="eyebrow">UN SIMULADOR DE VIDA, A TU MANERA</span><h1 id="page-title" tabindex="-1">Una vida.<br>Mil <em>posibilidades.</em></h1><p>Los grandes momentos empiezan con pequeñas decisiones. Encuentra tu camino, cuida a tu gente y construye una historia que solo puede ser tuya.</p><div class="welcome-buttons">${btn(`Empezar mi historia ${icon("arrow")}`, "creator", "", "button primary large")}${btn(`${icon("dice")} Sorpréndeme`, "random", "", "button text-button")}</div><div class="welcome-facts"><span>${icon("check")} Gratis y sin registro</span><span>${icon("clock")} Juega a tu ritmo</span></div></div>
-    <div class="welcome-art"><div class="art-tag">${icon("sun")} UN NUEVO DÍA EN TU MUNDO</div><div class="welcome-characters">${sprite(0, "young")}${sprite(1, "young")}</div><div class="art-note"><span class="little-star">✦</span><div>El futuro está abierto.<small>¿Qué historia vas a escribir?</small></div></div></div></section>
+    <div class="welcome-art"><div class="art-tag">${icon("spark")} LA CIUDAD NO DEJA DE SOÑAR</div><div class="welcome-characters">${sprite(0, "young")}${sprite(1, "young")}</div><div class="art-note"><span class="little-star">✦</span><div>El futuro está abierto.<small>¿Qué historia vas a escribir?</small></div></div></div></section>
     <div class="intro-strip"><div><span class="step-number">01</span><h3>Elige tu camino</h3><p>Cada año trae una decisión y tiempo para lo que te importa.</p></div><div><span class="step-number">02</span><h3>Mira cómo cambia todo</h3><p>Las elecciones de hoy pueden volver a encontrarte años después.</p></div><div><span class="step-number">03</span><h3>Deja tu huella</h3><p>Una carrera, una familia, un sueño. Ninguna vida es igual a otra.</p></div></div>
     ${data.meta.lives ? `<div class="return-banner">${icon("trophy")}<p>Ya empezaste <strong>${data.meta.lives} vidas</strong>. Tu récord: <strong>${data.meta.longest} años</strong>. Todavía quedan historias por descubrir.</p></div>` : ""}${data.warning ? `<p class="notice">${esc(data.warning)}</p>` : ""}`;
 }
@@ -177,7 +179,7 @@ function eventCard(s) {
   const e = currentEvent(s);
   if (s.eventDone)
     return `<section class="event-card resolved"><div class="event-label">${icon("check")} DECISIÓN TOMADA ${badge("Tu historia avanza")}</div><h2>${esc(s.result?.title || "Un paso más en tu camino")}</h2><p>${esc(s.result?.text || "Ya puedes dedicar tiempo a tus actividades.")}</p>${s.result?.delayed ? `<div class="memory-note">${icon("clock")} Algunas decisiones siguen creciendo con los años.</div>` : ""}<div class="next-hint">${icon("arrow")} Dedica tiempo a lo que te importa y avanza al siguiente año.</div></section>`;
-  return `<section class="event-card"><div class="event-label">${icon(e.icon)} ${esc(e.category.toUpperCase())}${badge("DECISIÓN DEL AÑO", "event-pill")}</div><h2>${esc(e.title)}</h2><p>${esc(e.text)}</p><div class="choices">${e.choices
+  return `<section class="event-card decision-deck" aria-label="Tarjeta de decisión"><div class="swipe-surface" tabindex="0" role="group" aria-label="Desliza o usa las flechas: izquierda para la opción A, derecha para la opción B" aria-describedby="swipe-help"><div class="event-label">${icon(e.icon)} ${esc(e.category.toUpperCase())}${badge("DECISIÓN DEL AÑO", "event-pill")}</div><div class="decision-art" aria-hidden="true"><span>${icon(e.icon)}</span><b>${String(s.age).padStart(2, "0")}<small>AÑOS · TU HISTORIA</small></b><i>¿Y AHORA QUÉ?</i></div><h2>${esc(e.title)}</h2><p>${esc(e.text)}</p><div class="swipe-stamp stamp-left" aria-hidden="true">← OPCIÓN A</div><div class="swipe-stamp stamp-right" aria-hidden="true">OPCIÓN B →</div></div><p id="swipe-help" class="swipe-help">${icon("spark")} Desliza la tarjeta: ← A · B → o pulsa tu decisión.</p><div class="choices">${e.choices
     .map((c, i) => {
       const reason = choiceReason(s, c);
       const hint =
@@ -187,7 +189,7 @@ function eventCard(s) {
               `${Math.round(Math.min(0.95, c.chance + 0.15) * 100)}%`,
             )
           : c.hint;
-      return `<button class="choice" data-action="choice" data-value="${i}" ${reason ? "disabled" : ""}><span class="choice-letter">${String.fromCharCode(65 + i)}</span><span><strong>${esc(c.text)}</strong><small>${esc(reason || hint)}</small></span>${icon(reason ? "lock" : "arrow")}</button>`;
+      return `<button class="choice" data-action="choice" data-value="${i}" ${reason ? "disabled" : ""}><span class="choice-letter">${i === 0 ? "← A" : i === 1 ? "B →" : String.fromCharCode(65 + i)}</span><span><strong>${esc(c.text)}</strong><small>${esc(reason || hint)}</small></span>${icon(reason ? "lock" : "arrow")}</button>`;
     })
     .join(
       "",

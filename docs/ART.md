@@ -1,26 +1,26 @@
 # Dirección artística y recursos
 
-Arte nuevo generado con la herramienta integrada de generación de imágenes, sin API externa ni claves. El estilo combina pixel art moderno y personajes 2D expresivos con una paleta de terracota, crema, verde y azul. Los recursos esenciales viven en el proyecto.
+Pixel art urbano nocturno: personajes humanos de proporciones naturales, expresiones sobrias y ropa cotidiana. Paleta de azul eléctrico, rojo coral e índigo sobre fondos oscuros. Recursos generados con la herramienta integrada de imágenes, sin API externa ni claves. Todos los assets viven en el proyecto.
 
 ## Recursos finales
 
 - `assets/characters/0-{baby,child,teen,young,adult,elder}.webp`: apariencia de cabello corto en seis etapas.
 - `assets/characters/1-{baby,child,teen,young,adult,elder}.webp`: apariencia de cabello largo en seis etapas.
-- `assets/backgrounds/neighborhood.webp`: escenario del barrio.
-- `favicon.svg` y `js/icons.js`: marca e iconos SVG creados para la interfaz.
-- `og-image.png`: tarjeta social de 1200 × 630, renderizada desde `tools/social-card.html` con los recursos locales.
-- `assets/fonts/`: Outfit y DM Sans variables, distribuidas bajo SIL Open Font License, con licencias adyacentes.
+- `assets/backgrounds/neighborhood.webp`: plaza urbana al anochecer.
+- `favicon.svg` y `js/icons.js`: marca e iconos SVG.
+- `og-image.png`: tarjeta social renderizada desde `tools/social-card.html` con los nuevos recursos locales.
+- `assets/fonts/`: Outfit y DM Sans, con sus licencias SIL OFL.
 
-El atlas original se dividió en celdas, se recortaron márgenes transparentes y se exportó a WebP con alpha conservado. El escenario se optimizó a 1440 px. `tools/prepare-assets.cjs` reproduce esa preparación si se proporcionan los dos PNG originales. Los sprites anteriores se sustituyen, sin ampliaciones ni filtros que simulen un reemplazo.
+`tools/prepare-assets.cjs` extrae las doce siluetas del atlas de 1536 × 1024, ajustando los márgenes para conservar los codos; recorta el espacio vacío, conserva la transparencia y comprime a WebP. El fondo se exporta a 1440 px. Los sprites anteriores se reemplazaron por dibujos nuevos.
 
 ## Prompt del atlas
 
-```
-Use case: stylized-concept. Asset type: production game character atlas for LifeSim. Create exactly 12 full-body character sprites on a transparent background, arranged precisely in a uniform 6-column by 2-row grid, equal rectangular cells. Canvas landscape 1536x1024. Top row: one recognizable warm tan skin brown short wavy haired male character aging across SIX stages left to right: seated baby, child age 8, teenager age 15, young adult age 24, mature adult age 45, elder age 75 with gray hair and glasses. Bottom row: warm brown skin dark long wavy haired female character aging across same six stages. Each character completely within its own cell, centered horizontally, feet on consistent baseline within each row, ample transparent space between characters. Modern premium cozy indie game pixel art, expressive friendly faces with readable eyes, crisp pixel clusters, sophisticated shading, charming slightly oversized heads, clear silhouettes, warm terracotta mustard teal forest green clothes, subtle light highlights. Clothes evolve appropriately with age; continuity in facial identity and hair. Full body, front facing slight three quarter view. NO text, NO labels, NO cell borders, NO shadows behind characters, NO scene, NO props outside cells. Real transparent alpha background. This is one atlas asset, not separate images.
+```text
+Use case: stylized-concept. Asset type: production pixel-art character sprite atlas for LifeSim web game. Create a single transparent PNG sprite sheet, landscape 1536x1024, exactly TWO ROWS and SIX equal 256px wide columns, each isolated sprite entirely within its cell with wide transparent gutters, NO labels, no grid, no floor. Row 1 is the same male human across ages, row 2 is the same female human across ages. Columns left to right: seated baby age1, standing child age8, teenager age16, young adult age25, middle aged adult age48, elderly age78. Same warm medium skin, dark brown hair gradually grey in elder, distinctive facial structure consistent within each row. Modern handmade pixel art as a grounded 1990s adventure game, clear square pixel clusters, limited 24 color palette, hard pixel edges, no smooth rendering. Human realistic proportions: adults 7 heads tall, small eyes, natural noses, expressive subtle faces, ordinary believable people, NO chibi, NO giant eyes, NO rounded oversized heads, NO Disney or Pixar aesthetic, NO 3D, NO anime, NO storybook. Casual urban clothes with vivid cobalt jackets and coral red accents; male short textured hair, female straight shoulder length hair. Each adult sprite about 130 wide x 370 high within its 256x512 cell, all feet align 45px above bottom of each row, babies smaller naturally. Front three-quarter view, full body head to shoes, relaxed poses, balanced arms. Actual transparent background and crisp silhouettes required.
 ```
 
 ## Prompt del escenario
 
-```
-Use case: stylized-concept. Asset type: wide background environment for a cozy life simulation web game. Premium modern pixel art with intricate crisp pixel clusters and warm painterly light. A beautiful walkable Latin American hillside neighborhood in the morning, teal and sage leafy trees, terracotta roofs, cream houses with balconies and tiny plants, faraway rolling hills and pastel blue sky with soft clouds. Foreground grassy park with a warm sandstone footpath across the bottom third, bench on left, flowers and a bicycle on right, open empty central foreground space to overlay a character. Eye-level perspective, broad horizontal 1536x1024 composition, serene playful atmospheric indie game art, welcoming and richly detailed but readable, warm sunlight from upper left. No people, no text, no logos, no watermarks. This is a real game environment asset, not a screenshot or UI.
+```text
+Use case: stylized-concept. Production background asset for a grounded pixel art life simulation web game. Wide landscape 1536x1024. A modern Latin American neighborhood at blue hour after sunset, eye-level view across a quiet plaza and pedestrian pavement, modest brick apartments, corner cafe with red neon strip (no readable text), blue lit windows, street lamps, potted plants, distant city skyline. Strong crisp square pixel clusters like a detailed 1990s point and click adventure game, limited saturated palette of midnight navy, indigo, electric blue and warm coral red with small amber lights. Human-scale believable architecture, cinematic but welcoming everyday place. Center lower half an open dark paved plaza where the game overlays character sprites, background perspective natural. No people, no cars in foreground, no lettering, no logos, no UI, no Disney or Pixar style, no fantasy cottages, no soft painted storybook effect. Pixel art texture throughout, sharp hard edges, no blur.
 ```

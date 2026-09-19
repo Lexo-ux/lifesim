@@ -14,6 +14,7 @@ El recorrido comprueba:
 
 - Crear una vida con nombre y apariencia; generar una vida aleatoria.
 - Decisiones, actividades y transición a infancia.
+- Tarjetas: deslizamiento izquierdo/derecho, arrastres cortos, cancelación vertical, flechas de teclado, botones, movimiento reducido y persistencia del resultado (`tests/decision-deck.cjs`).
 - Recargar y recuperar exactamente el estado guardado.
 - Navegar por Vida, Trabajo, Relaciones, Dinero y Perfil.
 - Ahorrar, visitar familia y consultar el historial con teclado.

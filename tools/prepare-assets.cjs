@@ -9,14 +9,16 @@ async function run() {
   await fs.mkdir("assets/characters", { recursive: true });
   await fs.mkdir("assets/backgrounds", { recursive: true });
   const stages = ["baby", "child", "teen", "young", "adult", "elder"];
+  // Gutters follow the final atlas silhouettes; the young adult's elbow crosses x=768.
+  const edges = [0, 256, 500, 740, 1005, 1280, 1536];
   for (let row = 0; row < 2; row++)
     for (let col = 0; col < 6; col++) {
       const cell = await sharp(atlas)
         .extract({
-          left: col * 256,
-          top: row ? 518 : 0,
-          width: 256,
-          height: row ? 506 : 518,
+          left: edges[col],
+          top: row * 512,
+          width: edges[col + 1] - edges[col],
+          height: 512,
         })
         .png()
         .toBuffer();
