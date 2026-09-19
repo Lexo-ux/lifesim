@@ -58,7 +58,7 @@ export function finishLife(s, reason) {
     "leaf",
   );
 }
-export function advanceYear(s) {
+export function advanceYear(s, { draw = true } = {}) {
   if (!s.eventDone) return "Antes de avanzar, toma la decisión de este año.";
   const previousStage = stage(s).id;
   settleYear(s);
@@ -109,7 +109,7 @@ export function advanceYear(s) {
   s.used = [];
   s.stats.energy = Math.max(40, 100 - Math.round(s.stats.stress * 0.45));
   apply(s, { stress: -10 });
-  drawEvent(s);
+  if (draw) drawEvent(s);
   return null;
 }
 // All UI mutations pass through this guard so locked screens cannot bypass rules.
