@@ -100,10 +100,13 @@ export function interact(s, action, id) {
   return null;
 }
 export function relationshipsYear(s) {
-  s.relationships.forEach(
-    (r) => { if (!r.deceased) r.bond = clamp(r.bond - (s.traits.includes("social") ? 2 : 4)); },
+  s.relationships.forEach((r) => {
+    if (!r.deceased)
+      r.bond = clamp(r.bond - (s.traits.includes("social") ? 2 : 4));
+  });
+  const partner = s.relationships.find(
+    (r) => r.type === "partner" && !r.deceased,
   );
-  const partner = s.relationships.find((r) => r.type === "partner" && !r.deceased);
   if (partner && partner.bond < 12) {
     partner.type = "ex";
     apply(s, { happiness: -16, stress: 10 });
