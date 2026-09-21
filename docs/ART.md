@@ -1,3 +1,5 @@
+> **LEGACY VISUAL ASSETS — registro histórico de producción.** La dirección vigente está en [ART_DIRECTION](ART_DIRECTION.md). Este documento conserva la procedencia original; no define el estilo final de Task 03.
+
 # Dirección artística y recursos
 
 La presentación V3 añade retratos de NPCs, variantes por edad y nuevos contextos; ver [arte de V3](ART-V3.md). Este documento conserva los prompts del protagonista y del barrio que siguen utilizándose.

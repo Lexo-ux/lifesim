@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>LifeSim — revisión de arte Task 03</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+      body {
+        padding: 24px;
+        background: var(--bg);
+      }
+      header,
+      main {
+        max-width: 1400px;
+        margin: auto;
+      }
+      header {
+        margin-bottom: 28px;
+      }
+      h1 {
+        font-size: 32px;
+        margin-bottom: 12px;
+      }
+      header p {
+        max-width: 760px;
+        color: var(--muted);
+      }
+      main {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+        gap: 24px;
+      }
+      figure {
+        margin: 0;
+      }
+      .study {
+        height: 500px;
+      }
+      .portrait-window {
+        background-image: url("../assets/backgrounds/bg_park_normal_v1.webp");
+      }
+      .npc-portrait {
+        image-rendering: auto;
+        height: 100%;
+      }
+      .dialogue {
+        min-height: 105px;
+      }
+      figcaption {
+        font: 12px/1.6 var(--body);
+        color: var(--muted);
+        margin-top: 12px;
+      }
+      .environment {
+        width: 100%;
+        display: block;
+      }
+      footer {
+        margin-top: 24px;
+      }
+      .narrative-card {
+        cursor: default;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="eyebrow">DESARROLLO · TASK 03</p>
+      <h1>Tinta, personas y memoria.</h1>
+      <p>
+        Estudios de dirección artística. Vera adulta y el parque están
+        integrados; los protagonistas y la figura Despertada son candidatos, sin
+        identidad histórica, rango ni mecánicas nuevas.
+      </p>
+    </header>
+    <main>
+      <figure>
+        <article class="narrative-card study">
+          <div class="portrait-window">
+            <img
+              class="npc-portrait"
+              src="../assets/characters/player_study_young_neutral_v1.webp"
+              alt="Estudio de protagonista joven, abrigo de grafito y camisa clara"
+            />
+            <div class="speaker">
+              <p>Estudio de identidad</p>
+              <h2>Juventud</h2>
+            </div>
+          </div>
+          <div class="dialogue">
+            <p>Un rostro humano antes de cualquier destino.</p>
+          </div>
+        </article>
+        <figcaption>
+          Candidato. La familia completa de seis edades sigue pendiente.
+        </figcaption>
+      </figure>
+      <figure>
+        <article class="narrative-card study">
+          <div class="portrait-window">
+            <img
+              class="npc-portrait"
+              src="../assets/characters/player_study_elder_neutral_v1.webp"
+              alt="La misma identidad con cabello canoso y arrugas"
+            />
+            <div class="speaker">
+              <p>Continuidad de identidad</p>
+              <h2>Vejez</h2>
+            </div>
+          </div>
+          <div class="dialogue">
+            <p>El tiempo cambia el rostro; permanece la persona.</p>
+          </div>
+        </article>
+        <figcaption>
+          Candidato. Requiere profundizar el envejecimiento antes del catálogo
+          final.
+        </figcaption>
+      </figure>
+      <figure>
+        <article class="narrative-card study">
+          <div class="portrait-window">
+            <img
+              class="npc-portrait"
+              src="../assets/npcs/npc_vera_neutral_v1.webp"
+              alt="Vera con cabello rizado y sudadera roja apagada"
+            />
+            <div class="speaker">
+              <p>Vida cotidiana</p>
+              <h2>Vera</h2>
+            </div>
+          </div>
+          <div class="dialogue">
+            <p>Ropa, expresión y una decisión por tomar.</p>
+          </div>
+        </article>
+        <figcaption>
+          Piloto activo: adulta 19–59. Otras edades aún usan retratos legacy.
+        </figcaption>
+      </figure>
+      <figure>
+        <article class="narrative-card study strange">
+          <div class="portrait-window">
+            <img
+              class="npc-portrait"
+              src="../assets/npcs/npc_awakened_study_neutral_v1.webp"
+              alt="Persona con ropa moderna y una pequeña refracción de luz sobre la mano"
+            />
+            <div class="speaker">
+              <p>Ejemplo visual no canónico</p>
+              <h2>Lo extraño</h2>
+            </div>
+          </div>
+          <div class="dialogue">
+            <p>Una luz que no pertenece al espacio cotidiano.</p>
+          </div>
+        </article>
+        <figcaption>
+          Solo estudio visual: ningún personaje, poder o rango añadido al juego.
+        </figcaption>
+      </figure>
+      <figure>
+        <img
+          class="environment"
+          src="../assets/backgrounds/bg_park_normal_v1.webp"
+          alt="Parque de barrio al anochecer, banco, árboles y edificios modernos"
+        />
+        <figcaption>
+          Parque · estado normal · piloto activo. Variantes de mundo
+          documentadas, no implementadas.
+        </figcaption>
+      </figure>
+    </main>
+    <footer><a href="../index.html">Abrir el juego</a></footer>
+  </body>
+</html>

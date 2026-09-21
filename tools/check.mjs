@@ -50,7 +50,6 @@ for (const f of [
 for (const appearance of [0, 1])
   for (const stage of ["baby", "child", "teen", "young", "adult", "elder"])
     await fs.access(`assets/characters/${appearance}-${stage}.webp`);
-const css = await fs.readFile("style.css", "utf8");
 for (const id of Object.keys(NPCS)) await fs.access(`assets/npcs/${id}.webp`);
 for (const id of [
   "vera-child",
@@ -67,8 +66,22 @@ for (const id of BACKGROUNDS)
   await fs.access(
     `assets/backgrounds/${id === "street" ? "neighborhood" : id}.webp`,
   );
-for (const match of css.matchAll(/url\(['"]?([^)'" ]+)/g))
-  await fs.access(path.resolve(match[1]));
+// Follow relative imports and asset URLs from each stylesheet's own directory.
+const visitedStyles = new Set();
+async function checkStyles(file) {
+  if (visitedStyles.has(file)) return;
+  visitedStyles.add(file);
+  const css = await fs.readFile(file, "utf8");
+  for (const match of css.matchAll(/url\(['"]?([^)'" ]+)/g)) {
+    if (/^(?:data:|https?:)/.test(match[1])) continue;
+    const target = path.resolve(path.dirname(file), match[1]);
+    await fs.access(target);
+    if (target.endsWith(".css")) await checkStyles(target);
+  }
+}
+await checkStyles(path.resolve("style.css"));
+const art = JSON.parse(await fs.readFile("assets/art-direction.json", "utf8"));
+for (const asset of art.assets) await fs.access(asset.path);
 console.log(
   `Syntax OK: ${files.length} modules. Entry points, 12 life sprites, 20 NPC portraits, 7 backgrounds and publication files OK.`,
 );

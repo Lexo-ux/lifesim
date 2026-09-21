@@ -17,7 +17,11 @@ import {
 } from "./screens.js";
 import { esc, button, icon } from "./helpers.js";
 import { mountSwipe } from "./swipe.js";
-import { leaveCard, transitionMoment } from "./transitions.js";
+import {
+  leaveCard,
+  transitionMoment,
+  clearMomentFeedback,
+} from "./transitions.js";
 import { animateIndicators } from "./indicators.js";
 
 const data = load(),
@@ -46,6 +50,7 @@ function persist() {
 }
 function render(focus = false) {
   cleanup();
+  clearMomentFeedback();
   document.body.classList.toggle(
     "playing",
     screen === "play" && data.state?.alive,

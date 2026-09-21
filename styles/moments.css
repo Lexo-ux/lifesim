@@ -1,0 +1,216 @@
+/* The illustration is a scene; the pale lower edge is a written memory. */
+.card-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin: var(--space-2) 0 var(--space-4);
+  isolation: isolate;
+}
+.deck-shadow {
+  position: absolute;
+  inset: 6px 5px -6px;
+  background: #3c443e url("../assets/ui/paper-grain.svg");
+  border: 1px solid #656d65;
+  border-radius: var(--radius-card);
+  transform: rotate(-1deg);
+  opacity: 0.65;
+}
+.narrative-card {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-card);
+  border: 1px solid #727770;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  cursor: grab;
+  transform: translateX(var(--x, 0px)) rotate(var(--rotation, 0deg));
+  transform-origin: 50% 80%;
+  transition: transform var(--motion-standard) var(--ease-settle);
+  animation: card-in var(--motion-deliberate) var(--ease-settle) both;
+}
+.narrative-card.dragging {
+  transition: none;
+  box-shadow: var(--shadow-raised);
+  cursor: grabbing;
+}
+.portrait-window {
+  position: relative;
+  flex: 1;
+  min-height: 80px;
+  overflow: hidden;
+  background:
+    linear-gradient(#10171918, #10171940),
+    var(--scene) center/cover;
+}
+.portrait-window:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-moment);
+  background: linear-gradient(transparent 50%, #10171966 72%, #101719ed 100%);
+  pointer-events: none;
+}
+.npc-portrait {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 96%;
+  width: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  image-rendering: pixelated;
+  z-index: var(--z-character);
+}
+.npc-portrait.self-portrait {
+  height: 86%;
+  bottom: 26px;
+}
+.npc-portrait.illustrated {
+  image-rendering: auto;
+  height: 130%;
+  width: 100%;
+  bottom: -30%;
+  object-fit: cover;
+  object-position: center top;
+}
+.card-corner {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: var(--z-fx);
+  color: var(--spectral-ivory);
+  opacity: 0.8;
+}
+.card-corner .icon {
+  width: 17px;
+  height: 17px;
+}
+.speaker {
+  position: absolute;
+  bottom: 16px;
+  left: 20px;
+  right: 20px;
+  z-index: var(--z-fx);
+  text-align: left;
+}
+.speaker h1 {
+  font-size: 31px;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+}
+.speaker p {
+  font-size: 10px;
+  letter-spacing: 1.1px;
+  margin-bottom: 5px;
+  color: var(--text-primary);
+}
+.dialogue {
+  position: relative;
+  padding: 22px 24px 24px;
+  min-height: 116px;
+  flex-shrink: 0;
+  color: var(--text-on-paper);
+  background: var(--surface-paper) url("../assets/ui/paper-grain.svg");
+  border-top: 3px double #b8b39f;
+}
+.dialogue:before {
+  content: "";
+  display: block;
+  width: 26px;
+  height: 1px;
+  margin-bottom: 10px;
+  background: #7e8274;
+}
+.dialogue p {
+  font: 17px/1.48 var(--font-story);
+  text-wrap: pretty;
+}
+.decision-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.decision {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 56px;
+  padding: 12px;
+  font-size: 12px;
+  text-align: left;
+  background: #292a29;
+  border: 1px solid #6b6961;
+  border-radius: var(--radius-control);
+  transition:
+    background var(--motion-fast),
+    transform var(--motion-fast);
+}
+.decision .icon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+.decision.left .icon {
+  rotate: 180deg;
+}
+.decision.right {
+  background: #202d30;
+  border-color: #5e7c7e;
+}
+.decision:hover {
+  background: var(--surface-hover);
+}
+.decision:active {
+  transform: translateY(2px);
+}
+.choice-preview {
+  position: absolute;
+  top: 24px;
+  max-width: calc(100% - 96px);
+  padding: 12px 16px;
+  color: var(--text-on-paper);
+  background: var(--surface-paper) url("../assets/ui/paper-grain.svg");
+  font: 600 20px/1.2 var(--font-display);
+  border: 1px solid #8a9286;
+  box-shadow: 0 5px 12px #0004;
+  opacity: 0;
+  z-index: var(--z-fx);
+  pointer-events: none;
+}
+.preview-left {
+  right: 18px;
+  transform: rotate(-3deg);
+}
+.preview-right {
+  left: 18px;
+  transform: rotate(3deg);
+}
+.preview-left:before {
+  content: "← ";
+}
+.preview-right:after {
+  content: " →";
+}
+[data-direction="left"] .preview-left,
+[data-direction="right"] .preview-right {
+  opacity: var(--strength, 0);
+}
+.strange {
+  border-color: var(--convergence);
+}
+.strange .dialogue {
+  border-top-color: #779a98;
+  background-color: #dfe5d8;
+}
+.strange .card-corner {
+  border-bottom: 1px solid currentColor;
+  transform: skewY(-12deg);
+}

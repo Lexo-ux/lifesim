@@ -50,4 +50,4 @@ Use meaningful tests for changed contracts; do not add fake tests. Update techni
 
 ## Git
 
-Inspect status and recent history first; preserve other work. Use the branch explicitly requested by the task (Task 02: `codex/world-bible`), otherwise a `codex/` feature branch. Make descriptive commits. Never merge into `main` unless the user explicitly authorizes that action. Stop at the task boundary: Task 02 does not start Task 03 or implement future gameplay.
+Inspect status and recent history first; preserve other work. Use the branch explicitly requested by the task (Task 03: `codex/art-direction-motion`), otherwise a `codex/` feature branch. Make descriptive commits. Never merge into `main` unless the user explicitly authorizes that action. Stop at the task boundary: Task 03 does not start Task 04 or implement future gameplay. Read docs/ART_DIRECTION.md, docs/DESIGN_SYSTEM.md and docs/MOTION.md before changing presentation. Existing character assets remain legacy until their complete identity/age family is validated.

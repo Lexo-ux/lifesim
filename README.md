@@ -2,7 +2,7 @@
 
 Juego narrativo web en español: una persona, un Moment y dos respuestas. Desliza, arrastra, usa las flechas o pulsa una decisión; el tiempo avanza al elegir. La simulación de educación, carrera, economía y vínculos continúa detrás de la historia.
 
-**Estado:** V3 jugable sobre la arquitectura de Task 01. Hay 130 Moments binarios, doce NPCs recurrentes y seis etapas del protagonista. Task 02 establece la biblia del mundo futuro en `/lore`; sus sistemas todavía no están implementados y el contenido V3 se conserva.
+**Estado:** V3 jugable con dirección visual y movimiento de Task 03, sobre la arquitectura de Task 01. Hay 130 Moments binarios, doce NPCs recurrentes y seis etapas del protagonista. Task 02 establece la biblia del mundo futuro en `/lore`; sus sistemas todavía no están implementados y el contenido V3 se conserva.
 
 ## Ejecutar
 
@@ -31,6 +31,7 @@ content/
   legacy/        Eventos V2 necesarios
   catalog.js     Catálogos de simulación
 assets/          Recursos finales locales
+styles/          Tokens, superficies, Moments, motion y responsive estáticos
 lore/            Canon futuro y reservas explícitas de Task 02
 docs/            Arquitectura y desarrollo
 tests/           Reglas, simulaciones y navegador
@@ -53,7 +54,7 @@ En Windows se puede usar Edge instalado: `$env:BROWSER_CHANNEL='msedge'; npm run
 
 ## Desarrollo y documentación
 
-Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 02 usa `codex/world-bible`; no se fusiona automáticamente con main ni inicia Task 03.
+Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 03 usa `codex/art-direction-motion`; no se fusiona automáticamente con main ni inicia Task 04.
 
 - [Estado real: implementado y planificado](docs/CURRENT_STATE.md)
 - [Arquitectura](docs/ARCHITECTURE.md) · [Desarrollo y pruebas](docs/DEVELOPMENT.md)
@@ -67,3 +68,7 @@ Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; n
 Guardado local en `lifesim.v3`, importación compatible desde V2 sin borrar su original. Task 01 no cambia claves, versiones, contenido ni mecánicas. Reiniciar requiere confirmación. No hay cloud saves, sincronización entre pestañas, PWA ni analítica nueva.
 
 GitHub Pages sirve la raíz; rutas relativas compatibles con `/lifesim/` y el dominio `lifesim.dpdns.org`. Se preservan CNAME, SEO, verificación, ads.txt y metadata. El workflow verifica el juego sin desplegar ni fusionar ramas. Anuncios configurables en `src/config/ads.js`, desactivados por defecto y limitados a inicio/final.
+
+## Dirección visual — Task 03
+
+[Arte](docs/ART_DIRECTION.md), [sistema de diseño](docs/DESIGN_SYSTEM.md), [movimiento](docs/MOTION.md), [procedencia y prompts](docs/ASSET_PROVENANCE.md), [checklist visual](docs/VISUAL_QA.md). El piloto incorpora Vera adulta y el parque ilustrado; el resto del catálogo gráfico sigue identificado como legacy. `tools/art-review.html` permite comparar los cinco estudios fuera del flujo del juego. Task 04 será la pantalla del Umbral y la entrada a una vida; no está implementada.

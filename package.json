@@ -10,7 +10,7 @@
     "validate:content": "node tools/validate-content.mjs",
     "debug:life": "node tools/debug-life.mjs",
     "test:browser": "node tools/browser-qa.mjs",
-    "format": "prettier --write index.html style.css src content tests tools docs lore AGENTS.md README.md package.json .github/workflows"
+    "format": "prettier --write index.html style.css styles src content tests tools docs lore AGENTS.md README.md package.json .github/workflows"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

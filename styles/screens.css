@@ -1,0 +1,443 @@
+/* A quiet title screen with one clear way into the next life. */
+.landing {
+  position: relative;
+  max-width: 520px;
+  min-height: 100svh;
+  max-height: 1100px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 35px 28px 24px;
+  isolation: isolate;
+  overflow: hidden;
+}
+.landing-art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(0deg, var(--bg) 4%, #10171944 75%),
+    url("../assets/backgrounds/neighborhood.webp") center/cover;
+}
+.landing-art:after {
+  content: "";
+  position: absolute;
+  inset: 25% 0 0;
+  background: linear-gradient(transparent, var(--bg) 78%);
+}
+.landing-stranger {
+  position: absolute;
+  top: 12%;
+  right: 0;
+  width: 65%;
+  opacity: 0.15;
+  filter: grayscale(0.3);
+}
+.landing-person {
+  position: absolute;
+  height: 42%;
+  top: 11%;
+  left: 50%;
+  transform: translateX(-50%);
+  image-rendering: pixelated;
+  filter: drop-shadow(0 8px 16px #101719);
+}
+.landing-copy {
+  width: 100%;
+  text-align: center;
+  margin-top: 42vh;
+  z-index: 1;
+}
+.edition {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.landing h1 {
+  font-size: clamp(54px, 13vw, 75px);
+  font-weight: 650;
+  letter-spacing: 1px;
+  position: relative;
+}
+.landing h1 span {
+  color: var(--human-warmth);
+}
+.landing h1 sup {
+  font-size: 13px;
+  letter-spacing: 3px;
+  vertical-align: top;
+  display: inline-block;
+  margin-top: 9px;
+  margin-left: 5px;
+}
+.tagline {
+  font: 300 23px/1.35 var(--heading);
+  margin-top: 20px;
+  color: var(--ink);
+}
+.landing-actions {
+  max-width: 300px;
+  margin: 27px auto 12px;
+  display: grid;
+  gap: 10px;
+}
+.landing-nav {
+  display: flex;
+  gap: 30px;
+}
+.save-note {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 12px;
+}
+.save-note.warning {
+  color: var(--danger);
+}
+/* Secondary screens are brief, dismissible pages inside a native dialog. */
+dialog {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-overlay);
+  padding: 34px 26px 26px;
+  max-width: 440px;
+  width: calc(100% - 26px);
+  max-height: calc(100svh - 28px);
+  overflow: auto;
+  box-shadow: 0 20px 100px #0008;
+}
+dialog::backdrop {
+  background: #060c10df;
+}
+dialog[open] {
+  animation: card-in var(--motion-standard) var(--ease-settle);
+}
+.close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+}
+.close .icon {
+  width: 18px;
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+dialog > p {
+  font-size: 13px;
+  line-height: 1.7;
+}
+dialog h2 {
+  padding-right: 20px;
+}
+label {
+  font-size: 12px;
+  display: block;
+  color: var(--ink);
+}
+input,
+select {
+  display: block;
+  width: 100%;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  color: var(--ink);
+  border-radius: var(--radius-control);
+  min-height: 46px;
+  padding: 10px 12px;
+  margin-top: 7px;
+}
+select {
+  font-size: 12px;
+}
+.creation-portrait {
+  height: 175px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 22px;
+  background: radial-gradient(ellipse at bottom, #424b40, transparent 68%);
+}
+.creation-portrait > img {
+  height: 170px;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+.appearance-options {
+  position: absolute;
+  right: 10px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.appearance {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface-raised);
+}
+.appearance.selected {
+  background: var(--surface-hover);
+  border-color: var(--convergence);
+}
+.creation-fields {
+  display: grid;
+  gap: 16px;
+  margin: 16px 0 23px;
+}
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+.profile-head > img {
+  width: 90px;
+  height: 155px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.profile-head h2 {
+  margin-bottom: 9px;
+  overflow-wrap: anywhere;
+}
+.profile-head p:not(.eyebrow) {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 5px 0;
+}
+.trait-line {
+  font-size: 13px;
+  margin: 16px 0 8px;
+}
+.ledger {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.ledger dd {
+  margin: 0;
+  text-align: right;
+}
+details {
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 13px;
+}
+summary {
+  cursor: pointer;
+  min-height: 44px;
+  font-size: 13px;
+  color: var(--ink);
+}
+details > p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin: 12px 0;
+}
+.people-list > div {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin: 12px 0;
+}
+.people-list img {
+  width: 58px;
+  height: 60px;
+  object-fit: contain;
+  object-position: bottom;
+  background: var(--surface-raised);
+  border-radius: var(--radius-control);
+}
+.people-list strong {
+  font-size: 13px;
+}
+.people-list small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+}
+.story-timeline {
+  padding: 0;
+  list-style: none;
+  margin: 25px 0 0;
+}
+.story-timeline li {
+  display: grid;
+  grid-template-columns: 35px 1fr;
+  gap: 16px;
+  padding-bottom: 22px;
+  position: relative;
+}
+.story-timeline li:not(:last-child):before {
+  content: "";
+  position: absolute;
+  top: 26px;
+  bottom: 3px;
+  left: 15px;
+  width: 1px;
+  background: var(--line);
+}
+.story-timeline time {
+  font: 500 17px var(--heading);
+  color: var(--surface-paper);
+  text-align: center;
+}
+.story-timeline p {
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.65;
+}
+.legacy-number {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin: 24px 0;
+}
+.legacy-number strong {
+  font: 500 58px/1 var(--heading);
+  color: var(--surface-paper);
+}
+.legacy-number span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.discovery {
+  font-size: 12px;
+  color: var(--muted);
+}
+.mystery-hint {
+  font:
+    italic 16px/1.6 Georgia,
+    serif;
+  color: var(--muted);
+  margin: 23px 0;
+}
+.legacy-endings p {
+  font-size: 12px;
+  display: flex;
+  gap: 10px;
+  margin: 16px 0;
+}
+.legacy-endings .icon {
+  width: 15px;
+  color: var(--surface-paper);
+}
+.achievement-list {
+  list-style: none;
+  padding: 0;
+}
+.achievement-list li {
+  display: flex;
+  gap: 12px;
+  margin: 18px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.achievement-list small {
+  display: block;
+  font-size: 10px;
+  margin-top: 5px;
+}
+.achievement-list .unlocked {
+  color: var(--human-warmth);
+}
+.achievement-list .icon {
+  width: 16px;
+  height: 16px;
+}
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 24px 0;
+  font-size: 13px;
+}
+.settings-row .button {
+  font-size: 12px;
+  padding: 10px 14px;
+}
+.death-screen {
+  max-width: 430px;
+  min-height: 100svh;
+  padding: 40px 27px;
+  margin: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: memory-in var(--motion-narrative) ease-out;
+}
+.memorial {
+  height: 200px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 25px;
+  background: radial-gradient(ellipse at center, #3d4239, transparent 65%);
+}
+.memorial img {
+  height: 180px;
+  image-rendering: pixelated;
+  filter: saturate(0.4);
+}
+.memorial > span {
+  position: absolute;
+  color: var(--human-warmth);
+  top: 10px;
+  right: 25%;
+  font-size: 25px;
+}
+.death-screen h1 {
+  font-size: 38px;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.life-dates {
+  font-size: 15px;
+  letter-spacing: 3px;
+  margin: 15px 0;
+}
+.life-age {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 35px;
+}
+.final-story {
+  text-align: left;
+  width: 100%;
+  margin: 15px 0;
+}
+.final-story h2 {
+  font-size: 23px;
+}
+.death-screen nav {
+  margin-top: 20px;
+}
+.ad-slot {
+  margin: 20px auto;
+  max-width: 420px;
+}
+.ad-slot > small {
+  font-size: 10px;
+  color: var(--muted);
+}

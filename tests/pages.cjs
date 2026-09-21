@@ -1,6 +1,7 @@
 const { chromium } = require("playwright");
 const { spawn } = require("node:child_process");
 const assert = require("node:assert/strict");
+const fs = require("node:fs/promises");
 const base = "http://127.0.0.1:4175/lifesim/";
 const server = spawn(process.execPath, ["tools/serve.mjs"], {
   env: { ...process.env, PORT: "4175", BASE_PATH: "/lifesim" },
@@ -53,6 +54,11 @@ let browser;
     "og-image.png",
   ])
     assert.equal((await fetch(base + file)).status, 200, file);
+  const art = JSON.parse(
+    await fs.readFile("assets/art-direction.json", "utf8"),
+  );
+  for (const item of art.assets)
+    assert.equal((await fetch(base + item.path)).status, 200, item.path);
   assert.deepEqual(failures, []);
   console.log(
     "GitHub Pages subpath QA passed: /lifesim/, ES modules, fonts, images, a playable year and publication files.",
