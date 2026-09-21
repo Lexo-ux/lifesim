@@ -2,7 +2,7 @@
 
 Juego narrativo web en español: una persona, un Moment y dos respuestas. Desliza, arrastra, usa las flechas o pulsa una decisión; el tiempo avanza al elegir. La simulación de educación, carrera, economía y vínculos continúa detrás de la historia.
 
-**Estado:** V3 jugable; Task 01 de arquitectura conserva el juego y prepara tareas futuras. Hay 130 Moments binarios, doce NPCs recurrentes y seis etapas del protagonista. El canon del mundo futuro está pendiente de Task 02; sus sistemas no se presentan como implementados.
+**Estado:** V3 jugable sobre la arquitectura de Task 01. Hay 130 Moments binarios, doce NPCs recurrentes y seis etapas del protagonista. Task 02 establece la biblia del mundo futuro en `/lore`; sus sistemas todavía no están implementados y el contenido V3 se conserva.
 
 ## Ejecutar
 
@@ -31,7 +31,7 @@ content/
   legacy/        Eventos V2 necesarios
   catalog.js     Catálogos de simulación
 assets/          Recursos finales locales
-lore/            Canon; estructura pendiente de Task 02
+lore/            Canon futuro y reservas explícitas de Task 02
 docs/            Arquitectura y desarrollo
 tests/           Reglas, simulaciones y navegador
 tools/           Servidor, validadores, replay y assets
@@ -53,13 +53,14 @@ En Windows se puede usar Edge instalado: `$env:BROWSER_CHANNEL='msedge'; npm run
 
 ## Desarrollo y documentación
 
-Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 01 usa `foundation/project-architecture`; no se fusiona automáticamente con main.
+Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 02 usa `codex/world-bible`; no se fusiona automáticamente con main ni inicia Task 03.
 
 - [Estado real: implementado y planificado](docs/CURRENT_STATE.md)
 - [Arquitectura](docs/ARCHITECTURE.md) · [Desarrollo y pruebas](docs/DEVELOPMENT.md)
 - [Contrato de Moments](docs/CONTENT.md) · [Guardados](docs/SAVES.md)
 - [Recursos y fuentes](docs/ASSETS.md) · [Validación](docs/VALIDATION.md)
-- [Canon y política de spoilers](lore/README.md) · [World Bible pendiente](lore/WORLD_BIBLE.md)
+- [Canon y política de spoilers](lore/README.md) · [World Bible](lore/WORLD_BIBLE.md)
+- [Invariantes canónicos](lore/CANON_RULES.md) · [Migración futura desde V3](docs/CANON_MIGRATION.md)
 
 ## Compatibilidad y publicación
 

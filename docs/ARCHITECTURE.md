@@ -19,7 +19,7 @@ Vanilla JavaScript con ES modules, HTML y CSS. Sin framework, backend, compilaci
 | `content/catalog.js`       | Etapas, rasgos, economía, carrera, educación y logros.                                 |
 | `content/legacy/events.js` | Contenido V2 necesario para compatibilidad y regresión.                                |
 | `assets/`                  | Recursos finales optimizados; nombres actuales preservados.                            |
-| `lore/`                    | Canon aprobado; estructura pendiente de Task 02.                                       |
+| `lore/`                    | Canon futuro de Task 02, con estados y reservas explícitos; no es runtime.             |
 | `tests/`, `tools/`         | Verificación, servidor local, replay y preparación de recursos.                        |
 
 No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. El CSS sigue en la raíz para no alterar cascada ni URLs. Los subcatálogos se dividirán cuando su crecimiento lo justifique.

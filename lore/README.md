@@ -1,28 +1,41 @@
 # Canon de LifeSim
 
-`/lore` es la ubicación oficial del canon aprobado. Separa las decisiones narrativas del código ejecutable y de los datos del juego. Esta carpeta se prepara en Task 01; no define un mundo nuevo.
+**Fuente:** especificación del usuario «Task 02/16 — Canonical World Bible and Narrative Specification», incorporada en Task 02. Este conjunto define el mundo futuro; no afirma que sus sistemas estén implementados.
 
-## Jerarquía y uso
+## Jerarquía y estados
 
-1. Las decisiones narrativas aprobadas explícitamente para el proyecto deben incorporarse con trazabilidad a la biblia.
-2. `WORLD_BIBLE.md`, cuando se complete y apruebe en Task 02, será la referencia central.
-3. Documentos especializados aprobados desarrollarán esa biblia sin contradecirla.
-4. `content/` implementa historias jugables y `docs/` explica tecnología; ninguno introduce canon mayor por sí solo.
+La [World Bible](WORLD_BIBLE.md) es la referencia de alto nivel. Los documentos especializados desarrollan sus materias; [CANON_RULES](CANON_RULES.md) resume invariantes y [GLOSSARY](GLOSSARY.md) fija términos. Ninguno puede contradecir otro silenciosamente.
 
-Ahora la biblia está **pendiente**. Las historias V3 existen como contenido de runtime, no como especificación aprobada del futuro mundo. No sustituirlas en una tarea de arquitectura. Antes de escribir contenido, leer los documentos canónicos relevantes. Ante una contradicción, preservar lo establecido, registrar el conflicto y proponer el cambio; una propuesta pendiente no modifica canon.
+| Etiqueta                 | Uso                                                                                            |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| CANON                    | Hecho o restricción aprobado por la especificación Task 02.                                    |
+| PROVISIONAL CANON        | Nombre, concepto o copy autorizado como provisional; no completar sus detalles por inferencia. |
+| TBD                      | Diseño aún sin resolver; no inventar una respuesta.                                            |
+| RESERVED — PRIVATE CANON | Espacio protegido cuya respuesta no se define ni publica aquí.                                 |
+| NON-CANON EXAMPLE        | Ilustración de una regla; no crea personas, sucesos ni fechas históricas.                      |
 
-## Documentos previstos
+Las etiquetas de cada sección prevalecen sobre el estado general del documento. Una propuesta no aprobada nunca se convierte en CANON por aparecer en un archivo.
 
-Task 02 determinará alcance y aprobación. No se crean archivos vacíos para estas materias:
+## Mapa de lectura
 
-- `WORLD_BIBLE.md`: documento central.
-- `TIMELINE.md`, `CONVERGENCE.md`, `AWAKENING.md`.
-- `RANKS_AND_RARITIES.md`, `CLASSES.md`, `HISTORICAL_NPCS.md`.
-- `FACTIONS.md`, `SPECIES.md`, `BESTIARY.md`, `LOCATIONS.md`.
-- `METANARRATIVE.md`, `ENDINGS.md`.
+- [WORLD_BIBLE](WORLD_BIBLE.md): identidad, principios, vida civil, tono y símbolo visual.
+- [CONVERGENCE](CONVERGENCE.md) · [AWAKENING](AWAKENING.md): fenómeno y Núcleo.
+- [RANKS_AND_RARITIES](RANKS_AND_RARITIES.md) · [CLASSES](CLASSES.md): dimensiones del Despertar.
+- [HISTORICAL_NPCS](HISTORICAL_NPCS.md) · [FACTIONS](FACTIONS.md) · [SPECIES](SPECIES.md): personas, instituciones y diversidad.
+- [TIMELINE](TIMELINE.md) · [WORLD_HISTORY](WORLD_HISTORY.md): eras, dependencias y estado mundial conceptual.
+- [MOMENTS](MOMENTS.md): escritura, decisiones y consecuencias.
+- [ENDINGS](ENDINGS.md) · [METANARRATIVE](METANARRATIVE.md): desenlaces y límites públicos.
+- [CANON_RULES](CANON_RULES.md) · [GLOSSARY](GLOSSARY.md): consulta operativa.
+- [Migración desde V3](../docs/CANON_MIGRATION.md): diferencias existentes y trabajo futuro.
 
-Estos nombres son planificación, no evidencia de sistemas implementados ni hechos del mundo.
+Un bestiario, atlas de lugares y cronología fechada podrán añadirse cuando exista una especificación aprobada; no se crean catálogos ficticios.
 
-## Spoilers y fuentes privadas
+## Uso y revisión
 
-Este repositorio es público y Pages sirve archivos estáticos desde su raíz. No guardar aquí secretos narrativos que deban mantenerse privados. El contenido necesario para ejecutar el juego siempre podrá inspeccionarse en el navegador. La arquitectura futura puede separar contenido público de runtime y fuentes canónicas privadas, con un proceso de publicación explícito. Task 01 no crea un repositorio privado ni cambia el despliegue. Ignorar una carpeta o quitar enlaces no protege material ya publicado.
+Leer los invariantes y la materia pertinente antes de escribir contenido. El código es fuente de verdad de lo implementado; `/lore` lo es del canon futuro. Los conflictos con V3 se documentan sin reescribir sus datos ni guardados en Task 02.
+
+Una revisión canónica debe identificar regla previa, propuesta, motivo, autorización explícita y documentos/contenido afectados. Conservar la decisión vigente hasta aprobar su sustitución; usar commits trazables. Nombres históricos, probabilidades y reservas no se cambian como ajustes editoriales.
+
+## Política pública
+
+El repositorio y el runtime estático pueden inspeccionarse. No publicar causa última de la Convergencia, solución exacta de la Resolución Verdadera, explicación definitiva de vidas repetidas ni giro final. Las reservas no afirman que ya exista una respuesta secreta escrita. No se ha inventado ni trasladado material privado, ni creado otro repositorio. Quitar enlaces o ignorar archivos no protege secretos publicados.
