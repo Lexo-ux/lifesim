@@ -1,5 +1,5 @@
-import { HOUSING, TRANSPORT, JOBS, ORIGINS } from "../data/catalog.js";
-import { apply, random, log } from "./state.js";
+import { HOUSING, TRANSPORT, JOBS, ORIGINS } from "../../content/catalog.js";
+import { apply, random, log } from "../engine/state.js";
 
 export const netWorth = (s) =>
   Math.round(

@@ -1,5 +1,5 @@
-import { NPCS } from "../../data/npcs.js";
-import { value } from "../state.js";
+import { NPCS } from "../../content/npcs/index.js";
+import { value } from "../engine/state.js";
 import { bond } from "./npc.js";
 
 export const now = (s) => s.age * 12 + s.story.month;

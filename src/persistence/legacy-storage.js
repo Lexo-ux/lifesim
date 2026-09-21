@@ -1,4 +1,4 @@
-import { emptyMeta } from "./achievements.js";
+import { emptyMeta } from "../systems/achievements.js";
 import {
   JOBS,
   COURSES,
@@ -6,9 +6,10 @@ import {
   TRANSPORT,
   TRAITS,
   ORIGINS,
-} from "../data/catalog.js";
-import { EVENTS } from "../data/events.js";
-export const SAVE_KEY = "lifesim.v2";
+} from "../../content/catalog.js";
+import { EVENTS } from "../../content/legacy/events.js";
+import { STORAGE_KEYS } from "../config/persistence.js";
+export const SAVE_KEY = STORAGE_KEYS.legacy;
 const defaults = () => ({
   version: 2,
   state: null,
@@ -140,7 +141,7 @@ export function load(storage = globalThis.localStorage) {
     const raw = storage.getItem(SAVE_KEY);
     if (!raw) {
       try {
-        const old = JSON.parse(storage.getItem("lifesim_mejor_vida"));
+        const old = JSON.parse(storage.getItem(STORAGE_KEYS.legacyRecord));
         if (isNumber(old?.edad)) result.meta.longest = old.edad;
       } catch {
         /* Optional legacy record. */
@@ -193,7 +194,7 @@ export function save(data, storage = globalThis.localStorage) {
 export function reset(storage = globalThis.localStorage) {
   try {
     storage.removeItem(SAVE_KEY);
-    storage.removeItem("lifesim_mejor_vida");
+    storage.removeItem(STORAGE_KEYS.legacyRecord);
     return true;
   } catch {
     return false;

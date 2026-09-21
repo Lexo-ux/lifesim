@@ -1,7 +1,8 @@
 name: Game quality
 on:
   push:
-    branches: [main, lifesim-2.0, lifesim-v3-card-first, "codex/**"]
+    branches:
+      [main, lifesim-2.0, lifesim-v3-card-first, "codex/**", "foundation/**"]
   pull_request:
 permissions:
   contents: read

@@ -1,5 +1,5 @@
-import { NAMES } from "../data/catalog.js";
-import { apply, clamp, pick, random, log } from "./state.js";
+import { NAMES } from "../../content/catalog.js";
+import { apply, clamp, pick, random, log } from "../engine/state.js";
 
 export const relationshipStatus = (bond) =>
   bond >= 80

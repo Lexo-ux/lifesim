@@ -1,7 +1,7 @@
-import { NPCS } from "../../data/npcs.js";
+import { NPCS } from "../../content/npcs/index.js";
 import { currentCard, cardText } from "../narrative/deck.js";
 import { speaker } from "../narrative/npc.js";
-import { stage } from "../state.js";
+import { stage } from "../engine/state.js";
 import { esc, icon, button, playerPortrait } from "./helpers.js";
 import { indicators } from "./indicators.js";
 export function portraitFor(s, id) {

@@ -2,3 +2,18 @@ node_modules/
 output/
 test-results/
 *.log
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.cache/
+coverage/
+playwright-report/
+# Local source/master artwork. Not a substitute for a private canon repository.
+art-source/

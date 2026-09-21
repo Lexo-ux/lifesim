@@ -1,4 +1,4 @@
-import { ACHIEVEMENTS } from "../data/catalog.js";
+import { ACHIEVEMENTS } from "../../content/catalog.js";
 import { netWorth } from "./economy.js";
 
 export const emptyMeta = () => ({

@@ -1,17 +1,39 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { NPCS, BACKGROUNDS } from "../data/npcs.js";
+import { NPCS, BACKGROUNDS } from "../content/npcs/index.js";
+import { validateContent } from "./validate-content.mjs";
 const files = (
   await Promise.all(
-    ["js", "data", "tests", "tools"].map(async (dir) =>
+    ["src", "content", "tests", "tools"].map(async (dir) =>
       (await fs.readdir(dir, { recursive: true }))
         .filter((f) => /\.(js|mjs|cjs)$/.test(f))
         .map((f) => `${dir}/${f}`),
     ),
   )
 ).flat();
-for (const file of files) execFileSync(process.execPath, ["--check", file]);
+for (const file of files) {
+  execFileSync(process.execPath, ["--check", file]);
+  const source = await fs.readFile(file, "utf8");
+  // Static relative ES imports/re-exports and literal import()/require().
+  for (const match of source.matchAll(
+    /(?:\bfrom\s*|\bimport\s*(?:\(\s*)?|\brequire\(\s*)["'](\.{1,2}\/[^"']+)["']/g,
+  )) {
+    const target = path.resolve(path.dirname(file), match[1]);
+    await fs.access(target);
+    if (
+      file.startsWith("content/") &&
+      !target.startsWith(path.resolve("content") + path.sep)
+    )
+      throw new Error(
+        `Content must not import runtime code: ${file} → ${match[1]}`,
+      );
+    if (file.startsWith("src/") && /[\\/](tools|tests)[\\/]/.test(target))
+      throw new Error(`Production code imports development tooling: ${file}`);
+  }
+}
+const contentErrors = validateContent();
+if (contentErrors.length) throw new Error(contentErrors.join("\n"));
 const html = await fs.readFile("index.html", "utf8");
 for (const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
   if (!/^(?:https?:|data:)/.test(match[1])) await fs.access(match[1]);

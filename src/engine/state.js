@@ -1,4 +1,4 @@
-import { STAGES, TRAITS, ORIGINS, NAMES, CITIES } from "../data/catalog.js";
+import { STAGES, TRAITS, ORIGINS, NAMES, CITIES } from "../../content/catalog.js";
 
 export const clamp = (n) => Math.max(0, Math.min(100, Math.round(n)));
 // A serialized PRNG makes pending decisions and annual rolls stable across reloads.

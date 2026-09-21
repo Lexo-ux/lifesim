@@ -163,10 +163,10 @@ const BASE = process.env.BASE_URL || "http://127.0.0.1:4173";
     await page.locator("[data-action=continue]").click();
     assert.equal((await read()).settings.sound, true);
     // Real narrative fixture, no production debug controls.
-    const { startLife, choose } = await import("../js/narrative/engine.js");
-    const { extendMeta } = await import("../js/narrative/meta.js");
-    const { emptyMeta } = await import("../js/achievements.js");
-    const { meet } = await import("../js/narrative/npc.js");
+    const { startLife, choose } = await import("../src/narrative/engine.js");
+    const { extendMeta } = await import("../src/narrative/meta.js");
+    const { emptyMeta } = await import("../src/systems/achievements.js");
+    const { meet } = await import("../src/narrative/npc.js");
     const meta = extendMeta(emptyMeta()),
       adult = startLife({ name: "Alex Rivera" }, meta, 872);
     adult.age = 24;

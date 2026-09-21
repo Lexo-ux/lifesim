@@ -4,12 +4,12 @@ import {
   JOBS,
   COURSES,
   ACHIEVEMENTS,
-} from "../../data/catalog.js";
-import { CARDS } from "../../data/narrative/index.js";
-import { NPCS } from "../../data/npcs.js";
-import { stage } from "../state.js";
-import { netWorth } from "../economy.js";
-import { relationshipStatus } from "../relationships.js";
+} from "../../content/catalog.js";
+import { CARDS } from "../../content/moments/index.js";
+import { NPCS } from "../../content/npcs/index.js";
+import { stage } from "../engine/state.js";
+import { netWorth } from "../systems/economy.js";
+import { relationshipStatus } from "../systems/relationships.js";
 import { portraitFor } from "./card.js";
 import { indicators } from "./indicators.js";
 import {

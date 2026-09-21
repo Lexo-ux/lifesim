@@ -1,22 +1,22 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { CARDS, CARD_BY_ID } from "../data/narrative/index.js";
-import { NPCS } from "../data/npcs.js";
-import { startLife, choose, macroStats } from "../js/narrative/engine.js";
-import { extendMeta } from "../js/narrative/meta.js";
-import { emptyMeta } from "../js/achievements.js";
-import { drawCard, currentCard, cardText } from "../js/narrative/deck.js";
-import { matches, eligible, now } from "../js/narrative/conditions.js";
-import { meet, npcYear } from "../js/narrative/npc.js";
+import { CARDS, CARD_BY_ID } from "../content/moments/index.js";
+import { NPCS } from "../content/npcs/index.js";
+import { startLife, choose, macroStats } from "../src/narrative/engine.js";
+import { extendMeta } from "../src/narrative/meta.js";
+import { emptyMeta } from "../src/systems/achievements.js";
+import { drawCard, currentCard, cardText } from "../src/narrative/deck.js";
+import { matches, eligible, now } from "../src/narrative/conditions.js";
+import { meet, npcYear } from "../src/narrative/npc.js";
 import {
   load,
   save,
   validStory,
   reset,
   SAVE_KEY,
-} from "../js/narrative/storage.js";
-import { newLife as oldLife } from "../js/game.js";
-import { save as oldSave } from "../js/storage.js";
+} from "../src/persistence/storage.js";
+import { newLife as oldLife } from "../src/engine/game.js";
+import { save as oldSave } from "../src/persistence/legacy-storage.js";
 const setup = (seed = 1) => {
   const meta = extendMeta(emptyMeta());
   return { s: startLife({ name: "Alex" }, meta, seed), meta };

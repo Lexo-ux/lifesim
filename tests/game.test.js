@@ -7,27 +7,27 @@ import {
   finishLife,
   biography,
   activityReason,
-} from "../js/game.js";
-import { createState, stageIndex } from "../js/state.js";
-import { emptyMeta, updateAchievements } from "../js/achievements.js";
+} from "../src/engine/game.js";
+import { createState, stageIndex } from "../src/engine/state.js";
+import { emptyMeta, updateAchievements } from "../src/systems/achievements.js";
 import {
   currentEvent,
   choiceReason,
   resolveChoice,
   resolvePending,
-} from "../js/events.js";
-import { EVENTS } from "../data/events.js";
-import { ACTIVITIES, JOBS } from "../data/catalog.js";
-import { forecast, netWorth, settleYear, transact } from "../js/economy.js";
+} from "../src/narrative/legacy-events.js";
+import { EVENTS } from "../content/legacy/events.js";
+import { ACTIVITIES, JOBS } from "../content/catalog.js";
+import { forecast, netWorth, settleYear, transact } from "../src/systems/economy.js";
 import {
   enroll,
   educationYear,
   hire,
   careerYear,
   retire,
-} from "../js/career.js";
-import { interact, relationshipsYear } from "../js/relationships.js";
-import { load, save, reset, validState, SAVE_KEY } from "../js/storage.js";
+} from "../src/systems/career.js";
+import { interact, relationshipsYear } from "../src/systems/relationships.js";
+import { load, save, reset, validState, SAVE_KEY } from "../src/persistence/legacy-storage.js";
 
 const setup = (seed = 41) => {
   const meta = emptyMeta();
