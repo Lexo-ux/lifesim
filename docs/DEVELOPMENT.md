@@ -49,7 +49,7 @@ CLI Node: semilla uint32, máximo 300 decisiones, izquierda/derecha/alternancia.
 - IDs de Moments/NPCs estables, ASCII/snake_case; evitar renombrarlos porque quedan en saves.
 - Contenido en `content/`, mecánicas en `src/systems/`, coordinación en `src/engine/` y `src/narrative/`, DOM en `src/ui/`.
 - [CONTENT](CONTENT.md), [ASSETS](ASSETS.md) y [SAVES](SAVES.md) definen contratos. Mantener documentación actualizada.
-- Configurar claves en `src/config/persistence.js`, anuncios en `src/config/ads.js`. Versión de release en `package.json`; timings de animación permanecen junto a CSS/transiciones, no se centralizan artificialmente.
+- Configurar claves en `src/config/persistence.js`, anuncios en `src/config/ads.js`. Versión de release en `package.json`; duraciones/easing visuales se centralizan en styles/tokens.css y se consumen desde src/ui/motion.js. Consultar docs/MOTION.md.
 
 ## Git y publicación
 
@@ -57,4 +57,4 @@ Revisar status, historial y origen antes de cambiar. Partir de la versión aprob
 
 Se mantiene GitHub Pages, dominio `lifesim.dpdns.org`, `CNAME`, `.nojekyll`, SEO, verificación, favicon/OG y ads.txt. `quality.yml` comprueba cambios, no despliega. La selección de rama/directorio de Pages es configuración externa; no se modifica aquí. No hay service worker que invalidar ni manifest. Los assets esenciales son locales.
 
-No versionar dependencias, resultados QA, cachés, masters ni secretos. `.gitignore` no protege archivos ya publicados. El runtime y este repositorio son públicos: fuentes canónicas privadas deben permanecer fuera. Ver [lore](../lore/README.md) y [migración de canon](CANON_MIGRATION.md). Task 02 usa `codex/world-bible`, solo cambia documentación y no inicia Task 03.
+No versionar dependencias, resultados QA, cachés, masters ni secretos. `.gitignore` no protege archivos ya publicados. El runtime y este repositorio son públicos: fuentes canónicas privadas deben permanecer fuera. Ver [lore](../lore/README.md) y [migración de canon](CANON_MIGRATION.md). Task 03 usa `codex/art-direction-motion`, cambia presentación y assets piloto y no inicia Task 04. Consultar docs/VISUAL_QA.md y la página de revisión tools/art-review.html.

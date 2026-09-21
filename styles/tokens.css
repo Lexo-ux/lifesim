@@ -1,0 +1,58 @@
+/* Shared by static CSS and src/ui/motion.js. No build step. */
+:root {
+  color-scheme: dark;
+  --surface-world: #101719;
+  --surface-card: #1b2325;
+  --surface-raised: #263033;
+  --surface-hover: #354144;
+  --surface-paper: #e8e0cf;
+  --text-primary: #f1eee5;
+  --text-secondary: #bcc3c1;
+  --text-on-paper: #282e2c;
+  --human-warmth: #d5ba8e;
+  --danger: #dc9497;
+  --danger-surface: #40282b;
+  --convergence: #b7d4d4;
+  --spectral-ivory: #f1f3df;
+  --border-subtle: #445254;
+  --border-strong: #788582;
+  --radius-card: 5px;
+  --radius-control: 4px;
+  --radius-overlay: 8px;
+  --shadow-card: 0 14px 28px #0005, 0 2px 4px #0005;
+  --shadow-raised: 0 24px 36px #0007;
+  --shadow-overlay: 0 24px 80px #0009;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --font-display: "Outfit", sans-serif;
+  --font-ui: "DM Sans", sans-serif;
+  --font-story: Georgia, "Times New Roman", serif;
+  --motion-fast: 140ms;
+  --motion-standard: 280ms;
+  --motion-deliberate: 420ms;
+  --motion-narrative: 1400ms;
+  --motion-cinematic: 2200ms; /* Reserved, no cinematic runtime in Task 03. */
+  --ease-settle: cubic-bezier(0.2, 0.75, 0.25, 1);
+  --ease-commit: cubic-bezier(0.4, 0, 0.75, 0.4);
+  --z-environment: 0;
+  --z-character: 1;
+  --z-moment: 2;
+  --z-fx: 3;
+  --z-hud: 10;
+  --z-feedback: 20;
+  --z-notification: 100;
+  /* Existing secondary components share the same semantic palette. */
+  --bg: var(--surface-world);
+  --panel: var(--surface-card);
+  --ink: var(--text-primary);
+  --muted: var(--text-secondary);
+  --red: var(--danger);
+  --blue: var(--convergence);
+  --line: var(--border-subtle);
+  --heading: var(--font-display);
+  --body: var(--font-ui);
+}

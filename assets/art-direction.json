@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "method": "Built-in ImageGen; technical WebP export with sharp",
+  "quality": 82,
+  "alphaQuality": 100,
+  "effort": 6,
+  "assets": [
+    {
+      "source": "exec-3e0d09e5-dfa9-4a1d-bdd0-48151137a974.png",
+      "path": "assets/characters/player_study_young_neutral_v1.webp",
+      "sourceDimensions": [1086, 1448],
+      "dimensions": [540, 720],
+      "alpha": true,
+      "bytes": 65188
+    },
+    {
+      "source": "exec-6f537906-1c50-4a01-a319-241ea7b15315.png",
+      "path": "assets/characters/player_study_elder_neutral_v1.webp",
+      "sourceDimensions": [1086, 1448],
+      "dimensions": [540, 720],
+      "alpha": true,
+      "bytes": 79684
+    },
+    {
+      "source": "exec-fe1edc96-0421-4f12-9d4b-9b47582023a4.png",
+      "path": "assets/npcs/npc_vera_neutral_v1.webp",
+      "sourceDimensions": [1086, 1448],
+      "dimensions": [540, 720],
+      "alpha": true,
+      "bytes": 65934
+    },
+    {
+      "source": "exec-beb06e5d-04eb-42e6-97a2-831df8972ff6.png",
+      "path": "assets/npcs/npc_awakened_study_neutral_v1.webp",
+      "sourceDimensions": [1086, 1448],
+      "dimensions": [540, 720],
+      "alpha": true,
+      "bytes": 70440
+    },
+    {
+      "source": "exec-ef097160-9d45-4cd8-8125-7614327a3623.png",
+      "path": "assets/backgrounds/bg_park_normal_v1.webp",
+      "sourceDimensions": [1086, 1448],
+      "dimensions": [768, 1024],
+      "alpha": false,
+      "bytes": 177284
+    }
+  ]
+}

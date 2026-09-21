@@ -1,0 +1,24 @@
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .narrative-card {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .indicator-track {
+    border: 1px solid CanvasText;
+  }
+  .indicator-track i {
+    background: Highlight;
+  }
+  .dialogue {
+    border: 1px solid CanvasText;
+  }
+}

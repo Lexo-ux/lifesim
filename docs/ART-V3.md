@@ -1,3 +1,5 @@
+> **LEGACY VISUAL ASSETS — registro histórico de producción.** La dirección vigente está en [ART_DIRECTION](ART_DIRECTION.md). Este documento conserva la procedencia original; no define el estilo final de Task 03.
+
 # Arte de LifeSim III
 
 La herramienta integrada de generación de imágenes creó tres atlas originales: personajes recurrentes, variantes por edad y entornos. No se utilizó una API externa. Se conserva la dirección pixel art humana de la versión anterior para el protagonista; la presentación principal pasa a retratos grandes de los interlocutores.

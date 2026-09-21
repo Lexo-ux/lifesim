@@ -48,3 +48,35 @@ Los recorridos simulados comprueban reglas y ejecución, no sustituyen pruebas d
 - Revisión documental: 131 enlaces locales resueltos; documentos requeridos presentes; tabla de rangos idéntica a la especificación, con suma exacta de 100%; nombres históricos y marcadores de reserva verificados. El script temporal de auditoría permanece en `output/`, fuera de Git.
 - Revisión editorial: canon/provisional/TBD/ejemplos diferenciados; causa última, solución verdadera, explicación de vidas repetidas y giro final reservados, sin respuestas inventadas. Diferencias V3 registradas en `CANON_MIGRATION.md`.
 - Diff vacío para `src/`, `content/`, assets, HTML/CSS, dependencias, workflows y todos los archivos de dominio/SEO/publicidad/verificación. Sin cambios de runtime, guardados, probabilidades ni despliegue; Task 03 no iniciada.
+
+## Task 03 — arte, interfaz y motion (2026-09-21)
+
+Base `1db08db`; rama `codex/art-direction-motion`. Se conserva el nombre `Lexo-ux/lifesim`. Main no se fusiona ni despliega desde esta tarea.
+
+- `npm run check`: 56 módulos con sintaxis/imports válidos; CSS recursivo, cinco assets de arte registrados, originales y archivos de publicación presentes.
+- `npm test`: **28/28**; regresiones V2/V3 y 200 vidas completas. 130 Moments, reglas, semilla, guardados y migración sin cambios.
+- `npm run test:browser`: creación, aleatoria, continuación, ratón/táctil/teclado, retorno/cancelación, doble input, consecuencias diferidas, guardado/recarga, seis edades, muerte/memorial, nueva vida, sonido y reinicio correctos. Sin errores JavaScript ni recursos 404.
+- Axe WCAG A/AA/2.1 AA: **0 incidencias** en inicio, creación, tarjeta móvil, perfil, historia, legado, ajustes y tarjeta escritorio. Esto no equivale a una auditoría manual completa de lectores de pantalla.
+- Prueba de motion: recogida inmediata, seguimiento 1:1, intención progresiva, retorno sin decisión, hit areas ≥44px, flechas de cambio y aria-valuetext, cambio a movimiento reducido durante commit, información de resultado visible y cero animaciones activas al quedar en reposo. Preview izquierda/derecha comprobado dentro del viewport.
+- Pages: `/lifesim/` carga juego, módulos CSS/JS, fuentes, imágenes originales/nuevas y archivos de dominio/SEO/publicidad. Revisión de diff confirma intactos CNAME, robots, sitemap, ads, verificación, HTML/metadata, favicon y OG. Sin cambios de dependencias de producción ni backend.
+
+### Rendimiento medido
+
+Edge/Chromium 153.0.4234.48, headless en este ordenador, viewport 390x844, sin throttling. Durante la muestra de arrastre: CLS **0**, **0** layouts, **0** tareas largas, 109 muestras de frame; mediana **10.0 ms**, p95 **10.1 ms**. Recálculo de estilos total 91.2 ms; 451 eventos de pintura, 75.0 ms acumulados. Son eventos de traza, no frames perdidos; los valores dependen del host. Sin bucle continuo, blur animado o partículas DOM. **No se afirma rendimiento validado en teléfono físico ni Safari.** Los cinco WebP suman 458,530 bytes; el juego carga solo los pertinentes, y los tres estudios restantes solo desde la página de revisión.
+
+### Evidencia visual
+
+Referencia reproducible obtenida del commit base mediante `git archive`, servida desde un directorio aislado ignorado; comparada con la rama implementada. Capturas tras completar movimientos/carga de fuentes. Se revisaron visualmente composición, rostro, contraste, decisiones, modales y memorial, además de las aserciones.
+
+- `output/qa/task03-before/`: 12 capturas del runtime original.
+- `output/qa/task03-after/`: 13 capturas, incluido movimiento reducido.
+- Viewports principales: **360×800, 390×844, 430×932, 1440×900**. Suite de regresión adicional: 360×640, 768×1024 y 812×375.
+- Inicio, creación, tarjeta, swipe izquierdo/derecho, perfil, historia, ajustes, memorial. `task03-comparison.png` compara la tarjeta; `task03-before-surfaces.png` y `task03-after-surfaces.png` son planchas de pantallas; `task03-art-family.png` muestra los cinco estudios.
+- Durante QA se corrigió la resolución relativa de la URL de escena tras dividir CSS y se recolocó la intención en el lado visible para evitar texto fuera de pantalla al arrastrar.
+- Evidencia ignorada localmente; GitHub Actions adjunta `output/qa/` como artefacto de la ejecución, sin exigir screenshots ni masters en producción.
+
+### Límite y siguiente tarea
+
+Solo Vera adulta y el parque se usan como piloto nuevo. Los doce sprites y veinte retratos originales están catalogados como **LEGACY VISUAL ASSETS**; se conserva el plan obligatorio de sustitución por familias completas. Los estudios de protagonista no reemplazan parcialmente sus seis edades. El estudio de Despertado no introduce NPC, rango, clase o capacidad canónica. La pantalla de inicio solo recibe el tema compatible.
+
+**Listo para Task 04 — The Threshold: Title Screen and Life Entry Sequence**: tokens, capas, motion, guía de luz/sonido/rangos y especificación de assets disponibles. No se ha iniciado el portal final, la secuencia de entrada, tiradas de rango, nuevas historias ni simulación mundial.

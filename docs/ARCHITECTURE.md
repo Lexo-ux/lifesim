@@ -22,7 +22,7 @@ Vanilla JavaScript con ES modules, HTML y CSS. Sin framework, backend, compilaci
 | `lore/`                    | Canon futuro de Task 02, con estados y reservas explícitos; no es runtime.             |
 | `tests/`, `tools/`         | Verificación, servidor local, replay y preparación de recursos.                        |
 
-No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. El CSS sigue en la raíz para no alterar cascada ni URLs. Los subcatálogos se dividirán cuando su crecimiento lo justifique.
+No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. `style.css` es una entrada estática de ocho módulos en `styles/`; tokens y motion son compartidos por CSS y `src/ui/motion.js`. Los imports y assets CSS resuelven desde cada archivo; la URL de escena dinámica se normaliza contra `document.baseURI` para evitar resolverla desde `/styles/`. Los subcatálogos se dividirán cuando su crecimiento lo justifique.
 
 ## Flujo y propiedad del estado
 
@@ -60,7 +60,7 @@ Primero valida V3; si no existe, intenta V2. No reemplaza un V3 ilegible con V2 
 
 ## Recursos, desarrollo y publicación
 
-HTML carga `style.css` y `src/main.js` con rutas relativas al documento. CSS importa fuentes locales. La UI construye URLs WebP por NPC/apariencia/etapa; `street` corresponde a `neighborhood.webp`. Precarga el siguiente retrato al elegir. Ver [assets](ASSETS.md).
+HTML carga `style.css` y `src/main.js` con rutas relativas al documento. CSS importa fuentes locales y módulos estáticos. `src/ui/art.js` mapea dos pilotos de arte; las demás rutas conservan su resolución legacy. La UI construye URLs WebP por NPC/apariencia/etapa; `street` corresponde a `neighborhood.webp`. Precarga el siguiente retrato al elegir. `motion.js` posee efectos finitos y limpieza; `swipe.js` desmonta listeners con AbortController. Nada visual consume el PRNG. Ver [assets](ASSETS.md).
 
 No hay build: la raíz es el artefacto de producción. El servidor local sirve los mismos archivos. Las pruebas Pages añaden `/lifesim/`. `quality.yml` ejecuta checks, Node, Chromium/axe y adjunta capturas; no despliega ni fusiona ramas. Dominio y archivos de publicación se mantienen. No hay service worker ni manifest.
 
