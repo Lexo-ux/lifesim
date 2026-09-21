@@ -9,7 +9,7 @@ Pixel art urbano nocturno: personajes humanos de proporciones naturales, expresi
 - `assets/characters/0-{baby,child,teen,young,adult,elder}.webp`: apariencia de cabello corto en seis etapas.
 - `assets/characters/1-{baby,child,teen,young,adult,elder}.webp`: apariencia de cabello largo en seis etapas.
 - `assets/backgrounds/neighborhood.webp`: plaza urbana al anochecer.
-- `favicon.svg` y `js/icons.js`: marca e iconos SVG.
+- `favicon.svg` y `src/ui/icons.js`: marca e iconos SVG.
 - `og-image.png`: tarjeta social renderizada desde `tools/social-card.html` con los nuevos recursos locales.
 - `assets/fonts/`: Outfit y DM Sans, con sus licencias SIL OFL.
 

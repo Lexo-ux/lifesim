@@ -1,51 +1,68 @@
 # LifeSim III
 
-**Una vida. Miles de decisiones.** Juego narrativo estático, en español. Una persona, una tarjeta y dos respuestas: desliza, arrastra, usa las flechas o pulsa una decisión. El tiempo avanza al elegir.
+Juego narrativo web en español: una persona, un Moment y dos respuestas. Desliza, arrastra, usa las flechas o pulsa una decisión; el tiempo avanza al elegir. La simulación de educación, carrera, economía y vínculos continúa detrás de la historia.
 
-La pantalla principal muestra solo salud, ánimo, desarrollo y economía. Educación, carrera, deudas y vínculos funcionan por debajo de la historia; sus oportunidades llegan en la baraja. Perfil, Historia y Legado son pantallas secundarias breves.
-
-## Contenido
-
-- 130 tarjetas originales con dos opciones y requisitos narrativos.
-- 12 personajes recurrentes, 20 retratos locales, seis etapas del protagonista.
-- 15 líneas argumentales: amistades, romance, familia, aprendizaje, trabajo, salud y dinero; algunas decisiones vuelven hasta quince años después.
-- El Archivo: ocho encuentros, siete capítulos y dos desenlaces centrales que se descubren a través de al menos cinco vidas.
-- Ocho profesiones, seis programas educativos, vivienda, ahorro, inversiones, deuda, relaciones, doce logros y recuerdos entre vidas.
+**Estado:** V3 jugable; Task 01 de arquitectura conserva el juego y prepara tareas futuras. Hay 130 Moments binarios, doce NPCs recurrentes y seis etapas del protagonista. El canon del mundo futuro está pendiente de Task 02; sus sistemas no se presentan como implementados.
 
 ## Ejecutar
 
-Node.js 22 o posterior. Sin compilación ni dependencias de producción:
-
-```sh
-npm start
-```
-
-Abre `http://127.0.0.1:4173`. Los módulos ES necesitan HTTP; también sirve cualquier servidor de archivos estáticos.
-
-## Verificar
+Node.js 22 o posterior:
 
 ```sh
 npm ci
+npm start
+```
+
+Abrir http://127.0.0.1:4173. Sin backend, build ni dependencias de producción; el sitio funciona como archivos estáticos con ES modules.
+
+## Estructura
+
+```text
+src/
+  engine/        Estado y coordinación anual
+  systems/       Economía, carrera, relaciones y logros
+  narrative/     Moments, condiciones, NPCs y consecuencias
+  persistence/   Guardado V3 y compatibilidad V2
+  ui/            Presentación, input y audio
+  config/        Claves de guardado y anuncios
+content/
+  moments/       Historias binarias y registro
+  npcs/          Definiciones actuales
+  legacy/        Eventos V2 necesarios
+  catalog.js     Catálogos de simulación
+assets/          Recursos finales locales
+lore/            Canon; estructura pendiente de Task 02
+docs/            Arquitectura y desarrollo
+tests/           Reglas, simulaciones y navegador
+tools/           Servidor, validadores, replay y assets
+AGENTS.md        Reglas de desarrollo
+```
+
+`index.html` y `style.css` siguen en la raíz. Assets y configuraciones del dominio conservan sus rutas.
+
+## Calidad
+
+```sh
 npm run check
 npm test
 npx playwright install chromium
 npm run test:browser
 ```
 
-En Windows puedes usar Edge instalado: `$env:BROWSER_CHANNEL='msedge'; npm run test:browser`.
+En Windows se puede usar Edge instalado: `$env:BROWSER_CHANNEL='msedge'; npm run test:browser`. Validación de contenido independiente: `npm run validate:content`. Replay de desarrollo: `npm run debug:life -- --seed 42 --steps 40`.
 
-Las pruebas incluyen 100 vidas completas de V3, 100 del motor V2 conservado, cadenas, migración, cinco vidas de metanarrativa, controles táctiles/ratón/teclado, accesibilidad, seis tamaños de pantalla y publicación bajo `/lifesim/`. [Validación](docs/VALIDATION.md).
+## Desarrollo y documentación
 
-## Guardados
+Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 01 usa `foundation/project-architecture`; no se fusiona automáticamente con main.
 
-V3 utiliza `lifesim.v3`. Importa una partida válida de `lifesim.v2` conservando edad, estudios, trabajo, dinero, relaciones, logros y efectos pendientes. La tarjeta pendiente de V2 se sustituye por una tarjeta V3 adecuada a la edad. El original V2 permanece intacto. Un guardado ilegible se conserva y muestra un aviso. Reiniciar requiere confirmar y borra ambas versiones. Sonido opcional, desactivado inicialmente.
+- [Estado real: implementado y planificado](docs/CURRENT_STATE.md)
+- [Arquitectura](docs/ARCHITECTURE.md) · [Desarrollo y pruebas](docs/DEVELOPMENT.md)
+- [Contrato de Moments](docs/CONTENT.md) · [Guardados](docs/SAVES.md)
+- [Recursos y fuentes](docs/ASSETS.md) · [Validación](docs/VALIDATION.md)
+- [Canon y política de spoilers](lore/README.md) · [World Bible pendiente](lore/WORLD_BIBLE.md)
 
-## GitHub Pages
+## Compatibilidad y publicación
 
-La raíz se publica directamente: sin backend ni build. Las rutas relativas funcionan en dominio propio y en `/lifesim/`. Se mantienen `CNAME`, `robots.txt`, `sitemap.xml`, `ads.txt`, verificación de Google y `.nojekyll`. La rama **lifesim-v3-card-first** queda para revisión; no se integra automáticamente en `main`.
+Guardado local en `lifesim.v3`, importación compatible desde V2 sin borrar su original. Task 01 no cambia claves, versiones, contenido ni mecánicas. Reiniciar requiere confirmación. No hay cloud saves, sincronización entre pestañas, PWA ni analítica nueva.
 
-Los anuncios siguen configurables en `data/ads.js`, únicamente en inicio y final. No hay anuncios entre decisiones. Los slots permanecen desactivados hasta configurar unidades válidas.
-
-[Arquitectura](docs/ARCHITECTURE.md) · [Arte y prompts V3](docs/ART-V3.md) · [Arte del protagonista](docs/ART.md).
-
-Límites: guardado local sin sincronización entre pestañas/dispositivos, sin PWA, retratos estáticos sin expresiones alternativas y tiempo medido en meses/años. Las rutinas pueden repetirse tras su enfriamiento. La siguiente iteración recomendada es probar el ritmo con jugadores y ampliar las ramas que eligen menos, especialmente en la vejez.
+GitHub Pages sirve la raíz; rutas relativas compatibles con `/lifesim/` y el dominio `lifesim.dpdns.org`. Se preservan CNAME, SEO, verificación, ads.txt y metadata. El workflow verifica el juego sin desplegar ni fusionar ramas. Anuncios configurables en `src/config/ads.js`, desactivados por defecto y limitados a inicio/final.
