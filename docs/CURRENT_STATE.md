@@ -1,6 +1,6 @@
-# Estado real — Task 01
+# Estado real — V3 y especificación Task 02
 
-Inspección: 2026-09-21. Base: `origin/main` en `12a0b80`, que integra LifeSim V3. Este inventario describe el código, no la hoja de ruta. Task 01 cambia organización, documentación y herramientas; no añade gameplay ni canon.
+Inspección del runtime: Task 01 (2026-09-21); base de Task 02: `origin/main` en `0801af5`, con la arquitectura integrada. Este inventario describe el código, no la hoja de ruta. Task 02 solo añade/actualiza documentación canónica y no cambia el runtime inventariado.
 
 ## IMPLEMENTED
 
@@ -29,6 +29,10 @@ Inspección: 2026-09-21. Base: `origin/main` en `12a0b80`, que integra LifeSim V
 - Validación de guardados manual, sin sincronización entre pestañas/dispositivos; localStorage y carga de contenido completo limitan el escalado. No hay carga por capítulos ni índice masivo de Moments.
 - Los retratos son estáticos con algunas variantes de edad, sin expresiones alternativas. Las rutinas pueden repetirse. Las pruebas automatizadas no sustituyen playtesting humano; no se ha validado Safari ni hardware móvil físico.
 
+## SPECIFIED — canon futuro, no runtime
+
+Task 02 incorpora la [World Bible](../lore/WORLD_BIBLE.md), sus documentos especializados y [reglas canónicas](../lore/CANON_RULES.md). Define Convergencia, Núcleo, Despertar, clases/rareza/rango, distribución sin pity, figuras históricas, eras y categorías de desenlace. Los aspectos provisionales, TBD y reservados están etiquetados. [CANON_MIGRATION](CANON_MIGRATION.md) registra diferencias con V3 sin corregirlas silenciosamente.
+
 ## PLANNED — no implementado
 
-Task 02: biblia y especificación narrativa aprobadas. Para etapas posteriores: tipos adicionales de Moment, clases/rangos, rarezas de rango, despertar, cazadores, criaturas, facciones, cronología, mundo/guerras, clasificación de NPCs históricos y generados, grandes catálogos y posibles fuentes privadas de canon. Sus nombres no establecen canon. No hay backend, cuentas, cloud saves, rankings globales ni nuevas analíticas. Task 01 termina aquí.
+Tipos adicionales de Moment, clases y rangos ejecutables, Despertar, cazadores, criaturas, facciones, cronología detallada, simulación mundial/guerra, NPCs históricos y generados como modelos separados, catálogos ampliados y metanarrativa futura. No hay backend, cuentas, cloud saves, rankings globales ni nuevas analíticas. Task 03 de dirección artística/diseño/movimiento es la siguiente tarea autorizable; Task 02 no la inicia.

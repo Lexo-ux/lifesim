@@ -5,14 +5,14 @@ All future agents working on LifeSim must follow these rules within the scope of
 ## Sources of truth
 
 - Existing behavior: repository code and tests. Earlier prompts are not evidence of implementation.
-- Narrative canon: `/lore`. Its Task 01 placeholder is not approved world lore.
+- Narrative canon: `/lore`. Task 02 establishes the future world; read `lore/CANON_RULES.md` and the relevant specialized documents. Respect CANON, PROVISIONAL CANON, TBD, RESERVED and NON-CANON EXAMPLE labels.
 - Technical architecture and current limitations: `/docs`.
 - Runtime content definitions: `/content`.
 - Read `docs/CURRENT_STATE.md`, `docs/ARCHITECTURE.md`, and `docs/DEVELOPMENT.md` before restructuring.
 
 ## Canon
 
-Never invent or silently modify major canon. If implementation conflicts with canon, identify the conflict, preserve established canon, and document a proposed change for the relevant narrative task. Do not silently turn existing V3 runtime details into the future world bible. Keep approved changes traceable; unresolved proposals are not canon.
+Never invent or silently modify major canon. If implementation conflicts with canon, identify the conflict, preserve established canon, and document a proposed change for the relevant narrative task. Do not silently turn existing V3 runtime details into the future world bible; consult `docs/CANON_MIGRATION.md` before adapting them. Keep approved changes traceable; unresolved proposals are not canon. Do not fill the reserved cause, repeated-life explanation or True Resolution with invented answers.
 
 ## Architecture and engine
 
@@ -50,4 +50,4 @@ Use meaningful tests for changed contracts; do not add fake tests. Update techni
 
 ## Git
 
-Inspect status and recent history first; preserve other work. Use the branch explicitly requested by the task (Task 01: `foundation/project-architecture`), otherwise a `codex/` feature branch. Make descriptive commits. Never merge into `main` unless the user explicitly authorizes that action. Task 01 stops before Task 02.
+Inspect status and recent history first; preserve other work. Use the branch explicitly requested by the task (Task 02: `codex/world-bible`), otherwise a `codex/` feature branch. Make descriptive commits. Never merge into `main` unless the user explicitly authorizes that action. Stop at the task boundary: Task 02 does not start Task 03 or implement future gameplay.

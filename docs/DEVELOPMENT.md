@@ -57,4 +57,4 @@ Revisar status, historial y origen antes de cambiar. Partir de la versión aprob
 
 Se mantiene GitHub Pages, dominio `lifesim.dpdns.org`, `CNAME`, `.nojekyll`, SEO, verificación, favicon/OG y ads.txt. `quality.yml` comprueba cambios, no despliega. La selección de rama/directorio de Pages es configuración externa; no se modifica aquí. No hay service worker que invalidar ni manifest. Los assets esenciales son locales.
 
-No versionar dependencias, resultados QA, cachés, masters ni secretos. `.gitignore` no protege archivos ya publicados. El runtime y este repositorio son públicos: fuentes canónicas privadas deben permanecer fuera. Ver [lore](../lore/README.md). Task 01 no inicia Task 02.
+No versionar dependencias, resultados QA, cachés, masters ni secretos. `.gitignore` no protege archivos ya publicados. El runtime y este repositorio son públicos: fuentes canónicas privadas deben permanecer fuera. Ver [lore](../lore/README.md) y [migración de canon](CANON_MIGRATION.md). Task 02 usa `codex/world-bible`, solo cambia documentación y no inicia Task 03.

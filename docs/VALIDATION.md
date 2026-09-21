@@ -39,3 +39,12 @@ Los recorridos simulados comprueban reglas y ejecución, no sustituyen pruebas d
 - Replay de desarrollo: semilla 42, cuarenta decisiones, final a edad 21; no accede a localStorage.
 - Diff vacío para assets, CSS, CNAME, robots, sitemap, ads.txt, verificación, favicon, OG, `.nojekyll` y lockfile. HTML cambia únicamente las dos referencias al entry point.
 - No hay build ni lint semántico configurados. Se verifican los archivos estáticos finales con checks y navegador. No se cambia la configuración remota de Pages ni DNS.
+
+## Task 02 — especificación canónica
+
+- Base: arquitectura integrada en `0801af5`; rama `codex/world-bible`. Cambios únicamente Markdown: lore, guía de agentes y documentación.
+- `npm run check`: 51 módulos y recursos válidos. `npm test`: 28/28 aprobadas, incluidas 200 vidas simuladas y compatibilidad de guardados.
+- `npm run test:browser` con Edge: navegación, decisiones, guardado/refresh, etapas, muerte/reinicio, seis tamaños, ocho vistas axe sin infracciones y subruta `/lifesim/` aprobados; sin errores JavaScript ni recursos ausentes.
+- Revisión documental: 131 enlaces locales resueltos; documentos requeridos presentes; tabla de rangos idéntica a la especificación, con suma exacta de 100%; nombres históricos y marcadores de reserva verificados. El script temporal de auditoría permanece en `output/`, fuera de Git.
+- Revisión editorial: canon/provisional/TBD/ejemplos diferenciados; causa última, solución verdadera, explicación de vidas repetidas y giro final reservados, sin respuestas inventadas. Diferencias V3 registradas en `CANON_MIGRATION.md`.
+- Diff vacío para `src/`, `content/`, assets, HTML/CSS, dependencias, workflows y todos los archivos de dominio/SEO/publicidad/verificación. Sin cambios de runtime, guardados, probabilidades ni despliegue; Task 03 no iniciada.
