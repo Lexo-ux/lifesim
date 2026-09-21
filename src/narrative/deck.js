@@ -1,6 +1,6 @@
-import { CARDS, CARD_BY_ID } from "../../data/narrative/index.js";
-import { COURSES } from "../../data/catalog.js";
-import { random } from "../state.js";
+import { CARDS, CARD_BY_ID } from "../../content/moments/index.js";
+import { COURSES } from "../../content/catalog.js";
+import { random } from "../engine/state.js";
 import { eligible, now } from "./conditions.js";
 import { meet } from "./npc.js";
 import { discover } from "./meta.js";

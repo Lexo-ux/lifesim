@@ -1,78 +1,83 @@
-# LifeSim III · arquitectura
+# Arquitectura actual de LifeSim
 
-Sitio estático con módulos ES y recursos locales. No requiere build, framework ni backend. `index.html → js/ui.js → js/ui/app.js`. La presentación V2 se eliminó: no existe el dashboard oculto bajo una nueva capa de CSS.
+Vanilla JavaScript con ES modules, HTML y CSS. Sin framework, backend, compilación ni dependencias de producción. Task 01 traslada módulos sin cambiar mecánicas, probabilidades, contenido, CSS ni imágenes. Código: implementación; `/lore`: canon; `/content`: datos; `/docs`: documentación técnica.
 
-## Capas
+## Límites de módulos
 
-- `js/state.js`, `economy.js`, `career.js`, `relationships.js`, `achievements.js`: simulación V2 reutilizada. `game.advanceYear({draw:false})` permite liquidar el año sin extraer un evento antiguo.
-- `js/narrative/engine.js`: nueva vida, elección transaccional, cuatro indicadores derivados y avance automático del tiempo.
-- `conditions.js`: edad, banderas, títulos, empleo, pareja/hijos, dinero, habilidades, personalidad, relación, tiempo desde otro evento y condiciones entre vidas.
-- `deck.js`: selección ponderada, rareza, enfriamientos, disponibilidad de estudios/trabajos, contenido ya visto, cola de consecuencias y repetición de interlocutores.
-- `npc.js`: identidades estables, vínculos compartidos con la simulación, memorias por decisión, roles, envejecimiento y fallecimiento.
-- `meta.js`: descubrimientos, finales, nombres de vidas anteriores, capítulos del Archivo y registro idempotente de cada vida terminada.
-- `narrative/storage.js`: validación V3 y migración no destructiva desde V2.
-- `js/ui/`: aplicación y diálogos, vistas secundarias, tarjeta, indicadores, gestos y transiciones. El DOM no contiene reglas de elegibilidad ni mutaciones económicas.
-- `data/narrative/`: schema, infancia, cadenas, vida adulta/vejez, profesiones/estudios y misterio. `data/npcs.js` define doce identidades y sus contextos.
+| Ubicación                  | Responsabilidad                                                                        |
+| -------------------------- | -------------------------------------------------------------------------------------- |
+| `src/main.js`              | Entrada estática: importa la aplicación.                                               |
+| `src/engine/state.js`      | Estado, PRNG, efectos, requisitos básicos, etapas e historial.                         |
+| `src/engine/game.js`       | Coordinación anual, mortalidad, biografía y API de acciones V2 conservada.             |
+| `src/systems/`             | Carrera/educación, economía, relaciones y logros.                                      |
+| `src/narrative/`           | Elección V3, baraja, condiciones, NPCs y metaprogreso; `legacy-events.js` preserva V2. |
+| `src/persistence/`         | Envoltura V3, validación, migración y lector/validador V2.                             |
+| `src/config/`              | Claves estables de persistencia y configuración publicitaria.                          |
+| `src/ui/`                  | DOM, vistas, input, transiciones, audio, iconos y anuncios opcionales.                 |
+| `content/moments/`         | Colecciones de Moments, registro y factories `card`/`choice`.                          |
+| `content/npcs/`            | Definiciones de personajes y contextos.                                                |
+| `content/catalog.js`       | Etapas, rasgos, economía, carrera, educación y logros.                                 |
+| `content/legacy/events.js` | Contenido V2 necesario para compatibilidad y regresión.                                |
+| `assets/`                  | Recursos finales optimizados; nombres actuales preservados.                            |
+| `lore/`                    | Canon aprobado; estructura pendiente de Task 02.                                       |
+| `tests/`, `tools/`         | Verificación, servidor local, replay y preparación de recursos.                        |
 
-## Contrato de una decisión
+No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. El CSS sigue en la raíz para no alterar cascada ni URLs. Los subcatálogos se dividirán cuando su crecimiento lo justifique.
 
-1. La baraja guarda el ID de una tarjeta elegible. Recargar conserva la tarjeta y la semilla; una nueva vida utiliza una semilla aleatoria nueva.
-2. El gesto elige izquierda/derecha al superar el umbral. El motor comprueba el ID esperado para rechazar entradas antiguas o duplicadas.
-3. Aplica efectos, operación de simulación, vínculo, personalidad, banderas y consecuencias sobre una copia. Un error no deja cambios parciales.
-4. Cada tarjeta consume meses (normalmente seis; primeros años, doce). Cada cruce de año liquida ingresos/gastos, carrera, estudios, relaciones, envejecimiento, mortalidad y consecuencias V2 pendientes.
-5. Registra hitos y logros. Elige primero una consecuencia narrativa vencida y elegible; en otro caso extrae una tarjeta ponderada. Descubre su personaje.
-6. Guarda partida, metaprogreso y ajustes en una escritura. La tarjeta sale desde su posición de arrastre; entra la siguiente y se animan los indicadores. No hay confirmación ni botón de siguiente año.
+## Flujo y propiedad del estado
 
-Los gestos verticales, cancelados o inferiores al umbral vuelven al centro. La pantalla conserva botones y flechas de teclado. Durante la salida se bloquean entradas duplicadas. Las animaciones se suprimen con movimiento reducido.
+```text
+index.html → src/main.js → UI app
+                             ↓ carga
+                       persistencia → state + meta + settings
+                             ↓
+content → narrativa → motor anual / sistemas → state + meta
+             ↑                                  ↓
+       entrada izquierda/derecha ← UI ← render + guardado
 
-## Estado
-
-Se conserva el núcleo validado `state.version = 2` para reutilizar sus sistemas. La extensión `state.story.version = 3` contiene mes, tarjeta actual, contador, eventos vistos, cola temporal, NPCs, personalidad, arcos y último resultado. La envoltura de persistencia es versión 3. Los cuatro indicadores se derivan, nunca se guardan duplicados.
-
-`meta` conserva los récords/logros V2 y añade `discovered`, `characters`, `secrets`, `endings`, `flags`, `chapter`, `lastChapterLife` y `echoes`. Los nombres y los finales de las últimas veinte vidas sirven a la metanarrativa. Los demás descubrimientos no se limitan a veinte vidas.
-
-## Escribir una tarjeta
-
-```js
-card(
-  "id_unico",
-  "vera",
-  "Una situación breve, con su voz.",
-  choice("Quedarme", { discipline: 4 }, { flags: ["meQuedo"] }),
-  choice(
-    "Acompañarla",
-    { cash: -800 },
-    {
-      bond: 12,
-      behavior: "social",
-      follow: [{ id: "reencuentro", months: 36 }],
-      milestone: "Te mudaste con Vera.",
-    },
-  ),
-  {
-    requires: { min: 22, bond: { vera: 65 } },
-    arc: "amistad",
-    pool: "friendship",
-  },
-);
+lore → decisiones editoriales → content (sin dependencia de runtime)
+tools / tests → módulos puros (nunca importados desde la aplicación)
 ```
 
-Las tarjetas de seguimiento usan `queued:true`; no entran espontáneamente en la baraja. La cola guarda meses absolutos y solo consume la tarjeta al poder presentarla. Si su NPC murió, la consecuencia no se presenta. Las tarjetas únicas se marcan al resolverlas; las rutinas usan `once:false` y `cooldown` en meses. La rareza afecta al peso, nunca se muestra una etiqueta de rareza.
+`ui/app.js` posee la sesión cargada y la presentación: pantalla, diálogo, foco y bloqueo de input. El estado serializable vive fuera del DOM y cambia mediante funciones de simulación/narrativa. Renderizar no debe consumir la semilla ni resolver consecuencias. No hay bucle por frame: cada elección inicia una transacción.
 
-`operation` adapta las funciones existentes para contratar, estudiar, comprar, ahorrar, retirarse o formar una familia. Los requisitos deben permitir ambas respuestas; las pruebas de vidas completas detectan opciones que quedarían bloqueadas. Algunas necesidades o compromisos narrativos permiten endeudarse; compras de catálogo requieren efectivo.
+## Flujo de un Moment
 
-Los arcos definidos son radio, Vera, taller, Noa, educación, cartas, vivienda, cuaderno, negocio, Luz, mentoría, salud, techo, deuda y liderazgo. No todos son lineales ni aparecen en todas las vidas.
+1. La baraja filtra requisitos, NPC vivo, enfriamiento y compromisos económicos. Prioriza consecuencias vencidas elegibles; después prioridades y selección ponderada.
+2. Guarda un ID en `state.story.current`. La UI presenta persona, texto, dos respuestas y cuatro indicadores derivados.
+3. Gestos, flechas y botones producen izquierda/derecha. La aplicación bloquea entradas durante la transición.
+4. `narrative/engine.choose` comprueba el ID esperado y copia estado/meta antes de aplicar efectos, operación, vínculos, banderas, comportamiento y cola. Un error descarta la copia.
+5. Consume meses; cada cruce anual llama a `engine/game.advanceYear({draw:false})`, sistemas y envejecimiento de NPCs. Conserva consecuencias V2 pendientes.
+6. Actualiza logros, hitos, fin de vida y siguiente Moment. Asigna la copia, guarda y anima la salida/entrada. No hay botón de siguiente año.
 
-## Archivo (spoilers)
+**Moment** es la unidad técnica. Hoy solo es binaria; `CARDS`, `card()`, `event` y los campos serializados siguen por compatibilidad. Ver [contrato de contenido](CONTENT.md).
 
-El sobre introduce un detalle extraño en una vida normal. En otra vida Iria recuerda la decisión; una libreta muestra el nombre real de una vida anterior. Más adelante se descubre un archivo de recuerdos y se decide custodiar sus nombres o abrirlo. La quinta vida permite observar el desenlace. Los mínimos usan **vidas terminadas**, no partidas abandonadas; reiniciar una vida repetidamente no desbloquea el misterio.
+## Persistencia
 
-## Migración y límites
+Núcleo `state.version = 2`, extensión `state.story.version = 3`, envoltura `version = 3`; versión del paquete independiente. La UI guarda `state`, `meta`, `settings` en una escritura localStorage. No guarda DOM, animaciones ni indicadores derivados.
 
-La primera carga sin V3 intenta leer V2 con su validador original. Conserva los efectos diferidos, relaciones y progreso; conecta la primera amistad/pareja/hija a las identidades narrativas y conserva sus nombres. Sustituye el evento pendiente V2 por uno V3 sin cobrar ni resolver la elección anterior. Las vidas terminadas muestran su memorial. La clave V2 no se modifica hasta un reinicio explícito.
+Primero valida V3; si no existe, intenta V2. No reemplaza un V3 ilegible con V2 silenciosamente. Conserva lector original, IDs y orden de PRNG. Ver [guardados](SAVES.md).
 
-No existe coordinación entre pestañas ni sincronización remota. Un fallo de almacenamiento avisa y deja seguir en memoria. No hay PWA ni arranque offline garantizado. Las dependencias de desarrollo solo se usan en pruebas y preparación del arte.
+## Recursos, desarrollo y publicación
 
-## Publicación
+HTML carga `style.css` y `src/main.js` con rutas relativas al documento. CSS importa fuentes locales. La UI construye URLs WebP por NPC/apariencia/etapa; `street` corresponde a `neighborhood.webp`. Precarga el siguiente retrato al elegir. Ver [assets](ASSETS.md).
 
-Conservar dominio, SEO, verificación y `ads.txt`. Los espacios publicitarios se limitan al inicio y al final, desactivados por defecto. `npm run check` recorre los módulos recursivamente y verifica recursos. El workflow ejecuta motor, navegador, axe y la prueba de subruta de Pages; no despliega ni integra ramas.
+No hay build: la raíz es el artefacto de producción. El servidor local sirve los mismos archivos. Las pruebas Pages añaden `/lifesim/`. `quality.yml` ejecuta checks, Node, Chromium/axe y adjunta capturas; no despliega ni fusiona ramas. Dominio y archivos de publicación se mantienen. No hay service worker ni manifest.
+
+`tools/debug-life.mjs` permite replay Node con semilla y decisiones. No toca localStorage, no se importa en el navegador y no expone panel/cheats de producción.
+
+## Límites actuales
+
+La separación no convierte V3 en un motor genérico: `game.js` coordina sistemas que también usan `state.js`; hay predicados JS de logros y eventos V2. Narrativa y retratos aún tienen casos por ID específico. Son deuda heredada documentada en [estado actual](CURRENT_STATE.md); no debe multiplicarse. Task 01 no cambia historias ni introduce un DSL nuevo.
+
+## Mapa del traslado
+
+- `js/state.js`, `js/game.js` → `src/engine/`.
+- Carrera, economía, relaciones y logros de `js/` → `src/systems/`.
+- `js/narrative/` → `src/narrative/`, salvo storage → `src/persistence/storage.js`.
+- `js/events.js` → `src/narrative/legacy-events.js`; `js/storage.js` → `src/persistence/legacy-storage.js`.
+- `js/ui/`, audio, ads e iconos → `src/ui/`; `js/ui.js` → `src/main.js`.
+- `data/narrative/` → `content/moments/`; `data/npcs.js` → `content/npcs/index.js`.
+- `data/catalog.js` → `content/catalog.js`; eventos V2 → `content/legacy/events.js`; anuncios → `src/config/ads.js`.
+
+Imports, tests y entrada HTML apuntan a las rutas nuevas. No hay copias duplicadas ni módulos puente. Assets y archivos de dominio conservan rutas.

@@ -1,4 +1,4 @@
-import { AD_CONFIG } from "../data/ads.js";
+import { AD_CONFIG } from "../config/ads.js";
 export function mountAd(placement, container) {
   const slot = AD_CONFIG.slots[placement];
   if (

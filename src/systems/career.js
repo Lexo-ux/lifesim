@@ -1,5 +1,5 @@
-import { COURSES, JOBS, SKILL_LABELS, STAT_LABELS } from "../data/catalog.js";
-import { apply, qualifies, log } from "./state.js";
+import { COURSES, JOBS, SKILL_LABELS, STAT_LABELS } from "../../content/catalog.js";
+import { apply, qualifies, log } from "../engine/state.js";
 import { salary } from "./economy.js";
 
 export function requirementText(item) {

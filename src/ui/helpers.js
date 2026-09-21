@@ -1,5 +1,5 @@
-import { icon } from "../icons.js";
-import { stage } from "../state.js";
+import { icon } from "./icons.js";
+import { stage } from "../engine/state.js";
 export { icon };
 export const esc = (x) =>
   String(x ?? "").replace(

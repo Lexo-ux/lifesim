@@ -1,10 +1,10 @@
-import { ACTIVITIES, TRAITS, JOBS, COURSES } from "../data/catalog.js";
+import { ACTIVITIES, TRAITS, JOBS, COURSES } from "../../content/catalog.js";
 import { createState, apply, random, qualifies, stage, log } from "./state.js";
-import { drawEvent, resolveChoice, resolvePending } from "./events.js";
-import { settleYear, transact } from "./economy.js";
-import { hire, enroll, careerYear, educationYear, retire } from "./career.js";
-import { interact, relationshipsYear } from "./relationships.js";
-import { updateAchievements } from "./achievements.js";
+import { drawEvent, resolveChoice, resolvePending } from "../narrative/legacy-events.js";
+import { settleYear, transact } from "../systems/economy.js";
+import { hire, enroll, careerYear, educationYear, retire } from "../systems/career.js";
+import { interact, relationshipsYear } from "../systems/relationships.js";
+import { updateAchievements } from "../systems/achievements.js";
 
 export function newLife(options, meta, seed) {
   const s = createState(options, seed);

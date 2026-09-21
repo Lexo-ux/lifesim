@@ -1,8 +1,8 @@
-import { createState, apply, log, stage } from "../state.js";
-import { advanceYear, finishLife } from "../game.js";
-import { hire, enroll, retire } from "../career.js";
-import { transact, netWorth } from "../economy.js";
-import { updateAchievements } from "../achievements.js";
+import { createState, apply, log, stage } from "../engine/state.js";
+import { advanceYear, finishLife } from "../engine/game.js";
+import { hire, enroll, retire } from "../systems/career.js";
+import { transact, netWorth } from "../systems/economy.js";
+import { updateAchievements } from "../systems/achievements.js";
 import { drawCard, currentCard } from "./deck.js";
 import { now } from "./conditions.js";
 import { meet, remember, npcYear } from "./npc.js";

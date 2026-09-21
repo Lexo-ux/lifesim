@@ -1,10 +1,10 @@
-import { NAMES, TRAITS, ORIGINS } from "../../data/catalog.js";
+import { NAMES, TRAITS, ORIGINS } from "../../content/catalog.js";
 import { startLife, choose } from "../narrative/engine.js";
-import { load, save, reset } from "../narrative/storage.js";
-import { emptyMeta } from "../achievements.js";
+import { load, save, reset } from "../persistence/storage.js";
+import { emptyMeta } from "../systems/achievements.js";
 import { extendMeta } from "../narrative/meta.js";
-import { sound } from "../audio.js";
-import { mountAd } from "../ads.js";
+import { sound } from "./audio.js";
+import { mountAd } from "./ads.js";
 import { gameScreen, portraitFor } from "./card.js";
 import { currentCard } from "../narrative/deck.js";
 import {

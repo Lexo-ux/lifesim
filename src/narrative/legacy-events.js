@@ -1,7 +1,7 @@
-import { EVENTS } from "../data/events.js";
-import { apply, random, qualifies, log } from "./state.js";
-import { addRelationship } from "./relationships.js";
-import { requirementText } from "./career.js";
+import { EVENTS } from "../../content/legacy/events.js";
+import { apply, random, qualifies, log } from "../engine/state.js";
+import { addRelationship } from "../systems/relationships.js";
+import { requirementText } from "../systems/career.js";
 
 export const currentEvent = (s) => EVENTS.find((e) => e.id === s.eventId);
 export function drawEvent(s) {

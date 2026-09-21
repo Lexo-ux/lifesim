@@ -2,7 +2,7 @@
 
 ## Motor y narrativa
 
-`npm test`: 26 pruebas. Incluye 100 vidas completas de V2 y 100 de V3 con políticas de izquierda/derecha/alternancia. Cada turno comprueba elegibilidad, finitud, rangos, dinero, guardado válido y final único. La baraja debe ofrecer más de 90 tarjetas distintas en esas simulaciones.
+`npm test`: 28 pruebas. Incluye 100 vidas completas de V2 y 100 de V3 con políticas de izquierda/derecha/alternancia. Cada turno comprueba elegibilidad, finitud, rangos, dinero, guardado válido y final único. La baraja debe ofrecer más de 90 tarjetas distintas en esas simulaciones. Task 01 añade validación de contenido real y pruebas negativas del validador.
 
 Pruebas específicas: 130 IDs únicos y dos decisiones, escritura concisa, referencias de seguimiento, requisitos y enfriamientos, identidad de NPCs, promesa infantil que vuelve doce años después, ramificación de Vera, pareja/hija, fallecimiento de personajes, universidad/graduación/empleo/casa/ahorro, entrada duplicada, cinco vidas del Archivo y la persistencia de sus nombres y elecciones.
 
@@ -28,3 +28,14 @@ El sonido se sintetiza tras una interacción, el volumen empieza silenciado y se
 ## Alcance
 
 Los recorridos simulados comprueban reglas y ejecución, no sustituyen pruebas de diversión con personas. La recomendación siguiente es medir sesiones reales, repetición de rutinas y alcance de los arcos, y ampliar contenido de vejez y reacciones a la personalidad. No hay sincronización entre dispositivos/pestañas ni PWA.
+
+## Task 01 — reestructuración (2026-09-21)
+
+- `npm run check`: 51 módulos con sintaxis válida; imports relativos, límites content/runtime, recursos y archivos de publicación comprobados.
+- `npm run validate:content`: 130 Moments y doce NPCs válidos. Referencias, assets, requisitos, operaciones y cadenas comprobados; no es una prueba exhaustiva de alcanzabilidad.
+- `npm test`: 28/28 aprobadas.
+- `node tools/browser-qa.mjs` con `BROWSER_CHANNEL=msedge` (mismo runner que `npm run test:browser`): recorrido completo, ocho vistas axe sin infracciones y Pages bajo `/lifesim/` aprobados.
+- Antes de mover módulos se capturaron ocho vidas completas con reloj fijo y semillas 1–8. La comparación posterior confirmó igualdad exacta de estado y meta en cada turno. El artefacto temporal está en `output/`, no en producción.
+- Replay de desarrollo: semilla 42, cuarenta decisiones, final a edad 21; no accede a localStorage.
+- Diff vacío para assets, CSS, CNAME, robots, sitemap, ads.txt, verificación, favicon, OG, `.nojekyll` y lockfile. HTML cambia únicamente las dos referencias al entry point.
+- No hay build ni lint semántico configurados. Se verifican los archivos estáticos finales con checks y navegador. No se cambia la configuración remota de Pages ni DNS.

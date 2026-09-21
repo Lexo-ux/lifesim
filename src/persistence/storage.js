@@ -1,11 +1,12 @@
-import { load as loadV2, validState, reset as resetV2 } from "../storage.js";
-import { emptyMeta } from "../achievements.js";
-import { CARD_BY_ID } from "../../data/narrative/index.js";
-import { NPCS } from "../../data/npcs.js";
-import { attachStory } from "./engine.js";
-import { drawCard } from "./deck.js";
-import { extendMeta, ending } from "./meta.js";
-export const SAVE_KEY = "lifesim.v3";
+import { load as loadV2, validState, reset as resetV2 } from "./legacy-storage.js";
+import { emptyMeta } from "../systems/achievements.js";
+import { CARD_BY_ID } from "../../content/moments/index.js";
+import { NPCS } from "../../content/npcs/index.js";
+import { attachStory } from "../narrative/engine.js";
+import { drawCard } from "../narrative/deck.js";
+import { extendMeta, ending } from "../narrative/meta.js";
+import { STORAGE_KEYS } from "../config/persistence.js";
+export const SAVE_KEY = STORAGE_KEYS.current;
 const record = (x) => !!x && typeof x === "object" && !Array.isArray(x);
 const number = (n) => Number.isFinite(n) && n >= 0;
 const strings = (x) =>

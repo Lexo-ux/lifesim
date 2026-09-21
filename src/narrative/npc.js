@@ -1,5 +1,5 @@
-import { NPCS } from "../../data/npcs.js";
-import { clamp, log } from "../state.js";
+import { NPCS } from "../../content/npcs/index.js";
+import { clamp, log } from "../engine/state.js";
 
 export function meet(s, id) {
   const spec = NPCS[id];
