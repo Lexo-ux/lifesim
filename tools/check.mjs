@@ -82,6 +82,14 @@ async function checkStyles(file) {
 await checkStyles(path.resolve("style.css"));
 const art = JSON.parse(await fs.readFile("assets/art-direction.json", "utf8"));
 for (const asset of art.assets) await fs.access(asset.path);
+const threshold = JSON.parse(
+  await fs.readFile("assets/threshold/manifest.json", "utf8"),
+);
+for (const asset of threshold.assets) {
+  const stat = await fs.stat(asset.path);
+  if (stat.size !== asset.shipped.bytes)
+    throw new Error(`Stale asset manifest: ${asset.path}`);
+}
 console.log(
   `Syntax OK: ${files.length} modules. Entry points, 12 life sprites, 20 NPC portraits, 7 backgrounds and publication files OK.`,
 );

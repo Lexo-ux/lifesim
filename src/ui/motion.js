@@ -11,7 +11,12 @@ export function duration(tier) {
   return Number.parseFloat(motionToken(`motion-${tier}`)); // Tokens are milliseconds.
 }
 preference.addEventListener("change", () => {
-  if (reduced()) for (const animation of active) animation.finish();
+  if (reduced())
+    for (const animation of active) {
+      if (animation.effect.getTiming().iterations === Infinity)
+        animation.cancel();
+      else animation.finish();
+    }
 });
 // A settled promise and cancel handle: navigation leaves no rejected promise.
 export function animate(
@@ -19,6 +24,7 @@ export function animate(
   frames,
   tier = "standard",
   easing = "ease-settle",
+  options = {},
 ) {
   if (!element || reduced())
     return { finished: Promise.resolve(), cancel() {} };
@@ -26,6 +32,7 @@ export function animate(
     duration: duration(tier),
     easing: motionToken(easing),
     fill: "both",
+    ...options,
   });
   active.add(animation);
   const finished = animation.finished

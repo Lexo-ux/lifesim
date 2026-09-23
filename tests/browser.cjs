@@ -27,6 +27,10 @@ const BASE = process.env.BASE_URL || "http://127.0.0.1:4173";
     await page.locator("[name=name]").fill("Valentina");
     await page.screenshot({ path: "output/qa/v3-creation.png" });
     await page.locator("button[type=submit]").click();
+    await page.waitForSelector(".narrative-card");
+    await page.waitForFunction(() =>
+      document.getAnimations().every((a) => a.playState === "finished"),
+    );
     const read = () =>
       page.evaluate(() => JSON.parse(localStorage.getItem("lifesim.v3")));
     const waitCount = async (n) =>
@@ -257,10 +261,11 @@ const BASE = process.env.BASE_URL || "http://127.0.0.1:4173";
     await restore(dead);
     assert.ok(await page.locator(".death-screen").isVisible());
     await screenshot("v3-death");
-    await page.locator("[data-action=remember]").click();
     assert.ok(await page.locator(".final-story").isVisible());
     await page.locator("[data-action=creator]").click();
     await page.locator("button[type=submit]").click();
+    await page.waitForSelector(".narrative-card");
+    await stable();
     assert.equal((await read()).state.age, 0);
     assert.equal((await read()).meta.completed, 1);
     // New life confirmation is scoped to replacing an active life.
@@ -268,6 +273,8 @@ const BASE = process.env.BASE_URL || "http://127.0.0.1:4173";
     await page.locator("[data-action=random]").click();
     assert.ok(await page.locator("[data-action=confirm-new]").isVisible());
     await page.locator("[data-action=confirm-new]").click();
+    await page.waitForSelector(".narrative-card");
+    await stable();
     assert.equal((await read()).state.age, 0);
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.keyboard.press("ArrowRight");

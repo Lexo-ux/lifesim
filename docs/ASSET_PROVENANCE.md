@@ -27,3 +27,20 @@ ImageGen keeps original PNGs in its generated_images task directory; source name
 Reviewed full-size and in mobile/desktop cards: natural proportions, continuous young/elder identity, clear silhouettes, no baked UI/text, preserved transparency and coherent ink/gouache/material palette. `tools/art-review.html` compares all candidates against the new park and current card materials. Vera and the park are a scoped runtime pilot, not a complete conversion. The elder study needs a more advanced aging pass before a full age-sheet production rollout; the exact same coat is intentional for identity comparison, not a final lifetime wardrobe. Vera's generated skin lighting is somewhat lighter than the old portrait; identity review should preserve her established dark complexion across the eventual age set.
 
 All original twelve protagonist sprites, twenty NPC portraits and seven environments remain **LEGACY VISUAL ASSETS**. Do not remove them while referenced. Read [ART_DIRECTION](ART_DIRECTION.md) for the mandatory incremental replacement plan and safe-crop production specifications.
+
+## Task 04 — Threshold family, 2026-09-21
+
+Six original project-specific ImageGen requests; generator tool exposes no model/version identifier. Revision 1 and exact prompts are recorded in [threshold-prompts.json](threshold-prompts.json). Environment/person use the Task 03 park as a style reference; the four life groups use the young protagonist study as a style reference only, not canonical identity. No online artwork, external likeness reference or audio sample. Each master remains in the local generated-images directory; no masters committed.
+
+| Production file                           | Original  | Shipped       |  Bytes | Alpha | Purpose                                      |
+| ----------------------------------------- | --------- | ------------- | -----: | ----- | -------------------------------------------- |
+| assets/threshold/environment_v1.webp      | 1086×1448 | 768×1024 WebP | 161252 | No    | Monumental doorway, empty light and ground   |
+| assets/threshold/person_v1.webp           | 1024×1536 | 320×480 WebP  |  19434 | Yes   | Anonymous modern person, seen from behind    |
+| assets/threshold/lives_beginnings_v1.webp | 1086×1448 | 360×480 WebP  |  41412 | Yes   | Baby, child, elder with cane                 |
+| assets/threshold/lives_vocations_v1.webp  | 1086×1448 | 360×480 WebP  |  48598 | Yes   | Student, physician, researcher               |
+| assets/threshold/lives_bonds_v1.webp      | 1086×1448 | 360×480 WebP  |  43278 | Yes   | Wedding couple, parent holding child         |
+| assets/threshold/lives_struggle_v1.webp   | 1086×1448 | 360×480 WebP  |  33738 | Yes   | Hunter/explorer, wounded fighter with crutch |
+
+Total: 347,712 bytes. Resize only, Sharp WebP quality 84 / alphaQuality 92 / effort 6; no recoloring, redrawing, alpha keying or upscaling. Exact source PNG names and measured metadata: `assets/threshold/manifest.json`. Reproduce with `node tools/export-threshold.mjs <master-directory>`. The person has true alpha, soft gouache edges and no painted background. Technical masks fade outer environment boundaries and clip fragments to the aperture; they do not redraw the artwork.
+
+Review: source and rendered frames checked for human anatomy, modern civilian silhouette, ink/gouache family, dark ornament/light hierarchy and absence of baked UI/text. Accepted candidates after composition review; iteration occurred in placement, blending, short-height sizing and reveal timing. No rejected raster versions or invented external approvals. The symbolic hunter and wounded figure carry no class, rank or historical identity. Social recommendation and remaining limitations: [THRESHOLD](THRESHOLD.md).
