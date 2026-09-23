@@ -23,6 +23,7 @@ import {
   clearMomentFeedback,
 } from "./transitions.js";
 import { animateIndicators } from "./indicators.js";
+import { updateCreatorPreview } from "./creator.js";
 import { mountThreshold, revealLife } from "./threshold.js";
 
 const data = load(),
@@ -232,12 +233,9 @@ document.addEventListener("click", (e) => {
     open(creator({ appearance }), "creator-modal");
   } else if (action === "appearance") {
     appearance = Number(value);
-    document.querySelector("#creation-preview").src =
-      `assets/characters/${appearance}-young.webp`;
-    modal.querySelectorAll(".appearance").forEach((b) => {
-      b.classList.toggle("selected", Number(b.dataset.value) === appearance);
-      b.setAttribute("aria-pressed", Number(b.dataset.value) === appearance);
-    });
+    updateCreatorPreview(modal, appearance);
+  } else if (action === "preview-stage") {
+    updateCreatorPreview(modal, appearance, value);
   } else if (action === "random") {
     const pick = (list) => list[Math.floor(Math.random() * list.length)];
     begin({

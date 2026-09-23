@@ -35,6 +35,8 @@ Decision previews are temporary paper slips with a direction arrow and the exist
 
 ## Character production specification
 
+Task 05 establishes [CHARACTER_ART](CHARACTER_ART.md) as the production authority for **Veiled Identity**: deliberately partly concealed, fully drawn human faces, stable appearance families and restrained full-color ink/gouache. Its concrete framing and versioned family directory refine the earlier general guidance below.
+
 - Master portrait: **1536×2048 (3:4)** RGBA preferred. Candidate generation may differ; record actual dimensions. Ship at up to 540×720 WebP, target ≤140 KB; reject artifacts after compression. No text or frame baked in.
 - Single person, full crown and shoulder silhouette inside 8% margins; upper body to hips. Eyes within top 18–30%, chin within top 35–45%. Neutral upright three-quarter framing. Clothing may continue to bottom; do not crop hair/hands accidentally.
 - Runtime scene is variable height: inspect at 360×800 and compact 360×640. Character is bottom anchored, environment cover-cropped independently. UI adds gradients and speaker; do not bake them into artwork.
@@ -44,11 +46,11 @@ Decision previews are temporary paper slips with a direction arrow and the exist
 
 ## Mandatory replacement plan
 
-**LEGACY VISUAL ASSETS:** all twelve `assets/characters/{0,1}-*.webp`, all twenty original `assets/npcs/{id}[-age].webp`, and the seven original backgrounds. They remain functional compatibility assets, not the final style reference. The creator preview and all protagonist age stages deliberately retain them until a complete identity/age sheet is validated. Task 04 replaces the title artwork with its own family.
+**LEGACY VISUAL ASSETS:** all twelve `assets/characters/{0,1}-*.webp`, all twenty original `assets/npcs/{id}[-age].webp`, and the seven original backgrounds. They remain functional compatibility assets, not the final style reference. Task 05 has validated and atomically replaced both complete protagonist families in all active surfaces; original protagonist files remain archival compatibility resources. NPC/background replacement is still partial. Task 04 replaces the title artwork with its own family.
 
 1. Validate the small Task 03 family: young/elder same identity, civilian, anonymous Awakened, normal park. See [ASSET_PROVENANCE](ASSET_PROVENANCE.md).
 2. Pilot adult Vera and the park in existing Moments. Preserve the other Vera ages as legacy; the mixed transition is documented, not treated as finished production art.
-3. Produce both protagonist appearances as full six-stage sheets from approved identity references. Review age continuity, pose, alpha and all screens together; switch each complete appearance atomically.
+3. **Complete in Task 05:** both protagonist appearances have six reviewed Veiled Identity stages, centralized in `src/ui/characters.js`; creator, self Moments, profile and memorial use the complete family.
 4. Replace NPC identity families including existing age variants; then add only expressions required by authorized content. Never mass-generate unrelated faces from unrelated prompts.
 5. Replace locations family by family. Keep old files until import/asset validation and all references establish they are unused; removal is a separate deliberate change.
 
@@ -105,4 +107,4 @@ No medieval default, Disney-like faces, neon cyberpunk, rainbow rarity, gold eve
 
 ## Task 04 — El Umbral
 
-A weathered stone/aged doorway occupies one portrait composition against blue-black darkness. Its restrained organic carvings stay dark; the ivory opening and ground spill carry the contrast. The anonymous person wears modern civilian clothing and faces away. Four transparent groups contain ten symbolic life concepts. They have no identity, rank, class or predicted outcome. HTML owns every word and action. ImageGen candidates were inspected at source size and in the composed 360px scene; the final pass softened image boundaries, moved fragments entirely inside the aperture and corrected short-screen space. The ink/gouache treatment, ordinary anatomy and limited palette pass the family review; the creator/gameplay age library remains intentionally legacy. Full provenance, limits and social recommendation: [THRESHOLD](THRESHOLD.md).
+A weathered stone/aged doorway occupies one portrait composition against blue-black darkness. Its restrained organic carvings stay dark; the ivory opening and ground spill carry the contrast. The anonymous person wears modern civilian clothing and faces away. Four transparent groups contain ten symbolic life concepts. They have no identity, rank, class or predicted outcome. HTML owns every word and action. ImageGen candidates were inspected at source size and in the composed 360px scene; the final pass softened image boundaries, moved fragments entirely inside the aperture and corrected short-screen space. The ink/gouache treatment, ordinary anatomy and limited palette pass the family review; the creator/gameplay age library was legacy at Task 04 and is superseded by the complete Task 05 family. Full provenance, limits and social recommendation: [THRESHOLD](THRESHOLD.md).
