@@ -12,7 +12,7 @@ Human life is tactile: expressive imperfect ink contours, gouache shadow, fabric
 
 Convergence is spatially wrong, not automatically evil: an interrupted contour, displaced perspective or foreign directional light. Spectral ivory and desaturated cyan interrupt the human palette. It is not a purple aura applied to everything. Existing V3 mystery cards receive only a restrained edge/material distinction; that styling does not reclassify their fiction as canonical Convergence.
 
-The Threshold is the central future symbol of birth, death, transition and possibility. Strong impossible warm light is reserved for it. Task 03 supplies language and tokens; the actual title, portal and crossing belong to Task 04.
+The Threshold is the central visual metaphor of birth, death, transition and possibility. Strong impossible warm light is reserved for it. Task 04 implements the portrait title, anonymous modern figure, symbolic lives and crossing; see [THRESHOLD](THRESHOLD.md). It supplies no explanation of repeated lives or future canon.
 
 ## Palette, light and material
 
@@ -25,7 +25,7 @@ The Threshold is the central future symbol of birth, death, transition and possi
 | War (future)              | Smoke, reduced saturation, sharp interrupted silhouettes; preserve readable faces.                |
 | Death                     | Quiet space, softened material and warm human memory; no automatic red/black horror treatment.    |
 
-`styles/tokens.css` is the numeric palette authority. Paper uses a 80×80 SVG tile with faint irregular marks: original code-native texture, no filters, generated noise loop or full-screen grain animation. It never sits over text as a separate overlay. Shadows indicate card pickup, not persistent glow. No continuously animated blur, gradients or particles.
+`styles/tokens.css` is the numeric palette authority. Paper uses a 80×80 SVG tile with faint irregular marks: original code-native texture, no filters, generated noise loop or full-screen grain animation. It never sits over text as a separate overlay. Shadows indicate card pickup, not persistent glow. No continuously animated blur or gradients. Task 04 allows ten sparse SVG dust dots moving as one group on the title only.
 
 ## Moment language
 
@@ -44,7 +44,7 @@ Decision previews are temporary paper slips with a direction arrow and the exist
 
 ## Mandatory replacement plan
 
-**LEGACY VISUAL ASSETS:** all twelve `assets/characters/{0,1}-*.webp`, all twenty original `assets/npcs/{id}[-age].webp`, and the seven original backgrounds. They remain functional compatibility assets, not the final style reference. Current title and all protagonist age stages deliberately retain them until a complete identity/age sheet is validated.
+**LEGACY VISUAL ASSETS:** all twelve `assets/characters/{0,1}-*.webp`, all twenty original `assets/npcs/{id}[-age].webp`, and the seven original backgrounds. They remain functional compatibility assets, not the final style reference. The creator preview and all protagonist age stages deliberately retain them until a complete identity/age sheet is validated. Task 04 replaces the title artwork with its own family.
 
 1. Validate the small Task 03 family: young/elder same identity, civilian, anonymous Awakened, normal park. See [ASSET_PROVENANCE](ASSET_PROVENANCE.md).
 2. Pilot adult Vera and the park in existing Moments. Preserve the other Vera ages as legacy; the mixed transition is documented, not treated as finished production art.
@@ -64,7 +64,7 @@ Depth order: background atmosphere → environment image → character → Momen
 
 ## Exceptional Moments and ranks — design only
 
-Marriage/birth: a brief warmer edge and intimate sound. Death: more breathing room and a slower fade. Awakening: alien light arrives before its explanation. Historical catastrophe/NPC loss: reduce normal motion and let text/person dominate. First Threshold: warm light is exceptional. These future events are not implemented here.
+Marriage/birth: a brief warmer edge and intimate sound. Death: more breathing room and a slower fade. Awakening: alien light arrives before its explanation. Historical catastrophe/NPC loss: reduce normal motion and let text/person dominate. First Threshold: warm light is exceptional. Outside the Threshold title implemented in Task 04, these future exceptional gameplay events are not implemented.
 
 Ranks use increasing pressure on the same visual grammar, not loot colors:
 
@@ -102,3 +102,7 @@ Current synthesized optional audio remains a placeholder with persisted mute. No
 ## Anti-patterns
 
 No medieval default, Disney-like faces, neon cyberpunk, rainbow rarity, gold everywhere, pulsing CTA, casino flashes, generic vector avatars, admin grids, ornamental tooltip walls, unreadable grain, or cinematics on every swipe. An ordinary Moment must remain ordinary enough for an exceptional Moment to matter.
+
+## Task 04 — El Umbral
+
+A weathered stone/aged doorway occupies one portrait composition against blue-black darkness. Its restrained organic carvings stay dark; the ivory opening and ground spill carry the contrast. The anonymous person wears modern civilian clothing and faces away. Four transparent groups contain ten symbolic life concepts. They have no identity, rank, class or predicted outcome. HTML owns every word and action. ImageGen candidates were inspected at source size and in the composed 360px scene; the final pass softened image boundaries, moved fragments entirely inside the aperture and corrected short-screen space. The ink/gouache treatment, ordinary anatomy and limited palette pass the family review; the creator/gameplay age library remains intentionally legacy. Full provenance, limits and social recommendation: [THRESHOLD](THRESHOLD.md).

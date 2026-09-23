@@ -36,7 +36,11 @@ let browser;
     if (r.status() >= 400) failures.push(`${r.status()}: ${r.url()}`);
   });
   await page.goto(base);
-  await page.getByRole("button", { name: "Vida al azar" }).click();
+  await page.getByRole("button", { name: "Dejarlo al azar" }).click();
+  await page.waitForSelector(".narrative-card");
+  await page.waitForFunction(() =>
+    document.getAnimations().every((a) => a.playState === "finished"),
+  );
   await page.locator("[data-action=choose]").first().click();
   await page.waitForSelector("[data-card=first_steps]");
   await page.evaluate(() => document.fonts.ready);
@@ -58,6 +62,11 @@ let browser;
     await fs.readFile("assets/art-direction.json", "utf8"),
   );
   for (const item of art.assets)
+    assert.equal((await fetch(base + item.path)).status, 200, item.path);
+  const threshold = JSON.parse(
+    await fs.readFile("assets/threshold/manifest.json", "utf8"),
+  );
+  for (const item of threshold.assets)
     assert.equal((await fetch(base + item.path)).status, 200, item.path);
   assert.deepEqual(failures, []);
   console.log(

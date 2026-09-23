@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "date": "2026-09-21",
+  "prompts": "docs/threshold-prompts.json",
+  "assets": [
+    {
+      "path": "assets/threshold/environment_v1.webp",
+      "purpose": "Monumental doorway, empty light and ground",
+      "source": "exec-393e8490-728e-4c0b-9e38-b156525062a3.png",
+      "generator": "ImageGen",
+      "promptRevision": 1,
+      "promptKey": "environment",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": false
+      },
+      "shipped": {
+        "width": 768,
+        "height": 1024,
+        "alpha": false,
+        "bytes": 161252
+      },
+      "format": "WebP",
+      "optimization": "Sharp resize inside; quality 84, alphaQuality 92, effort 6; no upscaling, redraw or alpha keying"
+    },
+    {
+      "path": "assets/threshold/person_v1.webp",
+      "purpose": "Anonymous modern person, seen from behind",
+      "source": "exec-71378ebb-f3d9-4b60-9d15-edf90b62c500.png",
+      "generator": "ImageGen",
+      "promptRevision": 1,
+      "promptKey": "protagonist",
+      "original": {
+        "width": 1024,
+        "height": 1536,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 320,
+        "height": 480,
+        "alpha": true,
+        "bytes": 19434
+      },
+      "format": "WebP",
+      "optimization": "Sharp resize inside; quality 84, alphaQuality 92, effort 6; no upscaling, redraw or alpha keying"
+    },
+    {
+      "path": "assets/threshold/lives_beginnings_v1.webp",
+      "purpose": "Baby, child, elder with cane",
+      "source": "exec-15e70f49-35b0-4fcc-9cf6-4274d8661011.png",
+      "generator": "ImageGen",
+      "promptRevision": 1,
+      "promptKey": "beginnings",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 360,
+        "height": 480,
+        "alpha": true,
+        "bytes": 41412
+      },
+      "format": "WebP",
+      "optimization": "Sharp resize inside; quality 84, alphaQuality 92, effort 6; no upscaling, redraw or alpha keying"
+    },
+    {
+      "path": "assets/threshold/lives_vocations_v1.webp",
+      "purpose": "Student, physician, researcher",
+      "source": "exec-2efc1f25-c89f-44aa-83a4-08dba2eb529b.png",
+      "generator": "ImageGen",
+      "promptRevision": 1,
+      "promptKey": "vocations",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 360,
+        "height": 480,
+        "alpha": true,
+        "bytes": 48598
+      },
+      "format": "WebP",
+      "optimization": "Sharp resize inside; quality 84, alphaQuality 92, effort 6; no upscaling, redraw or alpha keying"
+    },
+    {
+      "path": "assets/threshold/lives_bonds_v1.webp",
+      "purpose": "Wedding couple, parent holding child",
+      "source": "exec-295e7cae-ed37-42ee-b546-55db4f206649.png",
+      "generator": "ImageGen",
+      "promptRevision": 1,
+      "promptKey": "bonds",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 360,
+        "height": 480,
+        "alpha": true,
+        "bytes": 43278
+      },
+      "format": "WebP",
+      "optimization": "Sharp resize inside; quality 84, alphaQuality 92, effort 6; no upscaling, redraw or alpha keying"
+    },
+    {
+      "path": "assets/threshold/lives_struggle_v1.webp",
+      "purpose": "Hunter/explorer, wounded fighter with crutch",
+      "source": "exec-bf4e1753-64fa-4b5c-8084-11ec9d745c50.png",
+      "generator": "ImageGen",
+      "promptRevision": 1,
+      "promptKey": "struggle",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 360,
+        "height": 480,
+        "alpha": true,
+        "bytes": 33738
+      },
+      "format": "WebP",
+      "optimization": "Sharp resize inside; quality 84, alphaQuality 92, effort 6; no upscaling, redraw or alpha keying"
+    }
+  ]
+}

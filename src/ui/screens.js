@@ -20,11 +20,9 @@ import {
   cash,
   moneyMood,
 } from "./helpers.js";
-export function landing(data) {
-  return `<section class="landing"><div class="landing-art" aria-hidden="true"><img src="assets/npcs/iria.webp" class="landing-stranger" alt=""><img src="assets/characters/0-young.webp" class="landing-person" alt=""></div><div class="landing-copy"><p class="edition">HISTORIAS QUE DEJAN HUELLA</p><h1 id="page-title">LIFE<span>SIM</span><sup>III</sup></h1><p class="tagline">Una vida.<br>Miles de decisiones.</p><div class="landing-actions">${data.state ? button(data.state.alive ? "Continuar" : "Recordar mi vida", "continue", "", "button primary") : ""}${button("Nueva vida", "creator", "", "button " + (data.state ? "secondary" : "primary"))}${button("Vida al azar", "random", "", "text-button")}</div></div><nav class="landing-nav">${button("Legado", "legacy", "", "nav-link")}${button("Ajustes", "settings", "", "nav-link")}</nav>${data.migrated ? '<p class="save-note">Tu vida de V2 continúa aquí. El guardado anterior se conserva.</p>' : ""}${data.warning ? `<p class="save-note warning">${esc(data.warning)}</p>` : ""}</section>`;
-}
+export { thresholdScreen as landing } from "./threshold.js";
 export function creator(options) {
-  return `<form id="creator-form"><p class="eyebrow">OTRA POSIBILIDAD</p><h2 id="modal-title">¿Quién vas a ser?</h2><div class="creation-portrait"><img id="creation-preview" src="assets/characters/${options.appearance}-young.webp" alt="Tu apariencia"><div class="appearance-options">${[0, 1].map((i) => `<button type="button" data-action="appearance" data-value="${i}" aria-label="Apariencia ${i + 1}" aria-pressed="${options.appearance === i}" class="appearance ${options.appearance === i ? "selected" : ""}">${i + 1}</button>`).join("")}</div></div><label for="life-name">Tu nombre</label><input id="life-name" name="name" maxlength="28" value="Alex" required autocomplete="off"><div class="creation-fields"><label>Tu origen<select name="origin">${Object.entries(
+  return `<form id="creator-form"><p class="eyebrow">ANTES DE CRUZAR</p><h2 id="modal-title">Tu próxima vida</h2><div class="creation-portrait"><img id="creation-preview" src="assets/characters/${options.appearance}-young.webp" alt="Tu apariencia"><div class="appearance-options">${[0, 1].map((i) => `<button type="button" data-action="appearance" data-value="${i}" aria-label="Apariencia ${i + 1}" aria-pressed="${options.appearance === i}" class="appearance ${options.appearance === i ? "selected" : ""}">${i + 1}</button>`).join("")}</div></div><label for="life-name">Tu nombre</label><input id="life-name" name="name" maxlength="28" value="Alex" required autocomplete="off"><div class="creation-fields"><label>Tu origen<select name="origin">${Object.entries(
     ORIGINS,
   )
     .map(
@@ -39,7 +37,7 @@ export function creator(options) {
     .map(([id, v]) => `<option value="${id}">${esc(v.name)}</option>`)
     .join(
       "",
-    )}</select></label></div><button class="button primary full" type="submit">Empezar mi vida ${icon("arrow")}</button></form>`;
+    )}</select></label></div><button class="button primary full" type="submit">Cruzar el Umbral ${icon("arrow")}</button></form>`;
 }
 const profession = (s) =>
   s.retired

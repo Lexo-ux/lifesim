@@ -1,12 +1,12 @@
-# Motion — Task 03
+# Motion — Tasks 03–04
 
-Motion communicates contact, choice, consequence or narrative emphasis. No decorative idle loop. Gameplay transactions resolve and save before visual exit; movement never advances time or consumes randomness.
+Motion communicates contact, choice, consequence or narrative emphasis. Gameplay has no decorative idle loop. Task 04 permits a bounded title-only exception described below. Gameplay transactions resolve and save before visual exit; movement never advances time or consumes randomness.
 
 ## Technology decision
 
 **GSAP rejected for Task 03.** Static CSS handles appearance/return/hover, Web Animations handles exits, feedback and indicator interpolation. Native APIs already provide cancellation, finished promises and transforms. Another dependency would not improve this bounded sequencing enough to justify its loading/maintenance cost. No framework, build step, physics dependency, runtime plugin or animation CDN.
 
-`src/ui/motion.js` reads CSS tokens, tracks finite animations, cancels completed effects, responds to changed reduced-motion preference and owns pickup/drag/return presentation. `transitions.js` composes card exit and consequence feedback. `swipe.js` owns input and cleanup, never mechanics. CSS owns entrance/rest states. Future cinematics may compose these primitives, with one owner per animated property; do not build a generic timeline engine in advance.
+`src/ui/motion.js` reads CSS tokens, tracks owned animations, cancels completed effects, responds to changed reduced-motion preference and owns pickup/drag/return presentation. `transitions.js` composes card exit and consequence feedback. `swipe.js` owns input and cleanup, never mechanics. CSS owns entrance/rest states. Future cinematics may compose these primitives, with one owner per animated property; do not build a generic timeline engine in advance.
 
 ## Vocabulary
 
@@ -38,6 +38,19 @@ Future full-screen transitions must have an immediate stable alternative with th
 
 ## Performance and future escalation
 
-Only finite CSS/WAAPI motion, no polling/rAF animation loop, DOM particles, animated blur or filter. Shadows change once on pickup/return rather than interpolate per pointer event. Static paper tile is 80px; environments are optimized local WebP. Do not animate layout dimensions. Inspect frame timing and painting after new effects, not only file size.
+Gameplay uses finite CSS/WAAPI motion, no polling/rAF animation loop or animated blur/filter. The title-only exception uses two owned loops and ten dots in one SVG. Shadows change once on pickup/return rather than interpolate per pointer event. Static paper tile is 80px; environments are optimized local WebP. Do not animate layout dimensions. Inspect frame timing and painting after new effects, not only file size.
 
-Future parallax uses existing depth layers; future particles need a capped renderer with lifecycle ownership. Camera-like zoom/light/character entrances must clean up on navigation and reduce-motion changes. S can quiet the interface; SS can briefly misalign it; SSS may suspend ordinary composition. All restore a readable screen, support skipping, avoid flash and retain mute. No rank logic, event, title portal or crossing sequence is implemented by these specifications.
+Future parallax uses existing depth layers; future particles need a capped renderer with lifecycle ownership. Camera-like zoom/light/character entrances must clean up on navigation and reduce-motion changes. S can quiet the interface; SS can briefly misalign it; SSS may suspend ordinary composition. All restore a readable screen, support skipping, avoid flash and retain mute. No rank logic or new narrative event is implemented by these specifications. Task 04 implements the title portal and crossing below.
+
+## Task 04 — deliberate title-only ambient exception
+
+Native CSS/WAAPI remains sufficient; no GSAP. threshold.js owns reveal, idle, preparing, crossing, complete and hidden states, its AbortController, effects, one timer and audio cancellation. Gameplay has no new idle animation.
+
+- Reveal: 3800ms, linear clock with offset beats; outline → seam/door → person → possible lives → title → actions. Pointer, Enter/Space or Omitir settles immediately. Focus entering an action also settles the intro. Presented once per document session; menus/home do not replay it.
+- Idle: two compositor effects (light opacity over 8500ms; one SVG group of ten dust dots over 12000ms). Every 6800ms one timeout changes the two existing image buffers; dissolve/drift takes 1800ms. No random calls, independent silhouette elements, animation frame loop or animated blur.
+- Preparing: dialogs stop every effect, rotation and sound. Closing returns to idle; continuing destroys the owner.
+- Crossing: 1800ms linear native sequence after an exactly-once save transaction; controls recede, silhouette moves/scales into light, composition pushes 12%, a different symbolic group dissolves through, ivory veil covers the handoff. The first existing Moment resolves through a 420ms fade: total 2220ms. Explicit skip/Escape remains available above the veil; failure, reduced motion or hidden document resolves immediately.
+- Hidden/unmounted: cancel effects, clear timer, abort listeners, stop audio; generation guard prevents an old completion from affecting a new scene. A separate revealLife handoff releases the veil over gameplay.
+- Reduced motion: stable composition immediately, no loops/drift/camera/long fades; preference changes cancel infinite effects and settle finite ones safely. Same saved life and first Moment.
+
+No canvas renderer, particle library or transition code in the engine. Optional user-gesture audio uses two quiet synthesized sine voices with a finite gain envelope, respects mute, disconnects on completion/cancellation and cannot block navigation. Timing tokens live in styles/tokens.css. See [THRESHOLD](THRESHOLD.md) for lifecycle, scope and measured evidence.

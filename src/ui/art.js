@@ -7,3 +7,14 @@ export const ART = Object.freeze({
 });
 export const sceneFor = (location) =>
   ART.backgrounds[location] || `assets/backgrounds/${location}.webp`;
+
+// Symbolic possibilities only. These paths have no relationship to game RNG/IDs.
+export const THRESHOLD_ART = Object.freeze({
+  environment: "assets/threshold/environment_v1.webp",
+  person: "assets/threshold/person_v1.webp",
+  fragments: Object.freeze(
+    ["beginnings", "vocations", "bonds", "struggle"].map(
+      (name) => `assets/threshold/lives_${name}_v1.webp`,
+    ),
+  ),
+});

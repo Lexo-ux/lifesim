@@ -1,0 +1,298 @@
+/* One portrait composition. Artwork carries the symbol; HTML carries the actions. */
+body.at-threshold {
+  background: var(--threshold-night);
+}
+.threshold {
+  --title-ui-height: 266px;
+  --title-note-height: 0px;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: clip;
+  color: var(--ink);
+  background: radial-gradient(ellipse at 50% 48%, #39342920, transparent 65%);
+}
+.threshold.has-save {
+  --title-ui-height: 314px;
+}
+.threshold.has-note {
+  --title-note-height: 64px;
+}
+.threshold-title {
+  padding: max(24px, env(safe-area-inset-top)) 20px 10px;
+  text-align: center;
+  z-index: var(--z-moment);
+}
+.threshold-title h1 {
+  font: 450 32px/1.2 var(--font-display);
+  letter-spacing: 7px;
+  padding-left: 7px;
+}
+.threshold-title p {
+  font: italic 13px/1.5 var(--font-story);
+  color: #c2b9a7;
+  margin-top: 8px;
+}
+.threshold-scene {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  position: relative;
+}
+.threshold-frame {
+  position: relative;
+  width: min(
+    100%,
+    max(
+      216px,
+      calc((100svh - var(--title-ui-height) - var(--title-note-height)) * 0.75)
+    ),
+    510px
+  );
+  aspect-ratio: 3 / 4;
+  transform-origin: 50% 48%;
+  pointer-events: none;
+}
+.threshold-environment {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Only the outer darkness dissolves; the arch and ground stay intact. */
+  mask-image:
+    linear-gradient(to right, transparent, #000 9%, #000 91%, transparent),
+    linear-gradient(transparent, #000 8%, #000 88%, transparent);
+  mask-composite: intersect;
+}
+.threshold-lumen {
+  position: absolute;
+  left: 31%;
+  top: 22%;
+  width: 37%;
+  height: 56%;
+  opacity: 0.12;
+  background: radial-gradient(ellipse at 50% 36%, #fff4c4, transparent 68%);
+}
+.threshold-possibilities {
+  position: absolute;
+  left: 31%;
+  top: 24%;
+  width: 25%;
+  height: 46%;
+  opacity: 0.52;
+  mask-image: linear-gradient(transparent, #000 9%, #000 88%, transparent);
+}
+.life-fragment {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+}
+.life-fragment[data-active="true"] {
+  opacity: 1;
+}
+.threshold-person {
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  width: 19%;
+  height: 30%;
+  object-fit: contain;
+  object-position: bottom;
+  transform: translateX(-50%);
+  transform-origin: 50% 90%;
+}
+.threshold-shutter {
+  position: absolute;
+  left: 31%;
+  top: 14%;
+  width: 27%;
+  height: 62%;
+  background: var(--threshold-night);
+  border-radius: 45% 45% 0 0 / 12% 12% 0 0;
+  transform-origin: right;
+  opacity: 0;
+}
+.threshold-seam {
+  position: absolute;
+  top: 18%;
+  bottom: 26%;
+  left: 32.5%;
+  width: 2px;
+  background: linear-gradient(transparent, #ffedbd, #ffedbd, transparent);
+  opacity: 0;
+}
+.threshold-dust {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--threshold-ivory);
+  opacity: 0;
+}
+.threshold-controls {
+  position: relative;
+  width: min(100% - 48px, 320px);
+  text-align: center;
+  padding: 0 0 max(12px, env(safe-area-inset-bottom));
+  z-index: var(--z-moment);
+}
+.threshold-actions {
+  display: grid;
+  gap: 4px;
+}
+.threshold-primary {
+  min-height: 52px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #b8aa8b;
+  border-radius: 3px;
+  background: #e5d9bf;
+  color: #252822;
+  font: 600 12px/1.3 var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition:
+    background var(--motion-fast),
+    transform var(--motion-fast);
+}
+.threshold-primary:hover {
+  background: #f2e8d4;
+}
+.threshold-primary:active {
+  transform: translateY(1px);
+}
+.threshold-actions .text-button {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 12px;
+}
+.threshold-nav {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+}
+.threshold-nav .nav-link {
+  font-size: 11px;
+  min-width: 74px;
+}
+.threshold-skip {
+  position: absolute;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
+  min-height: 44px;
+  padding: 10px 12px;
+  font: 11px/1.4 var(--font-ui);
+  color: var(--ink);
+  background: #080d10d9;
+  border: 1px solid #6a706a;
+  border-radius: var(--radius-control);
+  z-index: calc(var(--z-feedback) + 1);
+}
+.threshold-skip[hidden] {
+  display: none;
+}
+.threshold[data-threshold-state="crossing"] .threshold-skip {
+  position: fixed;
+}
+.save-note {
+  font-size: 11px;
+  line-height: 1.5;
+  margin-top: 8px;
+  color: var(--muted);
+}
+.save-note.warning {
+  color: #edb0ab;
+}
+#life-entry-veil {
+  position: fixed;
+  inset: 0;
+  background: var(--threshold-ivory);
+  opacity: 0;
+  pointer-events: none;
+  z-index: var(--z-feedback);
+}
+/* The native creator keeps every field, with the paper/ink treatment of a life. */
+.creator-modal {
+  border-color: #7c7c6c;
+  background: #1b2324;
+}
+.creator-modal .eyebrow {
+  color: var(--human-warmth);
+}
+.creator-modal h2 {
+  font-size: 29px;
+  font-weight: 450;
+}
+.creator-modal .creation-portrait {
+  border-bottom: 1px solid #565d50;
+  background: radial-gradient(ellipse at bottom, #9f946625, transparent 68%);
+}
+.creator-modal input,
+.creator-modal select {
+  border-radius: 2px;
+  border-color: #74796e;
+  background: #252d2d;
+}
+.creator-modal button[type="submit"] {
+  margin-top: 6px;
+  letter-spacing: 0.8px;
+}
+@media (min-width: 700px) {
+  .threshold {
+    background: radial-gradient(ellipse at 50% 50%, #4942312e, transparent 62%);
+  }
+  .threshold-title {
+    padding-top: 26px;
+  }
+}
+@media (max-height: 700px) {
+  .threshold {
+    --title-ui-height: 248px;
+  }
+  .threshold.has-save {
+    --title-ui-height: 296px;
+  }
+  .threshold-title {
+    padding-top: 14px;
+    padding-bottom: 6px;
+  }
+  .threshold-title h1 {
+    font-size: 28px;
+  }
+  .threshold-title p {
+    margin-top: 4px;
+  }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .threshold {
+    min-height: 600px;
+  }
+  .threshold-frame {
+    width: 240px;
+  }
+  .threshold-title {
+    padding-top: 16px;
+  }
+  .threshold-scene {
+    flex: 0;
+  }
+  .threshold-controls {
+    margin-top: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .threshold-dust {
+    display: none;
+  }
+  .threshold-lumen {
+    opacity: 0.1;
+  }
+}

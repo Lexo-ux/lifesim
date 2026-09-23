@@ -1,5 +1,5 @@
 @media (min-width: 700px) {
-  body {
+  body.playing {
     background-image:
       linear-gradient(#101719df, #101719ed),
       url("../assets/backgrounds/bg_park_normal_v1.webp");
@@ -25,10 +25,6 @@
   }
   .quiet-nav {
     margin-top: 7px;
-  }
-  .landing {
-    border-inline: 1px solid var(--line);
-    min-height: min(100svh, 1000px);
   }
 }
 @media (max-height: 700px) {
@@ -85,23 +81,6 @@
   .quiet-nav .nav-link {
     min-height: 44px;
   }
-  .landing-copy {
-    margin-top: 33vh;
-  }
-  .landing-person {
-    top: 5%;
-    height: 37%;
-  }
-  .landing-actions {
-    margin-top: 18px;
-  }
-  .tagline {
-    font-size: 20px;
-    margin-top: 12px;
-  }
-  .landing h1 {
-    font-size: 52px;
-  }
   .creation-portrait {
     height: 125px;
   }
@@ -117,15 +96,6 @@
   .play-screen {
     height: auto;
     min-height: 660px;
-  }
-  .landing {
-    max-height: none;
-  }
-  .landing-copy {
-    margin-top: 150px;
-  }
-  .landing-person {
-    height: 220px;
   }
   .card-stage {
     min-height: 330px;

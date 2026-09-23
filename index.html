@@ -45,11 +45,18 @@
     />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="preload"
+      as="image"
+      href="assets/threshold/environment_v1.webp"
+      fetchpriority="high"
+    />
     <link rel="modulepreload" href="src/main.js" />
   </head>
   <body>
     <a href="#main" class="skip-link">Ir al juego</a>
     <div id="app"></div>
+    <div id="life-entry-veil" aria-hidden="true"></div>
     <div
       id="announcer"
       class="sr-only"

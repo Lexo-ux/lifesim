@@ -23,6 +23,7 @@ import {
   clearMomentFeedback,
 } from "./transitions.js";
 import { animateIndicators } from "./indicators.js";
+import { mountThreshold, revealLife } from "./threshold.js";
 
 const data = load(),
   app = document.querySelector("#app"),
@@ -34,6 +35,7 @@ let screen = "home",
   revealDeath = false,
   pending = null,
   opener = null;
+let titleScene = null;
 function announce(text) {
   document.querySelector("#announcer").textContent = text;
 }
@@ -48,9 +50,11 @@ function notice(text) {
 function persist() {
   if (!save(data)) notice("No se pudo guardar. Tu vida sigue en esta pestaña.");
 }
-function render(focus = false) {
+function render(focus = false, revealTitle = true) {
   cleanup();
+  titleScene = null;
   clearMomentFeedback();
+  document.body.classList.toggle("at-threshold", screen === "home");
   document.body.classList.toggle(
     "playing",
     screen === "play" && data.state?.alive,
@@ -62,8 +66,15 @@ function render(focus = false) {
         ? deathScreen(data.state, data.meta, revealDeath)
         : gameScreen(data);
   app.innerHTML = `<main id="main">${html}</main>`;
-  if (screen === "play" && data.state?.alive)
+  if (screen === "home") {
+    titleScene = mountThreshold(document.querySelector(".threshold"), {
+      reveal: revealTitle,
+    });
+    const ownedScene = titleScene;
+    cleanup = () => ownedScene.destroy();
+  } else if (screen === "play" && data.state?.alive)
     cleanup = mountSwipe(document.querySelector(".narrative-card"), commit);
+  else cleanup = () => {};
   document
     .querySelector("[data-action=sound]")
     ?.setAttribute(
@@ -87,6 +98,7 @@ function render(focus = false) {
     );
 }
 function open(content, cls = "") {
+  titleScene?.prepare();
   opener = document.activeElement;
   modal.className = cls;
   modal.innerHTML = `<button class="icon-button close" data-action="close" aria-label="Cerrar">${icon("close")}</button>${content}`;
@@ -155,6 +167,7 @@ async function commit(side) {
   busy = false;
 }
 function begin(options) {
+  if (busy) return;
   if (data.state?.alive) {
     pending = options;
     open(
@@ -164,7 +177,9 @@ function begin(options) {
   }
   commitNew(options);
 }
-function commitNew(options) {
+async function commitNew(options) {
+  if (busy || !options) return;
+  busy = true;
   const seed = crypto.getRandomValues(new Uint32Array(1))[0];
   data.state = startLife(options, data.meta, seed);
   data.warning = "";
@@ -173,9 +188,25 @@ function commitNew(options) {
   pending = null;
   persist();
   close();
+  if (screen !== "home") {
+    screen = "home";
+    render(false, false);
+  }
+  announce("Cruzando el Umbral.");
+  const arrived = await titleScene.cross(data.settings.sound);
+  if (!arrived) {
+    busy = false;
+    return;
+  }
   screen = "play";
   render(true);
-  sound("year", data.settings.sound);
+  await revealLife();
+  busy = false;
+  if (!document.hidden) sound("year", data.settings.sound);
+  announce(
+    document.querySelector("#card-dialogue")?.textContent ||
+      "Tu vida comienza.",
+  );
 }
 function settings() {
   open(
@@ -192,6 +223,7 @@ document.addEventListener("click", (e) => {
     screen = "home";
     render(true);
   } else if (action === "continue") {
+    revealDeath = !data.state?.alive;
     screen = "play";
     render(true);
   } else if (action === "close") close();
@@ -254,6 +286,7 @@ document.addEventListener("click", (e) => {
 document.addEventListener("submit", (e) => {
   if (e.target.id !== "creator-form") return;
   e.preventDefault();
+  if (busy) return;
   const form = new FormData(e.target);
   begin({
     name: form.get("name"),
@@ -263,6 +296,7 @@ document.addEventListener("submit", (e) => {
   });
 });
 modal.addEventListener("close", () => {
+  if (!busy) titleScene?.resume();
   if (opener?.isConnected) opener.focus({ preventScroll: true });
 });
 render();

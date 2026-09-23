@@ -35,7 +35,16 @@
   --motion-standard: 280ms;
   --motion-deliberate: 420ms;
   --motion-narrative: 1400ms;
-  --motion-cinematic: 2200ms; /* Reserved, no cinematic runtime in Task 03. */
+  --motion-cinematic: 2200ms;
+  --ease-threshold: linear;
+  --motion-threshold-reveal: 3800ms;
+  --motion-threshold-crossing: 1800ms;
+  --motion-threshold-dissolve: 1800ms;
+  --motion-threshold-cycle: 6800ms;
+  --motion-threshold-breath: 8500ms;
+  --motion-threshold-drift: 12000ms;
+  --threshold-night: #080d10;
+  --threshold-ivory: #f2e5c8;
   --ease-settle: cubic-bezier(0.2, 0.75, 0.25, 1);
   --ease-commit: cubic-bezier(0.4, 0, 0.75, 0.4);
   --z-environment: 0;

@@ -33,7 +33,13 @@ const phase = process.env.VISUAL_PHASE || "after";
         ]);
       });
       await page.waitForFunction(() =>
-        document.getAnimations().every((a) => a.playState === "finished"),
+        document
+          .getAnimations()
+          .every(
+            (a) =>
+              a.effect?.getTiming().iterations === Infinity ||
+              a.playState === "finished",
+          ),
       );
     };
     const shot = async (name) => {
@@ -132,7 +138,6 @@ const phase = process.env.VISUAL_PHASE || "after";
     dead.state.story.current = "quiet_day";
     choose(dead.state, dead.meta, "left");
     await restore(dead);
-    await page.locator("[data-action=remember]").click();
     await shot("memorial");
     await restore(fixture);
     if (phase === "after") {

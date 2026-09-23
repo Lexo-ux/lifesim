@@ -46,6 +46,7 @@ const fs = require("node:fs/promises");
     await page.locator("[data-action=creator]").click();
     await audit("creation");
     await page.locator("button[type=submit]").click();
+    await page.waitForSelector(".narrative-card");
     await audit("card-mobile");
     for (const action of ["profile", "history", "legacy", "settings"]) {
       await page.locator(`[data-action=${action}]`).click();

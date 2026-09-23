@@ -24,7 +24,7 @@ Narrative text is 17px/1.48 normally, 15px/1.4 on short screens. Speaker is 31px
 - **Buttons:** paper primary, transparent secondary, crimson destructive. Focus outline is visible; hover/press do not carry unique information. Sound/settings/close/appearance/home/native summaries all receive ≥44px hit area.
 - **Overlays:** native dialog, solid dark backdrop, no blur. Single dismissible scroll surface, distinct close control; inherited focus restoration, Escape and semantics remain. No stacked artificial windows.
 - **Navigation:** quiet Profile/History/Legacy labels below age/stage; home/sound/settings small above. Utility detail remains contextual. No hidden accessibility routes and no desktop side dashboard.
-- **Creation / title:** current working flows receive tokens only. Final Threshold composition, entry sequence and protagonist crossing are explicitly Task 04.
+- **Creation / title:** Task 04 implements the portrait Threshold composition, restrained title/CTA, native creator dialog and crossing. Its warm light is confined to the artwork and brief handoff. The creator keeps all four inputs and established dialog behavior. See [THRESHOLD](THRESHOLD.md).
 - **Memorial:** soft warm memory, space around identity, narrative timeline; no red death spectacle.
 
 ## Responsive contract

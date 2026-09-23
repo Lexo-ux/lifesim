@@ -28,3 +28,7 @@ Antes de publicar: comprobar dimensiones, alpha, peso y carga bajo `/lifesim/`. 
 ## Task 03 — catálogo mixto temporal
 
 Los doce sprites y veinte retratos originales son **LEGACY VISUAL ASSETS**, igual que los siete entornos originales. Nuevos candidatos: dos protagonistas, Vera, un Despertado anónimo y parque, todos WebP locales. Solo Vera adulta y el parque están activos. Especificación/plan obligatorio: [ART_DIRECTION](ART_DIRECTION.md). Archivos, dimensiones, pesos, fuente, versión y uso: [ASSET_PROVENANCE](ASSET_PROVENANCE.md); prompts exactos en [ART_PROMPTS_TASK03](ART_PROMPTS_TASK03.md). Textura de papel SVG original, sin filtros. Los assets de estudio se cargan únicamente en `tools/art-review.html`.
+
+## Task 04 — familia del Umbral
+
+Seis recursos locales en `assets/threshold/`, catálogo `manifest.json` y selección de UI en `src/ui/art.js`. Un entorno opaco, protagonista con alpha y cuatro composiciones transparentes de vidas posibles. Solo se precarga el entorno; las dos siguientes composiciones se solicitan cuando rotan. Exportación técnica reproducible con `tools/export-threshold.mjs`, prompts exactos en `docs/threshold-prompts.json`. No hay masters desplegados ni recursos de terceros. Ver [procedencia](ASSET_PROVENANCE.md) y [Umbral](THRESHOLD.md).
