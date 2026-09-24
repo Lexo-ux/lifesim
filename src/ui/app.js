@@ -1,4 +1,5 @@
 import { createPresentation } from "./presentation/index.js";
+import { awakeningCue } from "./awakening.js";
 import { NAMES, TRAITS, ORIGINS } from "../../content/catalog.js";
 import { startLife, choose } from "../narrative/engine.js";
 import { load, save, reset } from "../persistence/storage.js";
@@ -88,6 +89,8 @@ function render(focus = false, revealTitle = true) {
     presentation.setState(
       currentCard(data.state).pool === "meta" ? "unusual" : "normal",
     );
+    const cue = awakeningCue(data.state, currentCard(data.state));
+    if (cue) presentation.emphasize(cue);
     if (modal.open) presentation.pause();
     cleanup = mountSwipe(
       document.querySelector(".narrative-card"),
@@ -138,6 +141,7 @@ async function commit(side) {
     .querySelectorAll(".decision-controls button")
     .forEach((b) => (b.disabled = true));
   const oldCard = document.querySelector(".narrative-card");
+  const wasAwakening = currentCard(data.state).system === "awakening";
   const result = choose(data.state, data.meta, side, oldCard?.dataset.card);
   if (result.error) {
     busy = false;
@@ -160,7 +164,13 @@ async function commit(side) {
     data.settings.sound,
   );
   presentation?.contact("commit");
-  await leaveCard(oldCard, side);
+  // Within the incident, the same person/place stays present. Only the committed
+  // narrative and semantic field change; no slide/screen choreography owns progress.
+  const continuousIncident =
+    wasAwakening &&
+    data.state.alive &&
+    currentCard(data.state).system === "awakening";
+  if (!continuousIncident) await leaveCard(oldCard, side);
   revealDeath = false;
   render(true);
   animateIndicators(result.before, result.after);
@@ -170,22 +180,24 @@ async function commit(side) {
       `La vida de ${data.state.name} terminó a los ${data.state.age} años.`,
     );
   } else {
-    presentation?.emphasize(
-      result.outcome.stage
-        ? "memory"
-        : result.after.health < result.before.health
-          ? "danger"
-          : result.outcome.secret
-            ? "unusual"
-            : "normal",
-      { gesture: true },
-    );
-    transitionMoment(
-      result.outcome.stage
-        ? `Nuevo capítulo · ${result.outcome.stage}`
-        : result.outcome.text,
-      result.outcome.stage ? "chapter" : "",
-    );
+    if (!awakeningCue(data.state, currentCard(data.state)))
+      presentation?.emphasize(
+        result.outcome.stage
+          ? "memory"
+          : result.after.health < result.before.health
+            ? "danger"
+            : result.outcome.secret
+              ? "unusual"
+              : "normal",
+        { gesture: true },
+      );
+    if (!continuousIncident)
+      transitionMoment(
+        result.outcome.stage
+          ? `Nuevo capítulo · ${result.outcome.stage}`
+          : result.outcome.text,
+        result.outcome.stage ? "chapter" : "",
+      );
     announce(
       `${result.outcome.text} ${result.outcome.aged ? `Ahora tienes ${data.state.age} años.` : ""}`,
     );

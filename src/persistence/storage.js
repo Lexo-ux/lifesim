@@ -1,4 +1,8 @@
-import { load as loadV2, validState, reset as resetV2 } from "./legacy-storage.js";
+import {
+  load as loadV2,
+  validState,
+  reset as resetV2,
+} from "./legacy-storage.js";
 import { emptyMeta } from "../systems/achievements.js";
 import { CARD_BY_ID } from "../../content/moments/index.js";
 import { NPCS } from "../../content/npcs/index.js";
@@ -6,6 +10,7 @@ import { attachStory } from "../narrative/engine.js";
 import { drawCard } from "../narrative/deck.js";
 import { extendMeta, ending } from "../narrative/meta.js";
 import { STORAGE_KEYS } from "../config/persistence.js";
+import { validAwakening } from "../systems/awakening.js";
 export const SAVE_KEY = STORAGE_KEYS.current;
 const record = (x) => !!x && typeof x === "object" && !Array.isArray(x);
 const number = (n) => Number.isFinite(n) && n >= 0;
@@ -23,6 +28,7 @@ export function validStory(s) {
   const t = s?.story;
   return (
     validState(s) &&
+    validAwakening(s) &&
     record(t) &&
     t.version === 3 &&
     Number.isInteger(t.month) &&

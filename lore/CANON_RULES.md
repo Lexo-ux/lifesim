@@ -9,7 +9,7 @@
 | C03 | Convergencia es superposición por fallo de fronteras; «portal» es una hipótesis incompleta. Su causa última no está resuelta.         | [Convergencia](CONVERGENCE.md)          |
 | C04 | Despertado no equivale a Cazador. Las vidas no despertadas son rutas principales, no fracasos.                                        | [Despertar](AWAKENING.md)               |
 | C05 | Clase ≠ rareza ≠ rango; no deducir poder de rareza ni profesión de clase.                                                             | [Rangos](RANKS_AND_RARITIES.md)         |
-| C06 | Conservar orden E–SSS y probabilidades aprobadas entre Despertados; no inferir tasa poblacional de Despertar.                         | [Rangos](RANKS_AND_RARITIES.md)         |
+| C06 | Conservar orden E–SSS y probabilidades aprobadas entre Despertados; usar la tasa de elegibles aprobada en AWAKENING.md.               | [Rangos](RANKS_AND_RARITIES.md)         |
 | C07 | Sin pity: vidas, logros y metaprogreso no aumentan ocultamente S/SS/SSS.                                                              | [Rangos](RANKS_AND_RARITIES.md)         |
 | C08 | Identidad histórica estable, destino variable; ningún NPC histórico es inmortal por definición. Nombres requieren revisión explícita. | [NPCs](HISTORICAL_NPCS.md)              |
 | C09 | Los no humanos no son un enemigo único; admitir defensa propia, desplazamiento, política y cooperación.                               | [Especies](SPECIES.md)                  |

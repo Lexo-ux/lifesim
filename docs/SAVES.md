@@ -23,6 +23,10 @@ Estado: semilla, edad, estadísticas, habilidades, finanzas, estudios, carrera, 
 
 `load` no escribe; `save` valida V3, serializa y devuelve éxito/fallo. La UI avisa si no puede guardar. No hay sincronización, conflictos entre pestañas resueltos, backup remoto ni importador de archivos del jugador.
 
+## Extensión de Despertar — Task 06
+
+Se conserva la envoltura y todas las claves. `state.awakening.version = 1` añade estado, fecha de exposición, resolución, cursor narrativo, Núcleo/clase/rareza/rango, evaluación y respuesta. La ausencia del campo en V2/V3 sigue siendo válida: cargar o renderizar no crea la extensión ni añade tiradas de Despertar. El adaptador V2 conserva su comportamiento previo. En la siguiente decisión de una vida viva se incorpora un estado pendiente y se programa una exposición futura según la regla documentada. Una vida fallecida anterior permanece intacta. El resultado se resuelve dentro de la transacción de elección y se guarda antes de presentarlo; recargar conserva resultado y cursor. Versiones desconocidas, enums inválidos y cursores inconsistentes se rechazan conservando el original. Contrato completo: [AWAKENING_SYSTEM](AWAKENING_SYSTEM.md).
+
 ## Cambios futuros
 
 No vincular versión de guardado a `package.json`. Antes de renombrar/eliminar IDs o cambiar campos/versiones: migrador explícito, fallback que conserve el original y pruebas con datos anteriores. No consumir PRNG incidentalmente durante migraciones. Las pruebas actuales cubren migración, corrupción, storage denegado, reinicio y continuación determinista.

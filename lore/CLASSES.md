@@ -38,4 +38,4 @@ Ash Sovereign, Herald of the Void, Architect, Chronicler, Worldwalker, Last Bast
 
 Su rareza extrema es una intención de diseño sin tasa aprobada aquí. No asignarlos automáticamente a SSS ni asumir que todos combaten. Sus nombres no demuestran divinidades, entidades finales, causas cosmológicas ni conocimiento de otras vidas. No desarrollar sus poderes en Task 02.
 
-El catálogo futuro deberá declarar manifestación, límites, papel civil/estratégico y relación con las cuatro propiedades del Núcleo. No se crean definiciones de runtime en esta tarea.
+El catálogo debe declarar manifestación, límites, papel civil/estratégico y relación con las cuatro propiedades del Núcleo. Task 06 implementa doce conceptos aprobados en `content/awakening/classes.js`; sus localizaciones, familias técnicas, compatibilidades y pesos constituyen el catálogo inicial revisable, no nuevos invariantes del mundo. Las clases excepcionales reservadas siguen sin implementarse. Ver [AWAKENING_SYSTEM](../docs/AWAKENING_SYSTEM.md).

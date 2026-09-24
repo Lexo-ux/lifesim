@@ -29,7 +29,8 @@ exports.record = async (browser, page) => {
   await page.bringToFront();
   const cdp = await page.context().newCDPSession(page);
   let pending = null,
-    frames = 0;
+    frames = 0,
+    failure = null;
   cdp.on("Page.screencastFrame", (event) => {
     cdp
       .send("Page.screencastFrameAck", { sessionId: event.sessionId })
@@ -38,6 +39,11 @@ exports.record = async (browser, page) => {
     frames++;
     pending = encoder
       .evaluate((data) => encodeFrame(data), event.data)
+      .catch((error) => {
+        // Teardown after a failed assertion must not mask that assertion with
+        // an unhandled encoder rejection. A normal stop still reports errors.
+        failure = error;
+      })
       .finally(() => {
         pending = null;
       });
@@ -52,6 +58,7 @@ exports.record = async (browser, page) => {
   return async (path) => {
     await cdp.send("Page.stopScreencast");
     await pending;
+    if (failure) throw failure;
     const finalFrame = await cdp.send("Page.captureScreenshot", {
       format: "jpeg",
       quality: 82,

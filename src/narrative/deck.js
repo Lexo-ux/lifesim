@@ -4,6 +4,10 @@ import { random } from "../engine/state.js";
 import { eligible, now } from "./conditions.js";
 import { meet } from "./npc.js";
 import { discover } from "./meta.js";
+import {
+  awakeningMomentId,
+  interpolateAwakening,
+} from "../systems/awakening.js";
 
 function pathAvailable(s, event) {
   if (event.id === "bicycle" && s.transport === "bike") return false;
@@ -44,6 +48,13 @@ export function drawCard(s, meta) {
     s.story.current = null;
     return null;
   }
+  const interruption = awakeningMomentId(s);
+  if (interruption) {
+    const event = CARD_BY_ID[interruption];
+    s.story.current = interruption;
+    discover(meta, event);
+    return event;
+  }
   const due = s.story.queue.find(
     (q) =>
       q.due <= now(s) && eligible(s, meta, CARD_BY_ID[q.id], { queued: true }),
@@ -71,6 +82,7 @@ export function drawCard(s, meta) {
 }
 export const currentCard = (s) => CARD_BY_ID[s.story.current];
 export function cardText(s, meta, event = currentCard(s)) {
+  if (event.system === "awakening") return interpolateAwakening(event.text, s);
   const echo =
     meta.echoes.findLast((e) => e.id !== s.id)?.name ||
     "un nombre que te resulta familiar";

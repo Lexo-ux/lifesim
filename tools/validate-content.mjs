@@ -3,6 +3,8 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { CARDS } from "../content/moments/index.js";
 import { NPCS, BACKGROUNDS } from "../content/npcs/index.js";
+import { CLASSES } from "../content/awakening/classes.js";
+import { RANKS, RARITIES } from "../content/awakening/rules.js";
 import {
   JOBS,
   COURSES,
@@ -44,6 +46,14 @@ const operationValid = (v) =>
   operations.has(v) ||
   JOBS.some((j) => v === `job:${j.id}`) ||
   COURSES.some((c) => v === `course:${c.id}`);
+const awakeningValues = {
+  status: ["pending", "exposed", "ordinary", "awakened"],
+  rank: RANKS.map((x) => x.id),
+  rarity: RARITIES.map((x) => x.id),
+  classId: CLASSES.map((x) => x.id),
+  family: CLASSES.map((x) => x.family),
+  capability: CLASSES.flatMap((x) => x.capabilities),
+};
 
 // Validates today's binary Moment contract. No future rank or world rules are invented.
 export function validateContent({
@@ -69,6 +79,12 @@ export function validateContent({
     )
       report(bg, "missing background asset");
   const requirementChecks = {
+    awakening: (v) =>
+      record(v) &&
+      Object.entries(v).every(
+        ([k, n]) =>
+          Object.hasOwn(awakeningValues, k) && awakeningValues[k].includes(n),
+      ),
     min: nonnegative,
     max: nonnegative,
     cash: nonnegative,
@@ -124,7 +140,11 @@ export function validateContent({
     ids.add(m.id);
     if (m.npc !== "self" && !npcs[m.npc]) report(m.id, "missing NPC reference");
     if (!text(m.text)) report(m.id, "missing dialogue");
-    if (!(Number.isInteger(m.months) && m.months > 0 && m.months <= 12))
+    if (!(
+      Number.isInteger(m.months) &&
+      m.months >= (m.system === "awakening" ? 0 : 1) &&
+      m.months <= 12
+    ))
       report(m.id, "invalid month duration");
     if (m.background && !backgrounds.includes(m.background))
       report(m.id, "missing background reference");

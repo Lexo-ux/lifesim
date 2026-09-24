@@ -4,7 +4,7 @@
 
 La exposición a energía vinculada a los Umbrales provoca en una minoría de humanos una estructura energética anómala denominada científicamente **Núcleo / Core**. Cuando se estabiliza, ocurre el **Despertar / Awakening**; la persona es un **Despertado / Awakened**.
 
-La exposición no establece por sí sola una probabilidad ni garantiza Despertar. **TBD — balance posterior:** proporción de la población que despierta. No usar la tabla de rangos como probabilidad de despertar.
+**CANON — aprobación Task 06:** entre humanos elegibles, **25% Despertados / 75% no Despertados**. La exposición no garantiza Despertar. Esta proporción es independiente del rango y no se deduce de su tabla. No hay pity, repetición de tirada, compensación por vidas anteriores ni modificadores de logros o metaprogreso. Las vidas no despertadas son rutas completas.
 
 ## Propiedades canónicas
 
@@ -15,7 +15,9 @@ La exposición no establece por sí sola una probabilidad ni garantiza Despertar
 | Afinidad / Affinity    | Forma natural en que se expresa la energía.                                          |
 | Resonancia / Resonance | Compatibilidad con energías, materiales, organismos, entornos o mundos particulares. |
 
-Son dimensiones conceptuales amplias, suficientes para clases futuras; no son estadísticas implementadas ni llevan fórmulas, unidades o umbrales numéricos aquí.
+Son dimensiones conceptuales amplias, suficientes para clases futuras; este documento no fija fórmulas, unidades ni umbrales numéricos de runtime.
+
+Task 06 las representa en runtime con datos semánticos; sus bandas y configuraciones iniciales son decisiones de implementación documentadas en [AWAKENING_SYSTEM](../docs/AWAKENING_SYSTEM.md), no escalas universales canonizadas.
 
 ## Actividad y función social
 

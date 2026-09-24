@@ -22,7 +22,7 @@ Vanilla JavaScript con ES modules, HTML y CSS. Sin framework, backend, compilaci
 | `lore/`                    | Canon futuro de Task 02, con estados y reservas explícitos; no es runtime.             |
 | `tests/`, `tools/`         | Verificación, servidor local, replay y preparación de recursos.                        |
 
-No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. `style.css` es una entrada estática de once módulos en `styles/`; tokens y motion son compartidos por CSS y `src/ui/motion.js`. Los imports y assets CSS resuelven desde cada archivo; la URL de escena dinámica se normaliza contra `document.baseURI` para evitar resolverla desde `/styles/`. Los subcatálogos se dividirán cuando su crecimiento lo justifique.
+No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. `style.css` es una entrada estática de doce módulos en `styles/`; tokens y motion son compartidos por CSS y `src/ui/motion.js`. Los imports y assets CSS resuelven desde cada archivo; la URL de escena dinámica se normaliza contra `document.baseURI` para evitar resolverla desde `/styles/`. Los subcatálogos se dividirán cuando su crecimiento lo justifique.
 
 ## Flujo y propiedad del estado
 
@@ -55,6 +55,8 @@ tools / tests → módulos puros (nunca importados desde la aplicación)
 **Moment** es la unidad técnica. Hoy solo es binaria; `CARDS`, `card()`, `event` y los campos serializados siguen por compatibilidad. Ver [contrato de contenido](CONTENT.md).
 
 ## Persistencia
+
+Task 06 incorpora `src/systems/awakening.js`, catálogos en `content/awakening/` y catorce Moments adicionales. El motor coordina su transacción y el deck prioriza su cursor sin eliminar consecuencias pendientes. La extensión opcional versionada se valida en persistencia; el adaptador UI solo lee resultados y solicita los FX de Task 05.5. Detalles de propiedad, RNG, selección y migración: [AWAKENING_SYSTEM](AWAKENING_SYSTEM.md).
 
 Núcleo `state.version = 2`, extensión `state.story.version = 3`, envoltura `version = 3`; versión del paquete independiente. La UI guarda `state`, `meta`, `settings` en una escritura localStorage. No guarda DOM, animaciones ni indicadores derivados.
 

@@ -22,6 +22,8 @@ Micro stays 80–250ms; gameplay 200–600ms; narrative 0.6–2.5s. Cinematic is
 
 ## Interaction contract
 
+Task 06 keeps the protagonist perceptually in place across the bounded Awakening incident: no generic card entrance/exit between its beats, and no animation-completion gate for progression. Each committed choice updates narrative text and requests the existing semantic owner. Ordinary card interaction and the Threshold retain their behavior. No new motion technology or timer controller is introduced.
+
 - Primary pointer down immediately picks up the card (cursor/depth); card follows horizontal distance 1:1.
 - One width read at pickup caches threshold `min(90px, width×0.24)`; moves write transforms and opacity only. Rotation clamps to ±4.2 degrees, with ≤1.2° perspective and bounded art/light response from the presentation owner. No per-frame DOM geometry reads.
 - Intent ramps to full opacity at threshold and includes direction plus action phrase. No consequence probabilities or stat deltas.

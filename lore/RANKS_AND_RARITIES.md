@@ -10,7 +10,20 @@
 
 **NON-CANON EXAMPLE — combinaciones válidas, no personajes históricos:** `Warrior / Common / B` y `Mana Surgeon / Legendary / D`. El primero puede tener mayor magnitud aunque su clase sea común; la especialización del segundo puede ser decisiva sin fuerza de combate comparable.
 
-**TBD:** catálogo completo de etiquetas y probabilidades de rareza de clase. Common/Común y Legendary/Legendaria aparecen en los ejemplos aprobados, pero no definen una escala exhaustiva. La rareza de Moments de V3 es otra dimensión y no debe reutilizarse como rango o rareza de clase.
+## Rareza de clase — aprobación Task 06
+
+**CANON:** distribución entre Despertados, estadísticamente independiente del rango.
+
+| Rareza                 | Probabilidad |
+| ---------------------- | -----------: |
+| Common / Común         |        55.0% |
+| Uncommon / Poco común  |        27.0% |
+| Rare / Rara            |        12.0% |
+| Epic / Épica           |         4.5% |
+| Legendary / Legendaria |         1.4% |
+| Mythic / Mítica        |         0.1% |
+
+Una clase Común puede tener rango SSS; una manifestación Mítica puede ser E. La rareza de Moments de V3 es otra dimensión. Las compatibilidades y pesos de identidades dentro de cada rareza son decisiones del catálogo, nunca multiplicadores de rango. No hay pity ni modificadores por vidas, logros o metaprogreso.
 
 ## Orden y objetivos aprobados
 
@@ -29,13 +42,13 @@ Orden canónico ascendente: **E → D → C → B → A → S → SS → SSS**.
 | SS    | 0.029%                  |
 | SSS   | 0.001%                  |
 
-Los valores publicados suman 100%. Se conservan exactamente como objetivos iniciales aprobados. Si simulaciones posteriores detectan problemas de normalización, representación o balance, documentar el problema y proponer una revisión explícita; no ajustar silenciosamente. La probabilidad poblacional de Despertar sigue pendiente en [AWAKENING](AWAKENING.md).
+Los valores publicados suman 100%. Se conservan exactamente como objetivos iniciales aprobados. Si simulaciones posteriores detectan problemas de normalización, representación o balance, documentar el problema y proponer una revisión explícita; no ajustar silenciosamente. La probabilidad de Despertar entre humanos elegibles está aprobada por Task 06 en [AWAKENING](AWAKENING.md).
 
 ## Sin pity
 
 No hay compensación oculta por mala suerte. Jugar muchas vidas, completar misterios, acumular logros o fallar tiradas no aumenta automáticamente S/SS/SSS. Decenas o cientos de vidas sin rango superior son un resultado legítimo. Metaprogreso y rareza narrativa no pueden introducir un multiplicador indirecto de rango. Cambiar esta regla exige una revisión canónica explícita.
 
-No se prescribe aquí algoritmo de tirada, redondeo, semilla ni almacenamiento. No hay código nuevo ni rebalanceo de V3.
+No se prescribe aquí algoritmo de tirada, redondeo, semilla ni almacenamiento. La implementación de Task 06 se documenta por separado; no modifica estas distribuciones.
 
 ## Experiencia y significado
 

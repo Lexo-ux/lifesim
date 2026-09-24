@@ -6,6 +6,25 @@ import { validateContent } from "../tools/validate-content.mjs";
 test("production Moments have valid references, requirements, chains and local assets", () => {
   assert.deepEqual(validateContent(), []);
 });
+test("Awakening requirements accept catalog values and report invalid keys without throwing", () => {
+  const moments = structuredClone(CARDS);
+  moments[0].requires = {
+    awakening: { rank: "E", classId: "healer", capability: "tissue-support" },
+  };
+  assert.deepEqual(validateContent({ moments }), []);
+  for (const requirement of [
+    { rank: "X" },
+    { constructor: "invalid" },
+    { unknown: "E" },
+  ]) {
+    moments[0].requires = { awakening: requirement };
+    assert.ok(
+      validateContent({ moments }).some((e) =>
+        e.includes("invalid requirement awakening"),
+      ),
+    );
+  }
+});
 test("validator rejects duplicate IDs, unknown speakers/assets, malformed requirements and broken chains", () => {
   const moments = structuredClone(CARDS);
   moments.push(structuredClone(moments[0]));
