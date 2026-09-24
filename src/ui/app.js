@@ -1,3 +1,4 @@
+import { createPresentation } from "./presentation/index.js";
 import { NAMES, TRAITS, ORIGINS } from "../../content/catalog.js";
 import { startLife, choose } from "../narrative/engine.js";
 import { load, save, reset } from "../persistence/storage.js";
@@ -37,6 +38,8 @@ let screen = "home",
   pending = null,
   opener = null;
 let titleScene = null;
+let presentation = null;
+let visualQuality = "auto";
 function announce(text) {
   document.querySelector("#announcer").textContent = text;
 }
@@ -66,6 +69,10 @@ function render(focus = false, revealTitle = true) {
       : !data.state?.alive
         ? deathScreen(data.state, data.meta, revealDeath)
         : gameScreen(data);
+  if (screen !== "play" || !data.state?.alive) {
+    presentation?.destroy();
+    presentation = null;
+  }
   app.innerHTML = `<main id="main">${html}</main>`;
   if (screen === "home") {
     titleScene = mountThreshold(document.querySelector(".threshold"), {
@@ -73,9 +80,21 @@ function render(focus = false, revealTitle = true) {
     });
     const ownedScene = titleScene;
     cleanup = () => ownedScene.destroy();
-  } else if (screen === "play" && data.state?.alive)
-    cleanup = mountSwipe(document.querySelector(".narrative-card"), commit);
-  else cleanup = () => {};
+  } else if (screen === "play" && data.state?.alive) {
+    presentation ||= createPresentation(document.body, {
+      quality: visualQuality,
+    });
+    presentation.attach(document.querySelector(".narrative-card"));
+    presentation.setState(
+      currentCard(data.state).pool === "meta" ? "unusual" : "normal",
+    );
+    if (modal.open) presentation.pause();
+    cleanup = mountSwipe(
+      document.querySelector(".narrative-card"),
+      commit,
+      presentation,
+    );
+  } else cleanup = () => {};
   document
     .querySelector("[data-action=sound]")
     ?.setAttribute(
@@ -100,6 +119,7 @@ function render(focus = false, revealTitle = true) {
 }
 function open(content, cls = "") {
   titleScene?.prepare();
+  presentation?.pause();
   opener = document.activeElement;
   modal.className = cls;
   modal.innerHTML = `<button class="icon-button close" data-action="close" aria-label="Cerrar">${icon("close")}</button>${content}`;
@@ -139,6 +159,7 @@ async function commit(side) {
         : "commit",
     data.settings.sound,
   );
+  presentation?.contact("commit");
   await leaveCard(oldCard, side);
   revealDeath = false;
   render(true);
@@ -149,6 +170,16 @@ async function commit(side) {
       `La vida de ${data.state.name} terminó a los ${data.state.age} años.`,
     );
   } else {
+    presentation?.emphasize(
+      result.outcome.stage
+        ? "memory"
+        : result.after.health < result.before.health
+          ? "danger"
+          : result.outcome.secret
+            ? "unusual"
+            : "normal",
+      { gesture: true },
+    );
     transitionMoment(
       result.outcome.stage
         ? `Nuevo capítulo · ${result.outcome.stage}`
@@ -211,7 +242,7 @@ async function commitNew(options) {
 }
 function settings() {
   open(
-    `<p class="eyebrow">A TU RITMO</p><h2 id="modal-title">Ajustes</h2><div class="settings-row"><span>Sonido</span>${button(data.settings.sound ? "Activado" : "Silenciado", "toggle-sound", "", "button secondary")}</div><p class="small muted">La partida se guarda en este navegador.</p><div class="settings-row"><span>Todos los recuerdos</span>${button("Reiniciar", "ask-reset", "", "button danger")}</div>`,
+    `<p class="eyebrow">A TU RITMO</p><h2 id="modal-title">Ajustes</h2><div class="settings-row"><span>Sonido</span>${button(data.settings.sound ? "Activado" : "Silenciado", "toggle-sound", "", "button secondary")}</div><div class="settings-row"><span>Atmósfera</span>${button(visualQuality === "auto" ? "Automática" : visualQuality === "low" ? "Sutil" : "Sin efectos", "visual-quality", "", "button secondary")}</div><p class="small muted">Atmósfera: preferencia de esta sesión. El movimiento reducido del sistema tiene prioridad.</p><p class="small muted">La partida se guarda en este navegador.</p><div class="settings-row"><span>Todos los recuerdos</span>${button("Reiniciar", "ask-reset", "", "button danger")}</div>`,
   );
 }
 document.addEventListener("click", (e) => {
@@ -261,6 +292,15 @@ document.addEventListener("click", (e) => {
       render();
       settings();
     } else render();
+  } else if (action === "visual-quality") {
+    visualQuality =
+      visualQuality === "auto"
+        ? "low"
+        : visualQuality === "low"
+          ? "off"
+          : "auto";
+    presentation?.setQuality(visualQuality);
+    settings();
   } else if (action === "ask-reset")
     open(
       `<h2 id="modal-title">¿Borrar todos los recuerdos?</h2><p>Se eliminarán esta vida, el legado, los ajustes y el guardado anterior de V2.</p><div class="modal-actions">${button("Conservarlos", "close")}${button("Borrar todo", "reset", "", "button danger")}</div>`,
@@ -295,6 +335,7 @@ document.addEventListener("submit", (e) => {
 });
 modal.addEventListener("close", () => {
   if (!busy) titleScene?.resume();
+  presentation?.resume();
   if (opener?.isConnected) opener.focus({ preventScroll: true });
 });
 render();

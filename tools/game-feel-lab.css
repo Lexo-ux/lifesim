@@ -1,0 +1,61 @@
+.lab-controls {
+  padding: 24px;
+  background: #141e22;
+  border: 1px solid var(--border-subtle);
+  width: min(100%, 340px);
+  margin: 24px auto;
+  position: relative;
+  z-index: 2;
+}
+.lab-controls h2 {
+  font-size: 24px;
+}
+.lab-controls p {
+  font-size: 12px;
+  margin-bottom: 14px;
+  color: var(--muted);
+}
+.lab-controls button {
+  min-height: 44px;
+}
+.lab-controls > button {
+  width: 100%;
+  margin-top: 12px;
+}
+.lab-states {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.lab-states button {
+  background: var(--surface-raised);
+  padding: 8px;
+  border: 1px solid var(--border-subtle);
+  font-size: 12px;
+}
+.lab-states button[aria-pressed="true"] {
+  border-color: var(--convergence);
+  background: var(--surface-hover);
+}
+.lab-marker {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+#lab-status {
+  margin-top: 14px;
+}
+@media (min-width: 1100px) {
+  .lab-controls {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 260px;
+    margin: 0;
+  }
+  #app {
+    margin-right: 290px;
+  }
+}

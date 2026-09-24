@@ -61,7 +61,9 @@ const dir = "output/qa/task04";
     const animations = () =>
       page.evaluate(
         () =>
-          document.getAnimations().filter((a) => a.playState === "running")
+          document
+            .getAnimations()
+            .filter((a) => a.playState === "running" && a.id !== "feel-ambient")
             .length,
       );
     // Film the real DOM sequence at real durations, including the ivory handoff.

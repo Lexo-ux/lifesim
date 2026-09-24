@@ -29,7 +29,9 @@ const BASE = process.env.BASE_URL || "http://127.0.0.1:4173";
     await page.locator("button[type=submit]").click();
     await page.waitForSelector(".narrative-card");
     await page.waitForFunction(() =>
-      document.getAnimations().every((a) => a.playState === "finished"),
+      document
+        .getAnimations()
+        .every((a) => a.playState === "finished" || a.id === "feel-ambient"),
     );
     const read = () =>
       page.evaluate(() => JSON.parse(localStorage.getItem("lifesim.v3")));

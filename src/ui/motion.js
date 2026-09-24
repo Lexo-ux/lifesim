@@ -28,16 +28,27 @@ export function animate(
 ) {
   if (!element || reduced())
     return { finished: Promise.resolve(), cancel() {} };
-  const animation = element.animate(frames, {
-    duration: duration(tier),
-    easing: motionToken(easing),
-    fill: "both",
-    ...options,
-  });
+  let animation;
+  try {
+    animation = element.animate(frames, {
+      duration: duration(tier),
+      easing: motionToken(easing),
+      fill: "both",
+      ...options,
+    });
+  } catch {
+    return { finished: Promise.resolve(), cancel() {} };
+  }
   active.add(animation);
+  const endTime = animation.effect.getComputedTiming().endTime;
+  const timeout =
+    endTime === Infinity
+      ? null
+      : setTimeout(() => animation.cancel(), Math.max(0, endTime) + 150);
   const finished = animation.finished
     .catch(() => {})
     .finally(() => {
+      clearTimeout(timeout);
       active.delete(animation);
       animation.cancel();
     });
@@ -50,14 +61,18 @@ export function followPointer(card, dx, threshold) {
   card.style.setProperty("--x", `${dx}px`);
   card.style.setProperty(
     "--rotation",
-    `${Math.max(-6, Math.min(6, dx / 24))}deg`,
+    `${Math.max(-4.2, Math.min(4.2, dx / 28))}deg`,
   );
   card.style.setProperty("--strength", Math.min(1, Math.abs(dx) / threshold));
+  card.style.setProperty(
+    "--lean",
+    `${Math.max(-1.2, Math.min(1.2, dx / 100))}deg`,
+  );
   card.dataset.direction = dx < 0 ? "left" : "right";
 }
 export function returnCard(card) {
   card.classList.remove("dragging");
-  for (const property of ["--x", "--rotation", "--strength"])
+  for (const property of ["--x", "--rotation", "--strength", "--lean"])
     card.style.removeProperty(property);
   card.removeAttribute("data-direction");
 }

@@ -2,7 +2,7 @@
 
 Juego narrativo web en español: una persona, un Moment y dos respuestas. Desliza, arrastra, usa las flechas o pulsa una decisión; el tiempo avanza al elegir. La simulación de educación, carrera, economía y vínculos continúa detrás de la historia.
 
-**Estado:** V3 jugable con El Umbral (Task 04) y las dos familias Veiled Identity del protagonista (Task 05), sobre la arquitectura de Task 01. Hay 130 Moments binarios, doce NPCs recurrentes y seis etapas del protagonista. Task 02 establece la biblia del mundo futuro en `/lore`; sus sistemas todavía no están implementados y el contenido V3 se conserva.
+**Estado:** V3 jugable con El Umbral (Task 04), las dos familias Veiled Identity del protagonista (Task 05) y Mystic Card/atmósfera (Task 05.5), sobre la arquitectura de Task 01. Hay 130 Moments binarios, doce NPCs recurrentes y seis etapas del protagonista. Task 02 establece la biblia del mundo futuro en `/lore`; sus sistemas todavía no están implementados y el contenido V3 se conserva.
 
 ## Ejecutar
 
@@ -54,11 +54,12 @@ En Windows se puede usar Edge instalado: `$env:BROWSER_CHANNEL='msedge'; npm run
 
 ## Desarrollo y documentación
 
-Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 05 usa `codex/character-life-generation`; no se fusiona automáticamente con main ni inicia Task 06.
+Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 05.5 usa `codex/mystic-game-feel`; no se fusiona automáticamente con main ni inicia Task 06.
 
 - [Estado real: implementado y planificado](docs/CURRENT_STATE.md)
 - [Arquitectura](docs/ARCHITECTURE.md) · [Desarrollo y pruebas](docs/DEVELOPMENT.md)
 - [Contrato de Moments](docs/CONTENT.md) · [Guardados](docs/SAVES.md)
+- [Interacción y atmósfera: Mystic Game Feel](docs/GAME_FEEL.md)
 - [Arte de personajes: Veiled Identity](docs/CHARACTER_ART.md)
 - [Recursos y fuentes](docs/ASSETS.md) · [Validación](docs/VALIDATION.md)
 - [Canon y política de spoilers](lore/README.md) · [World Bible](lore/WORLD_BIBLE.md)
@@ -72,4 +73,4 @@ GitHub Pages sirve la raíz; rutas relativas compatibles con `/lifesim/` y el do
 
 ## Dirección visual — Task 03
 
-[Arte](docs/ART_DIRECTION.md), [sistema de diseño](docs/DESIGN_SYSTEM.md), [movimiento](docs/MOTION.md), [procedencia y prompts](docs/ASSET_PROVENANCE.md), [checklist visual](docs/VISUAL_QA.md). El piloto incorpora Vera adulta y el parque ilustrado; el resto del catálogo gráfico sigue identificado como legacy. `tools/art-review.html` permite comparar los cinco estudios fuera del flujo del juego. Task 04 incorpora [El Umbral](docs/THRESHOLD.md): arte propio, título sensible al guardado y cruce hacia una nueva vida, con movimiento reducido y omisión. Task 05 queda pendiente.
+[Arte](docs/ART_DIRECTION.md), [sistema de diseño](docs/DESIGN_SYSTEM.md), [movimiento](docs/MOTION.md), [procedencia y prompts](docs/ASSET_PROVENANCE.md), [checklist visual](docs/VISUAL_QA.md). El piloto incorpora Vera adulta y el parque ilustrado; el resto del catálogo gráfico sigue identificado como legacy. `tools/art-review.html` permite comparar los cinco estudios fuera del flujo del juego. Task 04 incorpora [El Umbral](docs/THRESHOLD.md): arte propio, título sensible al guardado y cruce hacia una nueva vida, con movimiento reducido y omisión. Task 05 incorpora las dos familias Veiled Identity completas; Task 05.5 añade Mystic Card y atmósfera semántica sin implementar los sistemas futuros.

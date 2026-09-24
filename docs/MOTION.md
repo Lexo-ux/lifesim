@@ -1,6 +1,6 @@
-# Motion — Tasks 03–04
+# Motion — Tasks 03–05.5
 
-Motion communicates contact, choice, consequence or narrative emphasis. Gameplay has no decorative idle loop. Task 04 permits a bounded title-only exception described below. Gameplay transactions resolve and save before visual exit; movement never advances time or consumes randomness.
+Motion communicates contact, choice, consequence or narrative emphasis. Task 04 owns the bounded title sequence below. Task 05.5 adds a separate, capped gameplay atmosphere; [GAME_FEEL](GAME_FEEL.md) owns that semantic FX contract. Gameplay transactions resolve and save before visual exit; movement never advances time or consumes randomness.
 
 ## Technology decision
 
@@ -23,7 +23,7 @@ Micro stays 80–250ms; gameplay 200–600ms; narrative 0.6–2.5s. Cinematic is
 ## Interaction contract
 
 - Primary pointer down immediately picks up the card (cursor/depth); card follows horizontal distance 1:1.
-- One width read at pickup caches threshold `min(90px, width×0.24)`; moves write transforms and opacity only. Rotation clamps to ±6 degrees. No per-frame DOM geometry reads.
+- One width read at pickup caches threshold `min(90px, width×0.24)`; moves write transforms and opacity only. Rotation clamps to ±4.2 degrees, with ≤1.2° perspective and bounded art/light response from the presentation owner. No per-frame DOM geometry reads.
 - Intent ramps to full opacity at threshold and includes direction plus action phrase. No consequence probabilities or stat deltas.
 - Vertical intent, pointer cancellation or capture loss returns the card. Below threshold returns in 280ms with no choice. Successful commit keeps its current pose and exits; implicit capture loss cannot snap it back.
 - Arrow keys and visible buttons resolve the same choice once. Held-key repeats are ignored. Modal controls retain keyboard ownership. AbortController removes all gesture listeners on remount, and pointer capture is released.
@@ -38,13 +38,13 @@ Future full-screen transitions must have an immediate stable alternative with th
 
 ## Performance and future escalation
 
-Gameplay uses finite CSS/WAAPI motion, no polling/rAF animation loop or animated blur/filter. The title-only exception uses two owned loops and ten dots in one SVG. Shadows change once on pickup/return rather than interpolate per pointer event. Static paper tile is 80px; environments are optimized local WebP. Do not animate layout dimensions. Inspect frame timing and painting after new effects, not only file size.
+Card interactions use finite CSS/WAAPI motion and no per-move geometry reads. Task 05.5 adds two long compositor loops, twelve fixed motes and a one-off bounded quality probe; no continuous JS render loop or animated blur/filter. The independent title uses two owned loops and ten dots in one SVG. Shadows change once on pickup/return rather than interpolate per pointer event. Static paper tile is 80px; environments are optimized local WebP. Do not animate layout dimensions. Inspect frame timing and painting after new effects, not only file size.
 
-Future parallax uses existing depth layers; future particles need a capped renderer with lifecycle ownership. Camera-like zoom/light/character entrances must clean up on navigation and reduce-motion changes. S can quiet the interface; SS can briefly misalign it; SSS may suspend ordinary composition. All restore a readable screen, support skipping, avoid flash and retain mute. No rank logic or new narrative event is implemented by these specifications. Task 04 implements the title portal and crossing below.
+Task 05.5 supplies shallow parallax, a capped atmosphere owner and an S/SS/SSS presentation harness. See GAME_FEEL.md for lifecycle, fallback, cancellation and measurements. Camera-like zoom/light/character entrances must clean up on navigation and reduce-motion changes. S can quiet the interface; SS can briefly misalign it; SSS may suspend ordinary composition. All restore a readable screen, support skipping, avoid flash and retain mute. No rank logic or new narrative event is implemented by these specifications. Task 04 implements the title portal and crossing below.
 
 ## Task 04 — deliberate title-only ambient exception
 
-Native CSS/WAAPI remains sufficient; no GSAP. threshold.js owns reveal, idle, preparing, crossing, complete and hidden states, its AbortController, effects, one timer and audio cancellation. Gameplay has no new idle animation.
+Native CSS/WAAPI remains sufficient; no GSAP. threshold.js owns reveal, idle, preparing, crossing, complete and hidden states, its AbortController, effects, one timer and audio cancellation. This describes Task 04 only; gameplay atmosphere is owned separately by Task 05.5.
 
 - Reveal: 3800ms, linear clock with offset beats; outline → seam/door → person → possible lives → title → actions. Pointer, Enter/Space or Omitir settles immediately. Focus entering an action also settles the intro. Presented once per document session; menus/home do not replay it.
 - Idle: two compositor effects (light opacity over 8500ms; one SVG group of ten dust dots over 12000ms). Every 6800ms one timeout changes the two existing image buffers; dissolve/drift takes 1800ms. No random calls, independent silhouette elements, animation frame loop or animated blur.

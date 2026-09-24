@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <base href="../" />
+    <title>LifeSim · Laboratorio de presentación</title>
+    <link rel="icon" href="favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="tools/game-feel-lab.css" />
+  </head>
+  <body class="playing">
+    <div id="app"><main id="main"></main></div>
+    <aside class="lab-controls" aria-label="Laboratorio de presentación">
+      <p class="eyebrow">DESARROLLO · SIN PARTIDA</p>
+      <h2>Materia y misterio</h2>
+      <p>
+        No asigna poderes, rangos ni resultados. No lee ni escribe guardados.
+      </p>
+      <div class="lab-states" role="group" aria-label="Estado visual"></div>
+      <label for="lab-tier">Calidad visual</label
+      ><select id="lab-tier">
+        <option value="auto">Automática</option>
+        <option value="full">Completa</option>
+        <option value="low">Sutil / baja</option>
+        <option value="off">Sin atmósfera</option></select
+      ><button class="button primary" id="lab-sequence">Normal → SSS</button
+      ><button class="button" id="lab-reset">Restablecer / cancelar</button>
+      <p id="lab-status" role="status" aria-live="polite"></p>
+      <a href="index.html">Volver al juego</a>
+    </aside>
+    <div id="moment-flash" class="moment-flash" aria-hidden="true"></div>
+    <script type="module" src="tools/game-feel-lab.js"></script>
+  </body>
+</html>

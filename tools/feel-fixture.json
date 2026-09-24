@@ -1,0 +1,149 @@
+{
+  "version": 3,
+  "state": {
+    "version": 2,
+    "seed": 1831566685,
+    "id": "1790212307581-872",
+    "name": "Alex",
+    "appearance": 1,
+    "age": 24,
+    "birthYear": 2004,
+    "city": "Bogotá",
+    "traits": ["curious"],
+    "origin": "balanced",
+    "alive": true,
+    "deathReason": "",
+    "stats": {
+      "health": 85,
+      "happiness": 77,
+      "intelligence": 38,
+      "fitness": 35,
+      "energy": 100,
+      "stress": 5
+    },
+    "skills": {
+      "technology": 0,
+      "creativity": 8,
+      "charisma": 12,
+      "strength": 5,
+      "discipline": 10,
+      "finance": 0
+    },
+    "cash": 800,
+    "savings": 0,
+    "investments": 0,
+    "debt": 0,
+    "housing": "family",
+    "transport": "walk",
+    "education": {
+      "degrees": [],
+      "current": null,
+      "dropped": []
+    },
+    "career": null,
+    "retired": false,
+    "pension": 0,
+    "relationships": [
+      {
+        "id": "elena",
+        "name": "Elena",
+        "type": "family",
+        "bond": 78,
+        "since": 0
+      },
+      {
+        "id": "tomas",
+        "name": "Tomás",
+        "type": "family",
+        "bond": 78,
+        "since": 0
+      }
+    ],
+    "points": 3,
+    "used": [],
+    "pending": [],
+    "flags": {},
+    "history": [
+      {
+        "age": 0,
+        "text": "Naciste en Bogotá, en una un hogar tranquilo. El resto de la historia lo escribes tú.",
+        "milestone": true,
+        "icon": "sprout"
+      }
+    ],
+    "eventId": "hello",
+    "eventDone": true,
+    "eventSeen": [],
+    "result": null,
+    "lastYear": null,
+    "achievements": ["first"],
+    "peaks": {
+      "wealth": 800,
+      "intelligence": 38,
+      "happiness": 77,
+      "fitness": 35
+    },
+    "story": {
+      "version": 3,
+      "month": 0,
+      "current": "quiet_day",
+      "count": 0,
+      "seen": {},
+      "recent": [],
+      "queue": [],
+      "npcs": {
+        "elena": {
+          "id": "elena",
+          "name": "Elena",
+          "role": "Mamá",
+          "portrait": "elena",
+          "firstMetAge": 0,
+          "memories": [],
+          "flags": {},
+          "alive": true,
+          "traits": [],
+          "bond": 78
+        },
+        "tomas": {
+          "id": "tomas",
+          "name": "Tomás",
+          "role": "Papá",
+          "portrait": "tomas",
+          "firstMetAge": 0,
+          "memories": [],
+          "flags": {},
+          "alive": true,
+          "traits": [],
+          "bond": 78
+        }
+      },
+      "personality": {},
+      "arcs": {},
+      "outcome": null,
+      "ending": null
+    }
+  },
+  "meta": {
+    "version": 2,
+    "lives": 1,
+    "completed": 0,
+    "longest": 0,
+    "wealth": 800,
+    "intelligence": 38,
+    "happiness": 77,
+    "unlocked": ["first"],
+    "finishedIds": [],
+    "discovered": ["first_light"],
+    "characters": ["elena"],
+    "secrets": [],
+    "endings": [],
+    "flags": {},
+    "chapter": 0,
+    "lastChapterLife": "",
+    "echoes": []
+  },
+  "settings": {
+    "sound": false,
+    "onboarded": true
+  }
+}

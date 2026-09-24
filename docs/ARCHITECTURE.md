@@ -22,7 +22,7 @@ Vanilla JavaScript con ES modules, HTML y CSS. Sin framework, backend, compilaci
 | `lore/`                    | Canon futuro de Task 02, con estados y reservas explícitos; no es runtime.             |
 | `tests/`, `tools/`         | Verificación, servidor local, replay y preparación de recursos.                        |
 
-No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. `style.css` es una entrada estática de nueve módulos en `styles/`; tokens y motion son compartidos por CSS y `src/ui/motion.js`. Los imports y assets CSS resuelven desde cada archivo; la URL de escena dinámica se normaliza contra `document.baseURI` para evitar resolverla desde `/styles/`. Los subcatálogos se dividirán cuando su crecimiento lo justifique.
+No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. `style.css` es una entrada estática de once módulos en `styles/`; tokens y motion son compartidos por CSS y `src/ui/motion.js`. Los imports y assets CSS resuelven desde cada archivo; la URL de escena dinámica se normaliza contra `document.baseURI` para evitar resolverla desde `/styles/`. Los subcatálogos se dividirán cuando su crecimiento lo justifique.
 
 ## Flujo y propiedad del estado
 
@@ -38,6 +38,8 @@ content → narrativa → motor anual / sistemas → state + meta
 lore → decisiones editoriales → content (sin dependencia de runtime)
 tools / tests → módulos puros (nunca importados desde la aplicación)
 ```
+
+`ui/presentation/` mantiene estados semánticos, calidad y FX no serializables, sin imports de motor/sistemas/contenido/persistencia ni fuentes aleatorias. El propietario de atmósfera vive entre tarjetas y se destruye al salir del juego. Contratos: [GAME_FEEL](GAME_FEEL.md).
 
 `ui/app.js` posee la sesión cargada y la presentación: pantalla, diálogo, foco y bloqueo de input. El estado serializable vive fuera del DOM y cambia mediante funciones de simulación/narrativa. Renderizar no debe consumir la semilla ni resolver consecuencias. No hay bucle por frame: cada elección inicia una transacción.
 

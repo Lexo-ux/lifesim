@@ -39,7 +39,9 @@ let browser;
   await page.getByRole("button", { name: "Dejarlo al azar" }).click();
   await page.waitForSelector(".narrative-card");
   await page.waitForFunction(() =>
-    document.getAnimations().every((a) => a.playState === "finished"),
+    document
+      .getAnimations()
+      .every((a) => a.playState === "finished" || a.id === "feel-ambient"),
   );
   await page.locator("[data-action=choose]").first().click();
   await page.waitForSelector("[data-card=first_steps]");
