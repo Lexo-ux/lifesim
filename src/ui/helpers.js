@@ -1,5 +1,6 @@
 import { icon } from "./icons.js";
 import { stage } from "../engine/state.js";
+import { characterPortrait } from "./characters.js";
 export { icon };
 export const esc = (x) =>
   String(x ?? "").replace(
@@ -12,7 +13,7 @@ export const esc = (x) =>
 export const button = (text, action, value = "", cls = "button") =>
   `<button class="${cls}" data-action="${action}" data-value="${esc(value)}">${text}</button>`;
 export const playerPortrait = (s) =>
-  `assets/characters/${s.appearance}-${stage(s).id}.webp`;
+  characterPortrait(s.appearance, stage(s).id);
 export const cash = (n) => "$" + Math.round(n).toLocaleString("es-CO");
 export const moneyMood = (s) =>
   s.debt > s.cash

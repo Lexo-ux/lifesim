@@ -1,0 +1,149 @@
+/* Veiled Identity: painterly portraits share the same registry on every surface. */
+.identity-preview {
+  margin: 0 0 10px;
+  height: 230px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 24px;
+  justify-items: center;
+  background: radial-gradient(ellipse at center, #ada38616, transparent 66%);
+}
+.identity-preview > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: auto;
+}
+.identity-preview figcaption {
+  font-size: 11px;
+  line-height: 24px;
+  color: var(--muted);
+}
+.identity-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.identity-options .appearance {
+  width: auto;
+  height: auto;
+  min-height: 48px;
+  min-width: 0;
+  flex: 1 1 125px;
+  border-radius: var(--radius-control);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  line-height: 1.3;
+}
+.identity-swatch {
+  flex-shrink: 0;
+  width: 12px;
+  height: 20px;
+  border-radius: 2px;
+  border: 1px solid #aeb2a3;
+}
+.identity-0 {
+  background: linear-gradient(135deg, #334759 50%, #8a4e3f 50%);
+}
+.identity-1 {
+  background: linear-gradient(135deg, #d4c9ab 50%, #a56b4b 50%);
+}
+.identity-check {
+  visibility: hidden;
+  width: 14px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.identity-check .icon {
+  width: 14px;
+  height: 18px;
+}
+.appearance.selected .identity-check {
+  visibility: visible;
+}
+.age-previews {
+  display: grid;
+  font-size: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 4.4em), 1fr));
+  gap: 2px;
+}
+.age-previews button {
+  min-height: 44px;
+  min-width: 0;
+  padding: 6px 1px;
+  font-size: 10px;
+  color: var(--muted);
+  background: transparent;
+  border-bottom: 2px solid transparent;
+}
+.age-previews button[aria-pressed="true"] {
+  color: var(--ink);
+  border-color: var(--convergence);
+  background: var(--surface-hover);
+}
+.age-previews button:hover {
+  color: var(--ink);
+  background: var(--surface-hover);
+}
+.creation-note {
+  text-align: center;
+  font: italic 12px/1.5 var(--font-story);
+  color: var(--muted);
+  margin: 8px 0 14px;
+}
+.npc-portrait.veiled {
+  image-rendering: auto;
+  height: 106%;
+  width: 100%;
+  bottom: -6%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+.profile-head > img.veiled-portrait {
+  image-rendering: auto;
+  width: 116px;
+  height: 160px;
+  flex-shrink: 0;
+}
+.memorial img.veiled-portrait {
+  image-rendering: auto;
+  width: 180px;
+  height: 220px;
+  object-fit: contain;
+  filter: none;
+}
+.memorial:has(.veiled-portrait) {
+  height: 230px;
+}
+@media (max-width: 350px) {
+  .profile-head {
+    flex-wrap: wrap;
+  }
+}
+/* Keep the four creation inputs close to the portrait without hiding the action. */
+.creator-modal .creation-fields {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9em), 1fr));
+}
+.creator-modal .creation-fields select {
+  padding-inline: 8px;
+  font-size: 11px;
+}
+@media (max-height: 700px) {
+  .identity-preview {
+    height: 160px;
+  }
+}
+@media (max-width: 350px) {
+  .creator-modal .creation-fields {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 350px) {
+  .age-previews {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 7.2em), 1fr));
+  }
+}

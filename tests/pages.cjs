@@ -68,6 +68,11 @@ let browser;
   );
   for (const item of threshold.assets)
     assert.equal((await fetch(base + item.path)).status, 200, item.path);
+  const characters = JSON.parse(
+    await fs.readFile("assets/characters/veiled-v1/manifest.json", "utf8"),
+  );
+  for (const item of characters.assets)
+    assert.equal((await fetch(base + item.path)).status, 200, item.path);
   assert.deepEqual(failures, []);
   console.log(
     "GitHub Pages subpath QA passed: /lifesim/, ES modules, fonts, images, a playable year and publication files.",

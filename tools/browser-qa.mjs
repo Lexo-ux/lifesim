@@ -27,6 +27,7 @@ try {
     "tests/visual.cjs",
     "tests/motion.cjs",
     "tests/threshold.cjs",
+    "tests/characters.cjs",
   ]) {
     const test = spawn(process.execPath, [file], {
       env: { ...process.env, BASE_URL: base },

@@ -1,0 +1,213 @@
+{
+  "version": 1,
+  "system": "Veiled Identity",
+  "generator": "Built-in ImageGen; model version not exposed",
+  "sourceDate": "2026-09-23",
+  "optimization": "Sharp: contain in 468×624, transparent padding 36px horizontal/48px vertical to 540×720; WebP quality82 alphaQuality92 effort6; no drawing or background extraction",
+  "assets": [
+    {
+      "id": "0-baby",
+      "path": "assets/characters/veiled-v1/0-baby.webp",
+      "source": "exec-8d0cb62f-8fe9-46e5-8817-3822efa7b82b.png",
+      "promptId": "0-baby-v1",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 96620
+      }
+    },
+    {
+      "id": "0-child",
+      "path": "assets/characters/veiled-v1/0-child.webp",
+      "source": "exec-c90a5439-c6f9-404b-babe-2a3b970a6f5c.png",
+      "promptId": "0-child-v2",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 72166
+      }
+    },
+    {
+      "id": "0-teen",
+      "path": "assets/characters/veiled-v1/0-teen.webp",
+      "source": "exec-9f88b4db-073d-4e67-9cf4-dd75acfcb196.png",
+      "promptId": "0-teen-v1",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 79506
+      }
+    },
+    {
+      "id": "0-young",
+      "path": "assets/characters/veiled-v1/0-young.webp",
+      "source": "exec-4c902878-cd5d-4191-bfb7-3be0f2592d25.png",
+      "promptId": "0-young-v1",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 73760
+      }
+    },
+    {
+      "id": "0-adult",
+      "path": "assets/characters/veiled-v1/0-adult.webp",
+      "source": "exec-bee72a30-6ac4-4147-94db-bdf905b0399c.png",
+      "promptId": "0-adult-v1",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 71682
+      }
+    },
+    {
+      "id": "0-elder",
+      "path": "assets/characters/veiled-v1/0-elder.webp",
+      "source": "exec-0b1a8b3a-4700-4013-9ba8-6a7d0664a0b2.png",
+      "promptId": "0-elder-v1",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 71972
+      }
+    },
+    {
+      "id": "1-baby",
+      "path": "assets/characters/veiled-v1/1-baby.webp",
+      "source": "exec-d1a20bd9-aaec-4516-89be-10d10e33dae8.png",
+      "promptId": "1-baby-v1",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 95980
+      }
+    },
+    {
+      "id": "1-child",
+      "path": "assets/characters/veiled-v1/1-child.webp",
+      "source": "exec-df2b7d07-c4eb-4924-bfa0-cf7f3c4b576e.png",
+      "promptId": "1-child-v2",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 81266
+      }
+    },
+    {
+      "id": "1-teen",
+      "path": "assets/characters/veiled-v1/1-teen.webp",
+      "source": "exec-f5d4796e-a0cb-4274-a82a-58ef80e48535.png",
+      "promptId": "1-teen-v1",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 76094
+      }
+    },
+    {
+      "id": "1-young",
+      "path": "assets/characters/veiled-v1/1-young.webp",
+      "source": "exec-185e7cea-3394-428a-8c7c-2980abe63417.png",
+      "promptId": "1-young-v1",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 79892
+      }
+    },
+    {
+      "id": "1-adult",
+      "path": "assets/characters/veiled-v1/1-adult.webp",
+      "source": "exec-4de3fb85-c62c-4bb0-8cb0-34772e98b4ba.png",
+      "promptId": "1-adult-v1",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 80386
+      }
+    },
+    {
+      "id": "1-elder",
+      "path": "assets/characters/veiled-v1/1-elder.webp",
+      "source": "exec-1b544753-e1fd-4217-b99e-82d2fbedca0d.png",
+      "promptId": "1-elder-v2",
+      "original": {
+        "width": 1086,
+        "height": 1448,
+        "alpha": true
+      },
+      "shipped": {
+        "width": 540,
+        "height": 720,
+        "alpha": true,
+        "bytes": 73194
+      }
+    }
+  ]
+}

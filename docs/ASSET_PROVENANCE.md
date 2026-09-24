@@ -44,3 +44,26 @@ Six original project-specific ImageGen requests; generator tool exposes no model
 Total: 347,712 bytes. Resize only, Sharp WebP quality 84 / alphaQuality 92 / effort 6; no recoloring, redrawing, alpha keying or upscaling. Exact source PNG names and measured metadata: `assets/threshold/manifest.json`. Reproduce with `node tools/export-threshold.mjs <master-directory>`. The person has true alpha, soft gouache edges and no painted background. Technical masks fade outer environment boundaries and clip fragments to the aperture; they do not redraw the artwork.
 
 Review: source and rendered frames checked for human anatomy, modern civilian silhouette, ink/gouache family, dark ornament/light hierarchy and absence of baked UI/text. Accepted candidates after composition review; iteration occurred in placement, blending, short-height sizing and reveal timing. No rejected raster versions or invented external approvals. The symbolic hunter and wounded figure carry no class, rank or historical identity. Social recommendation and remaining limitations: [THRESHOLD](THRESHOLD.md).
+
+## Task 05 — Veiled Identity, 2026-09-23
+
+Fifteen project-specific built-in ImageGen requests: two young anchors, ten age candidates and three targeted revisions. Model/version is not exposed. User reference was used only for ink/gouache treatment and composition inspiration, never copied, redistributed or claimed as original project artwork. The original Threshold environment supplied material context; each age used its own generated identity anchor. No downloaded third-party artwork or external hotlinks. Exact prompts, selected source names and rejected candidates: [character-prompts.json](character-prompts.json).
+
+| Portrait | Bytes | Selected revision |
+| -------- | ----: | ----------------- |
+| 0-baby   | 96620 | 0-baby-v1         |
+| 0-child  | 72166 | 0-child-v2        |
+| 0-teen   | 79506 | 0-teen-v1         |
+| 0-young  | 73760 | 0-young-v1        |
+| 0-adult  | 71682 | 0-adult-v1        |
+| 0-elder  | 71972 | 0-elder-v1        |
+| 1-baby   | 95980 | 1-baby-v1         |
+| 1-child  | 81266 | 1-child-v2        |
+| 1-teen   | 76094 | 1-teen-v1         |
+| 1-young  | 79892 | 1-young-v1        |
+| 1-adult  | 80386 | 1-adult-v1        |
+| 1-elder  | 73194 | 1-elder-v2        |
+
+All masters: 1086×1448 RGBA; all production exports: 540×720 WebP with genuine alpha. Total 952,518 bytes. Export with Sharp: contain inside 468×624, 36px horizontal/48px vertical transparent padding; quality 82, alphaQuality 92, effort 6. No drawing, color-keying or background extraction. `tools/export-characters.mjs` checks the complete 12-image set and source alpha before staging. Sources remain in the local ImageGen task directory; only optimized production files, prompts and metadata are committed.
+
+Review rejected both first-pass child candidates for adolescent proportions and the first second-identity elder for weak age separation at thumbnail size. Three targeted revisions improved child head/shoulder proportions and silver hair/age lines. The complete compressed 2×6 sheet was inspected before the resolver switched atomically. Nose, lips, cheek and ear remain drawn under deliberately obscured eyes. Both families retain distinct silhouette/hair/palette across six ages and belong to the Threshold material family. See [CHARACTER_ART](CHARACTER_ART.md) for live-UI QA and remaining scope.

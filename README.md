@@ -2,7 +2,7 @@
 
 Juego narrativo web en español: una persona, un Moment y dos respuestas. Desliza, arrastra, usa las flechas o pulsa una decisión; el tiempo avanza al elegir. La simulación de educación, carrera, economía y vínculos continúa detrás de la historia.
 
-**Estado:** V3 jugable con dirección visual y movimiento de Task 03, sobre la arquitectura de Task 01. Hay 130 Moments binarios, doce NPCs recurrentes y seis etapas del protagonista. Task 02 establece la biblia del mundo futuro en `/lore`; sus sistemas todavía no están implementados y el contenido V3 se conserva.
+**Estado:** V3 jugable con El Umbral (Task 04) y las dos familias Veiled Identity del protagonista (Task 05), sobre la arquitectura de Task 01. Hay 130 Moments binarios, doce NPCs recurrentes y seis etapas del protagonista. Task 02 establece la biblia del mundo futuro en `/lore`; sus sistemas todavía no están implementados y el contenido V3 se conserva.
 
 ## Ejecutar
 
@@ -54,11 +54,12 @@ En Windows se puede usar Edge instalado: `$env:BROWSER_CHANNEL='msedge'; npm run
 
 ## Desarrollo y documentación
 
-Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 04 usa `codex/the-threshold`; no se fusiona automáticamente con main ni inicia Task 05.
+Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 05 usa `codex/character-life-generation`; no se fusiona automáticamente con main ni inicia Task 06.
 
 - [Estado real: implementado y planificado](docs/CURRENT_STATE.md)
 - [Arquitectura](docs/ARCHITECTURE.md) · [Desarrollo y pruebas](docs/DEVELOPMENT.md)
 - [Contrato de Moments](docs/CONTENT.md) · [Guardados](docs/SAVES.md)
+- [Arte de personajes: Veiled Identity](docs/CHARACTER_ART.md)
 - [Recursos y fuentes](docs/ASSETS.md) · [Validación](docs/VALIDATION.md)
 - [Canon y política de spoilers](lore/README.md) · [World Bible](lore/WORLD_BIBLE.md)
 - [Invariantes canónicos](lore/CANON_RULES.md) · [Migración futura desde V3](docs/CANON_MIGRATION.md)

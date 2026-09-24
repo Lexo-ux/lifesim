@@ -1,13 +1,14 @@
 # Assets: producción y fuentes
 
-| Ruta actual                                                        | Contenido                                       |
-| ------------------------------------------------------------------ | ----------------------------------------------- |
-| `assets/characters/{0,1}-{baby,child,teen,young,adult,elder}.webp` | 12 sprites, dos apariencias y seis etapas.      |
-| `assets/npcs/{id}.webp`, `{id}-{child,teen,adult,elder}.webp`      | 12 bases y ocho variantes de edad.              |
-| `assets/backgrounds/{name}.webp`                                   | 7 entornos; `street` resuelve a `neighborhood`. |
-| `assets/fonts/`                                                    | Outfit, DM Sans y licencias.                    |
-| `src/ui/icons.js`, `favicon.svg`                                   | SVG de interfaz/marca.                          |
-| `og-image.png`                                                     | Imagen social final.                            |
+| Ruta actual                                                        | Contenido                                                       |
+| ------------------------------------------------------------------ | --------------------------------------------------------------- |
+| `assets/characters/{0,1}-{baby,child,teen,young,adult,elder}.webp` | 12 sprites legacy archivados; sin uso activo del protagonista.  |
+| `assets/characters/veiled-v1/{0,1}-{stage}.webp`                   | 12 retratos Veiled Identity activos, seis edades por identidad. |
+| `assets/npcs/{id}.webp`, `{id}-{child,teen,adult,elder}.webp`      | 12 bases y ocho variantes de edad.                              |
+| `assets/backgrounds/{name}.webp`                                   | 7 entornos; `street` resuelve a `neighborhood`.                 |
+| `assets/fonts/`                                                    | Outfit, DM Sans y licencias.                                    |
+| `src/ui/icons.js`, `favicon.svg`                                   | SVG de interfaz/marca.                                          |
+| `og-image.png`                                                     | Imagen social final.                                            |
 
 Los nombres heredados se conservan para evitar riesgo. El audio se sintetiza; no hay archivos musicales. No crear directorios de criaturas, efectos o audio vacíos.
 
@@ -32,3 +33,7 @@ Los doce sprites y veinte retratos originales son **LEGACY VISUAL ASSETS**, igua
 ## Task 04 — familia del Umbral
 
 Seis recursos locales en `assets/threshold/`, catálogo `manifest.json` y selección de UI en `src/ui/art.js`. Un entorno opaco, protagonista con alpha y cuatro composiciones transparentes de vidas posibles. Solo se precarga el entorno; las dos siguientes composiciones se solicitan cuando rotan. Exportación técnica reproducible con `tools/export-threshold.mjs`, prompts exactos en `docs/threshold-prompts.json`. No hay masters desplegados ni recursos de terceros. Ver [procedencia](ASSET_PROVENANCE.md) y [Umbral](THRESHOLD.md).
+
+## Task 05 — Veiled Identity
+
+Dos familias completas en `assets/characters/veiled-v1/`, 540×720 RGBA WebP. Registro UI `src/ui/characters.js`; manifiesto medido junto a los archivos; fuente artística [CHARACTER_ART](CHARACTER_ART.md); prompts y revisiones en `character-prompts.json`. `tools/export-characters.mjs <master-directory>` exporta por defecto a `output/task05/exports`, sin activar candidatos. Los doce recursos juntos pesan 952.518 bytes y cada superficie solicita solo su retrato actual. Los sprites originales y estudios Task 03 se conservan por trazabilidad; no son fallbacks de la identidad activa.
