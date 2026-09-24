@@ -167,8 +167,6 @@ const phase = process.env.VISUAL_PHASE || "after";
           1,
       );
       await shot("reduced-motion");
-      await page.emulateMedia({ reducedMotion: "no-preference" });
-      await page.waitForTimeout(2000);
       assert.equal(
         await page.evaluate(
           () =>
@@ -176,7 +174,21 @@ const phase = process.env.VISUAL_PHASE || "after";
               .length,
         ),
         0,
-        "no idle animation loops",
+        "reduced motion stops all ambient rendering",
+      );
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+      await page.waitForTimeout(2000);
+      assert.equal(
+        await page.evaluate(
+          () =>
+            document
+              .getAnimations()
+              .filter(
+                (a) => a.playState === "running" && a.id !== "feel-ambient",
+              ).length,
+        ),
+        0,
+        "no unowned idle animation loops",
       );
     }
     assert.deepEqual(errors, []);

@@ -25,7 +25,7 @@ The Threshold is the central visual metaphor of birth, death, transition and pos
 | War (future)              | Smoke, reduced saturation, sharp interrupted silhouettes; preserve readable faces.                |
 | Death                     | Quiet space, softened material and warm human memory; no automatic red/black horror treatment.    |
 
-`styles/tokens.css` is the numeric palette authority. Paper uses a 80×80 SVG tile with faint irregular marks: original code-native texture, no filters, generated noise loop or full-screen grain animation. It never sits over text as a separate overlay. Shadows indicate card pickup, not persistent glow. No continuously animated blur or gradients. Task 04 allows ten sparse SVG dust dots moving as one group on the title only.
+`styles/tokens.css` is the numeric palette authority. Paper uses a 80×80 SVG tile with faint irregular marks: original code-native texture, no filters, generated noise loop or full-screen grain animation. It never sits over text as a separate overlay. Shadows indicate card pickup, not persistent glow. No continuously animated blur or gradients. Task 04 allows ten sparse SVG dust dots moving as one group on the title. Task 05.5 adds a separate twelve-point gameplay field and bounded pigment drift; see [GAME_FEEL](GAME_FEEL.md).
 
 ## Moment language
 
@@ -66,7 +66,7 @@ Depth order: background atmosphere → environment image → character → Momen
 
 ## Exceptional Moments and ranks — design only
 
-Marriage/birth: a brief warmer edge and intimate sound. Death: more breathing room and a slower fade. Awakening: alien light arrives before its explanation. Historical catastrophe/NPC loss: reduce normal motion and let text/person dominate. First Threshold: warm light is exceptional. Outside the Threshold title implemented in Task 04, these future exceptional gameplay events are not implemented.
+Marriage/birth: a brief warmer edge and intimate sound. Death: more breathing room and a slower fade. Awakening: alien light arrives before its explanation. Historical catastrophe/NPC loss: reduce normal motion and let text/person dominate. First Threshold: warm light is exceptional. Task 05.5 supplies semantic visual demonstrations for those future events; their gameplay mechanics remain unimplemented.
 
 Ranks use increasing pressure on the same visual grammar, not loot colors:
 

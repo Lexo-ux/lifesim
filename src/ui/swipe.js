@@ -1,6 +1,6 @@
 import { pickup, followPointer, returnCard } from "./motion.js";
 // One controller per card. Read geometry at pickup, never per move.
-export function mountSwipe(card, onCommit) {
+export function mountSwipe(card, onCommit, presentation) {
   if (!card) return () => {};
   const controller = new AbortController();
   const options = { signal: controller.signal };
@@ -10,6 +10,7 @@ export function mountSwipe(card, onCommit) {
     const id = drag?.id;
     drag = null;
     returnCard(card);
+    presentation?.contact("return");
     if (id !== undefined && card.hasPointerCapture(id))
       card.releasePointerCapture(id);
   };
@@ -17,6 +18,7 @@ export function mountSwipe(card, onCommit) {
     if (done) return;
     done = true;
     drag = null;
+    // The transaction owner emits commit once for pointer, keyboard and buttons.
     onCommit(side);
   };
   card.addEventListener(
@@ -37,6 +39,7 @@ export function mountSwipe(card, onCommit) {
         threshold: Math.min(90, card.clientWidth * 0.24),
       };
       pickup(card);
+      presentation?.contact("pickup");
       card.setPointerCapture(e.pointerId);
     },
     options,
@@ -53,6 +56,7 @@ export function mountSwipe(card, onCommit) {
       }
       drag.dx = dx;
       followPointer(card, dx, drag.threshold);
+      presentation?.contact("drag", dx, dy, drag.threshold);
     },
     options,
   );

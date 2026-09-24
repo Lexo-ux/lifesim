@@ -1,6 +1,6 @@
 # Design system — Task 03
 
-The runtime remains static HTML + ES modules. `style.css` imports local fonts and ten stylesheets using relative URLs. No preprocessor/framework or production dependency.
+The runtime remains static HTML + ES modules. `style.css` imports local fonts and eleven stylesheets using relative URLs. No preprocessor/framework or production dependency.
 
 ## Tokens and typography
 
@@ -16,7 +16,7 @@ Narrative text is 17px/1.48 normally, 15px/1.4 on short screens. Speaker is 31px
 
 ## Components
 
-- **Moment:** portrait dominates a single flexible height area; paper narrative remains readable and never covers the face. 5px radius, fine neutral edge, small offset sheet, no collectible frame. Meta pool receives a subtle anomalous line only.
+- **Moment:** portrait dominates a single flexible height area; paper narrative remains readable and never covers the face. Task 05.5 uses a deckled silhouette, irregular ink edge and displaced paper reverse, with a shallow scene/character/light response; no collectible frame. Meta pool receives a subtle anomalous line only.
 - **Indicators:** four distinct SVG glyphs and labels, 3px fill tracks. Width is fixed; `scaleX` presents values without animating layout. Change adds ↑/↓ plus progressbar `aria-valuetext`, so direction is not color-only. The actual accessible value remains available without printing numbers permanently.
 - **Decisions:** two equal large controls, explicit short action and arrows; neutral warm/cold surfaces distinguish direction without claiming good/bad. Minimum 44px touch target (normally 56px). Pointer and keyboard choose the identical transaction.
 - **Preview:** ink on paper at the upper corner, arrow + action; opacity tracks distance. No stat deltas or promised outcomes.
@@ -42,3 +42,5 @@ See [MOTION](MOTION.md), [ART_DIRECTION](ART_DIRECTION.md) and [VISUAL_QA](VISUA
 ## Character presentation — Task 05
 
 `styles/characters.css` owns Veiled Identity cropping and creator layout. Portraits use alpha, contain fit and normal image interpolation; self Moments use their own class rather than Vera’s enlarged crop. Creator controls have pressed state, text labels and 44px targets. Inputs remain in the native scrollable dialog; narrow layouts stack fields. Profile and memorial keep the saved identity and actual age. Preview switches are immediate, with no visual randomness, extra animation, or reduced-motion exception.
+
+Task 05.5 adds `styles/game-feel.css` and the presentation owner. Ordinary play stays quiet; high-intensity states temporarily change scene alignment, light and boundary without hiding controls. Focus outline moves to the stage to survive clipping; decorative layers are inert. A session-only Atmosphere setting selects automatic, low or off. [GAME_FEEL](GAME_FEEL.md) defines the component states, quality tiers and extension contract.
