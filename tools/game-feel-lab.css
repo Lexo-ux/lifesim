@@ -54,6 +54,8 @@
     transform: translateY(-50%);
     width: 260px;
     margin: 0;
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
   }
   #app {
     margin-right: 290px;

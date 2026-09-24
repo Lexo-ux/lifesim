@@ -34,13 +34,13 @@ const force = (s, id) => {
   meet(s, CARD_BY_ID[id].npc);
 };
 test("130 original cards: exactly two choices, local speakers, connected arcs and concise writing", () => {
-  assert.equal(CARDS.length, 130);
+  assert.equal(CARDS.filter((c) => c.system !== "awakening").length, 130);
   assert.equal(new Set(CARDS.map((c) => c.id)).size, CARDS.length);
   assert.equal(Object.keys(NPCS).length, 12);
   for (const c of CARDS) {
     assert.ok(NPCS[c.npc] || c.npc === "self");
     assert.ok(c.left.label && c.right.label);
-    assert.ok(c.months > 0 && c.months <= 12);
+    assert.ok((c.months > 0 || c.system === "awakening") && c.months <= 12);
     for (const o of [c.left, c.right])
       for (const q of o.follow || []) assert.ok(CARD_BY_ID[q.id]?.queued, q.id);
   }

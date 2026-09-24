@@ -20,6 +20,10 @@ La ausencia de sistemas futuros no es por sí misma un fallo de V3. Se distingue
 | [pantallas](../src/ui/screens.js), [CSS](../style.css) y assets muestran el barrio/personajes V3.                                                                                       | Dirección futura del Umbral ornamentado con luz cálida y vidas posibles.                                                                 | **Task 03** establece la base visual; **Task 04 — The Threshold: Title Screen and Life Entry Sequence** construirá la pantalla/entrada, todavía pendiente.                                         |
 | [persistencia](../src/persistence/storage.js) conserva núcleo V2, extensión V3 y IDs del catálogo actual.                                                                               | El futuro canon no autoriza invalidar partidas.                                                                                          | Todo cambio de esquema/ID requiere adaptador, migración o versión explícita y pruebas; Task 02 no los cambia.                   |
 
+## Actualización autorizada — Task 06
+
+La fila de Núcleo/Despertar/clases se ha implementado como una sección vertical acotada: [AWAKENING_SYSTEM](AWAKENING_SYSTEM.md). Se promueven solo las probabilidades aprobadas, se conserva la tabla de rangos y se añade un catálogo inicial basado en conceptos existentes. La exposición local y su ventana de edad son reglas de gameplay; no datan las eras, no convierten NPCs V3 en históricos ni revelan metanarrativa. El resto de discrepancias sigue pendiente.
+
 ## Fronteras para tareas siguientes
 
 Los nombres de trabajos posteriores de la tabla son áreas de trabajo, no numeración inventada del roadmap. Tasks 03 y 04 tienen títulos proporcionados por el usuario; no se inventa numeración para otras áreas.

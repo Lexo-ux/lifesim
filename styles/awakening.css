@@ -1,0 +1,81 @@
+/* Same Mystic Card / Veiled Identity. Typography records a finding, never loot rarity. */
+.narrative-card[data-sequence="awakening"] {
+  animation: none;
+}
+.awakening-mark {
+  position: absolute;
+  right: 16px;
+  top: 24px;
+  z-index: 3;
+  max-width: 64%;
+  color: var(--ink);
+  background: #101b20e8;
+  border-left: 1px solid #b4cbcd88;
+  padding: 9px 12px;
+  pointer-events: none;
+}
+.awakening-mark small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.17em;
+}
+.awakening-mark:not(.rank-mark) {
+  top: auto;
+  bottom: 18px;
+  max-width: 60%;
+}
+.awakening-mark strong {
+  display: block;
+  font: 500 20px/1.2 var(--heading);
+  margin-top: 5px;
+}
+.rank-mark {
+  background: #101b20cf;
+  text-align: right;
+}
+.rank-mark strong {
+  font: 400 clamp(42px, 12vw, 64px)/1 var(--heading);
+  letter-spacing: 0.07em;
+}
+.rank-mark[data-rank="D"] {
+  border-left-style: double;
+}
+.rank-mark[data-rank="C"] {
+  border: 1px solid #b4cbcd88;
+}
+.rank-mark[data-rank="B"] {
+  border: 3px double #b4cbcd88;
+}
+.rank-mark[data-rank="A"] {
+  box-shadow: -4px 0 0 #d3dfd226;
+}
+.awakening-profile dd {
+  margin: 2px 0 15px;
+  color: var(--muted);
+}
+.awakening-profile dt {
+  color: var(--ink);
+  font-weight: 600;
+}
+.awakening-memory,
+.awakening-note {
+  border-left: 1px solid var(--convergence);
+  padding-left: 16px;
+}
+@media (max-height: 700px) {
+  .awakening-mark {
+    top: 12px;
+    padding: 6px 9px;
+  }
+  .awakening-mark strong {
+    font-size: 17px;
+  }
+  .rank-mark strong {
+    font-size: 36px;
+  }
+}
+@media (forced-colors: active) {
+  .awakening-mark {
+    border: 1px solid CanvasText;
+  }
+}

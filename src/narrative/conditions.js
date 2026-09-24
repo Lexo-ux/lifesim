@@ -1,9 +1,11 @@
 import { NPCS } from "../../content/npcs/index.js";
 import { value } from "../engine/state.js";
 import { bond } from "./npc.js";
+import { awakeningMomentId, matchesAwakening } from "../systems/awakening.js";
 
 export const now = (s) => s.age * 12 + s.story.month;
 export function matches(s, meta, r = {}) {
+  if (r.awakening && !matchesAwakening(s, r.awakening)) return false;
   if (s.age < (r.min ?? 0) || s.age > (r.max ?? 110)) return false;
   if (r.flags?.some((f) => !s.flags[f]) || r.not?.some((f) => s.flags[f]))
     return false;
@@ -71,6 +73,7 @@ export function matches(s, meta, r = {}) {
   return true;
 }
 export function eligible(s, meta, event, { queued = false } = {}) {
+  if (event.system === "awakening") return event.id === awakeningMomentId(s);
   const spec = NPCS[event.npc];
   if (
     spec &&

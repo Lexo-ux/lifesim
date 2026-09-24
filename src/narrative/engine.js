@@ -7,6 +7,12 @@ import { drawCard, currentCard } from "./deck.js";
 import { now } from "./conditions.js";
 import { meet, remember, npcYear } from "./npc.js";
 import { ending } from "./meta.js";
+import {
+  pendingAwakening,
+  scheduleAwakening,
+  advanceAwakening,
+  awakeningMomentId,
+} from "../systems/awakening.js";
 
 export function attachStory(s) {
   if (s.story) return s;
@@ -46,6 +52,7 @@ export function attachStory(s) {
 }
 export function startLife(options, meta, seed) {
   const s = attachStory(createState(options, seed));
+  s.awakening = pendingAwakening();
   meta.lives++;
   drawCard(s, meta);
   updateAchievements(s, meta);
@@ -143,6 +150,8 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   const event = currentCard(s),
     option = event?.[side];
   if (!option) return { error: "No existe esa decisión." };
+  if (event.system === "awakening" && event.id !== awakeningMomentId(s))
+    return { error: "Esta decisión ya cambió." };
   const next = structuredClone(s),
     nextMeta = structuredClone(meta);
   const before = macroStats(s),
@@ -179,6 +188,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   if (event.arc)
     next.story.arcs[event.arc] = { last: event.id, side, age: next.age };
   if (option.milestone) log(next, option.milestone, true, "spark");
+  advanceAwakening(next, event, side);
   next.story.month += next.age < 3 ? 12 : event.months;
   if (next.stats.health <= 0) finishLife(next, "Tu cuerpo no pudo seguir.");
   while (next.story.month >= 12 && next.alive) {
@@ -190,6 +200,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
     if (next.alive) apply(next, { stress: -3, energy: 10 });
   }
   if (!next.alive) next.story.month = 0;
+  scheduleAwakening(next);
   const unlocked = updateAchievements(next, nextMeta);
   if (!next.alive) ending(next, nextMeta);
   const milestones = next.history

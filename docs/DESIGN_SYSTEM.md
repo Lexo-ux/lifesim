@@ -1,6 +1,6 @@
 # Design system — Task 03
 
-The runtime remains static HTML + ES modules. `style.css` imports local fonts and eleven stylesheets using relative URLs. No preprocessor/framework or production dependency.
+The runtime remains static HTML + ES modules. `style.css` imports local fonts and twelve stylesheets using relative URLs. No preprocessor/framework or production dependency.
 
 ## Tokens and typography
 
@@ -40,6 +40,8 @@ Retain existing original SVG icons instead of introducing mismatched emoji/new l
 See [MOTION](MOTION.md), [ART_DIRECTION](ART_DIRECTION.md) and [VISUAL_QA](VISUAL_QA.md). This is an implemented foundation, not a claim that the full legacy art catalog has been replaced.
 
 ## Character presentation — Task 05
+
+Task 06 adds a small in-scene written finding for manifestation/class/rarity or evaluated rank, using the same ink and type rather than rarity colors. The character remains the primary identity; details of the Core live in Profile after evaluation, and History/Memorial retain the event. Non-Awakened profiles have no empty supernatural fields. `styles/awakening.css` is the twelfth presentation module; no new character assets.
 
 `styles/characters.css` owns Veiled Identity cropping and creator layout. Portraits use alpha, contain fit and normal image interpolation; self Moments use their own class rather than Vera’s enlarged crop. Creator controls have pressed state, text labels and 44px targets. Inputs remain in the native scrollable dialog; narrow layouts stack fields. Profile and memorial keep the saved identity and actual age. Preview switches are immediate, with no visual randomness, extra animation, or reduced-motion exception.
 

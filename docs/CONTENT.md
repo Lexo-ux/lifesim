@@ -29,6 +29,8 @@ No cambiar nombres serializados para adoptar terminología. Un futuro formato co
 
 Leer primero canon aprobado y módulos relevantes. Usar ID único estable, NPC/contexto existente y dos elecciones ejecutables. Registrar la colección en `index.js` y comprobar requisitos/operaciones. Un Moment normal utiliza capacidades existentes sin editar el motor. Una interacción nueva necesita una tarea de sistema independiente, schema, pruebas y evaluación de guardados.
 
+Task 06 añade catorce Moments con `system: "awakening"`: su selección pertenece al cursor persistente del Despertar, no a pesos de rareza narrativa. Solo estos beats acotados admiten `months: 0`; las rutinas ordinarias siguen requiriendo tiempo positivo. `requires.awakening` consulta estado, clase, familia, capacidad narrativa, rareza o rango sin tiradas. El contenido declara textos, elecciones y cues; la UI reutiliza la Mystic Card. Catálogo y reglas: [AWAKENING_SYSTEM](AWAKENING_SYSTEM.md).
+
 El contenido actual es JS confiable; no cargar archivos arbitrarios del usuario ni ejecutar código remoto. `content/` no importa runtime/UI/tools. El catálogo y los eventos V2 aún contienen predicados JS; documentar antes de convertirlos a JSON. Mantener `content/legacy/` mientras validadores y consecuencias V2 dependan de él.
 
 ## Validación y límites

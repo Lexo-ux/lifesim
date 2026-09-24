@@ -105,12 +105,13 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
     ]) {
       await page.evaluate((s) => feelLab.presentation.emphasize(s), state);
       await page.waitForTimeout(state === "unusual" ? 300 : 1100);
-      await shot(state);
       const inspect = await page.evaluate(() => feelLab.presentation.inspect());
       assert.equal(inspect.state, state);
       assert.ok(
         inspect.effects <= 4 && inspect.particles === 12 && inspect.loops <= 2,
       );
+      // Check the live state before screenshot encoding can outlast a brief cue.
+      await shot(state);
       if (state === "rank-sss") {
         await page.waitForTimeout(800);
         await shot("rank-sss-late");

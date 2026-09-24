@@ -1,12 +1,20 @@
-// Development-only. Deliberately does not import the app, storage or a game engine.
+// Development-only. Optional Task 06 cases use an isolated in-memory engine state.
+// No app or persistence imports; never reads/writes normal localStorage.
 import { gameScreen } from "../src/ui/card.js";
 import { createPresentation } from "../src/ui/presentation/index.js";
 import { STATES } from "../src/ui/presentation/presets.js";
 import { mountSwipe } from "../src/ui/swipe.js";
 import { leaveCard, transitionMoment } from "../src/ui/transitions.js";
-const fixture = await (
+import { choose } from "../src/narrative/engine.js";
+import { currentCard } from "../src/narrative/deck.js";
+import { awakeningFixture } from "./awakening-fixtures.js";
+import { awakeningCue } from "../src/ui/awakening.js";
+const originalFixture = await (
   await fetch(new URL("tools/feel-fixture.json", document.baseURI))
 ).json();
+let fixture = structuredClone(originalFixture),
+  lifeMode = false,
+  generation = 0;
 const presentation = createPresentation(document.body),
   status = document.querySelector("#lab-status");
 let cleanup = () => {},
@@ -37,19 +45,35 @@ function show() {
     presentation,
   );
   presentation.attach(document.querySelector(".narrative-card"));
+  if (lifeMode) {
+    presentation.setState("normal");
+    const cue = awakeningCue(fixture.state, currentCard(fixture.state));
+    if (cue) presentation.emphasize(cue);
+  }
 }
 async function commit(side) {
   if (busy) return;
   busy = true;
+  const own = generation;
   presentation.contact("commit");
   try {
-    await leaveCard(document.querySelector(".narrative-card"), side);
+    const wasIncident =
+      lifeMode && currentCard(fixture.state).system === "awakening";
+    if (lifeMode) {
+      const result = choose(fixture.state, fixture.meta, side);
+      if (result.error) throw Error(result.error);
+    }
+    if (!wasIncident || currentCard(fixture.state).system !== "awakening")
+      await leaveCard(document.querySelector(".narrative-card"), side);
+    if (own !== generation) return;
     cleanup();
     show();
-    presentation.emphasize("memory", { gesture: true });
-    transitionMoment("Ensayo de una decisión. No cambia ninguna vida.");
+    if (!lifeMode) {
+      presentation.emphasize("memory", { gesture: true });
+      transitionMoment("Ensayo de una decisión. No cambia ninguna vida.");
+    }
   } finally {
-    busy = false;
+    if (own === generation) busy = false;
   }
 }
 function cancel() {
@@ -63,6 +87,19 @@ function select(state) {
   presentation.reset();
   if (state !== "normal") presentation.emphasize(state, { gesture: true });
 }
+function loadCase(key) {
+  generation++;
+  busy = false;
+  cancel();
+  cleanup();
+  presentation.reset();
+  lifeMode = key !== "visual";
+  fixture = lifeMode ? awakeningFixture(key) : structuredClone(originalFixture);
+  show();
+}
+document
+  .querySelector("#lab-life")
+  .addEventListener("change", (e) => loadCase(e.target.value));
 const wait = (ms) =>
   new Promise((r) => {
     resolveWait = r;
@@ -137,6 +174,8 @@ presentation.reset();
 // Narrow QA seam; exists only in this unlinked, noindex development page.
 window.feelLab = {
   presentation,
+  loadCase,
+  busy: () => busy,
   fixture: () => structuredClone(fixture),
   remount() {
     cleanup();
