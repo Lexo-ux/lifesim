@@ -2,7 +2,8 @@
 .card-stage {
   position: relative;
   flex: 1;
-  min-height: 0;
+  /* Let long/enlarged narrative text grow the page instead of clipping in the card. */
+  min-height: min-content;
   margin: var(--space-2) 0 var(--space-4);
   isolation: isolate;
 }

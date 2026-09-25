@@ -3,11 +3,14 @@ import { parseArgs } from "node:util";
 import { startLife, choose } from "../src/narrative/engine.js";
 import { extendMeta } from "../src/narrative/meta.js";
 import { emptyMeta } from "../src/systems/achievements.js";
+import { inspectOpportunities } from "./inspect-opportunities.js";
+import { CARD_BY_ID } from "../content/moments/index.js";
 const { values } = parseArgs({
   options: {
     seed: { type: "string", default: "1" },
     steps: { type: "string", default: "10" },
     side: { type: "string", default: "alternate" },
+    opportunities: { type: "boolean", default: false },
   },
 });
 const seed = Number(values.seed),
@@ -34,6 +37,30 @@ for (let i = 0; i < steps && state.alive; i++) {
     values.side === "alternate" ? (i % 2 ? "right" : "left") : values.side;
   const result = choose(state, meta, side);
   if (result.error) throw new Error(`${moment}: ${result.error}`);
-  trace.push({ moment, age, side });
+  trace.push({
+    moment,
+    age,
+    side,
+    ...(values.opportunities && CARD_BY_ID[moment].opportunity
+      ? {
+          consequences: CARD_BY_ID[moment][side].consequences,
+          lifeAfter: structuredClone(state.life),
+        }
+      : {}),
+  });
 }
-console.log(JSON.stringify({ seed, trace, state, meta }, null, 2));
+console.log(
+  JSON.stringify(
+    {
+      seed,
+      trace,
+      state,
+      meta,
+      ...(values.opportunities
+        ? { opportunities: inspectOpportunities(state, meta) }
+        : {}),
+    },
+    null,
+    2,
+  ),
+);

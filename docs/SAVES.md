@@ -29,4 +29,6 @@ Se conserva la envoltura y todas las claves. `state.awakening.version = 1` añad
 
 ## Cambios futuros
 
+Task 07 incorpora `state.life.version = 1`: dirección/capítulos, capacidades aprendidas, experiencia, hechos, decisiones, exclusiones, enfriamientos y empleos observados. El campo es opcional para guardados anteriores. La carga no lo crea ni escribe; la siguiente decisión válida activa adjunta valores mínimos sin RNG ni reconstrucción del pasado. Los estudios y la carrera conservan sus campos originales como autoridad. Las vidas fallecidas anteriores no reciben carreras inventadas. El Moment seleccionado y las consecuencias pendientes siguen en `story`. La validación rechaza extensiones incompatibles sin destruir el original; una vida nueva empieza vacía. Contrato completo: [LIFE_PATHS](LIFE_PATHS.md).
+
 No vincular versión de guardado a `package.json`. Antes de renombrar/eliminar IDs o cambiar campos/versiones: migrador explícito, fallback que conserve el original y pruebas con datos anteriores. No consumir PRNG incidentalmente durante migraciones. Las pruebas actuales cubren migración, corrupción, storage denegado, reinicio y continuación determinista.

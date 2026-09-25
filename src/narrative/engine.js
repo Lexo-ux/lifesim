@@ -8,6 +8,12 @@ import { now } from "./conditions.js";
 import { meet, remember, npcYear } from "./npc.js";
 import { ending } from "./meta.js";
 import {
+  ensureLife,
+  observeOccupation,
+  applyLifeConsequences,
+} from "../systems/life-paths.js";
+import { evaluateRequirement } from "./opportunities.js";
+import {
   pendingAwakening,
   scheduleAwakening,
   advanceAwakening,
@@ -53,6 +59,7 @@ export function attachStory(s) {
 export function startLife(options, meta, seed) {
   const s = attachStory(createState(options, seed));
   s.awakening = pendingAwakening();
+  ensureLife(s);
   meta.lives++;
   drawCard(s, meta);
   updateAchievements(s, meta);
@@ -154,6 +161,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
     return { error: "Esta decisión ya cambió." };
   const next = structuredClone(s),
     nextMeta = structuredClone(meta);
+  ensureLife(next);
   const before = macroStats(s),
     previousStage = stage(s).id,
     startAge = s.age,
@@ -167,6 +175,8 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   apply(next, effects);
   const error = operate(next, option.operation);
   if (error) return { error };
+  observeOccupation(next);
+  applyLifeConsequences(next, event, side, evaluateRequirement);
   for (const flag of option.flags || []) next.flags[flag] = true;
   for (const flag of option.metaFlags || []) nextMeta.flags[flag] = true;
   if (event.chapter) {
@@ -201,6 +211,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   }
   if (!next.alive) next.story.month = 0;
   scheduleAwakening(next);
+  observeOccupation(next);
   const unlocked = updateAchievements(next, nextMeta);
   if (!next.alive) ending(next, nextMeta);
   const milestones = next.history
