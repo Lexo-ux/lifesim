@@ -4,12 +4,13 @@ import { random } from "../engine/state.js";
 import { eligible, now } from "./conditions.js";
 import { meet } from "./npc.js";
 import { discover } from "./meta.js";
+import { opportunityText } from "./opportunities.js";
 import {
   awakeningMomentId,
   interpolateAwakening,
 } from "../systems/awakening.js";
 
-function pathAvailable(s, event) {
+export function pathAvailable(s, event) {
   if (event.id === "bicycle" && s.transport === "bike") return false;
   if (event.id === "car_offer" && s.transport === "car") return false;
   if (event.test === "savings") return s.savings > 0;
@@ -83,6 +84,7 @@ export function drawCard(s, meta) {
 export const currentCard = (s) => CARD_BY_ID[s.story.current];
 export function cardText(s, meta, event = currentCard(s)) {
   if (event.system === "awakening") return interpolateAwakening(event.text, s);
+  if (event.opportunity) return opportunityText(s, event);
   const echo =
     meta.echoes.findLast((e) => e.id !== s.id)?.name ||
     "un nombre que te resulta familiar";

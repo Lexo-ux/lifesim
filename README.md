@@ -2,7 +2,7 @@
 
 Juego narrativo web en español: una persona, un Moment y dos respuestas. Desliza, arrastra, usa las flechas o pulsa una decisión; el tiempo avanza al elegir. La simulación de educación, carrera, economía y vínculos continúa detrás de la historia.
 
-**Estado:** V3 jugable con El Umbral (Task 04), las dos familias Veiled Identity del protagonista (Task 05), Mystic Card/atmósfera (Task 05.5) y Despertar (Task 06), sobre la arquitectura de Task 01. Hay 144 Moments binarios (130 originales y 14 del Despertar), doce NPCs recurrentes y seis etapas del protagonista. Task 02 establece la biblia del mundo futuro en `/lore`; Despertar, Núcleo, clases, rareza y rango ya tienen una primera implementación. El resto de sistemas futuros sigue pendiente y el contenido V3 original se conserva.
+**Estado:** V3 jugable con El Umbral (Task 04), Veiled Identity (Task 05), Mystic Card/atmósfera (Task 05.5), Despertar (Task 06) y caminos/oportunidades (Task 07), sobre la arquitectura de Task 01. Hay 168 Moments binarios (130 originales, 14 del Despertar y 24 oportunidades), doce NPCs recurrentes y seis etapas del protagonista. Las decisiones pueden cambiar capacidades, orientación y consecuencias años después; clases y rango no imponen carrera. Task 02 establece la biblia del mundo futuro en `/lore`. Los sistemas posteriores siguen pendientes y el contenido V3 original se conserva.
 
 ## Ejecutar
 
@@ -54,7 +54,7 @@ En Windows se puede usar Edge instalado: `$env:BROWSER_CHANNEL='msedge'; npm run
 
 ## Desarrollo y documentación
 
-Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 06 usa `codex/awakening-system`, desde `99a9413`; no se fusiona automáticamente con main ni inicia Task 07. Ver [sistema de Despertar](docs/AWAKENING_SYSTEM.md).
+Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 07 usa `codex/life-paths-opportunities`, desde `99779f2`; no se fusiona con main ni inicia Task 08. Ver [caminos y oportunidades](docs/LIFE_PATHS.md) y [sistema de Despertar](docs/AWAKENING_SYSTEM.md).
 
 - [Estado real: implementado y planificado](docs/CURRENT_STATE.md)
 - [Arquitectura](docs/ARCHITECTURE.md) · [Desarrollo y pruebas](docs/DEVELOPMENT.md)

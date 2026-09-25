@@ -34,7 +34,10 @@ const force = (s, id) => {
   meet(s, CARD_BY_ID[id].npc);
 };
 test("130 original cards: exactly two choices, local speakers, connected arcs and concise writing", () => {
-  assert.equal(CARDS.filter((c) => c.system !== "awakening").length, 130);
+  assert.equal(
+    CARDS.filter((c) => c.system !== "awakening" && !c.opportunity).length,
+    130,
+  );
   assert.equal(new Set(CARDS.map((c) => c.id)).size, CARDS.length);
   assert.equal(Object.keys(NPCS).length, 12);
   for (const c of CARDS) {

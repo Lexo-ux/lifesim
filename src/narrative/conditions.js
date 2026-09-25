@@ -2,6 +2,7 @@ import { NPCS } from "../../content/npcs/index.js";
 import { value } from "../engine/state.js";
 import { bond } from "./npc.js";
 import { awakeningMomentId, matchesAwakening } from "../systems/awakening.js";
+import { opportunityReasons } from "./opportunities.js";
 
 export const now = (s) => s.age * 12 + s.story.month;
 export function matches(s, meta, r = {}) {
@@ -74,6 +75,8 @@ export function matches(s, meta, r = {}) {
 }
 export function eligible(s, meta, event, { queued = false } = {}) {
   if (event.system === "awakening") return event.id === awakeningMomentId(s);
+  if (event.opportunity && opportunityReasons(s, event, { queued }).length)
+    return false;
   const spec = NPCS[event.npc];
   if (
     spec &&

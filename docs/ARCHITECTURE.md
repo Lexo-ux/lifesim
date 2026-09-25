@@ -56,6 +56,8 @@ tools / tests → módulos puros (nunca importados desde la aplicación)
 
 ## Persistencia
 
+Task 07 añade `content/life-paths/catalog.js`, `src/systems/life-paths.js` y el evaluador `src/narrative/opportunities.js`. `conditions` usa sus requisitos y `choose` aplica consecuencias en la misma transacción. Se reutilizan deck, cola, estudios, carrera e historial; no hay otro selector ni RNG. `src/ui/life-paths.js` proyecta texto de Perfil/Memorial. `state.life` es opcional/versionado. Esquema, migración y fronteras futuras: [LIFE_PATHS](LIFE_PATHS.md).
+
 Task 06 incorpora `src/systems/awakening.js`, catálogos en `content/awakening/` y catorce Moments adicionales. El motor coordina su transacción y el deck prioriza su cursor sin eliminar consecuencias pendientes. La extensión opcional versionada se valida en persistencia; el adaptador UI solo lee resultados y solicita los FX de Task 05.5. Detalles de propiedad, RNG, selección y migración: [AWAKENING_SYSTEM](AWAKENING_SYSTEM.md).
 
 Núcleo `state.version = 2`, extensión `state.story.version = 3`, envoltura `version = 3`; versión del paquete independiente. La UI guarda `state`, `meta`, `settings` en una escritura localStorage. No guarda DOM, animaciones ni indicadores derivados.

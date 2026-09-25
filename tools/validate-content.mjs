@@ -5,6 +5,7 @@ import { CARDS } from "../content/moments/index.js";
 import { NPCS, BACKGROUNDS } from "../content/npcs/index.js";
 import { CLASSES } from "../content/awakening/classes.js";
 import { RANKS, RARITIES } from "../content/awakening/rules.js";
+import { opportunityErrors } from "../src/narrative/opportunity-schema.js";
 import {
   JOBS,
   COURSES,
@@ -134,6 +135,7 @@ export function validateContent({
   };
   const linked = new Set();
   for (const m of moments) {
+    for (const error of opportunityErrors(m, byId)) report(m.id, error);
     if (!text(m.id) || !/^[a-z][a-z0-9_]*$/.test(m.id))
       report(m.id, "invalid Moment ID");
     if (ids.has(m.id)) report(m.id, "duplicate Moment ID");
@@ -208,6 +210,20 @@ export function validateContent({
   for (const m of moments)
     if (m.queued && !linked.has(m.id))
       report(m.id, "queued Moment has no incoming follow-up");
+  // These finite, once-only chains must terminate. Repeatable families use cooldowns instead.
+  const visit = (id, stack = new Set()) => {
+    if (stack.has(id)) {
+      report(id, "cyclic opportunity follow-up");
+      return;
+    }
+    const m = byId.get(id);
+    if (!m?.opportunity) return;
+    const next = new Set([...stack, id]);
+    for (const side of ["left", "right"])
+      for (const follow of Array.isArray(m[side]?.follow) ? m[side].follow : [])
+        if (record(follow)) visit(follow.id, next);
+  };
+  for (const m of moments) if (m.opportunity) visit(m.id);
   return errors;
 }
 if (

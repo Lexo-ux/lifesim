@@ -31,13 +31,15 @@ Leer primero canon aprobado y módulos relevantes. Usar ID único estable, NPC/c
 
 Task 06 añade catorce Moments con `system: "awakening"`: su selección pertenece al cursor persistente del Despertar, no a pesos de rareza narrativa. Solo estos beats acotados admiten `months: 0`; las rutinas ordinarias siguen requiriendo tiempo positivo. `requires.awakening` consulta estado, clase, familia, capacidad narrativa, rareza o rango sin tiradas. El contenido declara textos, elecciones y cues; la UI reutiliza la Mystic Card. Catálogo y reglas: [AWAKENING_SYSTEM](AWAKENING_SYSTEM.md).
 
+Task 07 añade `opportunity`, `variants` de texto y `consequences` por respuesta. Su vocabulario cerrado, composición de requisitos, capacidades y reglas de cierre están en [LIFE_PATHS](LIFE_PATHS.md). Estos campos son opcionales; los Moments anteriores mantienen requisitos y operaciones. `follow` sigue siendo la única cola de continuación.
+
 El contenido actual es JS confiable; no cargar archivos arbitrarios del usuario ni ejecutar código remoto. `content/` no importa runtime/UI/tools. El catálogo y los eventos V2 aún contienen predicados JS; documentar antes de convertirlos a JSON. Mantener `content/legacy/` mientras validadores y consecuencias V2 dependan de él.
 
 ## Validación y límites
 
 `npm run validate:content` detecta IDs duplicados, NPCs/fondos/recursos ausentes, requisitos desconocidos o mal tipados, intervalos de edad imposibles, banderas contradictorias, operaciones/efectos inválidos, seguimientos rotos y Moments en cola sin referencia entrante. `npm run check` lo incluye. Las pruebas negativas comprueban que el validador falla cuando corresponde.
 
-No demuestra alcanzabilidad de todas las rutas, compatibilidad económica de cada opción ni balance. Las simulaciones complementan estas comprobaciones. No valida rangos inexistentes: un requisito `rank` se rechaza como desconocido. Futuros sistemas deberán definir sus dominios y pruebas antes de ampliar el validador.
+No demuestra alcanzabilidad de todas las rutas, compatibilidad económica de cada opción ni balance. Las simulaciones complementan estas comprobaciones. `requires.rank` sigue siendo desconocido; el rango se consulta mediante `requires.awakening` o el requisito tipado `opportunity.when`. Task 07 valida sus enums, consecuencias, contradicciones directas y cierres/ciclos. Futuros sistemas deberán definir sus dominios y pruebas antes de ampliar el validador.
 
 ## Crecimiento previsto
 
