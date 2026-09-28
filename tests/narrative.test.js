@@ -1,3 +1,4 @@
+import { SOCIAL_NPCS } from "../content/social/catalog.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { CARDS, CARD_BY_ID } from "../content/moments/index.js";
@@ -41,7 +42,7 @@ test("130 original cards: exactly two choices, local speakers, connected arcs an
   assert.equal(new Set(CARDS.map((c) => c.id)).size, CARDS.length);
   assert.equal(Object.keys(NPCS).length, 12);
   for (const c of CARDS) {
-    assert.ok(NPCS[c.npc] || c.npc === "self");
+    assert.ok(NPCS[c.npc] || SOCIAL_NPCS[c.npc] || c.npc === "self");
     assert.ok(c.left.label && c.right.label);
     assert.ok((c.months > 0 || c.system === "awakening") && c.months <= 12);
     for (const o of [c.left, c.right])

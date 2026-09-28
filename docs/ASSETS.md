@@ -37,3 +37,7 @@ Seis recursos locales en `assets/threshold/`, catálogo `manifest.json` y selecc
 ## Task 05 — Veiled Identity
 
 Dos familias completas en `assets/characters/veiled-v1/`, 540×720 RGBA WebP. Registro UI `src/ui/characters.js`; manifiesto medido junto a los archivos; fuente artística [CHARACTER_ART](CHARACTER_ART.md); prompts y revisiones en `character-prompts.json`. `tools/export-characters.mjs <master-directory>` exporta por defecto a `output/task05/exports`, sin activar candidatos. Los doce recursos juntos pesan 952.518 bytes y cada superficie solicita solo su retrato actual. Los sprites originales y estudios Task 03 se conservan por trazabilidad; no son fallbacks de la identidad activa.
+
+## Task 08 — recurring identities
+
+Six additional production portraits in `assets/characters/social-v1/`: Voss, Yuna, Vale, Okafor, local-a and local-b. 540×720 RGBA WebP; 386,862 bytes total. Stable identity keys resolve via `src/ui/social.js`; no essential hotlinks. Original and pilot NPC assets remain unchanged. Manifest records source/output hashes, generation prompts and measurements; continuity rules in [CHARACTER_ART](CHARACTER_ART.md). Masters are outside the deployed repository. The development review is `tools/social-review.html`.

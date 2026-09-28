@@ -103,6 +103,15 @@
   object-fit: contain;
   object-position: center bottom;
 }
+.people-list img.social-portrait {
+  object-fit: contain;
+  image-rendering: auto;
+}
+.npc-portrait.social-character {
+  height: 126%;
+  width: 115%;
+  bottom: -24%;
+}
 .profile-head > img.veiled-portrait {
   image-rendering: auto;
   width: 116px;

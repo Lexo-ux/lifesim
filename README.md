@@ -2,7 +2,7 @@
 
 Juego narrativo web en español: una persona, un Moment y dos respuestas. Desliza, arrastra, usa las flechas o pulsa una decisión; el tiempo avanza al elegir. La simulación de educación, carrera, economía y vínculos continúa detrás de la historia.
 
-**Estado:** V3 jugable con El Umbral (Task 04), Veiled Identity (Task 05), Mystic Card/atmósfera (Task 05.5), Despertar (Task 06) y caminos/oportunidades (Task 07), sobre la arquitectura de Task 01. Hay 168 Moments binarios (130 originales, 14 del Despertar y 24 oportunidades), doce NPCs recurrentes y seis etapas del protagonista. Las decisiones pueden cambiar capacidades, orientación y consecuencias años después; clases y rango no imponen carrera. Task 02 establece la biblia del mundo futuro en `/lore`. Los sistemas posteriores siguen pendientes y el contenido V3 original se conserva.
+**Estado:** V3 jugable con El Umbral (Task 04), Veiled Identity (Task 05), Mystic Card/atmósfera (Task 05.5), Despertar (Task 06), caminos/oportunidades (Task 07) y personas/instituciones (Task 08), sobre la arquitectura de Task 01. Hay 183 Moments binarios (130 originales, 14 del Despertar, 24 oportunidades de trayectoria y 15 sociales), doce NPCs heredados, cuatro identidades canónicas, tres plantillas locales y seis etapas del protagonista. Las decisiones pueden cambiar capacidades, orientación y consecuencias años después; clases y rango no imponen carrera. Task 02 establece la biblia del mundo futuro en `/lore`. Los sistemas posteriores siguen pendientes y el contenido V3 original se conserva.
 
 ## Ejecutar
 
@@ -54,7 +54,7 @@ En Windows se puede usar Edge instalado: `$env:BROWSER_CHANNEL='msedge'; npm run
 
 ## Desarrollo y documentación
 
-Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 07 usa `codex/life-paths-opportunities`, desde `99779f2`; no se fusiona con main ni inicia Task 08. Ver [caminos y oportunidades](docs/LIFE_PATHS.md) y [sistema de Despertar](docs/AWAKENING_SYSTEM.md).
+Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 08 usa `codex/relationships-institutions`, desde `3037867`; no se fusiona con main ni inicia Task 09. Ver [personas e instituciones](docs/SOCIAL_SYSTEM.md). Ver [caminos y oportunidades](docs/LIFE_PATHS.md) y [sistema de Despertar](docs/AWAKENING_SYSTEM.md).
 
 - [Estado real: implementado y planificado](docs/CURRENT_STATE.md)
 - [Arquitectura](docs/ARCHITECTURE.md) · [Desarrollo y pruebas](docs/DEVELOPMENT.md)

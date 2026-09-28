@@ -33,6 +33,8 @@ Task 06 añade catorce Moments con `system: "awakening"`: su selección pertenec
 
 Task 07 añade `opportunity`, `variants` de texto y `consequences` por respuesta. Su vocabulario cerrado, composición de requisitos, capacidades y reglas de cierre están en [LIFE_PATHS](LIFE_PATHS.md). Estos campos son opcionales; los Moments anteriores mantienen requisitos y operaciones. `follow` sigue siendo la única cola de continuación.
 
+Task 08 añade quince Moments sociales al final del registro. NPCs nuevos resuelven identidad mediante `content/social/catalog.js`, sin reclasificar los doce V3. Requisitos/consecuencias sociales se integran en el mismo esquema; los cierres con interlocutor registrado declaran `closureText` y deben garantizar una identidad ya conocida en todas las entradas a su cadena. Un interlocutor no disponible se sustituye por correspondencia/voz interior con respuestas seguras. `{person:id}` interpola solo identidades instanciadas. Contratos de conocimiento, instituciones y memorias: [SOCIAL_SYSTEM](SOCIAL_SYSTEM.md).
+
 El contenido actual es JS confiable; no cargar archivos arbitrarios del usuario ni ejecutar código remoto. `content/` no importa runtime/UI/tools. El catálogo y los eventos V2 aún contienen predicados JS; documentar antes de convertirlos a JSON. Mantener `content/legacy/` mientras validadores y consecuencias V2 dependan de él.
 
 ## Validación y límites

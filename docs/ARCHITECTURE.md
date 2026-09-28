@@ -87,3 +87,9 @@ La separación no convierte V3 en un motor genérico: `game.js` coordina sistema
 - `data/catalog.js` → `content/catalog.js`; eventos V2 → `content/legacy/events.js`; anuncios → `src/config/ads.js`.
 
 Imports, tests y entrada HTML apuntan a las rutas nuevas. No hay copias duplicadas ni módulos puente. Assets y archivos de dominio conservan rutas.
+
+## Task 08 — social context
+
+`content/social/catalog.js` owns canonical identities, local templates, institution descriptors and semantic vocabularies; `content/moments/social.js` supplies fifteen chains/continuations. `src/systems/social.js` owns life-local instantiation, knowledge and declarative social effects. It joins the existing Life State context/evaluator and transactional choice path; there is no social deck, render loop or second education/career authority.
+
+`src/persistence/social-validation.js` validates the optional extension without migration draws. `src/ui/social.js` projects known people/institutions into the existing Profile/Memorial; card portrait/speaker resolution handles persisted identities and reflective closures. `src/narrative/social-schema.js` and `tools/validate-social.js` validate content references and introduction guarantees. Legacy `story.npcs` stays under its existing owner. Full contracts: [SOCIAL_SYSTEM](SOCIAL_SYSTEM.md).

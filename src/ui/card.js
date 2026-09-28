@@ -6,8 +6,12 @@ import { esc, icon, button, playerPortrait } from "./helpers.js";
 import { indicators } from "./indicators.js";
 import { ART, sceneFor } from "./art.js";
 import { awakeningMark } from "./awakening.js";
+import { socialPortrait, socialSpeaker } from "./social.js";
+import { socialChoice, npcAvailable } from "../systems/social.js";
+import { SOCIAL_NPCS } from "../../content/social/catalog.js";
 export function portraitFor(s, id) {
   if (id === "self") return playerPortrait(s);
+  if (SOCIAL_NPCS[id]) return socialPortrait(s, id) || playerPortrait(s);
   const ages = {
     vera:
       s.age < 13 ? "child" : s.age < 19 ? "teen" : s.age >= 60 ? "elder" : null,
@@ -24,24 +28,31 @@ export function portraitFor(s, id) {
   const variant = `${id}${ages[id] ? "-" + ages[id] : ""}`;
   return ART.portraits[variant] || `assets/npcs/${variant}.webp`;
 }
-export function gameScreen(data) {
+export function gameScreen(data, moment = currentCard(data.state)) {
   const s = data.state,
-    e = currentCard(s),
+    e = moment,
+    actor = e.closureText && !npcAvailable(s, e.npc) ? "self" : e.npc,
+    left = socialChoice(s, e, "left"),
+    right = socialChoice(s, e, "right"),
     npc =
-      e.npc === "self"
+      actor === "self"
         ? { name: s.name, role: "Tu voz interior" }
-        : speaker(s, e.npc);
-  const bg = e.background || NPCS[e.npc]?.background || "home";
+        : socialSpeaker(s, actor) || speaker(s, actor);
+  const bg =
+    e.background ||
+    SOCIAL_NPCS[actor]?.background ||
+    NPCS[actor]?.background ||
+    "home";
   const environment = bg === "street" ? "neighborhood" : bg;
-  const portrait = portraitFor(s, e.npc);
+  const portrait = portraitFor(s, actor);
   const illustrated = Object.values(ART.portraits).includes(portrait);
   // Custom-property URLs otherwise resolve relative to the consuming stylesheet.
   const scene = new URL(sceneFor(environment), document.baseURI).href;
   return `<section class="play-screen" aria-label="Tu vida"><header class="game-top"><button class="wordmark" data-action="home" aria-label="Volver al inicio">LIFE<span>SIM</span><i>III</i></button><div class="top-tools">${button(icon(data.settings.sound ? "volume" : "mute"), "sound", "", "icon-button")}${button(icon("settings"), "settings", "", "icon-button")}</div></header>${indicators(s)}
  <div class="card-stage"><div class="deck-shadow" aria-hidden="true"></div><article class="narrative-card ${e.pool === "meta" ? "strange" : ""}" tabindex="0" aria-label="Tarjeta de ${esc(npc.name)}" aria-describedby="card-dialogue" data-card="${e.id}" data-sequence="${e.system || "ordinary"}">
- <div class="portrait-window" style="--scene:url('${scene}')"><span class="scene-depth" aria-hidden="true"></span><span class="card-corner" aria-hidden="true">${icon(e.pool === "meta" ? "moon" : "spark")}</span><img class="npc-portrait ${e.npc === "self" ? "self-portrait veiled" : ""} ${illustrated ? "illustrated" : ""}" src="${portrait}" alt="${esc(npc.name)}" draggable="false" fetchpriority="high">${awakeningMark(s, e)}<div class="speaker"><p>${esc(npc.role)}</p><h1 id="page-title">${esc(npc.name)}</h1></div></div>
- <div class="dialogue"><p id="card-dialogue">${esc(cardText(s, data.meta))}</p></div><span class="material-light" aria-hidden="true"></span><div class="choice-preview preview-left" aria-hidden="true">${esc(e.left.label)}</div><div class="choice-preview preview-right" aria-hidden="true">${esc(e.right.label)}</div></article></div>
- <div class="decision-controls">${button(`${icon("arrow")}<span>${esc(e.left.label)}</span>`, "choose", "left", "decision left")}${button(`<span>${esc(e.right.label)}</span>${icon("arrow")}`, "choose", "right", "decision right")}</div>
+ <div class="portrait-window" style="--scene:url('${scene}')"><span class="scene-depth" aria-hidden="true"></span><span class="card-corner" aria-hidden="true">${icon(e.pool === "meta" ? "moon" : "spark")}</span><img class="npc-portrait ${actor === "self" ? "self-portrait veiled" : SOCIAL_NPCS[actor] ? "veiled social-character" : ""} ${illustrated ? "illustrated" : ""}" src="${portrait}" alt="${esc(npc.name)}" draggable="false" fetchpriority="high">${awakeningMark(s, e)}<div class="speaker"><p>${esc(npc.role)}</p><h1 id="page-title">${esc(npc.name)}</h1></div></div>
+ <div class="dialogue"><p id="card-dialogue">${esc(cardText(s, data.meta, e))}</p></div><span class="material-light" aria-hidden="true"></span><div class="choice-preview preview-left" aria-hidden="true">${esc(left.label)}</div><div class="choice-preview preview-right" aria-hidden="true">${esc(right.label)}</div></article></div>
+ <div class="decision-controls">${button(`${icon("arrow")}<span>${esc(left.label)}</span>`, "choose", "left", "decision left")}${button(`<span>${esc(right.label)}</span>${icon("arrow")}`, "choose", "right", "decision right")}</div>
  <div class="moment"><span>${s.age} ${s.age === 1 ? "año" : "años"} <i>·</i> ${s.birthYear + s.age}${s.story.month ? " / II" : ""}</span><span class="chapter">${esc(stage(s).name)}</span></div>
  <div class="onboarding ${data.settings.onboarded ? "learned" : ""}" aria-hidden="${data.settings.onboarded}">${data.settings.onboarded ? "" : "← Desliza la tarjeta o elige una respuesta →"}</div>
  <nav class="quiet-nav" aria-label="Tu historia">${button("Perfil", "profile", "", "nav-link")}${button("Historia", "history", "", "nav-link")}${button("Legado", "legacy", "", "nav-link")}</nav></section>`;

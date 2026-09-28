@@ -14,6 +14,11 @@ import {
 } from "../systems/life-paths.js";
 import { evaluateRequirement } from "./opportunities.js";
 import {
+  prepareSocialEncounter,
+  recordSocialEncounter,
+  socialChoice,
+} from "../systems/social.js";
+import {
   pendingAwakening,
   scheduleAwakening,
   advanceAwakening,
@@ -155,7 +160,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   )
     return { error: "Esta decisión ya cambió." };
   const event = currentCard(s),
-    option = event?.[side];
+    option = event && socialChoice(s, event, side);
   if (!option) return { error: "No existe esa decisión." };
   if (event.system === "awakening" && event.id !== awakeningMomentId(s))
     return { error: "Esta decisión ya cambió." };
@@ -175,8 +180,10 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   apply(next, effects);
   const error = operate(next, option.operation);
   if (error) return { error };
+  prepareSocialEncounter(next, event);
+  recordSocialEncounter(next, event);
   observeOccupation(next);
-  applyLifeConsequences(next, event, side, evaluateRequirement);
+  applyLifeConsequences(next, event, side, evaluateRequirement, option);
   for (const flag of option.flags || []) next.flags[flag] = true;
   for (const flag of option.metaFlags || []) nextMeta.flags[flag] = true;
   if (event.chapter) {

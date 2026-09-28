@@ -6,6 +6,8 @@ import { NPCS, BACKGROUNDS } from "../content/npcs/index.js";
 import { CLASSES } from "../content/awakening/classes.js";
 import { RANKS, RARITIES } from "../content/awakening/rules.js";
 import { opportunityErrors } from "../src/narrative/opportunity-schema.js";
+import { SOCIAL_NPCS } from "../content/social/catalog.js";
+import { validateSocialContent } from "./validate-social.js";
 import {
   JOBS,
   COURSES,
@@ -67,6 +69,11 @@ export function validateContent({
     ids = new Set(),
     byId = new Map(moments.map((m) => [m.id, m]));
   const report = (id, message) => errors.push(`${id}: ${message}`);
+  for (const visual of new Set(
+    Object.values(SOCIAL_NPCS).flatMap((n) => n.visuals || [n.visual]),
+  ))
+    if (!assetExists(`assets/characters/social-v1/${visual}.webp`))
+      report(visual, "missing social portrait asset");
   for (const [id, npc] of Object.entries(npcs)) {
     if (!assetExists(`assets/npcs/${npc.portrait}.webp`))
       report(id, "missing portrait asset");
@@ -140,7 +147,8 @@ export function validateContent({
       report(m.id, "invalid Moment ID");
     if (ids.has(m.id)) report(m.id, "duplicate Moment ID");
     ids.add(m.id);
-    if (m.npc !== "self" && !npcs[m.npc]) report(m.id, "missing NPC reference");
+    if (m.npc !== "self" && !npcs[m.npc] && !SOCIAL_NPCS[m.npc])
+      report(m.id, "missing NPC reference");
     if (!text(m.text)) report(m.id, "missing dialogue");
     if (!(
       Number.isInteger(m.months) &&
@@ -224,7 +232,7 @@ export function validateContent({
         if (record(follow)) visit(follow.id, next);
   };
   for (const m of moments) if (m.opportunity) visit(m.id);
-  return errors;
+  return [...errors, ...validateSocialContent(moments)];
 }
 if (
   process.argv[1] &&
@@ -236,6 +244,6 @@ if (
     process.exitCode = 1;
   } else
     console.log(
-      `Content OK: ${CARDS.length} binary Moments, ${Object.keys(NPCS).length} NPCs, references and assets.`,
+      `Content OK: ${CARDS.length} binary Moments, ${Object.keys(NPCS).length} legacy NPCs and ${Object.keys(SOCIAL_NPCS).length} social identities, references and assets.`,
     );
 }

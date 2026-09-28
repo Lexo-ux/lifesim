@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "tool": "OpenAI image generation (built-in)",
+  "date": "2026-09-28",
+  "rights": "Original AI-generated assets commissioned for this repository; no third-party artwork used. Existing LifeSim Veiled Identity served as treatment reference.",
+  "review": "Family reviewed after candidate revisions; Yuna reframed, local A/B revised for painterly silhouette and true alpha. No automatic first-candidate acceptance. Browser QA recorded in docs/SOCIAL_SYSTEM.md.",
+  "prompts": {
+    "yuna": "Original production character portrait for LifeSim, Seo Yuna, adult woman healer, compact upright silhouette, straight black chin-length bob with tucked side and single plain ivory hairpin, slate blue modern long medical work jacket over an ivory high-neck blouse, sleeves rolled, small closed teal notebook held gently in one hand, other hand open. Warm natural light-medium skin, face half turned downward; completely drawn nose, cheek, lips and jaw, eyes partly concealed by bob and shadow. Attentive resolute posture. No magical healing beams, no hospital badges or nationality symbols. Canonical name identifies the asset only, NEVER write it. Veiled Identity modern dark fantasy illustration: imperfect ink contours, watercolor/gouache grain, restrained full color, realistic human proportions, painterly edges, modern clothes. Not photorealistic, not 3D, no anime/Disney. Crown to upper thighs, hands and crown visible, single centered person filling consistent portrait 3:4 envelope with 8% transparent padding. Sparse slate/ivory pigment wash around silhouette with genuine alpha; entirely transparent outside. Fully drawn human face intentionally partly concealed by lighting or pose, never mannequin/featureless. No background scene, magic glow, icons, logos, UI, text, national symbols. Cohesive with quiet ink/gouache LifeSim art, artistically authored silhouette language rather than elaborate fantasy costume. Visual design only: do not invent biography or possessions with powers.",
+    "vale": "Original production character portrait for LifeSim, Marcus Vale, adult male military commander, lean angular tall silhouette, close-cropped dark hair with grey brush at front, muted olive-grey modern field jacket with high straight collar and plain shoulder seams, no medals/flags/insignia, folded graphite map case under one arm, one hand touching its edge. Natural medium warm skin; face turned three-quarter down, defined nose/lips/jaw, brow shadow obscuring the eyes but NOT a blank face. Deliberate contained posture. No weapons or armor. Canonical name identifies the asset only, NEVER write it. Veiled Identity modern dark fantasy illustration: imperfect ink contours, watercolor/gouache grain, restrained full color, realistic human proportions, painterly edges, modern clothes. Not photorealistic, not 3D, no anime/Disney. Crown to upper thighs, hands and crown visible, single centered person filling consistent portrait 3:4 envelope with 8% transparent padding. Sparse slate/ivory pigment wash around silhouette with genuine alpha; entirely transparent outside. Fully drawn human face intentionally partly concealed by lighting or pose, never mannequin/featureless. No background scene, magic glow, icons, logos, UI, text, national symbols. Cohesive with quiet ink/gouache LifeSim art, artistically authored silhouette language rather than elaborate fantasy costume. Visual design only: do not invent biography or possessions with powers.",
+    "okafor": "Original production character portrait for LifeSim, Amara Okafor, adult woman dimensional researcher, dark brown skin, tall gently forward-leaning silhouette, thick black natural twists gathered in a low loose knot, narrow rectangular spectacles partly obscured by reflected pale light (no glowing eyes), charcoal plum-grey modern textured long cardigan/jacket over muted ochre shirt, worn rectangular blue-grey notebook hugged to ribs with a pencil across fingers. Inquisitive understated posture; face genuinely drawn nose/cheek/lips/ear/jaw, eyes partly hidden by angle and spectacles. No invented mystical powers or class/rank. Canonical name identifies the asset only, NEVER write it. Veiled Identity modern dark fantasy illustration: imperfect ink contours, watercolor/gouache grain, restrained full color, realistic human proportions, painterly edges, modern clothes. Not photorealistic, not 3D, no anime/Disney. Crown to upper thighs, hands and crown visible, single centered person filling consistent portrait 3:4 envelope with 8% transparent padding. Sparse slate/ivory pigment wash around silhouette with genuine alpha; entirely transparent outside. Fully drawn human face intentionally partly concealed by lighting or pose, never mannequin/featureless. No background scene, magic glow, icons, logos, UI, text, national symbols. Cohesive with quiet ink/gouache LifeSim art, artistically authored silhouette language rather than elaborate fantasy costume. Visual design only: do not invent biography or possessions with powers.",
+    "local-a": "Original LifeSim reusable life-local adult NPC portrait archetype. adult person, long narrow face with warm medium brown skin, tightly curled dark hair cropped at the sides and fuller on top, muted rust work overshirt with elbow patch over graphite T-shirt, small folded blank notebook in one hand, slightly sideways relaxed posture, slim tall silhouette. Veiled Identity hand-drawn modern dark fantasy, imperfect ink contours and grainy gouache/watercolor, restrained full color natural human anatomy, modern everyday garments not fantasy armor. Entire crown through upper thighs, generous 10% transparent empty padding around crown/hands/shoulders, no clipping. Eyes partially obscured by hair or downward angle, still fully drawn nose mouth ears jaw, absolutely not a mannequin or faceless oval. Sparse ivory/slate pigment behind silhouette dissolving to alpha. Genuine transparent background. Human expressive quiet presence; no badges, names, institutional logo, rank, weapons, effects, luminous halo, interface. Avoid anime/Disney, photorealism/3D and stock-avatar cartoon. Body-language neutral enough to be a colleague, neighbor or evaluator with identity recognizable through hair, silhouette and clothing. The image is an original visual archetype, not a real person.",
+    "local-b": "Original LifeSim reusable life-local adult NPC portrait archetype. adult person, pale warm skin with strong rounded nose and cheek, heavy straight dark hair tied loosely at the nape with stray fringe hiding one eye, deep desaturated teal modern boxy work jacket, cream plain scarf folded low at the collar, one hand resting on a plain shoulder satchel strap, short broad compact silhouette. Veiled Identity hand-drawn modern dark fantasy, imperfect ink contours and grainy gouache/watercolor, restrained full color natural human anatomy, modern everyday garments not fantasy armor. Entire crown through upper thighs, generous 10% transparent empty padding around crown/hands/shoulders, no clipping. Eyes partially obscured by hair or downward angle, still fully drawn nose mouth ears jaw, absolutely not a mannequin or faceless oval. Sparse ivory/slate pigment behind silhouette dissolving to alpha. Genuine transparent background. Human expressive quiet presence; no badges, names, institutional logo, rank, weapons, effects, luminous halo, interface. Avoid anime/Disney, photorealism/3D and stock-avatar cartoon. Body-language neutral enough to be a colleague, neighbor or evaluator with identity recognizable through hair, silhouette and clothing. The image is an original visual archetype, not a real person.",
+    "yuna-v2": "Revise ONLY the framing and slightly painted texture of this original Seo Yuna game portrait. Preserve exactly the same person, black bob, ivory hairpin, slate-blue jacket, ivory blouse, teal notebook, outstretched hand, facial structure and pose. Zoom the composition out so the entire crown, all hair, both hands including every fingertip and full shoulders fit safely inside 10% EMPTY TRANSPARENT PADDING on all sides. Retain waist/upper-thigh portrait framing, no full body. Slightly more visible imperfect ink/gouache strokes and painterly cloth edges, keep the fully drawn face partly obscured by fringe/downward gaze. Preserve genuine alpha outside irregular pale pigment wash. Do not add background, text, glows, props, new jewelry, new facial anatomy or change identity. This is a composition repair, not a new character.",
+    "local-a-v2": "Edit this original game portrait preserving EXACT character identity, clothing, pose and hand-drawn ink/gouache treatment. REMOVE the entire brown/black rectangular gradient background. True transparent alpha cutout, no black rectangle or flat background. Only a small ragged watercolor pigment wash touching shoulders may remain, dissolving into genuine transparency. Zoom out 12 percent so full crown, hands and silhouette have generous transparent margins. Feather bottom of clothing into irregular painterly ink edges above canvas bottom. Do not redraw a different person. Preserve believable fully drawn face partly concealed by hair/shadow. This must composite cleanly over a different game environment.",
+    "local-b-v2": "Edit this original game portrait preserving EXACT character identity, clothing, pose and hand-drawn ink/gouache treatment. REMOVE the entire brown/black rectangular gradient background. True transparent alpha cutout, no black rectangle or flat background. Only a small ragged watercolor pigment wash touching shoulders may remain, dissolving into genuine transparency. Zoom out 12 percent so full crown, hands and silhouette have generous transparent margins. Feather bottom of clothing into irregular painterly ink edges above canvas bottom. Do not redraw a different person. Preserve believable fully drawn face partly concealed by hair/shadow. This must composite cleanly over a different game environment."
+  },
+  "assets": [
+    {
+      "id": "voss",
+      "path": "assets/characters/social-v1/voss.webp",
+      "source": {
+        "file": "exec-26e06109-ff8c-4883-ba15-7d312a6ed4ca.png",
+        "sha256": "81346f535b48b7daadd2c8e8204bc6b5a85d629a582cddbe848d2630d3f4a4ce",
+        "width": 1086,
+        "height": 1448
+      },
+      "shipped": {
+        "bytes": 73664,
+        "width": 540,
+        "height": 720,
+        "sha256": "06f28895e160bef51c80bb1bc5bc2e4fd4bdee2addbf5012a712a018945107b9"
+      }
+    },
+    {
+      "id": "yuna",
+      "path": "assets/characters/social-v1/yuna.webp",
+      "source": {
+        "file": "exec-7983a97d-0ccf-4506-a2f7-d46781651f3e.png",
+        "sha256": "4e12f123d98483e488992dd0461e889ab35e1f2ac617c634ca6461143335c071",
+        "width": 1086,
+        "height": 1448
+      },
+      "shipped": {
+        "bytes": 48704,
+        "width": 540,
+        "height": 720,
+        "sha256": "07eeee746c68544e9369d5ee62ba358c8f2c3ae43dfad85808b389ffaef4cbb4"
+      }
+    },
+    {
+      "id": "vale",
+      "path": "assets/characters/social-v1/vale.webp",
+      "source": {
+        "file": "exec-768b5dd6-1235-4a32-bb0e-25e12a52da07.png",
+        "sha256": "48c1f43eb7ffe6870b14a01f579ebe91caea4f3abd38e3586564c080f002aebf",
+        "width": 1086,
+        "height": 1448
+      },
+      "shipped": {
+        "bytes": 64954,
+        "width": 540,
+        "height": 720,
+        "sha256": "65a82d9e119463c1bc1c51d690a81e7783a5d7e89d1c4b323302104f8dea7df4"
+      }
+    },
+    {
+      "id": "okafor",
+      "path": "assets/characters/social-v1/okafor.webp",
+      "source": {
+        "file": "exec-d9b57471-be43-4b27-95de-923a6895ae2b.png",
+        "sha256": "4e61676175ad1e63aa7d1a71e3ebfd2c346181c87824888ae5ba33246e2211e5",
+        "width": 1086,
+        "height": 1448
+      },
+      "shipped": {
+        "bytes": 81006,
+        "width": 540,
+        "height": 720,
+        "sha256": "4f1dcc8bf89609b8ffbe556e4ee5cb06a225a10798bbf903889c9476f27a9bc8"
+      }
+    },
+    {
+      "id": "local-a",
+      "path": "assets/characters/social-v1/local-a.webp",
+      "source": {
+        "file": "exec-a80cfb20-dfb9-4d74-9bbf-b25d8293468e.png",
+        "sha256": "8674092f68946174845594b578a127c2402c628bf78bd750281c0dfcacf4042d",
+        "width": 1024,
+        "height": 1536
+      },
+      "shipped": {
+        "bytes": 63102,
+        "width": 540,
+        "height": 720,
+        "sha256": "d78489f22b80321ad9c1153062b16a80629b69c731d71bbc2ede2889aeb706a3"
+      }
+    },
+    {
+      "id": "local-b",
+      "path": "assets/characters/social-v1/local-b.webp",
+      "source": {
+        "file": "exec-7f472499-7586-4489-bf0e-fb0c4d35a652.png",
+        "sha256": "c86054a8307062d1fb4232db2ca4bcb0519bf083f9fba56b9adbad0bab478ed7",
+        "width": 1024,
+        "height": 1536
+      },
+      "shipped": {
+        "bytes": 55432,
+        "width": 540,
+        "height": 720,
+        "sha256": "617b0a9a3d6a372bf3f4b8dd3046ad64de97dd287fb52e226b67de163ad8848f"
+      }
+    }
+  ],
+  "productionBriefVoss": "Original LifeSim Veiled Identity design: broad tall human silhouette, dark swept hair with grey temples, imperfect ink/gouache, graphite asymmetric coat with muted oxblood lining, worn strap, lowered relaxed hands, anatomically drawn face with downward shadowed eyes, transparent painterly edges. Brief reconstructed from the generation request; not a verbatim prompt.",
+  "export": {
+    "tool": "sharp",
+    "width": 540,
+    "height": 720,
+    "quality": 82,
+    "alphaQuality": 95,
+    "effort": 6,
+    "script": "tools/export-social.mjs"
+  }
+}

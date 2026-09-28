@@ -1,4 +1,5 @@
 import { lifeContext } from "../systems/life-paths.js";
+import { socialRequirement } from "../systems/social.js";
 import {
   OPPORTUNITY_SPACING,
   LEVELS,
@@ -19,6 +20,8 @@ export function evaluateRequirement(context, rule) {
     return v === undefined ? undefined : !v;
   }
   const { type, id, value } = rule;
+  const social = socialRequirement(context, rule);
+  if (social !== undefined) return social;
   switch (type) {
     case "age":
       return context.age >= (rule.min ?? 0) && context.age <= (rule.max ?? 110);

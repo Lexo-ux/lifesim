@@ -379,4 +379,11 @@ test("300 seeded complete lives preserve playable choices, closures, spacing and
   assert.ok(r.pathChanges > 300);
   assert.ok(r.status.ordinary.available.includes("lp_first_contract"));
   assert.ok(r.status.awakened.available.includes("lp_field_invitation"));
+  assert.ok(r.social.locals > 100);
+  assert.ok(r.social.recurringLocalRate > 0.7);
+  assert.ok(r.social.relationshipStates.length > 5);
+  assert.equal(r.social.orphanReferences, 0);
+  assert.equal(r.social.contradictoryStates, 0);
+  assert.ok(r.social.maxPeople <= 4);
+  assert.ok(r.social.maxInstitutions <= 3);
 });
