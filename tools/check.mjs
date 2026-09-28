@@ -88,11 +88,18 @@ const threshold = JSON.parse(
 const characters = JSON.parse(
   await fs.readFile("assets/characters/veiled-v1/manifest.json", "utf8"),
 );
-for (const asset of [...threshold.assets, ...characters.assets]) {
+const social = JSON.parse(
+  await fs.readFile("assets/characters/social-v1/manifest.json", "utf8"),
+);
+for (const asset of [
+  ...threshold.assets,
+  ...characters.assets,
+  ...social.assets,
+]) {
   const stat = await fs.stat(asset.path);
   if (stat.size !== asset.shipped.bytes)
     throw new Error(`Stale asset manifest: ${asset.path}`);
 }
 console.log(
-  `Syntax OK: ${files.length} modules. Entry points, 12 Veiled Identity portraits and 12 archived life sprites, 20 NPC portraits, 7 backgrounds and publication files OK.`,
+  `Syntax OK: ${files.length} modules. Entry points, 12 Veiled Identity portraits and 12 archived life sprites, 20 legacy/pilot and 6 social NPC portraits, 7 backgrounds and publication files OK.`,
 );

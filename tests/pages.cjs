@@ -75,6 +75,27 @@ let browser;
   );
   for (const item of characters.assets)
     assert.equal((await fetch(base + item.path)).status, 200, item.path);
+  const social = JSON.parse(
+    await fs.readFile("assets/characters/social-v1/manifest.json", "utf8"),
+  );
+  for (const item of social.assets)
+    assert.equal((await fetch(base + item.path)).status, 200, item.path);
+  const { socialFixture } = await import("../tools/social-fixtures.js");
+  const socialData = socialFixture("okafor");
+  await page.evaluate(
+    (d) => localStorage.setItem("lifesim.v3", JSON.stringify(d)),
+    socialData,
+  );
+  await page.reload();
+  await page.locator("[data-action=continue]").click();
+  await page.waitForSelector("[data-card=so_okafor_question]");
+  await page.locator(".npc-portrait").evaluate((img) => img.decode());
+  await page.locator("[data-action=choose]").first().click();
+  await page.waitForFunction(
+    () =>
+      JSON.parse(localStorage.getItem("lifesim.v3")).state.social.people
+        .world_okafor.encounters === 1,
+  );
   assert.deepEqual(failures, []);
   console.log(
     "GitHub Pages subpath QA passed: /lifesim/, ES modules, fonts, images, a playable year and publication files.",

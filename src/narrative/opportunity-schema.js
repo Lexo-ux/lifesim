@@ -1,5 +1,10 @@
 // Pure schema checks shared by tooling. No expression evaluation, code or arbitrary state paths.
 import {
+  socialRequirementSchema,
+  socialConsequenceSchema,
+} from "./social-schema.js";
+import { SOCIAL_NPCS } from "../../content/social/catalog.js";
+import {
   DOMAINS,
   CAPABILITIES,
   LEVELS,
@@ -58,6 +63,9 @@ export function requirementErrors(r, byId, depth = 0) {
               a !== b &&
               a.type === b.type &&
               a.id === b.id &&
+              a.field === b.field &&
+              a.memory === b.memory &&
+              a.obligation === b.obligation &&
               a.value !== undefined &&
               b.value !== undefined &&
               a.value !== b.value &&
@@ -73,6 +81,8 @@ export function requirementErrors(r, byId, depth = 0) {
       }
       return errors;
     }
+  const social = socialRequirementSchema(r);
+  if (social) return social;
   let allowed = ["type", "value"],
     valid = false;
   if (has(values, r.type)) valid = values[r.type].includes(r.value);
@@ -137,6 +147,8 @@ export function requirementErrors(r, byId, depth = 0) {
 export function consequenceErrors(e, byId) {
   if (!record(e)) return ["malformed consequence"];
   const errors = e.when !== undefined ? requirementErrors(e.when, byId) : [];
+  const social = socialConsequenceSchema(e);
+  if (social) return [...errors, ...social];
   let fields = ["op", "id", "when"],
     valid = false;
   switch (e.op) {
@@ -195,7 +207,12 @@ export function opportunityErrors(m, byId) {
         o?.when ||
         o?.familyCooldown ||
         Object.keys(m.requires || {}).length ||
-        m.npc !== "self")
+        (m.npc !== "self" &&
+          !(
+            SOCIAL_NPCS[m.npc] &&
+            typeof m.closureText === "string" &&
+            m.closureText.length
+          )))
     )
       errors.push("required follow-up needs unconditional closure");
   }

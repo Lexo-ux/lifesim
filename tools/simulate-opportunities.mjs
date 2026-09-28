@@ -26,6 +26,19 @@ export function simulateOpportunities(lives = 300) {
     consecutiveOpportunities: 0,
     repeatCooldownViolations: 0,
     selectionMs: [],
+    social: {
+      locals: 0,
+      recurringLocals: 0,
+      canonicalEncounters: {},
+      relationshipStates: [],
+      callbacks: 0,
+      institutionalCallbacks: 0,
+      maxPeople: 0,
+      maxInstitutions: 0,
+      orphanReferences: 0,
+      contradictoryStates: 0,
+      largestRecurrenceYears: 0,
+    },
   };
   const count = (o, key) => (o[key] = (o[key] || 0) + 1);
   const opportunities = CARDS.filter((m) => m.opportunity);
@@ -60,6 +73,11 @@ export function simulateOpportunities(lives = 300) {
         )
           report.repeatCooldownViolations++;
         if (m.queued) report.delayedClosures++;
+        if (m.queued && m.id.startsWith("so_")) {
+          report.social.callbacks++;
+          if (m.npc !== "local_neighbor")
+            report.social.institutionalCallbacks++;
+        }
       }
       for (const q of s.story.queue)
         if (CARD_BY_ID[q.id].opportunity)
@@ -87,6 +105,33 @@ export function simulateOpportunities(lives = 300) {
       report.decisions++;
     }
     if (s.alive) report.deadEnds++;
+    const social = report.social,
+      people = Object.values(s.social?.people || {});
+    social.maxPeople = Math.max(social.maxPeople, people.length);
+    social.maxInstitutions = Math.max(
+      social.maxInstitutions,
+      Object.keys(s.social?.institutions || {}).length,
+    );
+    for (const p of people) {
+      if (p.category === "local") {
+        social.locals++;
+        if (p.encounters > 1) social.recurringLocals++;
+      } else if (p.encounters) count(social.canonicalEncounters, p.id);
+      const signature = Object.values(p.relationship).join("/");
+      if (!social.relationshipStates.includes(signature))
+        social.relationshipStates.push(signature);
+      social.largestRecurrenceYears = Math.max(
+        social.largestRecurrenceYears,
+        (p.lastContact - p.firstMet) / 12,
+      );
+      for (const id of p.known.affiliations)
+        if (!s.social.institutions[id]) social.orphanReferences++;
+      if (
+        p.known.status === "reported-dead" &&
+        p.relationship.contact === "connected"
+      )
+        social.contradictoryStates++;
+    }
     sequences.add(sequence.join(","));
     count(report.directions, s.life.direction || "undirected");
     report.pathChanges += Math.max(0, s.life.chapters.length - 1);
@@ -123,6 +168,9 @@ export function simulateOpportunities(lives = 300) {
   report.diversity = Object.keys(report.opportunities).length;
   report.sequenceVariants = sequences.size;
   report.deadEndRate = report.deadEnds / lives;
+  report.social.recurringLocalRate = report.social.locals
+    ? +(report.social.recurringLocals / report.social.locals).toFixed(4)
+    : 0;
   return report;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)

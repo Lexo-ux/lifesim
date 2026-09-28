@@ -12,6 +12,7 @@ import {
 import { CLASS_BY_ID } from "../../content/awakening/classes.js";
 import { JOBS } from "../../content/catalog.js";
 import { log } from "../engine/state.js";
+import { applySocialConsequence, interpolateSocial } from "./social.js";
 export const lifeMonth = (s) => s.age * 12 + (s.story?.month || 0);
 export function ensureLife(s) {
   if (!s.alive || s.life) return s.life;
@@ -98,14 +99,21 @@ export function lifeContext(s) {
     decisions: s.life?.decisions || {},
     seen: s.story.seen,
     awakening: s.awakening,
+    social: s.social,
   };
 }
 // Common effects operate only on this extension; old operations still own degrees/jobs/money.
-export function applyLifeConsequences(s, event, side, evaluate) {
+export function applyLifeConsequences(
+  s,
+  event,
+  side,
+  evaluate,
+  selected = event[side],
+) {
   if (!event.opportunity && !event[side].consequences) return;
   const life = ensureLife(s),
     at = lifeMonth(s),
-    option = event[side];
+    option = selected;
   if (event.opportunity) {
     life.decisions[event.id] = { side, at };
     life.familyLast[event.opportunity.family] = at;
@@ -113,6 +121,7 @@ export function applyLifeConsequences(s, event, side, evaluate) {
   }
   for (const effect of option.consequences || []) {
     if (effect.when && !evaluate(lifeContext(s), effect.when)) continue;
+    if (applySocialConsequence(s, effect, event)) continue;
     if (effect.op === "direction") {
       if (life.direction === effect.id) continue;
       const previous = life.chapters.at(-1);
@@ -138,7 +147,8 @@ export function applyLifeConsequences(s, event, side, evaluate) {
       life.memory[effect.id] = { value: effect.value, source: event.id, at };
     } else if (effect.op === "exclude") {
       if (!life.excluded.includes(effect.id)) life.excluded.push(effect.id);
-    } else if (effect.op === "milestone") log(s, effect.text, true, "spark");
+    } else if (effect.op === "milestone")
+      log(s, interpolateSocial(s, effect.text), true, "spark");
     else throw Error(`Unknown life consequence: ${effect.op}`);
   }
 }

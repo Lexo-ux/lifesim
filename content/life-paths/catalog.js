@@ -1,4 +1,5 @@
 // Runtime opportunity vocabulary, not new world history or professional licenses.
+import { SOCIAL_FAMILIES } from "../social/catalog.js";
 export const DOMAINS = {
   education: "aprendizaje",
   health: "cuidado de personas",
@@ -38,6 +39,7 @@ export const FACTS = {
   training: ["started", "declined"],
 };
 export const FAMILIES = [
+  ...SOCIAL_FAMILIES,
   "orientation",
   "training",
   "clinic",

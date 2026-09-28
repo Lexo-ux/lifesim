@@ -12,6 +12,7 @@ import { extendMeta, ending } from "../narrative/meta.js";
 import { STORAGE_KEYS } from "../config/persistence.js";
 import { validAwakening } from "../systems/awakening.js";
 import { validLife } from "../systems/life-paths.js";
+import { validSocial } from "./social-validation.js";
 export const SAVE_KEY = STORAGE_KEYS.current;
 const record = (x) => !!x && typeof x === "object" && !Array.isArray(x);
 const number = (n) => Number.isFinite(n) && n >= 0;
@@ -31,6 +32,7 @@ export function validStory(s) {
     validState(s) &&
     validAwakening(s) &&
     validLife(s, CARD_BY_ID) &&
+    validSocial(s, CARD_BY_ID) &&
     record(t) &&
     t.version === 3 &&
     Number.isInteger(t.month) &&

@@ -1,5 +1,7 @@
 // Development only. Read-only explanations; never rerolls or replaces the selected Moment.
 import { CARDS } from "../content/moments/index.js";
+import { SOCIAL_NPCS, INSTITUTIONS } from "../content/social/catalog.js";
+import { npcAvailable } from "../src/systems/social.js";
 import { lifeContext } from "../src/systems/life-paths.js";
 import { eligible, matches } from "../src/narrative/conditions.js";
 import { pathAvailable } from "../src/narrative/deck.js";
@@ -21,6 +23,11 @@ export function inspectOpportunities(s, meta) {
         };
   return {
     life: structuredClone(s.life || null),
+    social: {
+      state: structuredClone(s.social || null),
+      identities: SOCIAL_NPCS,
+      institutions: INSTITUTIONS,
+    },
     context,
     selected: s.story.current,
     opportunities: CARDS.filter((m) => m.opportunity).map((m) => {
@@ -28,6 +35,12 @@ export function inspectOpportunities(s, meta) {
         (s.story.current === m.id && !!m.queued) ||
         s.story.queue.some((q) => q.id === m.id && q.due <= context.month);
       const reasons = opportunityReasons(s, m, { queued, context });
+      if (SOCIAL_NPCS[m.npc] && !npcAvailable(s, m.npc))
+        reasons.push(
+          m.queued && m.closureText
+            ? "unavailable: reflective closure"
+            : "npc-unavailable",
+        );
       if (s.story.seen[m.id] !== undefined && m.once !== false)
         reasons.push("already-seen");
       if (

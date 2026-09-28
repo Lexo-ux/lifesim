@@ -6,6 +6,11 @@ import { meet } from "./npc.js";
 import { discover } from "./meta.js";
 import { opportunityText } from "./opportunities.js";
 import {
+  prepareSocialEncounter,
+  socialClosureText,
+  interpolateSocial,
+} from "../systems/social.js";
+import {
   awakeningMomentId,
   interpolateAwakening,
 } from "../systems/awakening.js";
@@ -77,6 +82,7 @@ export function drawCard(s, meta) {
     }
   }
   s.story.current = event.id;
+  prepareSocialEncounter(s, event);
   meet(s, event.npc);
   discover(meta, event);
   return event;
@@ -84,7 +90,11 @@ export function drawCard(s, meta) {
 export const currentCard = (s) => CARD_BY_ID[s.story.current];
 export function cardText(s, meta, event = currentCard(s)) {
   if (event.system === "awakening") return interpolateAwakening(event.text, s);
-  if (event.opportunity) return opportunityText(s, event);
+  if (event.opportunity)
+    return interpolateSocial(
+      s,
+      socialClosureText(s, event) || opportunityText(s, event),
+    );
   const echo =
     meta.echoes.findLast((e) => e.id !== s.id)?.name ||
     "un nombre que te resulta familiar";
