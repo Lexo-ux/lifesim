@@ -8,6 +8,7 @@ import { RANKS, RARITIES } from "../content/awakening/rules.js";
 import { opportunityErrors } from "../src/narrative/opportunity-schema.js";
 import { SOCIAL_NPCS } from "../content/social/catalog.js";
 import { validateSocialContent } from "./validate-social.js";
+import { validateWorldContent } from "./validate-world.js";
 import {
   JOBS,
   COURSES,
@@ -232,7 +233,11 @@ export function validateContent({
         if (record(follow)) visit(follow.id, next);
   };
   for (const m of moments) if (m.opportunity) visit(m.id);
-  return [...errors, ...validateSocialContent(moments)];
+  return [
+    ...errors,
+    ...validateSocialContent(moments),
+    ...validateWorldContent(undefined, undefined, moments),
+  ];
 }
 if (
   process.argv[1] &&

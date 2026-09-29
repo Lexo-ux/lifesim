@@ -1,5 +1,6 @@
 import { createPresentation } from "./presentation/index.js";
 import { awakeningCue } from "./awakening.js";
+import { worldCue } from "./world.js";
 import { NAMES, TRAITS, ORIGINS } from "../../content/catalog.js";
 import { startLife, choose } from "../narrative/engine.js";
 import { load, save, reset } from "../persistence/storage.js";
@@ -89,7 +90,9 @@ function render(focus = false, revealTitle = true) {
     presentation.setState(
       currentCard(data.state).pool === "meta" ? "unusual" : "normal",
     );
-    const cue = awakeningCue(data.state, currentCard(data.state));
+    const cue =
+      awakeningCue(data.state, currentCard(data.state)) ||
+      worldCue(currentCard(data.state));
     if (cue) presentation.emphasize(cue);
     if (modal.open) presentation.pause();
     cleanup = mountSwipe(
@@ -180,7 +183,10 @@ async function commit(side) {
       `La vida de ${data.state.name} terminó a los ${data.state.age} años.`,
     );
   } else {
-    if (!awakeningCue(data.state, currentCard(data.state)))
+    if (
+      !awakeningCue(data.state, currentCard(data.state)) &&
+      !worldCue(currentCard(data.state))
+    )
       presentation?.emphasize(
         result.outcome.stage
           ? "memory"

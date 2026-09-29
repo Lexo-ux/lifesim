@@ -249,6 +249,7 @@ test("unknown actual circumstances stay hidden; unavailable NPC callbacks close 
     trust = person(d, "world_okafor").relationship.trust,
     encounters = person(d, "world_okafor").encounters;
   d.state.social.circumstances.world_okafor = "deceased";
+  d.state.world.npcs.world_okafor = "deceased";
   assert.equal(socialProfile(d.state), profile);
   advanceSocial(d, "so_okafor_return");
   assert.match(cardText(d.state, d.meta), /No tienes noticias confirmadas/);

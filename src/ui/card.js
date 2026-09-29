@@ -6,6 +6,7 @@ import { esc, icon, button, playerPortrait } from "./helpers.js";
 import { indicators } from "./indicators.js";
 import { ART, sceneFor } from "./art.js";
 import { awakeningMark } from "./awakening.js";
+import { worldSpeaker } from "./world.js";
 import { socialPortrait, socialSpeaker } from "./social.js";
 import { socialChoice, npcAvailable } from "../systems/social.js";
 import { SOCIAL_NPCS } from "../../content/social/catalog.js";
@@ -36,7 +37,7 @@ export function gameScreen(data, moment = currentCard(data.state)) {
     right = socialChoice(s, e, "right"),
     npc =
       actor === "self"
-        ? { name: s.name, role: "Tu voz interior" }
+        ? worldSpeaker(e) || { name: s.name, role: "Tu voz interior" }
         : socialSpeaker(s, actor) || speaker(s, actor);
   const bg =
     e.background ||
