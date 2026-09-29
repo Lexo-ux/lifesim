@@ -8,6 +8,7 @@ import { RANKS, RARITIES } from "../content/awakening/rules.js";
 import { opportunityErrors } from "../src/narrative/opportunity-schema.js";
 import { SOCIAL_NPCS } from "../content/social/catalog.js";
 import { validateSocialContent } from "./validate-social.js";
+import { validateFieldContent } from "./validate-field.js";
 import { validateWorldContent } from "./validate-world.js";
 import {
   JOBS,
@@ -237,6 +238,7 @@ export function validateContent({
     ...errors,
     ...validateSocialContent(moments),
     ...validateWorldContent(undefined, undefined, moments),
+    ...validateFieldContent(undefined, moments),
   ];
 }
 if (

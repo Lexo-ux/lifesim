@@ -39,3 +39,7 @@ The new social registry explicitly separates Adrian Voss, Seo Yuna, Marcus Vale 
 ## Task 09 — provisional historical runtime
 
 The seven-era order and four historical identities/roles are reused without new major canon. Relative months, event variants, two abstract regions and bounded world conditions are explicitly IMPLEMENTATION TARGET data in `content/world/`. They do not canonize V3's 2004 birth date or city names. The world clock begins at zero for a new life; each life realizes the same framework with its own variations. Active legacy lives receive a minimal baseline, never an invented personal past. Outcome era is reachable, but actual world resolution stays unassigned. World truth and authored protagonist knowledge are separate. No private cause, final twist or True Resolution is published. See [WORLD_SIMULATION](WORLD_SIMULATION.md).
+
+## Task 10 — optional field service
+
+Seven authored operation families and Bastion's runtime presence use approved Hunter/guild and historical identity boundaries. Timing, risk, team roles and operational results are IMPLEMENTATION TARGET, not new major canon. Bastion remains founded by Voss in the base history, with no invented headquarters, officers or guaranteed survival. Generic teams are not new named factions. Non-Awakened field support remains meaningful; rank provides force without prescribing success or historical importance. No Convergence cause, final resolution or Task 11 war system is added. [FIELD_OPERATIONS](FIELD_OPERATIONS.md).

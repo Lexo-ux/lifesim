@@ -106,3 +106,7 @@ Prueba local de referencia: 52.722 decisiones, 23/24 oportunidades, 1.434 cambio
 La inspección visual detectó recorte heredado de párrafos largos al ampliar texto. `styles/moments.css` permite que la tarjeta crezca hasta su altura intrínseca y la página se desplace verticalmente. La prueba compara también los límites del párrafo con la tarjeta y con las respuestas; comprobar únicamente `scrollHeight` del párrafo no detectaba el recorte del ancestro.
 
 Límites: sección compacta, no toda una carrera simulada; los oficios nuevos sin `job:*` son dirección/experiencia, no salarios implícitos. Las rutinas son repetibles con límites. QA de navegador de escritorio con tamaños móviles no sustituye dispositivos físicos ni valida Safari.
+
+## Task 10 extension
+
+`lifeContext.field` exposes optional versioned field state. Finite `field-offer`, `field-status`, `field-idle`, `field-outcome` and `field-experience` predicates use the same evaluator. Field consequences delegate to their owner; normal queue closures and ordinary-life spacing remain in force. Existing profession, education, capability projection and randomness stay authoritative. See [FIELD_OPERATIONS](FIELD_OPERATIONS.md); no Task 11 war context is registered.

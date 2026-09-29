@@ -91,3 +91,15 @@ Branch `codex/world-timeline`, base `d9b52a2`; no main merge or Task 10. Source:
 - `node tools/simulate-opportunities.mjs 300`: complete lives, opportunity/relationship regressions and world contributions/knowledge diagnostics. `debug:life -- --opportunities` labels private world truth separately from protagonist knowledge.
 - `tests/world.cjs` is part of `npm run test:browser`: actual cards across civilian/research/care/technical lives, delayed callbacks with intervening choices, reload, limited historical knowledge, five viewports, keyboard/touch, axe, 200% text, forced colors, reduced motion, drag sampling, memorial and new life. Evidence: ignored `output/qa/task09/`.
 - `tests/pages.cjs` now plays a world-news decision under `/lifesim/` as well as the existing social encounter. Static files and publication configuration are preserved.
+
+## Task 10 validation and inspection
+
+Base `main@039b297`, branch `codex/hunters-field-operations`; no merge or Task 11. Source: [FIELD_OPERATIONS](FIELD_OPERATIONS.md).
+
+- `node --test tests/field.test.js`: required scenarios, old world migration, deterministic persistence, authoring errors, lifecycle and operation consequences.
+- `node tools/simulate-field.mjs 8`: operation-focused production transactions across eight input-seed archetypes and seven families.
+- `node tools/simulate-opportunities.mjs 300`: full lives, also reporting offers, outcomes, roles, losses, contributions and exits.
+- Existing `debug:life -- --opportunities` includes `inspect-field.js`, explicitly labeling known information and private simulation factors. No production diagnostics or forcing controls.
+- `tests/field.cjs` joins `npm run test:browser`; outputs/captures go to ignored `output/qa/task10/`. Actual gestures/keys, delayed chains, recurring colleague, affiliation/refusal, reload, Profile/History/Memorial, new life, five sizes, reduced motion, forced colors and 200% text. Root and Pages subpath remain static.
+
+Final validation on 2026-09-28: `npm run check`, **134/134 Node tests**, and all thirteen `test:browser` suites passed. Field QA reviewed ten played chains, nineteen clean axe audits and zero console/asset errors. Diagnostics cover 448 operation scenarios, 300 complete lives and 2,000 worlds. Counts, performance caveats, iteration fixes and scope limits are recorded once in [FIELD_OPERATIONS — Validation evidence](FIELD_OPERATIONS.md#validation-evidence).

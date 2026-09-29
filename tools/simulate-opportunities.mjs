@@ -28,6 +28,18 @@ export function simulateOpportunities(lives = 300) {
     consecutiveOpportunities: 0,
     repeatCooldownViolations: 0,
     selectionMs: [],
+    field: {
+      offered: 0,
+      accepted: 0,
+      declined: 0,
+      resolved: 0,
+      outcomes: {},
+      roles: {},
+      contributions: 0,
+      losses: 0,
+      exits: 0,
+      unfinishedAtDeath: 0,
+    },
     world: {
       erasAtDeath: {},
       events: {},
@@ -123,6 +135,20 @@ export function simulateOpportunities(lives = 300) {
       report.decisions++;
     }
     if (s.alive) report.deadEnds++;
+    for (const i of Object.values(s.field?.operations || {})) {
+      report.field.offered++;
+      if (i.acceptedAt !== null) report.field.accepted++;
+      if (i.phase === "declined") report.field.declined++;
+      if (i.outcome) {
+        report.field.resolved++;
+        count(report.field.outcomes, i.outcome);
+        count(report.field.roles, i.role);
+      }
+      if (i.contribution) report.field.contributions++;
+      report.field.losses += i.losses.length;
+    }
+    if (s.field?.status === "withdrawn") report.field.exits++;
+    if (s.field?.active) report.field.unfinishedAtDeath++;
     const world = report.world;
     count(world.erasAtDeath, s.world.era);
     world.maxEvents = Math.max(

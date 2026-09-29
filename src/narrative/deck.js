@@ -1,4 +1,5 @@
 import { CARDS, CARD_BY_ID } from "../../content/moments/index.js";
+import { prepareFieldMoment, fieldText } from "../systems/field.js";
 import { prepareWorldMoment, reportText } from "../systems/world.js";
 import { COURSES } from "../../content/catalog.js";
 import { random } from "../engine/state.js";
@@ -84,6 +85,7 @@ export function drawCard(s, meta) {
   }
   s.story.current = event.id;
   prepareWorldMoment(s, event);
+  prepareFieldMoment(s, event);
   prepareSocialEncounter(s, event);
   meet(s, event.npc);
   discover(meta, event);
@@ -91,6 +93,7 @@ export function drawCard(s, meta) {
 }
 export const currentCard = (s) => CARD_BY_ID[s.story.current];
 export function cardText(s, meta, event = currentCard(s)) {
+  if (event.field) return fieldText(s, event) || event.text;
   if (event.worldReport) return reportText(s, event.worldReport);
   if (event.system === "awakening") return interpolateAwakening(event.text, s);
   if (event.opportunity)

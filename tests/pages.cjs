@@ -119,6 +119,22 @@ let browser;
       JSON.parse(localStorage.getItem("lifesim.v3")).state.story.seen
         .wo_news_rupture !== undefined,
   );
+  const { fieldFixture, selectField } =
+    await import("../tools/field-fixtures.js");
+  const fieldData = selectField(fieldFixture("technical"), "repair");
+  await page.evaluate(
+    (d) => localStorage.setItem("lifesim.v3", JSON.stringify(d)),
+    fieldData,
+  );
+  await page.reload();
+  await page.locator("[data-action=continue]").click();
+  await page.waitForSelector("[data-card=fo_repair_offer]");
+  await page.locator("[data-action=choose]").first().click();
+  await page.waitForFunction(
+    () =>
+      JSON.parse(localStorage.getItem("lifesim.v3")).state.field?.operations
+        .repair.phase === "accepted",
+  );
   assert.deepEqual(failures, []);
   console.log(
     "GitHub Pages subpath QA passed: /lifesim/, ES modules, fonts, images, a playable year and publication files.",

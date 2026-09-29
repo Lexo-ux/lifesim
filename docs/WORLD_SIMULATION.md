@@ -1,10 +1,10 @@
 # World timeline — Task 09
 
-Technical source of truth. Branch `codex/world-timeline`, base Task 08 `d9b52a2`. Canon remains in `/lore`; no new major canon, final destiny, reserved cause or resolution is established here. No Task 10/11 simulation is implemented.
+Technical source of truth. Branch `codex/world-timeline`, base Task 08 `d9b52a2`. Canon remains in `/lore`; no new major canon, final destiny, reserved cause or resolution is established here. Task 10 extends this owner through the version-compatibility section below and [FIELD_OPERATIONS](FIELD_OPERATIONS.md). No Task 11 war simulation is implemented.
 
 ## Ownership and time
 
-`src/systems/world.js` owns `state.world.version = 1`: relative `clock` in months, current `era`, domain-separated PRNG `seed`, migration `baseline`, bounded `dimensions`, two abstract `regions`, private canonical `npcs`, contextual `institutions`, event dispositions, pending events, attributable contributions and `outcome: null`. `state.worldKnowledge.version = 1` separately owns delivered reports. Both serialize with the existing V3 envelope/storage key. Neither contains DOM, timers, FX or renderer state.
+`src/systems/world.js` owns `state.world.version = 2` (version 1 remains readable; see the Task 10 migration below): relative `clock` in months, current `era`, domain-separated PRNG `seed`, migration `baseline`, bounded `dimensions`, two abstract `regions`, private canonical `npcs`, contextual `institutions`, event dispositions, pending events, attributable contributions and `outcome: null`. `state.worldKnowledge.version = 1` separately owns delivered reports. Both serialize with the existing V3 envelope/storage key. Neither contains DOM, timers, FX or renderer state.
 
 `choose` attaches the extension in its transaction, applies contributions, advances actual elapsed personal time through the existing annual simulation, advances the world, then selects the next Moment. Zero-time Awakening beats do not advance history. Death stops the personal clock; there is no omniscient post-death fast-forward. `advanceWorld(world, targetMonth)` needs no protagonist, encounter or Moment. The development fast simulator calls that exact function.
 
@@ -79,3 +79,7 @@ Validated: `npm run check`, **97/97 Node tests**, all twelve `npm run test:brows
 `tests/world.test.js` covers the 24 required scenario categories plus professional access, new-life isolation, negative schemas and corrupt saves. `tests/world.cjs` covers actual delayed choices and intervening Moments, save/reload equality with the pure engine, five viewports, known/private NPC loss, Profile/History/Memorial, reduced motion, 200% text, forced colors, axe, partial-drag frame sampling and new life. Evidence goes to ignored `output/qa/task09/`. Full project checks also verify static `/` and `/lifesim/` deployment; no compile/build exists.
 
 Scope limits: compact authored history, two abstract regions, no full population/economy, no ongoing NPC agents or faction graph, no final world resolution, no cross-life shared simulation. Desktop Chromium/Edge with mobile-sized viewports is not physical-device or Safari certification. No runtime dependency added.
+
+## Task 10 extension and version compatibility
+
+The current world owner writes version 2; version 1 remains readable. `ensureWorld` migrates only active lives at a valid choice boundary, adds `fieldBaseline` and marks past new events `unobserved-extension` rather than replaying them. New/old historical RNG algorithms and previous variant call order remain unchanged: the added events have no random draws. Bastion foundation, independent relief and possible later strain execute without field participation. Seven attributable `field_*` contracts permit bounded domain/regional effects plus a review after 24 months; ordinary content cannot request those effects without a resolved field instance. Reviews may be cancelled by displacement. World truth/knowledge separation, era anchors and null outcome remain intact. Details and Task 11 seam: [FIELD_OPERATIONS](FIELD_OPERATIONS.md).

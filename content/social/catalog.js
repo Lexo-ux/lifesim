@@ -87,6 +87,7 @@ export const SOCIAL_NPCS = {
 };
 // Local contextual organizations, NOT newly named world factions or Bastion mechanics.
 export const INSTITUTIONS = {
+  bastion: { name: "Bastion", type: "guild", introduced: 2 },
   workshop: { name: "El taller compartido", type: "production" },
   research: { name: "El equipo de investigación", type: "research" },
   evaluation: { name: "El equipo de evaluación", type: "evaluation" },
@@ -107,6 +108,7 @@ export const INSTITUTION_FIELDS = {
   scrutiny: ["none", "observed"],
 };
 export const SHARED_MEMORIES = {
+  field_service: ["completed", "partial", "failed", "retreated", "aborted"],
   spare_key: ["accepted", "declined", "kept", "forgotten", "returned"],
   reunion: ["listened", "declined"],
   work_credit: ["shared", "separate"],
@@ -114,7 +116,10 @@ export const SHARED_MEMORIES = {
   evaluation_boundary: ["explained", "private", "heard", "disputed"],
   evidence: ["shared", "withheld", "corrected", "withdrawn"],
 };
-export const OBLIGATIONS = { key: ["open", "kept", "broken", "released"] };
+export const OBLIGATIONS = {
+  key: ["open", "kept", "broken", "released"],
+  field_return: ["open", "kept", "released"],
+};
 export const INSTITUTION_MEMORIES = {
   attribution: ["shared", "separate", "revised"],
   access_request: ["accepted", "declined"],
