@@ -13,6 +13,7 @@ import { STORAGE_KEYS } from "../config/persistence.js";
 import { validAwakening } from "../systems/awakening.js";
 import { validLife } from "../systems/life-paths.js";
 import { validSocial } from "./social-validation.js";
+import { validField } from "./field-validation.js";
 import { validWorld } from "./world-validation.js";
 export const SAVE_KEY = STORAGE_KEYS.current;
 const record = (x) => !!x && typeof x === "object" && !Array.isArray(x);
@@ -35,6 +36,7 @@ export function validStory(s) {
     validLife(s, CARD_BY_ID) &&
     validSocial(s, CARD_BY_ID) &&
     validWorld(s, CARD_BY_ID) &&
+    validField(s, CARD_BY_ID) &&
     record(t) &&
     t.version === 3 &&
     Number.isInteger(t.month) &&

@@ -144,6 +144,7 @@ export function validateWorldContent(
         (k) =>
           ![
             "id",
+            "introduced",
             "era",
             "at",
             "status",

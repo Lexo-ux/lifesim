@@ -1,3 +1,5 @@
+import { fieldChoice } from "../systems/field.js";
+import { lifeContext } from "../systems/life-paths.js";
 import { NPCS } from "../../content/npcs/index.js";
 import { currentCard, cardText } from "../narrative/deck.js";
 import { speaker } from "../narrative/npc.js";
@@ -33,8 +35,20 @@ export function gameScreen(data, moment = currentCard(data.state)) {
   const s = data.state,
     e = moment,
     actor = e.closureText && !npcAvailable(s, e.npc) ? "self" : e.npc,
-    left = socialChoice(s, e, "left"),
-    right = socialChoice(s, e, "right"),
+    left = fieldChoice(
+      s,
+      e,
+      "left",
+      socialChoice(s, e, "left"),
+      lifeContext(s),
+    ),
+    right = fieldChoice(
+      s,
+      e,
+      "right",
+      socialChoice(s, e, "right"),
+      lifeContext(s),
+    ),
     npc =
       actor === "self"
         ? worldSpeaker(e) || { name: s.name, role: "Tu voz interior" }

@@ -32,6 +32,8 @@ export const REGION_CONDITIONS = [
   "sheltered",
 ];
 export const INSTITUTION_CONDITIONS = [
+  "unconfirmed",
+  "not-established",
   "operating",
   "strained",
   "relocated",
@@ -53,6 +55,61 @@ export const OUTCOMES = [
   "true-resolution",
 ];
 export const CONTRIBUTIONS = {
+  field_recon: {
+    field: "recon",
+    dimension: "knowledge",
+    amount: 1,
+    delay: 24,
+    event: "field_recon_review",
+  },
+  field_rescue: {
+    field: "rescue",
+    partial: true,
+    dimension: "civilians",
+    amount: 1,
+    region: "corridor",
+    condition: "sheltered",
+    delay: 24,
+    event: "field_rescue_review",
+  },
+  field_containment: {
+    field: "containment",
+    dimension: "pressure",
+    amount: -1,
+    delay: 24,
+    event: "field_containment_review",
+  },
+  field_medical: {
+    field: "medical",
+    partial: true,
+    dimension: "civilians",
+    amount: 1,
+    delay: 24,
+    event: "field_medical_review",
+  },
+  field_survey: {
+    field: "survey",
+    dimension: "research",
+    amount: 1,
+    delay: 24,
+    event: "field_survey_review",
+  },
+  field_repair: {
+    field: "repair",
+    dimension: "infrastructure",
+    amount: 1,
+    region: "corridor",
+    condition: "ordinary",
+    delay: 24,
+    event: "field_repair_review",
+  },
+  field_logistics: {
+    field: "logistics",
+    dimension: "resources",
+    amount: 1,
+    delay: 24,
+    event: "field_logistics_review",
+  },
   records: {
     dimension: "research",
     amount: 1,

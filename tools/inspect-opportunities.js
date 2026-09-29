@@ -1,4 +1,5 @@
 // Development only. Read-only explanations; never rerolls or replaces the selected Moment.
+import { inspectField } from "./inspect-field.js";
 import { CARDS } from "../content/moments/index.js";
 import { SOCIAL_NPCS, INSTITUTIONS } from "../content/social/catalog.js";
 import { npcAvailable } from "../src/systems/social.js";
@@ -23,6 +24,7 @@ export function inspectOpportunities(s, meta) {
         };
   return {
     life: structuredClone(s.life || null),
+    field: inspectField(s),
     world: {
       privateTruth: structuredClone(s.world || null),
       protagonistKnowledge: structuredClone(s.worldKnowledge || null),

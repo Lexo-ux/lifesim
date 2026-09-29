@@ -17,7 +17,8 @@ export const worldEventOccurred = (w, id) =>
 // Same PRNG algorithm; a domain-separated serialized stream never writes character.seed.
 export function createWorld(seed, at = 0, legacy = false) {
   const w = {
-    version: 1,
+    version: 2,
+    fieldBaseline: at,
     seed: (seed ^ 0x574f524c) >>> 0,
     clock: at,
     era: ERAS.findLast((e) => e.at <= at).id,
@@ -27,7 +28,14 @@ export function createWorld(seed, at = 0, legacy = false) {
       Object.keys(REGIONS).map((id) => [id, "ordinary"]),
     ),
     institutions: Object.fromEntries(
-      Object.keys(INSTITUTIONS).map((id) => [id, "operating"]),
+      Object.keys(INSTITUTIONS).map((id) => [
+        id,
+        INSTITUTIONS[id].introduced
+          ? legacy && at >= WORLD_EVENT_BY_ID.bastion_foundation.at
+            ? "unconfirmed"
+            : "not-established"
+          : "operating",
+      ]),
     ),
     npcs: Object.fromEntries(
       Object.keys(CANONICAL_NPCS).map((id) => [id, "available"]),
@@ -47,7 +55,31 @@ export function createWorld(seed, at = 0, legacy = false) {
   return w;
 }
 export function ensureWorld(s) {
-  if (!s.alive || s.world) return s.world;
+  if (!s.alive) return s.world;
+  if (s.world) {
+    if (s.world.version === 1) {
+      const w = s.world;
+      w.version = 2;
+      w.fieldBaseline = w.clock;
+      // Old reports may already mention its founder; do not erase that history or invent current access.
+      w.institutions.bastion =
+        w.clock >= WORLD_EVENT_BY_ID.bastion_foundation.at
+          ? "unconfirmed"
+          : "not-established";
+      for (const e of WORLD_EVENTS.filter(
+        (e) => e.introduced === 2 && e.at !== null,
+      )) {
+        if (e.at <= w.clock)
+          w.events[e.id] = {
+            status: "unobserved-extension",
+            at: w.clock,
+            variant: null,
+          };
+        else w.pending.push({ id: e.id, due: e.at, source: "chronology" });
+      }
+    }
+    return s.world;
+  }
   s.world = createWorld(s.seed, month(s), s.story.count > 0 || s.age > 0);
   for (const [id, value] of Object.entries(s.social?.circumstances || {}))
     if (Object.hasOwn(s.world.npcs, id)) s.world.npcs[id] = value;
@@ -179,20 +211,33 @@ export function advanceLifeWorld(s, elapsed) {
 }
 export function applyWorldConsequence(s, effect, moment) {
   if (effect.op !== "world-contribute") return false;
+  if (CONTRIBUTIONS[effect.id]?.field)
+    throw Error("Field contributions require a resolved operation");
+  contributeWorld(s, effect.id, moment);
+  return true;
+}
+export function contributeWorld(s, id, moment) {
   const w = s.world,
-    spec = CONTRIBUTIONS[effect.id];
+    spec = CONTRIBUTIONS[id];
   if (!w || !spec) throw Error("Unknown world contribution");
-  if (w.contributions[effect.id]) return true; // Bounded, attributable, once per kind per life.
-  w.contributions[effect.id] = { at: w.clock, age: s.age, source: moment.id };
+  if (
+    spec.field &&
+    (s.field?.operations[spec.field]?.contribution !== id ||
+      !(
+        s.field.operations[spec.field].outcome === "completed" ||
+        (spec.partial && s.field.operations[spec.field].outcome === "partial")
+      ) ||
+      moment.field?.id !== spec.field ||
+      moment.field?.stage !== "critical")
+  )
+    throw Error("Unattributed field contribution");
+  if (w.contributions[id]) return true; // Bounded, attributable, once per kind per life.
+  w.contributions[id] = { at: w.clock, age: s.age, source: moment.id };
   w.dimensions[spec.dimension] = bound(
     w.dimensions[spec.dimension] + spec.amount,
   );
-  scheduleWorldEvent(
-    w,
-    spec.event,
-    w.clock + spec.delay,
-    `contribution:${effect.id}`,
-  );
+  if (spec.region) w.regions[spec.region] = spec.condition;
+  scheduleWorldEvent(w, spec.event, w.clock + spec.delay, `contribution:${id}`);
   return true;
 }
 export function reportAvailable(context, id) {

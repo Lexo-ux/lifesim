@@ -145,6 +145,67 @@ export const WORLD_EVENTS = [
   event("supply_review", "hunters", null, [d("resources", 1)], {
     visibility: "local",
   }),
+  event("bastion_foundation", "hunters", 348, [inst("bastion", "operating")], {
+    introduced: 2,
+    canon: "lore/FACTIONS.md",
+    actors: ["world_voss"],
+    visibility: "public",
+    when: {
+      all: [
+        { type: "world-event", id: "voss_recognition" },
+        { type: "world-npc", id: "world_voss", value: "available" },
+      ],
+    },
+  }),
+  event("independent_relief", "hunters", 450, [d("civilians", 1)], {
+    introduced: 2,
+    visibility: "public",
+  }),
+  event("bastion_disruption", "retreat", 624, [inst("bastion", "strained")], {
+    introduced: 2,
+    when: {
+      all: [
+        { type: "world-event", id: "bastion_foundation" },
+        { not: { type: "world-npc", id: "world_voss", value: "available" } },
+      ],
+    },
+  }),
+  ...[
+    "recon",
+    "rescue",
+    "containment",
+    "medical",
+    "survey",
+    "repair",
+    "logistics",
+  ].map((id) =>
+    event(
+      `field_${id}_review`,
+      "hunters",
+      null,
+      [
+        d(
+          {
+            recon: "knowledge",
+            rescue: "civilians",
+            containment: "stability",
+            medical: "civilians",
+            survey: "knowledge",
+            repair: "infrastructure",
+            logistics: "resources",
+          }[id],
+          1,
+        ),
+      ],
+      {
+        introduced: 2,
+        visibility: "local",
+        when: {
+          not: { type: "world-region", id: "corridor", value: "displaced" },
+        },
+      },
+    ),
+  ),
 ];
 export const WORLD_EVENT_BY_ID = Object.fromEntries(
   WORLD_EVENTS.map((e) => [e.id, e]),

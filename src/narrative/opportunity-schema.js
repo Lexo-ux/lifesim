@@ -5,6 +5,10 @@ import {
 } from "./social-schema.js";
 import { SOCIAL_NPCS } from "../../content/social/catalog.js";
 import {
+  fieldRequirementSchema,
+  fieldConsequenceSchema,
+} from "./field-schema.js";
+import {
   worldRequirementSchema,
   worldConsequenceSchema,
 } from "./world-schema.js";
@@ -86,6 +90,8 @@ export function requirementErrors(r, byId, depth = 0) {
       return errors;
     }
   const social = socialRequirementSchema(r);
+  const field = fieldRequirementSchema(r);
+  if (field) return field;
   if (social) return social;
   const world = worldRequirementSchema(r);
   if (world) return world;
@@ -154,6 +160,8 @@ export function consequenceErrors(e, byId) {
   if (!record(e)) return ["malformed consequence"];
   const errors = e.when !== undefined ? requirementErrors(e.when, byId) : [];
   const social = socialConsequenceSchema(e);
+  const field = fieldConsequenceSchema(e);
+  if (field) return [...errors, ...field];
   if (social) return [...errors, ...social];
   const world = worldConsequenceSchema(e);
   if (world) return [...errors, ...world];

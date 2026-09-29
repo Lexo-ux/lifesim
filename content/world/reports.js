@@ -1,6 +1,18 @@
 // Knowledge is authored delivery, never a dump of simulation truth.
 // Variant-specific reports may be learned only after their historical event.
 export const REPORTS = {
+  bastion: {
+    event: "bastion_foundation",
+    delay: 6,
+    channel: "public",
+    text: "El aviso presenta a Bastion, fundado por Adrian Voss. Habla de coordinar salidas y regresos. Leerlo no te convierte en miembro ni te dice qué será de ellos.",
+  },
+  relief: {
+    event: "independent_relief",
+    delay: 6,
+    channel: "public",
+    text: "Una operación de evacuación ha terminado en el corredor. No participaste: otras personas prepararon rutas, condujeron y atendieron a quienes salían. Tu vida siguió mientras ocurría.",
+  },
   openings: {
     event: "public_openings",
     delay: 12,

@@ -23,6 +23,7 @@ export function validWorldState(w) {
   if (
     !only(w, [
       "version",
+      "fieldBaseline",
       "seed",
       "clock",
       "era",
@@ -36,7 +37,7 @@ export function validWorldState(w) {
       "contributions",
       "outcome",
     ]) ||
-    w.version !== 1 ||
+    ![1, 2].includes(w.version) ||
     !integer(w.seed) ||
     w.seed > 0xffffffff ||
     !integer(w.clock) ||
@@ -45,6 +46,12 @@ export function validWorldState(w) {
     w.outcome !== null
   )
     return false;
+  if (
+    w.version === 2 &&
+    (!integer(w.fieldBaseline) || w.fieldBaseline > w.clock)
+  )
+    return false;
+  if (w.version === 1 && w.fieldBaseline !== undefined) return false;
   if (
     !only(w.baseline, ["at", "legacy"]) ||
     !integer(w.baseline.at) ||
@@ -55,8 +62,14 @@ export function validWorldState(w) {
   if (
     !full(w.dimensions, DIMENSIONS, (n) => integer(n) && n <= 6) ||
     !full(w.regions, REGIONS, (v) => REGION_CONDITIONS.includes(v)) ||
-    !full(w.institutions, INSTITUTIONS, (v) =>
-      INSTITUTION_CONDITIONS.includes(v),
+    !full(
+      w.institutions,
+      Object.fromEntries(
+        Object.entries(INSTITUTIONS).filter(
+          ([, i]) => !i.introduced || w.version >= i.introduced,
+        ),
+      ),
+      (v) => INSTITUTION_CONDITIONS.includes(v),
     ) ||
     !full(w.npcs, CANONICAL_NPCS, (v) => CIRCUMSTANCES.includes(v))
   )
@@ -68,17 +81,28 @@ export function validWorldState(w) {
       return (
         own(WORLD_EVENT_BY_ID, id) &&
         spec &&
+        (!spec.introduced || w.version >= spec.introduced) &&
         only(e, ["status", "at", "variant"]) &&
         integer(e.at) &&
         e.at <= w.clock &&
-        ["occurred", "cancelled", "unobserved-baseline"].includes(e.status) &&
+        [
+          "occurred",
+          "cancelled",
+          "unobserved-baseline",
+          "unobserved-extension",
+        ].includes(e.status) &&
         (e.status === "occurred"
           ? spec.variants
             ? spec.variants.some((v) => v.id === e.variant)
             : e.variant === null
           : e.variant === null) &&
         (e.status !== "unobserved-baseline" ||
-          (w.baseline.legacy && e.at === w.baseline.at))
+          (w.baseline.legacy && e.at === w.baseline.at)) &&
+        (e.status !== "unobserved-extension" ||
+          (spec.introduced === 2 &&
+            w.version === 2 &&
+            e.at === w.fieldBaseline &&
+            spec.at <= w.fieldBaseline))
       );
     })
   )
@@ -88,6 +112,7 @@ export function validWorldState(w) {
     !Object.entries(w.contributions).every(
       ([id, c]) =>
         own(CONTRIBUTIONS, id) &&
+        (!CONTRIBUTIONS[id].field || w.version === 2) &&
         only(c, ["at", "age", "source"]) &&
         integer(c.at) &&
         c.at <= w.clock &&
@@ -105,6 +130,8 @@ export function validWorldState(w) {
       (p) =>
         only(p, ["id", "due", "source"]) &&
         own(WORLD_EVENT_BY_ID, p.id) &&
+        (!WORLD_EVENT_BY_ID[p.id].introduced ||
+          w.version >= WORLD_EVENT_BY_ID[p.id].introduced) &&
         !w.events[p.id] &&
         integer(p.due) &&
         p.due > w.clock &&
@@ -122,9 +149,9 @@ export function validWorldState(w) {
     return false;
   // Every initial event has a durable disposition; dropping a queue item is not a migration.
   if (
-    !WORLD_EVENTS.filter((e) => e.at !== null).every(
-      (e) => w.events[e.id] || w.pending.some((p) => p.id === e.id),
-    )
+    !WORLD_EVENTS.filter(
+      (e) => e.at !== null && (!e.introduced || w.version >= e.introduced),
+    ).every((e) => w.events[e.id] || w.pending.some((p) => p.id === e.id))
   )
     return false;
   for (const [id, spec] of Object.entries(CONTRIBUTIONS)) {
@@ -172,9 +199,15 @@ export function validWorld(s, moments) {
     return false;
   if (
     !Object.entries(w.contributions).every(([id, c]) =>
-      moments[c.source]?.[
-        s.life?.decisions[c.source]?.side
-      ]?.consequences?.some((e) => e.op === "world-contribute" && e.id === id),
+      CONTRIBUTIONS[id].field
+        ? s.field?.operations[CONTRIBUTIONS[id].field]?.contribution === id &&
+          moments[c.source]?.field?.stage === "critical" &&
+          moments[c.source]?.field?.id === CONTRIBUTIONS[id].field
+        : moments[c.source]?.[
+            s.life?.decisions[c.source]?.side
+          ]?.consequences?.some(
+            (e) => e.op === "world-contribute" && e.id === id,
+          ),
     )
   )
     return false;

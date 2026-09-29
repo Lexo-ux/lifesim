@@ -62,6 +62,7 @@ export function worldConsequenceSchema(e) {
   if (!e.op?.startsWith("world-")) return undefined;
   return e.op === "world-contribute" &&
     own(CONTRIBUTIONS, e.id) &&
+    !CONTRIBUTIONS[e.id].field &&
     Object.keys(e).every((k) => ["op", "id", "when"].includes(k))
     ? []
     : ["invalid world consequence"];
