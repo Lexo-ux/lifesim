@@ -7,6 +7,8 @@ import { CARD_BY_ID, CARDS } from "../content/moments/index.js";
 import { eligible } from "../src/narrative/conditions.js";
 import { lifeMonth } from "../src/systems/life-paths.js";
 import { validStory } from "../src/persistence/storage.js";
+import { validWorldState } from "../src/persistence/world-validation.js";
+import { REPORTS } from "../content/world/reports.js";
 export function simulateOpportunities(lives = 300) {
   const report = {
     lives,
@@ -26,6 +28,18 @@ export function simulateOpportunities(lives = 300) {
     consecutiveOpportunities: 0,
     repeatCooldownViolations: 0,
     selectionMs: [],
+    world: {
+      erasAtDeath: {},
+      events: {},
+      reports: {},
+      contributions: {},
+      unknownEvents: 0,
+      knownReports: 0,
+      pendingAtDeath: 0,
+      maxQueue: 0,
+      maxEvents: 0,
+      invalidWorlds: 0,
+    },
     social: {
       locals: 0,
       recurringLocals: 0,
@@ -100,11 +114,37 @@ export function simulateOpportunities(lives = 300) {
         break;
       }
       if (!validStory(s)) report.invalidSaves++;
+      report.world.maxQueue = Math.max(
+        report.world.maxQueue,
+        s.world.pending.length,
+      );
       visited.add(m.id);
       previous = m.id;
       report.decisions++;
     }
     if (s.alive) report.deadEnds++;
+    const world = report.world;
+    count(world.erasAtDeath, s.world.era);
+    world.maxEvents = Math.max(
+      world.maxEvents,
+      Object.keys(s.world.events).length,
+    );
+    world.pendingAtDeath += s.world.pending.length;
+    for (const [id, e] of Object.entries(s.world.events))
+      if (e.status === "occurred") count(world.events, id);
+    for (const id of Object.keys(s.worldKnowledge.reports)) {
+      count(world.reports, id);
+      world.knownReports++;
+    }
+    for (const id of Object.keys(s.world.contributions))
+      count(world.contributions, id);
+    const knownEvents = new Set(
+      Object.keys(s.worldKnowledge.reports).map((id) => REPORTS[id].event),
+    );
+    world.unknownEvents += Object.entries(s.world.events).filter(
+      ([id, e]) => e.status === "occurred" && !knownEvents.has(id),
+    ).length;
+    if (!validWorldState(s.world)) world.invalidWorlds++;
     const social = report.social,
       people = Object.values(s.social?.people || {});
     social.maxPeople = Math.max(social.maxPeople, people.length);

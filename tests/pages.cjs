@@ -96,6 +96,29 @@ let browser;
       JSON.parse(localStorage.getItem("lifesim.v3")).state.social.people
         .world_okafor.encounters === 1,
   );
+  const { worldFixture, selectWorld } =
+    await import("../tools/world-fixtures.js");
+  const worldData = selectWorld(
+    worldFixture("civilian", 520),
+    "wo_news_rupture",
+  );
+  await page.evaluate(
+    (d) => localStorage.setItem("lifesim.v3", JSON.stringify(d)),
+    worldData,
+  );
+  await page.reload();
+  await page.locator("[data-action=continue]").click();
+  await page.waitForSelector("[data-card=wo_news_rupture]");
+  assert.match(
+    await page.locator("#card-dialogue").textContent(),
+    /Gran Ruptura/,
+  );
+  await page.locator("[data-action=choose]").first().click();
+  await page.waitForFunction(
+    () =>
+      JSON.parse(localStorage.getItem("lifesim.v3")).state.story.seen
+        .wo_news_rupture !== undefined,
+  );
   assert.deepEqual(failures, []);
   console.log(
     "GitHub Pages subpath QA passed: /lifesim/, ES modules, fonts, images, a playable year and publication files.",

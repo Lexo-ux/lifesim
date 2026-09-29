@@ -1,4 +1,5 @@
 import { socialProfile, institutionProfile, socialMemory } from "./social.js";
+import { worldProfile, worldMemory } from "./world.js";
 import { SOCIAL_NPCS } from "../../content/social/catalog.js";
 import {
   TRAITS,
@@ -61,7 +62,9 @@ export function profile(s) {
       const r = s.relationships.find((r) => r.id === n.id);
       return `<div><img src="${portraitFor(s, n.id)}" alt="" loading="lazy"><span><strong>${esc(n.name)}</strong><small>${!n.alive ? "En tus recuerdos" : r?.type === "partner" ? "Tu pareja" : n.role} · ${n.alive ? relationshipStatus(r?.bond ?? n.bond) : ""}</small></span></div>`;
     })
-    .join("")}${socialProfile(s)}</div></details>${institutionProfile(s)}`;
+    .join(
+      "",
+    )}${socialProfile(s)}</div></details>${institutionProfile(s)}${worldProfile(s)}`;
 }
 export function timeline(s, limit = Infinity) {
   return `<ol class="story-timeline">${s.history
@@ -83,5 +86,5 @@ export function legacy(meta) {
     .join("")}</details>`;
 }
 export function deathScreen(s, meta, reveal = false) {
-  return `<section class="death-screen"><div class="memorial"><img class="veiled-portrait" src="${playerPortrait(s)}" alt="${esc(s.name)}"><span aria-hidden="true">✦</span></div><p class="eyebrow">UNA VIDA QUE PERMANECE</p><h1 id="page-title">${esc(s.name)}</h1><p class="life-dates">${s.birthYear} — ${s.birthYear + s.age}</p><p class="life-age">${s.age} años</p>${reveal ? `<div class="final-story"><h2>Tu historia</h2>${awakeningMemory(s)}${lifeMemory(s)}${socialMemory(s)}${timeline(s, 7)}</div><p class="mystery-hint">${meta.chapter ? "Alguien parece recordarte." : "Todavía quedan caminos que no has vivido."}</p>${button("Vivir otra vida", "creator", "", "button primary full")}${button("Mi legado", "legacy", "", "text-button")}` : button("Recordar", "remember", "", "button primary")}<nav>${button("Inicio", "home", "", "nav-link")}</nav></section>`;
+  return `<section class="death-screen"><div class="memorial"><img class="veiled-portrait" src="${playerPortrait(s)}" alt="${esc(s.name)}"><span aria-hidden="true">✦</span></div><p class="eyebrow">UNA VIDA QUE PERMANECE</p><h1 id="page-title">${esc(s.name)}</h1><p class="life-dates">${s.birthYear} — ${s.birthYear + s.age}</p><p class="life-age">${s.age} años</p>${reveal ? `<div class="final-story"><h2>Tu historia</h2>${awakeningMemory(s)}${lifeMemory(s)}${socialMemory(s)}${worldMemory(s)}${timeline(s, 7)}</div><p class="mystery-hint">${meta.chapter ? "Alguien parece recordarte." : "Todavía quedan caminos que no has vivido."}</p>${button("Vivir otra vida", "creator", "", "button primary full")}${button("Mi legado", "legacy", "", "text-button")}` : button("Recordar", "remember", "", "button primary")}<nav>${button("Inicio", "home", "", "nav-link")}</nav></section>`;
 }

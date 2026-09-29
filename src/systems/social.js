@@ -9,7 +9,8 @@ const now = (s) => s.age * 12 + (s.story?.month || 0);
 const has = (o, id) => Object.hasOwn(o, id);
 export const socialPerson = (s, id) => s.social?.people[id];
 export const npcAvailable = (s, id) =>
-  !s.social?.circumstances[id] || s.social.circumstances[id] === "available";
+  (s.world?.npcs[id] ?? s.social?.circumstances[id] ?? "available") ===
+  "available";
 export const socialIdentity = (s, id) => socialPerson(s, id)?.identity || null;
 export function ensureSocial(s) {
   if (!s.alive) return s.social;
@@ -124,7 +125,10 @@ export function socialRequirement(context, r) {
     case "npc-known":
       return !!p;
     case "npc-available":
-      return !s?.circumstances[r.id] || s.circumstances[r.id] === "available";
+      return (
+        (context.world?.npcs[r.id] ?? s?.circumstances[r.id] ?? "available") ===
+        "available"
+      );
     case "relationship":
       return !!p && p.relationship[r.field] === r.value;
     case "shared-memory":

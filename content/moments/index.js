@@ -6,6 +6,7 @@ import { MYSTERY } from "./mystery.js";
 import { AWAKENING } from "./awakening.js";
 import { OPPORTUNITIES } from "./opportunities.js";
 import { SOCIAL_MOMENTS } from "./social.js";
+import { WORLD_MOMENTS } from "./world.js";
 export const CARDS = [
   ...EARLY,
   ...ARCS,
@@ -15,5 +16,6 @@ export const CARDS = [
   ...AWAKENING,
   ...OPPORTUNITIES,
   ...SOCIAL_MOMENTS,
+  ...WORLD_MOMENTS,
 ];
 export const CARD_BY_ID = Object.fromEntries(CARDS.map((c) => [c.id, c]));

@@ -23,6 +23,10 @@ export function inspectOpportunities(s, meta) {
         };
   return {
     life: structuredClone(s.life || null),
+    world: {
+      privateTruth: structuredClone(s.world || null),
+      protagonistKnowledge: structuredClone(s.worldKnowledge || null),
+    },
     social: {
       state: structuredClone(s.social || null),
       identities: SOCIAL_NPCS,

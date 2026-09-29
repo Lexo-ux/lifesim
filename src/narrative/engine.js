@@ -1,4 +1,5 @@
 import { createState, apply, log, stage } from "../engine/state.js";
+import { ensureWorld, advanceLifeWorld } from "../systems/world.js";
 import { advanceYear, finishLife } from "../engine/game.js";
 import { hire, enroll, retire } from "../systems/career.js";
 import { transact, netWorth } from "../systems/economy.js";
@@ -65,6 +66,7 @@ export function startLife(options, meta, seed) {
   const s = attachStory(createState(options, seed));
   s.awakening = pendingAwakening();
   ensureLife(s);
+  ensureWorld(s);
   meta.lives++;
   drawCard(s, meta);
   updateAchievements(s, meta);
@@ -167,6 +169,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   const next = structuredClone(s),
     nextMeta = structuredClone(meta);
   ensureLife(next);
+  ensureWorld(next);
   const before = macroStats(s),
     previousStage = stage(s).id,
     startAge = s.age,
@@ -217,6 +220,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
     if (next.alive) apply(next, { stress: -3, energy: 10 });
   }
   if (!next.alive) next.story.month = 0;
+  advanceLifeWorld(next, now(next) - timestamp);
   scheduleAwakening(next);
   observeOccupation(next);
   const unlocked = updateAchievements(next, nextMeta);

@@ -1,5 +1,6 @@
 import { lifeContext } from "../systems/life-paths.js";
 import { socialRequirement } from "../systems/social.js";
+import { worldRequirement } from "../systems/world.js";
 import {
   OPPORTUNITY_SPACING,
   LEVELS,
@@ -20,6 +21,7 @@ export function evaluateRequirement(context, rule) {
     return v === undefined ? undefined : !v;
   }
   const { type, id, value } = rule;
+  if (type?.startsWith("world-")) return worldRequirement(context, rule);
   const social = socialRequirement(context, rule);
   if (social !== undefined) return social;
   switch (type) {

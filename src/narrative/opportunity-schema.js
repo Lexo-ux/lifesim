@@ -5,6 +5,10 @@ import {
 } from "./social-schema.js";
 import { SOCIAL_NPCS } from "../../content/social/catalog.js";
 import {
+  worldRequirementSchema,
+  worldConsequenceSchema,
+} from "./world-schema.js";
+import {
   DOMAINS,
   CAPABILITIES,
   LEVELS,
@@ -83,6 +87,8 @@ export function requirementErrors(r, byId, depth = 0) {
     }
   const social = socialRequirementSchema(r);
   if (social) return social;
+  const world = worldRequirementSchema(r);
+  if (world) return world;
   let allowed = ["type", "value"],
     valid = false;
   if (has(values, r.type)) valid = values[r.type].includes(r.value);
@@ -149,6 +155,8 @@ export function consequenceErrors(e, byId) {
   const errors = e.when !== undefined ? requirementErrors(e.when, byId) : [];
   const social = socialConsequenceSchema(e);
   if (social) return [...errors, ...social];
+  const world = worldConsequenceSchema(e);
+  if (world) return [...errors, ...world];
   let fields = ["op", "id", "when"],
     valid = false;
   switch (e.op) {

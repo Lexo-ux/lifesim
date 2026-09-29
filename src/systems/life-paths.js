@@ -12,6 +12,7 @@ import {
 import { CLASS_BY_ID } from "../../content/awakening/classes.js";
 import { JOBS } from "../../content/catalog.js";
 import { log } from "../engine/state.js";
+import { applyWorldConsequence } from "./world.js";
 import { applySocialConsequence, interpolateSocial } from "./social.js";
 export const lifeMonth = (s) => s.age * 12 + (s.story?.month || 0);
 export function ensureLife(s) {
@@ -98,8 +99,11 @@ export function lifeContext(s) {
     memory: s.life?.memory || {},
     decisions: s.life?.decisions || {},
     seen: s.story.seen,
+    current: s.story.current,
     awakening: s.awakening,
     social: s.social,
+    world: s.world,
+    worldKnowledge: s.worldKnowledge,
   };
 }
 // Common effects operate only on this extension; old operations still own degrees/jobs/money.
@@ -122,6 +126,7 @@ export function applyLifeConsequences(
   for (const effect of option.consequences || []) {
     if (effect.when && !evaluate(lifeContext(s), effect.when)) continue;
     if (applySocialConsequence(s, effect, event)) continue;
+    if (applyWorldConsequence(s, effect, event)) continue;
     if (effect.op === "direction") {
       if (life.direction === effect.id) continue;
       const previous = life.chapters.at(-1);

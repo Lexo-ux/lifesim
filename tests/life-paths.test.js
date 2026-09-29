@@ -37,6 +37,8 @@ test("100 pre-opportunity childhoods match the full-state Task 06 golden from 99
     const capture = () => {
       const plain = structuredClone(state);
       delete plain.life;
+      delete plain.world;
+      delete plain.worldKnowledge;
       digest.update(JSON.stringify({ state: plain, meta }));
     };
     capture();
