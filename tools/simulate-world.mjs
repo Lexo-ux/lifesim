@@ -17,6 +17,17 @@ export function simulateWorlds(count = 1000) {
     invalidStates: 0,
     chunkMismatch: 0,
     maxStepMs: 0,
+    war: {
+      outcomes: {},
+      fronts: {},
+      campaigns: {},
+      results: {},
+      unresolved: 0,
+      maxQueue: 0,
+      maxHistory: 0,
+      civilians: {},
+      territory: {},
+    },
   };
   const states = new Set();
   const add = (o, key) => (o[key] = (o[key] || 0) + 1);
@@ -26,12 +37,27 @@ export function simulateWorlds(count = 1000) {
     for (const era of ERAS) {
       const start = performance.now();
       advanceWorld(w, era.at);
+      report.war.maxQueue = Math.max(report.war.maxQueue, w.pending.length);
       report.maxStepMs = Math.max(report.maxStepMs, performance.now() - start);
       add(report.eras, w.era);
       if (!validWorldState(w)) report.invalidStates++;
     }
     advanceWorld(w, 1200);
     advanceWorld(direct, 1200);
+    add(report.war.outcomes, w.outcome || "unknown");
+    if (!w.outcome) report.war.unresolved++;
+    report.war.maxHistory = Math.max(
+      report.war.maxHistory,
+      w.war.campaigns.length,
+    );
+    add(report.war.civilians, w.dimensions.civilians);
+    add(report.war.territory, w.dimensions.territory);
+    for (const [id, f] of Object.entries(w.war.fronts))
+      add(report.war.fronts, `${id}:${f.condition}`);
+    for (const c of w.war.campaigns) {
+      add(report.war.campaigns, c.family);
+      add(report.war.results, c.result);
+    }
     if (JSON.stringify(w) !== JSON.stringify(direct)) report.chunkMismatch++;
     report.pendingAtEnd += w.pending.length;
     for (const [id, e] of Object.entries(w.events)) {

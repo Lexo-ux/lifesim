@@ -72,10 +72,14 @@ Referencia Task 08: **54.078 decisiones, 571 locales, 570 recurrentes (99,82%), 
 
 Task 09 implementa ese propietario en `world.npcs`, separado de identidad y vínculos. `npcAvailable` consulta primero esa autoridad para los cuatro canónicos y conserva la alternativa social para los demás. `lifeContext` incorpora mundo y conocimiento; los requisitos mundiales enumerados se documentan en [WORLD_SIMULATION](WORLD_SIMULATION.md). Una noticia explícitamente entregada puede actualizar el estado conocido de una persona ya conocida, nunca crear retrospectivamente un encuentro. Las circunstancias privadas por sí solas no escriben `known`.
 
-Task 10 puede añadir instituciones/afiliaciones/operaciones enumeradas y oportunidades al motor existente. No reutilizar la etiqueta `association` como una simulación de gremios ya realizada. Task 11 puede separar personas, comunicar pérdidas y alterar disponibilidad; debe conservar recuerdos, identidad y cierres seguros. Guerra dinámica, agentes autónomos, romance completo, cazadores, combate y metanarrativa futura no están implementados.
+Task 10 puede añadir instituciones/afiliaciones/operaciones enumeradas y oportunidades al motor existente. No reutilizar la etiqueta `association` como una simulación de gremios ya realizada. Task 11 puede separar personas, comunicar pérdidas y alterar disponibilidad; debe conservar recuerdos, identidad y cierres seguros. Task 10 implementa servicio de campo y Task 11 guerra estratégica acotada; agentes autónomos, romance completo, combate táctico y metanarrativa futura no están implementados.
 
 Los retratos canónicos tienen una pose validada cada uno; Voss/Yuna/Vale quedan listos para futuro contenido contextual, no aparecen artificialmente para cubrir métricas. Locales comparten dos arquetipos; no hay retratos infinitos ni envejecimiento anual. Catálogo/continuidad visual: [CHARACTER_ART](CHARACTER_ART.md). QA reproducible y limitaciones de dispositivos: [DEVELOPMENT](DEVELOPMENT.md).
 
 ## Task 10 operational integration
 
 Bastion is added to the same institution registry using its canonical name/founder, without new guild structure or a guild manager. Personal collaboration/trust remains independent of Task 09's world condition. Field teams reference the existing local colleague, with unchanged first-instantiation draws and stable identity; `field_service` memory and `field_return` obligation use existing semantic relations. Directly witnessed local loss updates the social circumstance and known status explicitly. Private historical fates never become automatic player knowledge. No new people or portraits are added. See [FIELD_OPERATIONS](FIELD_OPERATIONS.md).
+
+## Task 11 knowledge boundary
+
+Private campaign effects alter world institutions/regions, never personal trust or known NPC status. The authored neighbor-separation Moment uses existing social status/contact operations and retains identity and memories. Canonical availability contributes through world truth without fixing anyone’s destiny or leaking unreported death. [THRESHOLD_WAR](THRESHOLD_WAR.md).

@@ -112,3 +112,7 @@ Five viewport captures (360×640, 360×800, 390×844, 430×932, 1440×900), keyb
 Iteration corrected repair support under strained conditions, aborted deployments granting experience, two role choices resolving to the same role, and legacy guild knowledge being erased by migration. Dedicated regression tests cover these contracts. Screenshots now wait for the existing transient notice to settle before readability inspection; production notice timing was not changed.
 
 Limits: seven one-time families, one recurring local team template, abstract regions and compact objective rules. Canonical figures contribute through existing history rather than joining a simulated squad. There is no full guild economy, autonomous team AI, combat engine, equipment, diplomacy, new faction canon or Task 11 system. Browser QA on desktop Edge with phone-sized viewports does not certify physical phones or Safari.
+
+## Task 11 integration
+
+The separately authorized strategic owner now lives under World; see [THRESHOLD_WAR](THRESHOLD_WAR.md). Existing resolved field contributions affect its supply, civilian, research and force context through World dimensions/institutions. Instance uncertainty, roles, lifecycle and team ownership remain unchanged. Completed containment plus SSS/combat capability permits an optional contextual intervention; it changes force/front integrity only, not diplomacy, knowledge or guaranteed victory. The Task 10 scope/validation evidence above remains historical.

@@ -366,10 +366,11 @@ test("28 legacy completed lives remain untouched; v1 worlds migrate prospectivel
   const d = fieldFixture();
   const w = d.state.world;
   w.version = 1;
+  delete w.war;
   delete w.fieldBaseline;
   delete w.institutions.bastion;
   const newer = new Set(
-    WORLD_EVENTS.filter((e) => e.introduced === 2).map((e) => e.id),
+    WORLD_EVENTS.filter((e) => e.introduced >= 2).map((e) => e.id),
   );
   w.pending = w.pending.filter((p) => !newer.has(p.id));
   for (const id of newer) delete w.events[id];
@@ -381,7 +382,7 @@ test("28 legacy completed lives remain untouched; v1 worlds migrate prospectivel
   assert.deepEqual(dead, before);
   ensureWorld(d.state);
   assert.equal(d.state.field, undefined);
-  assert.equal(w.version, 2);
+  assert.equal(w.version, 3);
   assert.equal(w.institutions.bastion, "unconfirmed");
   assert.equal(w.events.bastion_foundation.status, "unobserved-extension");
   assert.ok(validWorldState(w));
@@ -488,9 +489,10 @@ test("new independent history preserves the prior world RNG stream and historica
   const a = createWorld(7919),
     b = structuredClone(a);
   const added = new Set(
-    WORLD_EVENTS.filter((e) => e.introduced === 2).map((e) => e.id),
+    WORLD_EVENTS.filter((e) => e.introduced >= 2).map((e) => e.id),
   );
   b.version = 1;
+  delete b.war;
   delete b.fieldBaseline;
   delete b.institutions.bastion;
   b.pending = b.pending.filter((p) => !added.has(p.id));

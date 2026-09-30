@@ -1,5 +1,11 @@
 import { random, log } from "../engine/state.js";
 import {
+  attachWar,
+  processWarEvent,
+  warRequirement,
+  applyWarContribution,
+} from "./war.js";
+import {
   ERAS,
   DIMENSIONS,
   REGIONS,
@@ -17,7 +23,7 @@ export const worldEventOccurred = (w, id) =>
 // Same PRNG algorithm; a domain-separated serialized stream never writes character.seed.
 export function createWorld(seed, at = 0, legacy = false) {
   const w = {
-    version: 2,
+    version: 3,
     fieldBaseline: at,
     seed: (seed ^ 0x574f524c) >>> 0,
     clock: at,
@@ -48,10 +54,13 @@ export function createWorld(seed, at = 0, legacy = false) {
   for (const e of WORLD_EVENTS) {
     if (e.at === null) continue;
     const due = e.at + (e.jitter ? Math.floor(random(w) * (e.jitter + 1)) : 0);
-    if (legacy && due <= at)
+    if (legacy && e.war === "resolve" && due <= at)
+      w.pending.push({ id: e.id, due: at + 1, source: "chronology" });
+    else if (legacy && due <= at)
       w.events[e.id] = { status: "unobserved-baseline", at, variant: null };
     else w.pending.push({ id: e.id, due, source: "chronology" });
   }
+  attachWar(w, legacy);
   return w;
 }
 export function ensureWorld(s) {
@@ -78,6 +87,22 @@ export function ensureWorld(s) {
         else w.pending.push({ id: e.id, due: e.at, source: "chronology" });
       }
     }
+    if (s.world.version === 2) {
+      const w = s.world;
+      w.version = 3;
+      attachWar(w, true);
+      for (const e of WORLD_EVENTS.filter((e) => e.introduced === 3)) {
+        if (e.war === "resolve" && e.at <= w.clock)
+          w.pending.push({ id: e.id, due: w.clock + 1, source: "chronology" });
+        else if (e.at <= w.clock)
+          w.events[e.id] = {
+            status: "unobserved-extension",
+            at: w.clock,
+            variant: null,
+          };
+        else w.pending.push({ id: e.id, due: e.at, source: "chronology" });
+      }
+    }
     return s.world;
   }
   s.world = createWorld(s.seed, month(s), s.story.count > 0 || s.age > 0);
@@ -93,6 +118,8 @@ export function worldRequirement(context, r) {
   if (!r.type?.startsWith("world-")) return undefined;
   const w = context.world;
   if (!w) return undefined;
+  if (["world-war-active", "world-front", "world-war-action"].includes(r.type))
+    return warRequirement(context, r);
   switch (r.type) {
     case "world-era":
       return w.era === r.value;
@@ -142,7 +169,7 @@ export function cancelWorldEvent(w, id) {
   w.events[id] = { status: "cancelled", at: w.clock, variant: null };
   return true;
 }
-function applyWorldEffect(w, e) {
+export function applyWorldEffect(w, e) {
   switch (e.op) {
     case "dimension":
       w.dimensions[e.id] = bound(w.dimensions[e.id] + e.amount);
@@ -197,6 +224,7 @@ export function advanceWorld(w, target) {
     }
     for (const effect of [...e.effects, ...(variant?.effects || [])])
       applyWorldEffect(w, effect);
+    if (e.war) processWarEvent(w, e, applyWorldEffect);
     w.events[e.id] = {
       status: "occurred",
       at: w.clock,
@@ -210,6 +238,10 @@ export function advanceLifeWorld(s, elapsed) {
   if (s.world) advanceWorld(s.world, s.world.clock + Math.max(0, elapsed));
 }
 export function applyWorldConsequence(s, effect, moment) {
+  if (effect.op === "world-war-contribute") {
+    applyWarContribution(s, effect.id, moment, applyWorldEffect);
+    return true;
+  }
   if (effect.op !== "world-contribute") return false;
   if (CONTRIBUTIONS[effect.id]?.field)
     throw Error("Field contributions require a resolved operation");
@@ -256,6 +288,11 @@ export function reportAvailable(context, id) {
   const event = w.events[r.event];
   return (
     event?.status === "occurred" &&
+    (!r.outcome || w.outcome === r.outcome) &&
+    (!r.warLoss ||
+      !!w.war?.campaigns.some(
+        (c) => c.after.condition === "lost" && c.before.condition !== "lost",
+      )) &&
     w.clock >= event.at + r.delay &&
     (!r.capabilities ||
       r.capabilities.some((id) => context.capabilities?.[id])) &&
@@ -271,7 +308,7 @@ export function reportText(s, id) {
 // just as social identities are prepared when their encounter is selected. No random draws.
 export function prepareWorldMoment(s, moment) {
   const id = moment.worldReport;
-  if (!id || !s.world || s.worldKnowledge.reports[id]) return;
+  if (!s.alive || !id || !s.world || s.worldKnowledge.reports[id]) return;
   const r = REPORTS[id];
   if (!worldEventOccurred(s.world, r.event))
     throw Error("Information before world event");

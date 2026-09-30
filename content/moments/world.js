@@ -35,10 +35,15 @@ export const WORLD_MOMENTS = [
         worldReport: id,
         weight: report.channel === "personal" ? 8 : 3,
         // A response to the player's work should not languish in the weighted news pool.
-        ...(report.channel === "personal" ? { priority: 1 } : {}),
+        ...(report.channel === "personal" || report.outcome
+          ? { priority: 1 }
+          : {}),
         opportunity: {
           family: "world-news",
-          mode: report.channel === "personal" ? "critical" : "contextual",
+          mode:
+            report.channel === "personal" || report.outcome
+              ? "critical"
+              : "contextual",
           when: q("world-report", id),
         },
       },

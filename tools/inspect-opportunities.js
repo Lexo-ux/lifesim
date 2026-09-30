@@ -10,6 +10,7 @@ import {
   evaluateRequirement,
   opportunityReasons,
 } from "../src/narrative/opportunities.js";
+import { inspectWar } from "./inspect-war.js";
 export function inspectOpportunities(s, meta) {
   const context = lifeContext(s);
   const explain = (rule) =>
@@ -25,6 +26,7 @@ export function inspectOpportunities(s, meta) {
   return {
     life: structuredClone(s.life || null),
     field: inspectField(s),
+    war: inspectWar(s),
     world: {
       privateTruth: structuredClone(s.world || null),
       protagonistKnowledge: structuredClone(s.worldKnowledge || null),

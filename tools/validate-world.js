@@ -157,6 +157,7 @@ export function validateWorldContent(
             "actors",
             "when",
             "variants",
+            "war",
           ].includes(k),
       )
     )

@@ -10,6 +10,7 @@ import { SOCIAL_NPCS } from "../content/social/catalog.js";
 import { validateSocialContent } from "./validate-social.js";
 import { validateFieldContent } from "./validate-field.js";
 import { validateWorldContent } from "./validate-world.js";
+import { validateWarContent } from "./validate-war.js";
 import {
   JOBS,
   COURSES,
@@ -238,6 +239,7 @@ export function validateContent({
     ...errors,
     ...validateSocialContent(moments),
     ...validateWorldContent(undefined, undefined, moments),
+    ...validateWarContent(),
     ...validateFieldContent(undefined, moments),
   ];
 }
