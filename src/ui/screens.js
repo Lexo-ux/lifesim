@@ -1,3 +1,4 @@
+import { mysteryMemory } from "./mysteries.js";
 import { legacyObservations, legacyMemory, rememberedLives } from "./legacy.js";
 import { socialProfile, institutionProfile, socialMemory } from "./social.js";
 import { fieldProfile, fieldMemory } from "./field.js";
@@ -64,7 +65,7 @@ export function profile(s) {
     })
     .join(
       "",
-    )}${socialProfile(s)}</div></details>${institutionProfile(s)}${worldProfile(s)}${fieldProfile(s)}`;
+    )}${socialProfile(s)}</div></details>${institutionProfile(s)}${worldProfile(s)}${fieldProfile(s)}${mysteryMemory(s)}`;
 }
 export function timeline(s, limit = Infinity) {
   return `<ol class="story-timeline">${s.history
@@ -79,5 +80,5 @@ export function legacy(meta) {
   return `<p class="eyebrow">ENTRE UNA VIDA Y OTRA</p><h2 id="modal-title">Tu legado</h2><div class="legacy-number"><strong>${meta.completed}</strong><span>${meta.completed === 1 ? "vida recordada" : "vidas recordadas"}</span></div>${legacyObservations(meta)}<div class="legacy-endings">${meta.endings.map((e) => `<p>${icon("spark")}${esc(e)}</p>`).join("")}</div><details><summary>Logros · ${meta.unlocked.length} / ${ACHIEVEMENTS.length}</summary><ul class="achievement-list">${ACHIEVEMENTS.map((a) => `<li class="${meta.unlocked.includes(a.id) ? "unlocked" : ""}">${icon(meta.unlocked.includes(a.id) ? "check" : "lock")}<span><strong>${a.secret && !meta.unlocked.includes(a.id) ? "Un recuerdo oculto" : esc(a.name)}</strong>${meta.unlocked.includes(a.id) ? `<small>${esc(a.description)}</small>` : ""}</span></li>`).join("")}</ul></details><details><summary>Huellas</summary><p>Vida más larga: ${meta.longest} años.</p>${rememberedLives(meta)}</details>`;
 }
 export function deathScreen(s, meta, reveal = false) {
-  return `<section class="death-screen"><div class="memorial"><img class="veiled-portrait" src="${playerPortrait(s)}" alt="${esc(s.name)}"><span aria-hidden="true">✦</span></div><p class="eyebrow">UNA VIDA QUE PERMANECE</p><h1 id="page-title">${esc(s.name)}</h1><p class="life-dates">${s.birthYear} — ${s.birthYear + s.age}</p><p class="life-age">${s.age} años</p>${reveal ? `<div class="final-story"><h2>Tu historia</h2>${awakeningMemory(s)}${lifeMemory(s)}${socialMemory(s)}${worldMemory(s)}${fieldMemory(s)}${timeline(s, 7)}${legacyMemory(s)}</div><p class="mystery-hint">Todavía quedan caminos que no has vivido.</p>${button("Vivir otra vida", "creator", "", "button primary full")}${button("Mi legado", "legacy", "", "text-button")}` : button("Recordar", "remember", "", "button primary")}<nav>${button("Inicio", "home", "", "nav-link")}</nav></section>`;
+  return `<section class="death-screen"><div class="memorial"><img class="veiled-portrait" src="${playerPortrait(s)}" alt="${esc(s.name)}"><span aria-hidden="true">✦</span></div><p class="eyebrow">UNA VIDA QUE PERMANECE</p><h1 id="page-title">${esc(s.name)}</h1><p class="life-dates">${s.birthYear} — ${s.birthYear + s.age}</p><p class="life-age">${s.age} años</p>${reveal ? `<div class="final-story"><h2>Tu historia</h2>${awakeningMemory(s)}${lifeMemory(s)}${socialMemory(s)}${worldMemory(s)}${fieldMemory(s)}${mysteryMemory(s)}${timeline(s, 7)}${legacyMemory(s)}</div><p class="mystery-hint">Todavía quedan caminos que no has vivido.</p>${button("Vivir otra vida", "creator", "", "button primary full")}${button("Mi legado", "legacy", "", "text-button")}` : button("Recordar", "remember", "", "button primary")}<nav>${button("Inicio", "home", "", "nav-link")}</nav></section>`;
 }

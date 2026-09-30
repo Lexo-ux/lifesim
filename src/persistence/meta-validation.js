@@ -12,6 +12,7 @@ import {
 import { OUTCOME_RULES } from "../../content/world/war.js";
 import { REPORTS } from "../../content/world/reports.js";
 import { OPERATION_BY_ID } from "../../content/field/catalog.js";
+import { OBSERVATIONS, CONSTANTS } from "../../content/mysteries/catalog.js";
 import {
   OCCUPATION_DOMAINS,
   DOMAINS,
@@ -39,6 +40,18 @@ const list = (v, allowed, limit = allowed.length) =>
   v.every((id) => allowed.includes(id));
 function sourceValid(source, kind, id, moments) {
   if (!exact(source, ["kind", "id", "at"]) || !n(source.at, 2400)) return false;
+  if (source.kind === "mystery")
+    return (
+      kind === "discoveries" &&
+      source.id === id &&
+      OBSERVATIONS[id]?.legacy === true
+    );
+  if (source.kind === "mystery-constant")
+    return (
+      kind === "discoveries" &&
+      !!CONSTANTS[source.id] &&
+      id === `constant_${source.id}`
+    );
   if (source.kind === "life")
     return (
       kind === "perspectives" && id === "everyday" && source.id === "ordinary"
@@ -139,6 +152,10 @@ export function validLegacyState(s, moments) {
         return false;
       if (source.kind === "report")
         return !!s.worldKnowledge?.reports[source.id];
+      if (source.kind === "mystery")
+        return s.mystery?.observations[source.id]?.at === source.at;
+      if (source.kind === "mystery-constant")
+        return s.mystery?.constants[source.id]?.at === source.at;
       if (source.kind === "operation") {
         const op = s.field?.operations[source.id];
         return !!op?.outcome && op.outcome !== "aborted";

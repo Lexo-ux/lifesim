@@ -127,3 +127,7 @@ See the focused scenarios in `tests/legacy.test.js` (all requested cases 1–34,
 - QA fixes: obsolete Archive regression converted to selected/queued compatibility coverage; original Task 06 golden preserved by projecting version metadata only; career evidence survives a job change after two annual settlements within eighteen months; reload test respects an already-open Memorial; doubled text is measured rather than assuming pixel type follows root font size; Memorial shows actual lingering questions without guessing life duration.
 
 Limits: finite initial vocabulary and twenty authored Echoes; no automatic metanarrative solution, expanded awareness, private-canon payload, universal reachability proof or anti-tamper guarantee. Native mobile hardware and other browser engines were not profiled; browser QA used installed Edge with representative touch viewports. Assets, runtime dependency list and all four gameplay RNG algorithms remain unchanged. Archived and newly selected narrative pools intentionally differ after the new eligibility boundary.
+
+## Task 13 extension
+
+Task 13 adds finite public observation and Constant IDs to `DISCOVERIES`, with typed provenance, using this same collector/death commit/frozen snapshot. The six incident graphs and their private premises remain per-life and are never inherited. Existing twenty Echoes, their eligibility, old Archive compatibility, storage keys and Awakening firewall are unchanged. The bounded evidence contract and source validation are in [DEEP_MYSTERIES](DEEP_MYSTERIES.md).

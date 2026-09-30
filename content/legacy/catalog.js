@@ -1,4 +1,5 @@
 // IMPLEMENTATION TARGET: public narrative vocabulary, never a cosmological recipe.
+import { MYSTERY_DISCOVERIES } from "../mysteries/catalog.js";
 export const LEGACY_LIMITS = { lives: 20, echoesPerLife: 3, familyMonths: 96 };
 export const ARCHIVE_IDS = [
   "archive_envelope",
@@ -52,6 +53,7 @@ const discovery = (name, text, origin) => ({
   canon: "lore/METANARRATIVE.md",
 });
 export const DISCOVERIES = {
+  ...MYSTERY_DISCOVERIES,
   incomplete_model: discovery(
     "Una explicación incompleta",
     "Las observaciones dejan preguntas que una explicación sencilla no cubre.",

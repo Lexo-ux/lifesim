@@ -40,6 +40,7 @@ export const FACTS = {
 };
 export const FAMILIES = [
   "life-echo",
+  "mystery-encounter",
   "field-offers",
   "field-affiliation",
   "world-news",

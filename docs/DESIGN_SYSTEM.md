@@ -17,7 +17,7 @@ Narrative text is 17px/1.48 normally, 15px/1.4 on short screens. Speaker is 31px
 ## Components
 
 - **Moment:** portrait dominates a single flexible height area; paper narrative remains readable and never covers the face. Task 05.5 uses a deckled silhouette, irregular ink edge and displaced paper reverse, with a shallow scene/character/light response; no collectible frame. Meta pool receives a subtle anomalous line only.
-- **Indicators:** four distinct SVG glyphs and labels, 3px fill tracks. Width is fixed; `scaleX` presents values without animating layout. Change adds ↑/↓ plus progressbar `aria-valuetext`, so direction is not color-only. The actual accessible value remains available without printing numbers permanently.
+- **Indicators:** four distinct SVG glyphs and labels, 3px fill tracks. Width is fixed; `scaleX` presents values without animating layout. Grid tracks allow labels to wrap at enlarged text sizes. Change adds ↑/↓ plus progressbar `aria-valuetext`, so direction is not color-only. The actual accessible value remains available without printing numbers permanently.
 - **Decisions:** two equal large controls, explicit short action and arrows; neutral warm/cold surfaces distinguish direction without claiming good/bad. Minimum 44px touch target (normally 56px). Pointer and keyboard choose the identical transaction.
 - **Preview:** ink on paper at the upper corner, arrow + action; opacity tracks distance. No stat deltas or promised outcomes.
 - **Feedback:** compact consequence caption; memory/achievement notification above content; important history persists in timeline. Caption never intercepts taps. Live region announces the resolved outcome.

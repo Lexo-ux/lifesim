@@ -96,7 +96,7 @@
 }
 .indicators {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-5);
   padding: 4px 10px 10px;
   flex-shrink: 0;
@@ -137,6 +137,7 @@
   background: var(--tone);
 }
 .indicator small {
+  overflow-wrap: anywhere;
   font-size: 10px;
   color: var(--muted);
   display: block;

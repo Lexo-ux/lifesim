@@ -7,6 +7,11 @@ import { eligible, now } from "./conditions.js";
 import { meet } from "./npc.js";
 import { discover, observeLegacyMoment } from "./meta.js";
 import { opportunityText } from "./opportunities.js";
+import { evaluateRequirement } from "./opportunities.js";
+import { lifeContext } from "../systems/life-paths.js";
+import { prepareMysteryMoment } from "../systems/mysteries.js";
+import { collectLegacyEvidence } from "./meta.js";
+import { BEATS, OBSERVATIONS } from "../../content/mysteries/catalog.js";
 import {
   prepareSocialEncounter,
   socialClosureText,
@@ -87,13 +92,24 @@ export function drawCard(s, meta) {
   prepareWorldMoment(s, event);
   prepareFieldMoment(s, event);
   prepareSocialEncounter(s, event);
+  prepareMysteryMoment(s, event, evaluateRequirement, lifeContext);
   meet(s, event.npc);
   discover(meta, event);
   observeLegacyMoment(s, event);
+  if (event.mystery) collectLegacyEvidence(s);
   return event;
 }
 export const currentCard = (s) => CARD_BY_ID[s.story.current];
 export function cardText(s, meta, event = currentCard(s)) {
+  if (event.mystery) {
+    const extra = BEATS[event.id].observations.filter(
+      (id) => OBSERVATIONS[id].when && s.mystery?.observations[id],
+    );
+    return [
+      opportunityText(s, event),
+      ...extra.map((id) => OBSERVATIONS[id].text),
+    ].join(" ");
+  }
   if (event.field) return fieldText(s, event) || event.text;
   if (event.worldReport) return reportText(s, event.worldReport);
   if (event.system === "awakening") return interpolateAwakening(event.text, s);

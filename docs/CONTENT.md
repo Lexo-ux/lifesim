@@ -46,3 +46,7 @@ No demuestra alcanzabilidad de todas las rutas, compatibilidad económica de cad
 ## Crecimiento previsto
 
 Dividir colecciones cuando crezcan: `moments/childhood`, `civilian`, `meta`; otras categorías como `awakening`, `hunters`, `war` solo cuando la tarea/canon correspondiente exista. Separar NPCs históricos de personales/generados; catálogos futuros de clases, facciones, criaturas, lugares y finales. No crear carpetas vacías ni declarar esas capacidades implementadas. El contenido de runtime es público; ver política de spoilers en `lore/README.md`.
+
+## Task 13 — authored investigations
+
+58 additional binary Moments are assembled from `content/mysteries/`: six seven-beat major graphs, twelve independent ambient and four contextual rare encounters. Entries use existing typed requirements; same-incident closures use the reflection queue and remain reachable across career changes. Observation, document, Constant and scar IDs are finite. Do not store private truth as a public observation, disclose unread evidence or introduce arbitrary temporal/state operations. The dedicated validator joins `validate:content`; full authoring and scope contract: [DEEP_MYSTERIES](DEEP_MYSTERIES.md).

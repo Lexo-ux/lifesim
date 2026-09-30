@@ -10,6 +10,7 @@ import { WORLD_MOMENTS } from "./world.js";
 import { FIELD_MOMENTS } from "./field.js";
 import { WAR_MOMENTS } from "./war.js";
 import { ECHO_MOMENTS } from "./echoes.js";
+import { DEEP_MYSTERIES } from "./deep-mysteries.js";
 export const CARDS = [
   ...EARLY,
   ...ARCS,
@@ -23,5 +24,6 @@ export const CARDS = [
   ...FIELD_MOMENTS,
   ...WAR_MOMENTS,
   ...ECHO_MOMENTS,
+  ...DEEP_MYSTERIES,
 ];
 export const CARD_BY_ID = Object.fromEntries(CARDS.map((c) => [c.id, c]));
