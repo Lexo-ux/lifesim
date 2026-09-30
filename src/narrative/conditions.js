@@ -6,6 +6,7 @@ import { opportunityReasons } from "./opportunities.js";
 import { SOCIAL_NPCS } from "../../content/social/catalog.js";
 import { npcAvailable } from "../systems/social.js";
 import { echoReasons } from "./meta.js";
+import { mysteryReasons } from "../systems/mysteries.js";
 
 export const now = (s) => s.age * 12 + s.story.month;
 export function matches(s, meta, r = {}) {
@@ -85,6 +86,7 @@ export function eligible(s, meta, event, { queued = false } = {}) {
         : s.story.queue.some((q) => q.id === event.id))
     );
   if (event.echo && echoReasons(s).length) return false;
+  if (event.mystery && mysteryReasons(s, event).length) return false;
   if (
     Object.hasOwn(SOCIAL_NPCS, event.npc) &&
     !npcAvailable(s, event.npc) &&

@@ -111,3 +111,7 @@ Imports, tests y entrada HTML apuntan a las rutas nuevas. No hay copias duplicad
 ## Task 12 — single cross-life owner
 
 `narrative/meta.js` owns pending evidence, frozen eligibility snapshot and idempotent death commit. The existing Task 07 predicate/consequence schema and selector serve twenty Echo Moments; no parallel narrative selector or random stream. Public registry/content stay in `content/legacy` and `content/moments/echoes.js`; persisted provenance is validated by `persistence/meta-validation.js`. UI projections are read-only. Private World truth never enters the collector: historical evidence comes from delivered reports. Meta version 3 and optional state extension version 1 preserve the V3 envelope. Complete contract and compatibility audit: [LEGACY_AND_ECHOES](LEGACY_AND_ECHOES.md).
+
+## Task 13 — bounded mystery evidence
+
+`content/mysteries` owns finite authored incidents; `content/moments/deep-mysteries.js` adapts them to the existing deck. `systems/mysteries.js` owns optional local evidence/cursor state, while Task 07 still selects/schedules and Task 12 still commits cross-life knowledge. Persistence validates references/choice provenance; UI projects delivered observations only. No new clock, RNG, renderer or meta owner. [DEEP_MYSTERIES](DEEP_MYSTERIES.md).

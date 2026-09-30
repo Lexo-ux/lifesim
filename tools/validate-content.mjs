@@ -12,6 +12,7 @@ import { validateSocialContent } from "./validate-social.js";
 import { validateFieldContent } from "./validate-field.js";
 import { validateWorldContent } from "./validate-world.js";
 import { validateWarContent } from "./validate-war.js";
+import { validateMysteries } from "./validate-mysteries.js";
 import {
   JOBS,
   COURSES,
@@ -243,6 +244,7 @@ export function validateContent({
     ...validateWorldContent(undefined, undefined, moments),
     ...validateWarContent(),
     ...validateFieldContent(undefined, moments),
+    ...validateMysteries(moments),
   ];
 }
 if (

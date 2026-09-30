@@ -19,6 +19,8 @@ import {
   applyLifeConsequences,
 } from "../systems/life-paths.js";
 import { evaluateRequirement } from "./opportunities.js";
+import { lifeContext } from "../systems/life-paths.js";
+import { resolveMysteryChoice } from "../systems/mysteries.js";
 import {
   prepareSocialEncounter,
   recordSocialEncounter,
@@ -201,6 +203,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   recordSocialEncounter(next, event);
   observeOccupation(next);
   applyLifeConsequences(next, event, side, evaluateRequirement, option);
+  resolveMysteryChoice(next, event, side, evaluateRequirement, lifeContext);
   for (const flag of option.flags || []) next.flags[flag] = true;
   for (const flag of option.metaFlags || []) nextMeta.flags[flag] = true;
   if (event.chapter) {

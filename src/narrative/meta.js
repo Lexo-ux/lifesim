@@ -8,6 +8,7 @@ import {
 } from "../../content/legacy/catalog.js";
 import { OCCUPATION_DOMAINS } from "../../content/life-paths/catalog.js";
 import { REPORTS } from "../../content/world/reports.js";
+import { OBSERVATIONS } from "../../content/mysteries/catalog.js";
 const now = (s) => s.age * 12 + (s.story?.month || 0);
 export const emptyEvidence = () => ({
   perspectives: {},
@@ -123,6 +124,16 @@ export function applyLegacyConsequence(s, e, moment) {
 // No access to s.world, NPC private circumstances or previous-life raw state.
 export function collectLegacyEvidence(s) {
   if (!s.legacy || s.legacy.finalized) return;
+  for (const [id, value] of Object.entries(s.mystery?.observations || {}))
+    if (OBSERVATIONS[id]?.legacy)
+      record(s, "discoveries", id, origin(s, "mystery", id, value.at));
+  for (const [id, value] of Object.entries(s.mystery?.constants || {}))
+    record(
+      s,
+      "discoveries",
+      `constant_${id}`,
+      origin(s, "mystery-constant", id, value.at),
+    );
   if (s.age >= 18 && s.story.count >= 12)
     record(s, "perspectives", "everyday", origin(s, "life", "ordinary"));
   for (const [domain, p] of Object.entries(EXPERIENCE_PERSPECTIVES)) {

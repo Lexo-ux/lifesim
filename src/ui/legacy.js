@@ -31,9 +31,13 @@ export function legacyMemory(s) {
   const names = Object.keys(s.legacy.pending.perspectives).map((id) =>
     PERSPECTIVES[id].name.toLowerCase(),
   );
-  const questions = Object.keys(s.legacy.pending.discoveries).map(
-    (id) => DISCOVERIES[id].name,
-  );
+  const questions = [
+    ...new Set(
+      Object.keys(s.legacy.pending.discoveries).map(
+        (id) => DISCOVERIES[id].name,
+      ),
+    ),
+  ];
   return `<section aria-label="Lo que dejó esta vida"><h2>Lo que dejó</h2><p>${names.length ? `Huellas de esta vida: ${esc(names.join(" · "))}.` : "Su nombre y su historia también permanecen."}</p>${questions.length ? `<p>Preguntas que quedaron: ${esc(questions.join(" · "))}.</p>` : ""}<p class="small muted">Lo vivido aquí no será conocimiento de la siguiente persona.</p></section>`;
 }
 
