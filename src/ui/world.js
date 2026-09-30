@@ -1,6 +1,7 @@
 import { esc } from "./helpers.js";
 import { reportText } from "../systems/world.js";
 import { REPORTS } from "../../content/world/reports.js";
+import { OUTCOME_RULES } from "../../content/world/war.js";
 export function worldCue(event) {
   return REPORTS[event.worldReport]?.presentation || null;
 }
@@ -25,5 +26,11 @@ export function worldProfile(s) {
 }
 export function worldMemory(s) {
   if (!s.worldKnowledge) return "";
-  return "<p>Destino de la humanidad: desconocido.</p>" + worldProfile(s);
+  const report = Object.keys(s.worldKnowledge.reports).find(
+    (id) => REPORTS[id]?.outcome,
+  );
+  const name = report
+    ? OUTCOME_RULES[REPORTS[report].outcome].name
+    : "desconocido";
+  return `<p>Destino de la humanidad: ${esc(name)}.</p>` + worldProfile(s);
 }

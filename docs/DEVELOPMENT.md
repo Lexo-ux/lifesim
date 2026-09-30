@@ -103,3 +103,15 @@ Base `main@039b297`, branch `codex/hunters-field-operations`; no merge or Task 1
 - `tests/field.cjs` joins `npm run test:browser`; outputs/captures go to ignored `output/qa/task10/`. Actual gestures/keys, delayed chains, recurring colleague, affiliation/refusal, reload, Profile/History/Memorial, new life, five sizes, reduced motion, forced colors and 200% text. Root and Pages subpath remain static.
 
 Final validation on 2026-09-28: `npm run check`, **134/134 Node tests**, and all thirteen `test:browser` suites passed. Field QA reviewed ten played chains, nineteen clean axe audits and zero console/asset errors. Diagnostics cover 448 operation scenarios, 300 complete lives and 2,000 worlds. Counts, performance caveats, iteration fixes and scope limits are recorded once in [FIELD_OPERATIONS — Validation evidence](FIELD_OPERATIONS.md#validation-evidence).
+
+## Task 11 validation and inspection
+
+Base `codex/hunters-field-operations@7f82916`, branch `codex/threshold-war`; no main merge or subsequent metanarrative work. Source: [THRESHOLD_WAR](THRESHOLD_WAR.md).
+
+- `node --test tests/war.test.js`: strategic autonomy, fronts/campaigns, civilian and field contributions, natural outcome seeds, knowledge, migration and invalid content/saves.
+- `node tools/simulate-world.mjs 5000`: production autonomous worlds, outcome/front/campaign distributions, queue bounds and chunk equivalence.
+- `node tools/simulate-opportunities.mjs 300`: complete lives, including wartime ordinary decisions, participation and known/unknown outcomes.
+- Existing opportunity inspection includes `tools/inspect-war.js`, separating private factors/candidates from player knowledge.
+- `tests/war.cjs` joins the browser runner: actual decisions, eight outcome deliveries, migration/reload, civilian/SSS contributions, temporal drag, memorial, mobile/desktop and accessibility. Ignored evidence: `output/qa/task11/`.
+
+Final Task 11 validation: 140 modules checked, **176/176 tests**, all fourteen browser suites, 5,000 autonomous worlds and 300 complete lives. Seventeen focused axe audits found no violations; no console/asset errors. Measurements, migration limits and iteration fixes: [THRESHOLD_WAR — Validation evidence](THRESHOLD_WAR.md#validation-evidence--task-11).

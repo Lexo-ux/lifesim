@@ -11,11 +11,23 @@ import { WORLD_EVENT_BY_ID } from "../../content/world/events.js";
 import { REPORTS } from "../../content/world/reports.js";
 import { CANONICAL_NPCS, INSTITUTIONS } from "../../content/social/catalog.js";
 const own = (o, id) => Object.hasOwn(o, id);
+import { FRONTS, FRONT_STATES, WAR_ACTIONS } from "../../content/world/war.js";
 export function worldRequirementSchema(r) {
   if (!r.type?.startsWith("world-")) return undefined;
   let fields = ["type", "id"],
     valid = false;
   switch (r.type) {
+    case "world-war-active":
+      fields = ["type"];
+      valid = true;
+      break;
+    case "world-front":
+      fields.push("value");
+      valid = own(FRONTS, r.id) && FRONT_STATES.includes(r.value);
+      break;
+    case "world-war-action":
+      valid = own(WAR_ACTIONS, r.id);
+      break;
     case "world-era":
       fields = ["type", "value"];
       valid = ERAS.some((e) => e.id === r.value);
@@ -60,6 +72,11 @@ export function worldRequirementSchema(r) {
 }
 export function worldConsequenceSchema(e) {
   if (!e.op?.startsWith("world-")) return undefined;
+  if (e.op === "world-war-contribute")
+    return own(WAR_ACTIONS, e.id) &&
+      Object.keys(e).every((k) => ["op", "id", "when"].includes(k))
+      ? []
+      : ["invalid war contribution"];
   return e.op === "world-contribute" &&
     own(CONTRIBUTIONS, e.id) &&
     !CONTRIBUTIONS[e.id].field &&

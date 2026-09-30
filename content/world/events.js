@@ -1,5 +1,6 @@
 // The seven-era order and roles are CANON. Every schedule/variant below is an
 // IMPLEMENTATION TARGET. No event defines a final destiny, cause or world ending.
+import { WAR_EVENTS } from "./war.js";
 const d = (id, amount) => ({ op: "dimension", id, amount });
 const region = (id, value) => ({ op: "region", id, value });
 const inst = (id, value) => ({ op: "institution", id, value });
@@ -207,6 +208,7 @@ export const WORLD_EVENTS = [
     ),
   ),
 ];
+WORLD_EVENTS.push(...WAR_EVENTS);
 export const WORLD_EVENT_BY_ID = Object.fromEntries(
   WORLD_EVENTS.map((e) => [e.id, e]),
 );

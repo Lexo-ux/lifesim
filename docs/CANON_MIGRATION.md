@@ -43,3 +43,7 @@ The seven-era order and four historical identities/roles are reused without new 
 ## Task 10 — optional field service
 
 Seven authored operation families and Bastion's runtime presence use approved Hunter/guild and historical identity boundaries. Timing, risk, team roles and operational results are IMPLEMENTATION TARGET, not new major canon. Bastion remains founded by Voss in the base history, with no invented headquarters, officers or guaranteed survival. Generic teams are not new named factions. Non-Awakened field support remains meaningful; rank provides force without prescribing success or historical importance. No Convergence cause, final resolution or Task 11 war system is added. [FIELD_OPERATIONS](FIELD_OPERATIONS.md).
+
+## Task 11 — strategic implementation targets
+
+Three abstract fronts over the existing two regions, campaign timing/thresholds, contribution magnitudes and outcome formulas are implementation targets only. No geography, final NPC destiny, new faction or strategic formula becomes canon. The eight public categories follow existing ending meanings; the reserved True Resolution and ultimate cause remain untouched. Military force, research, human continuity and understanding are separate inputs. Source: [THRESHOLD_WAR](THRESHOLD_WAR.md).

@@ -373,6 +373,7 @@ test("300 seeded complete lives preserve playable choices, closures, spacing and
       lives: r.lives,
       decisions: r.decisions,
       field: r.field,
+      war: r.war,
       diversity: r.diversity,
       pathChanges: r.pathChanges,
       deadEnds: r.deadEnds,

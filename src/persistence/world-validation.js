@@ -10,6 +10,7 @@ import {
 import { WORLD_EVENTS, WORLD_EVENT_BY_ID } from "../../content/world/events.js";
 import { REPORTS } from "../../content/world/reports.js";
 import { CANONICAL_NPCS, INSTITUTIONS } from "../../content/social/catalog.js";
+import { validWar, validWarSources } from "./war-validation.js";
 const record = (o) => !!o && typeof o === "object" && !Array.isArray(o);
 const only = (o, keys) =>
   record(o) && Object.keys(o).every((k) => keys.includes(k));
@@ -36,18 +37,19 @@ export function validWorldState(w) {
       "pending",
       "contributions",
       "outcome",
+      "war",
     ]) ||
-    ![1, 2].includes(w.version) ||
+    ![1, 2, 3].includes(w.version) ||
     !integer(w.seed) ||
     w.seed > 0xffffffff ||
     !integer(w.clock) ||
     w.clock > 2400 ||
     !ERAS.some((e) => e.id === w.era) ||
-    w.outcome !== null
+    !validWar(w)
   )
     return false;
   if (
-    w.version === 2 &&
+    w.version >= 2 &&
     (!integer(w.fieldBaseline) || w.fieldBaseline > w.clock)
   )
     return false;
@@ -100,9 +102,13 @@ export function validWorldState(w) {
           (w.baseline.legacy && e.at === w.baseline.at)) &&
         (e.status !== "unobserved-extension" ||
           (spec.introduced === 2 &&
-            w.version === 2 &&
+            w.version >= 2 &&
             e.at === w.fieldBaseline &&
-            spec.at <= w.fieldBaseline))
+            spec.at <= w.fieldBaseline) ||
+          (spec.introduced === 3 &&
+            w.version >= 3 &&
+            e.at === w.war.baseline.at &&
+            spec.at <= w.war.baseline.at))
       );
     })
   )
@@ -112,7 +118,7 @@ export function validWorldState(w) {
     !Object.entries(w.contributions).every(
       ([id, c]) =>
         own(CONTRIBUTIONS, id) &&
-        (!CONTRIBUTIONS[id].field || w.version === 2) &&
+        (!CONTRIBUTIONS[id].field || w.version >= 2) &&
         only(c, ["at", "age", "source"]) &&
         integer(c.at) &&
         c.at <= w.clock &&
@@ -192,6 +198,7 @@ export function validWorld(s, moments) {
     );
   if (
     !validWorldState(w) ||
+    !validWarSources(s, moments) ||
     !only(k, ["version", "reports"]) ||
     k.version !== 1 ||
     !record(k.reports)
@@ -222,6 +229,14 @@ export function validWorld(s, moments) {
         integer(report.at) &&
         report.at <= w.clock &&
         event?.status === "occurred" &&
+        (!spec.outcome || w.outcome === spec.outcome) &&
+        (!spec.warLoss ||
+          w.war?.campaigns.some(
+            (c) =>
+              c.at <= report.at &&
+              c.after.condition === "lost" &&
+              c.before.condition !== "lost",
+          )) &&
         report.at >= event.at + spec.delay &&
         integer(report.age) &&
         report.age <= s.age &&

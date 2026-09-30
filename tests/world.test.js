@@ -65,7 +65,7 @@ test("02 all seven eras advance through simulation anchors, without choosing car
     assert.equal(w.era, era.id);
     assert.ok(validWorldState(w));
   }
-  assert.equal(w.outcome, null);
+  assert.equal(w.outcome, "stalemate"); // Task 11 resolves the historical scope; knowledge is still separate.
 });
 test("03 silent world event has no Moment, knowledge or history write", () => {
   const d = worldFixture("civilian", 160),

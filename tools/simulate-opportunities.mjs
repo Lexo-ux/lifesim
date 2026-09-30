@@ -13,6 +13,15 @@ export function simulateOpportunities(lives = 300) {
   const report = {
     lives,
     decisions: 0,
+    war: {
+      outcomesAtDeath: {},
+      knownOutcomes: {},
+      unknownOutcomes: 0,
+      personalContributions: 0,
+      ordinaryDuringWar: 0,
+      warMoments: 0,
+      byDirection: {},
+    },
     opportunities: {},
     directions: {},
     status: {},
@@ -86,6 +95,7 @@ export function simulateOpportunities(lives = 300) {
       for (const candidate of opportunities)
         if (eligible(s, meta, candidate)) availability.add(candidate.id);
       if (m.opportunity) {
+        if (m.id.startsWith("wa_")) report.war.warMoments++;
         sequence.push(m.id);
         count(report.opportunities, m.id);
         if (m.once !== false && visited.has(m.id)) report.onceRepeats++;
@@ -112,6 +122,7 @@ export function simulateOpportunities(lives = 300) {
             at - q.due,
           );
       const side =
+        // Policy is independent of every production random stream.
         (n * 17 + steps * 13 + (n % 3) * steps) % 7 < 4 ? "left" : "right";
       const before = performance.now(),
         result = choose(s, meta, side);
@@ -126,6 +137,8 @@ export function simulateOpportunities(lives = 300) {
         break;
       }
       if (!validStory(s)) report.invalidSaves++;
+      if (s.world.war?.active && !m.worldContext && !m.field)
+        report.war.ordinaryDuringWar++;
       report.world.maxQueue = Math.max(
         report.world.maxQueue,
         s.world.pending.length,
@@ -150,6 +163,19 @@ export function simulateOpportunities(lives = 300) {
     if (s.field?.status === "withdrawn") report.field.exits++;
     if (s.field?.active) report.field.unfinishedAtDeath++;
     const world = report.world;
+    count(report.war.outcomesAtDeath, s.world.outcome || "unresolved");
+    const learned = Object.keys(s.worldKnowledge.reports).find(
+      (id) => REPORTS[id].outcome,
+    );
+    if (learned) count(report.war.knownOutcomes, REPORTS[learned].outcome);
+    else report.war.unknownOutcomes++;
+    report.war.personalContributions += Object.keys(
+      s.world.war?.contributions || {},
+    ).length;
+    count(
+      report.war.byDirection,
+      `${s.life.direction || "undirected"}:${s.world.outcome || "unresolved"}:${learned ? "known" : "unknown"}`,
+    );
     count(world.erasAtDeath, s.world.era);
     world.maxEvents = Math.max(
       world.maxEvents,

@@ -103,3 +103,7 @@ Imports, tests y entrada HTML apuntan a las rutas nuevas. No hay copias duplicad
 ## Task 10 — field operations
 
 `content/field/catalog.js` defines seven authored operations; `content/moments/field.js` adapts them to the existing deck/queue. `src/systems/field.js` owns optional versioned instances and objective-specific resolution, delegating relationships to social and finite contributions to world. A separate persisted instance RNG commits uncertainty on acceptance. `field-schema.js` and `field-validation.js` validate authoring/saves; the UI adapter projects biography and requests existing semantic cues. No second selector, renderer, clock or career owner. World v2 migrates v1 prospectively for Bastion/history; completed legacy lives remain intact. See [FIELD_OPERATIONS](FIELD_OPERATIONS.md).
+
+## Task 11 — strategic World subsystem
+
+`content/world/war.js` owns finite fronts/campaigns/actions/outcome policy; `war-reports.js` and `content/moments/war.js` supply authored knowledge and personal decisions. `src/systems/war.js` is called by the existing World event queue and effect owner, with its own persisted uncertainty stream but no clock, deck or UI authority. `war-validation.js` and `validate-war.js` extend existing validation. Profile/Memorial project learned reports through the existing World adapter; inspectors/simulators stay development-only. Source: [THRESHOLD_WAR](THRESHOLD_WAR.md).
