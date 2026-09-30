@@ -7,7 +7,12 @@ import { updateAchievements } from "../systems/achievements.js";
 import { drawCard, currentCard } from "./deck.js";
 import { now } from "./conditions.js";
 import { meet, remember, npcYear } from "./npc.js";
-import { ending } from "./meta.js";
+import {
+  ending,
+  ensureLegacy,
+  collectLegacyEvidence,
+  observeLegacyMoment,
+} from "./meta.js";
 import {
   ensureLife,
   observeOccupation,
@@ -67,6 +72,7 @@ export function startLife(options, meta, seed) {
   s.awakening = pendingAwakening();
   ensureLife(s);
   ensureWorld(s);
+  ensureLegacy(s, meta, true);
   meta.lives++;
   drawCard(s, meta);
   updateAchievements(s, meta);
@@ -164,12 +170,20 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   const event = currentCard(s),
     option = event && socialChoice(s, event, side);
   if (!option) return { error: "No existe esa decisión." };
+  if (
+    event.compatibilityOnly &&
+    s.legacy &&
+    !s.legacy.compatibility.includes(event.id)
+  )
+    return { error: "Este recuerdo pertenece a un guardado anterior." };
   if (event.system === "awakening" && event.id !== awakeningMomentId(s))
     return { error: "Esta decisión ya cambió." };
   const next = structuredClone(s),
     nextMeta = structuredClone(meta);
   ensureLife(next);
   ensureWorld(next);
+  ensureLegacy(next, nextMeta);
+  observeLegacyMoment(next, event);
   const before = macroStats(s),
     previousStage = stage(s).id,
     startAge = s.age,
@@ -224,6 +238,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   scheduleAwakening(next);
   observeOccupation(next);
   const unlocked = updateAchievements(next, nextMeta);
+  collectLegacyEvidence(next);
   if (!next.alive) ending(next, nextMeta);
   const milestones = next.history
     .slice(historyStart)

@@ -39,6 +39,7 @@ export const FACTS = {
   training: ["started", "declined"],
 };
 export const FAMILIES = [
+  "life-echo",
   "field-offers",
   "field-affiliation",
   "world-news",

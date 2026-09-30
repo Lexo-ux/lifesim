@@ -29,9 +29,10 @@ export function updateAchievements(s, meta) {
         fresh.push(achievement);
       }
     }
-  if (!s.alive && !meta.finishedIds.includes(s.id)) {
+  if (!s.alive && !s.legacy?.finalized && !meta.finishedIds.includes(s.id)) {
     meta.completed++;
     meta.finishedIds.push(s.id);
+    meta.finishedIds = meta.finishedIds.slice(-20);
   }
   return fresh;
 }

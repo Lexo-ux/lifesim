@@ -1,4 +1,5 @@
 import { existsSync } from "node:fs";
+import { legacyContentErrors } from "../src/narrative/legacy-schema.js";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { CARDS } from "../content/moments/index.js";
@@ -145,6 +146,7 @@ export function validateContent({
   };
   const linked = new Set();
   for (const m of moments) {
+    for (const error of legacyContentErrors(m)) report(m.id, error);
     for (const error of opportunityErrors(m, byId)) report(m.id, error);
     if (!text(m.id) || !/^[a-z][a-z0-9_]*$/.test(m.id))
       report(m.id, "invalid Moment ID");

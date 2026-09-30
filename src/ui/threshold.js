@@ -1,3 +1,4 @@
+import { thresholdEcho } from "./legacy.js";
 import { THRESHOLD_ART } from "./art.js";
 import { animate, duration, reduced } from "./motion.js";
 import { thresholdSound } from "./audio.js";
@@ -30,7 +31,7 @@ export function thresholdScreen(data) {
       ? button("Recordar", "continue", "", "text-button")
       : "";
   return `<section class="threshold ${data.state ? "has-save" : ""} ${data.warning || data.migrated ? "has-note" : ""}" data-threshold-state="idle" aria-labelledby="page-title">
-    <header class="threshold-title"><h1 id="page-title">LIFESIM</h1><p>Cada vida deja algo.</p></header>
+    <header class="threshold-title"><h1 id="page-title">LIFESIM</h1><p>${esc(thresholdEcho(data.meta))}</p></header>
     <div class="threshold-scene" aria-hidden="true"><div class="threshold-frame">
       <img class="threshold-environment" src="${THRESHOLD_ART.environment}" width="768" height="1024" alt="" fetchpriority="high" decoding="async">
       <div class="threshold-lumen"></div>

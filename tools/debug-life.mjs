@@ -5,12 +5,14 @@ import { extendMeta } from "../src/narrative/meta.js";
 import { emptyMeta } from "../src/systems/achievements.js";
 import { inspectOpportunities } from "./inspect-opportunities.js";
 import { CARD_BY_ID } from "../content/moments/index.js";
+import { inspectLegacy } from "./inspect-legacy.js";
 const { values } = parseArgs({
   options: {
     seed: { type: "string", default: "1" },
     steps: { type: "string", default: "10" },
     side: { type: "string", default: "alternate" },
     opportunities: { type: "boolean", default: false },
+    legacy: { type: "boolean", default: false },
   },
 });
 const seed = Number(values.seed),
@@ -56,6 +58,7 @@ console.log(
       trace,
       state,
       meta,
+      ...(values.legacy ? { legacy: inspectLegacy(state, meta) } : {}),
       ...(values.opportunities
         ? { opportunities: inspectOpportunities(state, meta) }
         : {}),

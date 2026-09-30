@@ -203,52 +203,21 @@ test("cards drive existing education, careers, home ownership, savings and yearl
   choose(s, meta, "right");
   assert.ok(s.savings >= 1000);
 });
-test("cross-life archive progresses over five lives and remembers names and choices", () => {
+test("old selected Archive keeps its choice; fresh lives never resume the obsolete ladder", () => {
   const { s, meta } = setup();
+  delete s.legacy; // A Task 11 active save, before the extension existed.
   s.age = 30;
   force(s, "archive_envelope");
-  choose(s, meta, "right");
+  assert.equal(choose(s, meta, "right").error, undefined);
   assert.equal(meta.chapter, 1);
-  assert.equal(matches(s, meta, { chapter: 1, newLife: true }), false);
-  const die = (state) => {
-    state.stats.health = 0;
-    force(state, "quiet_day");
-    choose(state, meta, "left");
-    assert.equal(state.alive, false);
-  };
-  die(s);
-  let next = startLife({ name: "Otra persona" }, meta, 2);
+  s.stats.health = 0;
+  force(s, "quiet_day");
+  choose(s, meta, "left");
+  const next = startLife({ name: "Otra persona" }, meta, 2);
   next.age = 30;
-  assert.ok(eligible(next, meta, CARD_BY_ID.archive_recognition));
-  force(next, "archive_recognition");
-  assert.match(cardText(next, meta), /guardarlo/);
-  choose(next, meta, "right");
-  force(next, "archive_name");
-  assert.match(cardText(next, meta), /Alex/);
-  choose(next, meta, "left");
-  die(next);
-  next = startLife({}, meta, 3);
-  next.age = 30;
-  for (const id of ["archive_door", "archive_radio"]) {
-    assert.ok(eligible(next, meta, CARD_BY_ID[id]));
-    force(next, id);
-    choose(next, meta, "right");
-  }
-  die(next);
-  next = startLife({}, meta, 4);
-  next.age = 30;
-  assert.ok(eligible(next, meta, CARD_BY_ID.archive_cost));
-  force(next, "archive_cost");
-  choose(next, meta, "right");
-  die(next);
-  assert.ok(meta.endings.includes("La puerta abierta"));
-  next = startLife({}, meta, 5);
-  next.age = 30;
-  assert.ok(eligible(next, meta, CARD_BY_ID.archive_after_open));
-  force(next, "archive_after_open");
-  choose(next, meta, "left");
-  assert.equal(meta.chapter, 7);
-  assert.equal(meta.completed, 4);
+  for (const m of Object.values(CARD_BY_ID).filter((m) => m.compatibilityOnly))
+    assert.equal(eligible(next, meta, m), false);
+  assert.equal(meta.echoes[0].name, "Alex");
 });
 test("V2 migration preserves finances, education, achievements and delayed consequences without overwriting V2", () => {
   const storage = memory(),
