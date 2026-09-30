@@ -15,6 +15,7 @@ import { validLife } from "../systems/life-paths.js";
 import { validSocial } from "./social-validation.js";
 import { validField } from "./field-validation.js";
 import { validWorld } from "./world-validation.js";
+import { validLegacyState, validMeta } from "./meta-validation.js";
 export const SAVE_KEY = STORAGE_KEYS.current;
 const record = (x) => !!x && typeof x === "object" && !Array.isArray(x);
 const number = (n) => Number.isFinite(n) && n >= 0;
@@ -37,6 +38,7 @@ export function validStory(s) {
     validSocial(s, CARD_BY_ID) &&
     validWorld(s, CARD_BY_ID) &&
     validField(s, CARD_BY_ID) &&
+    validLegacyState(s, CARD_BY_ID) &&
     record(t) &&
     t.version === 3 &&
     Number.isInteger(t.month) &&
@@ -76,6 +78,7 @@ export function validStory(s) {
   );
 }
 function readMeta(raw) {
+  if (raw?.version === 3) return structuredClone(raw);
   const meta = extendMeta(emptyMeta());
   if (!record(raw)) return meta;
   for (const key of [
@@ -115,6 +118,7 @@ function readMeta(raw) {
           typeof e.ending === "string",
       )
       .slice(-20);
+  meta.finishedIds = meta.finishedIds.slice(-20);
   return meta;
 }
 export function load(storage = globalThis.localStorage) {
@@ -123,8 +127,20 @@ export function load(storage = globalThis.localStorage) {
     const raw = storage.getItem(SAVE_KEY);
     if (raw) {
       const data = JSON.parse(raw);
+      if (
+        data.meta?.version !== undefined &&
+        ![2, 3].includes(data.meta.version)
+      )
+        throw new Error("Unknown meta version");
+      if (data.state?.legacy && data.meta?.version !== 3)
+        throw new Error("Missing snapshot provenance");
       if (data.version !== 3 || (data.state && !validStory(data.state)))
         throw new Error("Invalid V3 save");
+      if (
+        data.meta?.version === 3 &&
+        !validMeta(data.meta, data.state, CARD_BY_ID)
+      )
+        throw new Error("Invalid legacy provenance");
       result.state = data.state || null;
       result.meta = readMeta(data.meta);
       result.settings = {
@@ -155,6 +171,7 @@ export function load(storage = globalThis.localStorage) {
 export function save(data, storage = globalThis.localStorage) {
   try {
     if (data.state && !validStory(data.state)) return false;
+    if (!validMeta(data.meta, data.state, CARD_BY_ID)) return false;
     storage.setItem(
       SAVE_KEY,
       JSON.stringify({

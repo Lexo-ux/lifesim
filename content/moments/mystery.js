@@ -163,4 +163,4 @@ export const MYSTERY = [
       chapter: 7,
     },
   ),
-];
+].map((moment) => ({ ...moment, compatibilityOnly: true }));

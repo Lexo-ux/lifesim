@@ -1,5 +1,9 @@
 // Pure schema checks shared by tooling. No expression evaluation, code or arbitrary state paths.
 import {
+  legacyRequirementSchema,
+  legacyConsequenceSchema,
+} from "./legacy-schema.js";
+import {
   socialRequirementSchema,
   socialConsequenceSchema,
 } from "./social-schema.js";
@@ -90,6 +94,8 @@ export function requirementErrors(r, byId, depth = 0) {
       return errors;
     }
   const social = socialRequirementSchema(r);
+  const legacy = legacyRequirementSchema(r);
+  if (legacy) return legacy;
   const field = fieldRequirementSchema(r);
   if (field) return field;
   if (social) return social;
@@ -160,6 +166,8 @@ export function consequenceErrors(e, byId) {
   if (!record(e)) return ["malformed consequence"];
   const errors = e.when !== undefined ? requirementErrors(e.when, byId) : [];
   const social = socialConsequenceSchema(e);
+  const legacy = legacyConsequenceSchema(e);
+  if (legacy) return [...errors, ...legacy];
   const field = fieldConsequenceSchema(e);
   if (field) return [...errors, ...field];
   if (social) return [...errors, ...social];

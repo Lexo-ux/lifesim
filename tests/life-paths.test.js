@@ -40,7 +40,11 @@ test("100 pre-opportunity childhoods match the full-state Task 06 golden from 99
       delete plain.life;
       delete plain.world;
       delete plain.worldKnowledge;
-      digest.update(JSON.stringify({ state: plain, meta }));
+      delete plain.legacy;
+      const oldMeta = structuredClone(meta);
+      delete oldMeta.legacy;
+      oldMeta.version = 2;
+      digest.update(JSON.stringify({ state: plain, meta: oldMeta }));
     };
     capture();
     while (state.age < 16 && state.alive) {

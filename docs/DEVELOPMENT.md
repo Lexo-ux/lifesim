@@ -115,3 +115,15 @@ Base `codex/hunters-field-operations@7f82916`, branch `codex/threshold-war`; no 
 - `tests/war.cjs` joins the browser runner: actual decisions, eight outcome deliveries, migration/reload, civilian/SSS contributions, temporal drag, memorial, mobile/desktop and accessibility. Ignored evidence: `output/qa/task11/`.
 
 Final Task 11 validation: 140 modules checked, **176/176 tests**, all fourteen browser suites, 5,000 autonomous worlds and 300 complete lives. Seventeen focused axe audits found no violations; no console/asset errors. Measurements, migration limits and iteration fixes: [THRESHOLD_WAR — Validation evidence](THRESHOLD_WAR.md#validation-evidence--task-11).
+
+## Task 12 validation and inspection
+
+Branch `codex/legacy-echoes`, base `codex/threshold-war@2f562bb`; do not merge main or begin Task 13. Contract: [LEGACY_AND_ECHOES](LEGACY_AND_ECHOES.md).
+
+- `node --test tests/legacy.test.js`: grouped scenarios 1–34, compatibility, provenance, bounds and production multi-life simulation.
+- `node tools/simulate-legacy.mjs 200 10`: 200 independent player histories, ten production lives each; independent QA decision policy, no overrides of production odds.
+- `npm run debug:life -- --seed 42 --steps 80 --legacy` muestra las tres capas sin tocar guardados.
+- `inspectLegacy(state, meta)` from `tools/inspect-legacy.js`: read-only three-layer inspection, frozen snapshot and rejected Echo reasons. Development tools are never imported by runtime.
+- `node tests/legacy.cjs` with the local server: card/Legacy/Memorial/Threshold/new-life journey, reload, five viewports, keyboard/touch and axe/reduced-motion/200%-text/forced-colors audits. Included in `npm run test:browser`. Captures and diagnostics go to ignored `output/qa/task12`.
+
+Task 12 final evidence: 150 modules, **197/197 tests**, all fifteen browser suites, 2,000 production lives across 200 player histories and one additional 50-life history. Fourteen focused axe audits, no console/resource errors; bounded records and zero first-life Echo/Archive/repetition/dead-end cases. Detailed diagnostics and limitations: [LEGACY_AND_ECHOES — Validation evidence](LEGACY_AND_ECHOES.md#validation-evidence).

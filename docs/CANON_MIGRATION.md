@@ -47,3 +47,7 @@ Seven authored operation families and Bastion's runtime presence use approved Hu
 ## Task 11 — strategic implementation targets
 
 Three abstract fronts over the existing two regions, campaign timing/thresholds, contribution magnitudes and outcome formulas are implementation targets only. No geography, final NPC destiny, new faction or strategic formula becomes canon. The eight public categories follow existing ending meanings; the reserved True Resolution and ultimate cause remain untouched. Military force, research, human continuity and understanding are separate inputs. Source: [THRESHOLD_WAR](THRESHOLD_WAR.md).
+
+## Task 12 — retire explanatory Archive progression
+
+The eight original mystery IDs are excluded from all fresh selection. Already selected/queued old units keep their saved choices and interpolation as compatibility-only content, not promoted canon. Old chapters never unlock modern Echoes. Iria and historical identities gain no cross-life awareness. Twenty new ambiguous impressions and eight perspectives implement the public possibilities in METANARRATIVE; their timing, vocabulary and evidence mappings are IMPLEMENTATION TARGET. Character knowledge, committed player discovery and private World truth remain distinct. No cause, repeated-life explanation or True Resolution recipe is written. The complete old-system disposition/ID audit is in [LEGACY_AND_ECHOES](LEGACY_AND_ECHOES.md#existing-system-audit).

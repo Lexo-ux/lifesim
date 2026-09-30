@@ -2,6 +2,7 @@ import { lifeContext } from "../systems/life-paths.js";
 import { socialRequirement } from "../systems/social.js";
 import { worldRequirement } from "../systems/world.js";
 import { fieldRequirement } from "../systems/field.js";
+import { legacyRequirement } from "./meta.js";
 import {
   OPPORTUNITY_SPACING,
   LEVELS,
@@ -22,6 +23,7 @@ export function evaluateRequirement(context, rule) {
     return v === undefined ? undefined : !v;
   }
   const { type, id, value } = rule;
+  if (type?.startsWith("meta-")) return legacyRequirement(context, rule);
   if (type?.startsWith("world-")) return worldRequirement(context, rule);
   if (type?.startsWith("field-")) return fieldRequirement(context, rule);
   const social = socialRequirement(context, rule);

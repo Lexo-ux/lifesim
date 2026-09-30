@@ -107,3 +107,7 @@ Imports, tests y entrada HTML apuntan a las rutas nuevas. No hay copias duplicad
 ## Task 11 — strategic World subsystem
 
 `content/world/war.js` owns finite fronts/campaigns/actions/outcome policy; `war-reports.js` and `content/moments/war.js` supply authored knowledge and personal decisions. `src/systems/war.js` is called by the existing World event queue and effect owner, with its own persisted uncertainty stream but no clock, deck or UI authority. `war-validation.js` and `validate-war.js` extend existing validation. Profile/Memorial project learned reports through the existing World adapter; inspectors/simulators stay development-only. Source: [THRESHOLD_WAR](THRESHOLD_WAR.md).
+
+## Task 12 — single cross-life owner
+
+`narrative/meta.js` owns pending evidence, frozen eligibility snapshot and idempotent death commit. The existing Task 07 predicate/consequence schema and selector serve twenty Echo Moments; no parallel narrative selector or random stream. Public registry/content stay in `content/legacy` and `content/moments/echoes.js`; persisted provenance is validated by `persistence/meta-validation.js`. UI projections are read-only. Private World truth never enters the collector: historical evidence comes from delivered reports. Meta version 3 and optional state extension version 1 preserve the V3 envelope. Complete contract and compatibility audit: [LEGACY_AND_ECHOES](LEGACY_AND_ECHOES.md).

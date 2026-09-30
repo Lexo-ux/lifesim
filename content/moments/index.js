@@ -9,6 +9,7 @@ import { SOCIAL_MOMENTS } from "./social.js";
 import { WORLD_MOMENTS } from "./world.js";
 import { FIELD_MOMENTS } from "./field.js";
 import { WAR_MOMENTS } from "./war.js";
+import { ECHO_MOMENTS } from "./echoes.js";
 export const CARDS = [
   ...EARLY,
   ...ARCS,
@@ -21,5 +22,6 @@ export const CARDS = [
   ...WORLD_MOMENTS,
   ...FIELD_MOMENTS,
   ...WAR_MOMENTS,
+  ...ECHO_MOMENTS,
 ];
 export const CARD_BY_ID = Object.fromEntries(CARDS.map((c) => [c.id, c]));

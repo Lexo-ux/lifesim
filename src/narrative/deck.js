@@ -5,7 +5,7 @@ import { COURSES } from "../../content/catalog.js";
 import { random } from "../engine/state.js";
 import { eligible, now } from "./conditions.js";
 import { meet } from "./npc.js";
-import { discover } from "./meta.js";
+import { discover, observeLegacyMoment } from "./meta.js";
 import { opportunityText } from "./opportunities.js";
 import {
   prepareSocialEncounter,
@@ -89,6 +89,7 @@ export function drawCard(s, meta) {
   prepareSocialEncounter(s, event);
   meet(s, event.npc);
   discover(meta, event);
+  observeLegacyMoment(s, event);
   return event;
 }
 export const currentCard = (s) => CARD_BY_ID[s.story.current];
