@@ -127,3 +127,7 @@ Branch `codex/legacy-echoes`, base `codex/threshold-war@2f562bb`; do not merge m
 - `node tests/legacy.cjs` with the local server: card/Legacy/Memorial/Threshold/new-life journey, reload, five viewports, keyboard/touch and axe/reduced-motion/200%-text/forced-colors audits. Included in `npm run test:browser`. Captures and diagnostics go to ignored `output/qa/task12`.
 
 Task 12 final evidence: 150 modules, **197/197 tests**, all fifteen browser suites, 2,000 production lives across 200 player histories and one additional 50-life history. Fourteen focused axe audits, no console/resource errors; bounded records and zero first-life Echo/Archive/repetition/dead-end cases. Detailed diagnostics and limitations: [LEGACY_AND_ECHOES — Validation evidence](LEGACY_AND_ECHOES.md#validation-evidence).
+
+## Task 14 verification
+
+Use node --test tests/resolution.test.js, the existing node tools/simulate-mysteries.mjs 100 10, and npm run debug:life -- --seed 42 --steps 120 --resolution. The full browser runner includes tests/resolution.cjs; screenshots/video/report are ignored local evidence under output/qa/task14. On this Windows host use BROWSER_CHANNEL=msedge. Contract: [TRUE_RESOLUTION](TRUE_RESOLUTION.md). Do not begin Task 15.

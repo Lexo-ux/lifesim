@@ -1,6 +1,7 @@
 import { esc } from "./helpers.js";
 import { reportText } from "../systems/world.js";
 import { REPORTS } from "../../content/world/reports.js";
+import { RESOLUTION_OUTCOME } from "../../content/resolution/catalog.js";
 import { OUTCOME_RULES } from "../../content/world/war.js";
 export function worldCue(event) {
   return REPORTS[event.worldReport]?.presentation || null;
@@ -30,7 +31,10 @@ export function worldMemory(s) {
     (id) => REPORTS[id]?.outcome,
   );
   const name = report
-    ? OUTCOME_RULES[REPORTS[report].outcome].name
+    ? (REPORTS[report].outcome === "true-resolution"
+        ? RESOLUTION_OUTCOME
+        : OUTCOME_RULES[REPORTS[report].outcome]
+      ).name
     : "desconocido";
   return `<p>Destino de la humanidad: ${esc(name)}.</p>` + worldProfile(s);
 }

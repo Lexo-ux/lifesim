@@ -33,6 +33,7 @@ import {
   FLOWS,
   RESERVES,
 } from "../../content/awakening/rules.js";
+import { resolutionConsequenceSchema } from "./resolution-schema.js";
 const record = (x) => !!x && typeof x === "object" && !Array.isArray(x);
 const has = (o, k) => Object.hasOwn(o, k);
 const integer = (n) => Number.isInteger(n) && n >= 0;
@@ -93,6 +94,12 @@ export function requirementErrors(r, byId, depth = 0) {
       }
       return errors;
     }
+  if (r.type === "resolution-synthesis")
+    return ["flow", "boundary", "vein"].includes(r.id) &&
+      ["current", "recognized"].includes(r.mode) &&
+      keys.length === 3
+      ? []
+      : ["invalid synthesis requirement"];
   const social = socialRequirementSchema(r);
   const legacy = legacyRequirementSchema(r);
   if (legacy) return legacy;
@@ -163,6 +170,8 @@ export function requirementErrors(r, byId, depth = 0) {
     : [`invalid requirement ${r.type}`];
 }
 export function consequenceErrors(e, byId) {
+  if (e && resolutionConsequenceSchema(e))
+    return resolutionConsequenceSchema(e);
   if (!record(e)) return ["malformed consequence"];
   const errors = e.when !== undefined ? requirementErrors(e.when, byId) : [];
   const social = socialConsequenceSchema(e);

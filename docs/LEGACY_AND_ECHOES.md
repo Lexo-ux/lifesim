@@ -1,6 +1,6 @@
 # Legacy and Echoes — Task 12
 
-Branch `codex/legacy-echoes`, base `codex/threshold-war@2f562bb`. This is the public runtime contract, not a cosmological explanation. The vocabulary, sources and timing below are **IMPLEMENTATION TARGET**, within [METANARRATIVE](../lore/METANARRATIVE.md). No cause, repeated-life explanation, final entity, True Resolution recipe or NPC awareness is established. Task 13 is not implemented.
+Branch `codex/legacy-echoes`, base `codex/threshold-war@2f562bb`. This is the public runtime contract, not a cosmological explanation. The vocabulary, sources and timing below are **IMPLEMENTATION TARGET**, within [METANARRATIVE](../lore/METANARRATIVE.md). No cause, repeated-life explanation, final entity, True Resolution recipe or NPC awareness is established. Tasks 13–14 extend the evidence contract as documented at the end; no complete solution enters inherited protagonist knowledge.
 
 ## Ownership and three knowledge layers
 
@@ -131,3 +131,7 @@ Limits: finite initial vocabulary and twenty authored Echoes; no automatic metan
 ## Task 13 extension
 
 Task 13 adds finite public observation and Constant IDs to `DISCOVERIES`, with typed provenance, using this same collector/death commit/frozen snapshot. The six incident graphs and their private premises remain per-life and are never inherited. Existing twenty Echoes, their eligibility, old Archive compatibility, storage keys and Awakening firewall are unchanged. The bounded evidence contract and source validation are in [DEEP_MYSTERIES](DEEP_MYSTERIES.md).
+
+## Task 14 extension
+
+Finite delivered recognition IDs reuse this collector/death commit. Optional theory history and witnessed-operation first receipts stay inside the same Legacy owner, outside frozen protagonist input. The True Resolution inherited-outcome guard remains intact. [TRUE_RESOLUTION](TRUE_RESOLUTION.md) specifies the knowledge firewall and finite bounds.

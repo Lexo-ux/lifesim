@@ -9,6 +9,7 @@ import {
 import { OCCUPATION_DOMAINS } from "../../content/life-paths/catalog.js";
 import { REPORTS } from "../../content/world/reports.js";
 import { OBSERVATIONS } from "../../content/mysteries/catalog.js";
+import { OBSERVATION_LEGACY } from "../../content/resolution/catalog.js";
 const now = (s) => s.age * 12 + (s.story?.month || 0);
 export const emptyEvidence = () => ({
   perspectives: {},
@@ -107,7 +108,7 @@ export function observeLegacyMoment(s, event) {
     const id = event.worldReport;
     if (REPORT_DISCOVERIES[id])
       record(s, "discoveries", REPORT_DISCOVERIES[id], origin(s, "report", id));
-    if (REPORTS[id]?.outcome)
+    if (REPORTS[id]?.outcome && REPORTS[id].outcome !== "true-resolution")
       record(s, "outcomes", REPORTS[id].outcome, origin(s, "report", id));
     if (id === "outcome_alliance")
       record(s, "perspectives", "contact", origin(s, "report", id));
@@ -124,6 +125,14 @@ export function applyLegacyConsequence(s, e, moment) {
 // No access to s.world, NPC private circumstances or previous-life raw state.
 export function collectLegacyEvidence(s) {
   if (!s.legacy || s.legacy.finalized) return;
+  for (const [id, value] of Object.entries(s.resolution?.observations || {}))
+    if (OBSERVATION_LEGACY[id])
+      record(
+        s,
+        "discoveries",
+        OBSERVATION_LEGACY[id],
+        origin(s, "resolution", id, value.at),
+      );
   for (const [id, value] of Object.entries(s.mystery?.observations || {}))
     if (OBSERVATIONS[id]?.legacy)
       record(s, "discoveries", id, origin(s, "mystery", id, value.at));
@@ -176,7 +185,7 @@ export function collectLegacyEvidence(s) {
     const source = origin(s, "report", id, r.at);
     if (REPORT_DISCOVERIES[id])
       record(s, "discoveries", REPORT_DISCOVERIES[id], source);
-    if (REPORTS[id]?.outcome)
+    if (REPORTS[id]?.outcome && REPORTS[id].outcome !== "true-resolution")
       record(s, "outcomes", REPORTS[id].outcome, source);
     if (id === "outcome_alliance") record(s, "perspectives", "contact", source);
   }
@@ -213,6 +222,14 @@ export function ending(s, meta) {
   if (!s.legacy) return;
   collectLegacyEvidence(s);
   const l = meta.legacy;
+  if (s.resolution && Object.keys(s.resolution.hypotheses).length) {
+    const ledger = (l.resolution ||= { version: 1, records: {}, theories: {} });
+    for (const [id, chain] of Object.entries(s.resolution.hypotheses)) {
+      const theory = (ledger.theories[id] ||= {});
+      for (const x of chain)
+        theory[x.value] ||= { life: s.id, source: x.source, at: x.at };
+    }
+  }
   if (!l.lives.some((v) => v.id === s.id)) {
     l.revision++;
     for (const kind of Object.keys(emptyEvidence()))
@@ -243,4 +260,24 @@ export function ending(s, meta) {
   }
   meta.finishedIds = meta.finishedIds.slice(-LEGACY_LIMITS.lives);
   s.legacy.finalized = true;
+}
+
+// An authored operational result may be retained while its participant still lives.
+// This player record is deliberately absent from frozen eligibility snapshots.
+// It never commits pending discoveries early or imports a private previous World.
+export function rememberResolutionResult(s, meta) {
+  const o = s.resolution?.operation;
+  if (o?.result !== "completed" || !s.life?.decisions.rs_hold) return;
+  const ledger = (meta.legacy.resolution ||= {
+    version: 1,
+    records: {},
+    theories: {},
+  });
+  ledger.records[o.strategy] ||= {
+    life: s.id,
+    at: o.resolvedAt,
+    source: "rs_hold",
+    strategy: o.strategy,
+    result: "true-resolution",
+  };
 }

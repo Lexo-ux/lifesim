@@ -21,6 +21,11 @@ import {
   awakeningMomentId,
   interpolateAwakening,
 } from "../systems/awakening.js";
+import {
+  resolutionMomentId,
+  prepareResolutionMoment,
+} from "../systems/resolution.js";
+import { OPERATION_TEXT } from "../../content/resolution/presentation.js";
 
 export function pathAvailable(s, event) {
   if (event.id === "bicycle" && s.transport === "bike") return false;
@@ -61,10 +66,11 @@ export function drawCard(s, meta) {
     s.story.current = null;
     return null;
   }
-  const interruption = awakeningMomentId(s);
+  const interruption = awakeningMomentId(s) || resolutionMomentId(s);
   if (interruption) {
     const event = CARD_BY_ID[interruption];
     s.story.current = interruption;
+    if (event.resolution) prepareResolutionMoment(s, event);
     discover(meta, event);
     return event;
   }
@@ -90,17 +96,26 @@ export function drawCard(s, meta) {
   }
   s.story.current = event.id;
   prepareWorldMoment(s, event);
+  prepareResolutionMoment(s, event);
   prepareFieldMoment(s, event);
   prepareSocialEncounter(s, event);
   prepareMysteryMoment(s, event, evaluateRequirement, lifeContext);
   meet(s, event.npc);
   discover(meta, event);
   observeLegacyMoment(s, event);
-  if (event.mystery) collectLegacyEvidence(s);
+  if (event.mystery || event.resolution) collectLegacyEvidence(s);
   return event;
 }
 export const currentCard = (s) => CARD_BY_ID[s.story.current];
 export function cardText(s, meta, event = currentCard(s)) {
+  if (event.id === "rs_result")
+    return OPERATION_TEXT[s.resolution.operation.result] || event.text;
+  if (event.id === "rs_hold") {
+    if (s.resolution.operation.strategy === "forced")
+      return OPERATION_TEXT.forced_hold;
+    if (!s.resolution.operation.support.services.includes("contact"))
+      return OPERATION_TEXT.harmonic_exposed;
+  }
   if (event.mystery) {
     const extra = BEATS[event.id].observations.filter(
       (id) => OBSERVATIONS[id].when && s.mystery?.observations[id],

@@ -6,8 +6,28 @@ import { CARD_BY_ID } from "../content/moments/index.js";
 import { BEATS, INCIDENT_BY_ID } from "../content/mysteries/catalog.js";
 import { validStory } from "../src/persistence/storage.js";
 import { validMeta } from "../src/persistence/meta-validation.js";
+import { soulReferenceReady } from "../src/systems/resolution.js";
 export function simulateMysteries(players = 300, livesPerPlayer = 10) {
   const r = {
+    resolution: {
+      ordinary: 0,
+      trueResolution: 0,
+      forced: 0,
+      harmonic: 0,
+      partial: 0,
+      aborted: 0,
+      soulReference: 0,
+      nonAwakenedReference: 0,
+      civilian: 0,
+      field: 0,
+      hypotheses: 0,
+      supersededHypotheses: 0,
+      noa: 0,
+      immutableReceipts: 0,
+      supersededCampaigns: 0,
+      autoConversions: 0,
+      secondClocks: 0,
+    },
     players,
     lives: 0,
     decisions: 0,
@@ -36,11 +56,21 @@ export function simulateMysteries(players = 300, livesPerPlayer = 10) {
   for (let player = 1; player <= players; player++) {
     const meta = extendMeta(emptyMeta());
     for (let life = 0; life < livesPerPlayer; life++) {
+      const priorReceipt = JSON.stringify(
+        meta.legacy.resolution?.records || {},
+      );
       const s = startLife(
         { name: `Persona ${player}` },
         meta,
         (player * 7919 + life * 104729) >>> 0,
       );
+      if (
+        JSON.stringify(meta.legacy.resolution?.records || {}) !== priorReceipt
+      )
+        throw Error("Previous realization mutated");
+      r.resolution.immutableReceipts += Object.keys(
+        meta.legacy.resolution?.records || {},
+      ).length;
       s.id = `mystery-simulation-${player}-${life}`;
       const visited = new Set();
       let steps = 0;
@@ -86,6 +116,35 @@ export function simulateMysteries(players = 300, livesPerPlayer = 10) {
         }
         r.maxQueue = Math.max(r.maxQueue, s.story.queue.length);
       }
+      const rr = r.resolution,
+        x = s.resolution,
+        o = x?.operation;
+      if (s.world.outcome)
+        rr[
+          s.world.outcome === "true-resolution" ? "trueResolution" : "ordinary"
+        ]++;
+      if (o?.result === "completed") rr[o.strategy]++;
+      if (o?.result === "partial") rr.partial++;
+      if (o?.result === "aborted") rr.aborted++;
+      if (soulReferenceReady(s)) {
+        rr.soulReference++;
+        if (s.awakening.status === "ordinary") rr.nonAwakenedReference++;
+      }
+      if (x?.observations.strata) rr.civilian++;
+      if (x?.observations.field_branch) rr.field++;
+      if (x?.observations.noa) rr.noa++;
+      for (const chain of Object.values(x?.hypotheses || {})) {
+        rr.hypotheses += chain.length;
+        rr.supersededHypotheses += chain.some((c) => c.value === "superseded")
+          ? 1
+          : 0;
+      }
+      rr.supersededCampaigns += Object.entries(s.world.events).filter(
+        ([id, v]) => id.startsWith("war_") && v.status === "superseded",
+      ).length;
+      if (o?.strategy === "forced" && !s.life.decisions.rs_forced_strategy)
+        rr.autoConversions++;
+      if (x?.clock || x?.worldClock || x?.otherClock) rr.secondClocks++;
       r.lives++;
       if (s.alive) r.deadEnds++;
       for (const [id, i] of Object.entries(s.mystery?.incidents || {})) {

@@ -52,7 +52,9 @@ const discovery = (name, text, origin) => ({
   status: "IMPLEMENTATION TARGET",
   canon: "lore/METANARRATIVE.md",
 });
+import { RESOLUTION_DISCOVERIES } from "../resolution/catalog.js";
 export const DISCOVERIES = {
+  ...RESOLUTION_DISCOVERIES,
   ...MYSTERY_DISCOVERIES,
   incomplete_model: discovery(
     "Una explicación incompleta",

@@ -17,6 +17,12 @@ import {
   OCCUPATION_DOMAINS,
   DOMAINS,
 } from "../../content/life-paths/catalog.js";
+import {
+  OBSERVATION_LEGACY,
+  HYPOTHESES,
+  HYPOTHESIS_STATES,
+} from "../../content/resolution/catalog.js";
+import { RESOLUTION_SCENES } from "../../content/moments/resolution.js";
 const obj = (x) => !!x && typeof x === "object" && !Array.isArray(x);
 const exact = (x, keys) =>
   obj(x) &&
@@ -40,6 +46,8 @@ const list = (v, allowed, limit = allowed.length) =>
   v.every((id) => allowed.includes(id));
 function sourceValid(source, kind, id, moments) {
   if (!exact(source, ["kind", "id", "at"]) || !n(source.at, 2400)) return false;
+  if (source.kind === "resolution")
+    return kind === "discoveries" && OBSERVATION_LEGACY[source.id] === id;
   if (source.kind === "mystery")
     return (
       kind === "discoveries" &&
@@ -152,6 +160,8 @@ export function validLegacyState(s, moments) {
         return false;
       if (source.kind === "report")
         return !!s.worldKnowledge?.reports[source.id];
+      if (source.kind === "resolution")
+        return s.resolution?.observations[source.id]?.at === source.at;
       if (source.kind === "mystery")
         return s.mystery?.observations[source.id]?.at === source.at;
       if (source.kind === "mystery-constant")
@@ -287,7 +297,14 @@ export function validMeta(meta, s, moments) {
     return false;
   const l = meta.legacy;
   if (
-    !exact(l, ["version", "revision", ...kinds, "lives"]) ||
+    !exact(l, [
+      "version",
+      "revision",
+      ...kinds,
+      "lives",
+      ...(l.resolution === undefined ? [] : ["resolution"]),
+    ]) ||
+    !validResolutionLedger(l.resolution) ||
     l.version !== 1 ||
     !n(l.revision) ||
     !Array.isArray(l.lives) ||
@@ -356,6 +373,54 @@ export function validMeta(meta, s, moments) {
     )
       return false;
     if (s.legacy.finalized && !l.lives.some((v) => v.id === s.id)) return false;
+  }
+  return true;
+}
+
+function validResolutionLedger(x) {
+  if (x === undefined) return true;
+  if (
+    !exact(x, ["version", "records", "theories"]) ||
+    x.version !== 1 ||
+    !obj(x.records) ||
+    !obj(x.theories)
+  )
+    return false;
+  for (const [id, r] of Object.entries(x.records))
+    if (
+      !["harmonic", "forced"].includes(id) ||
+      !exact(r, ["life", "at", "source", "strategy", "result"]) ||
+      !text(r.life) ||
+      !n(r.at, 2400) ||
+      r.at < 504 ||
+      r.source !== "rs_hold" ||
+      r.strategy !== id ||
+      r.result !== "true-resolution"
+    )
+      return false;
+  for (const [id, t] of Object.entries(x.theories)) {
+    if (!HYPOTHESES[id] || !obj(t) || !t.proposed) return false;
+    for (const [status, p] of Object.entries(t))
+      if (
+        !HYPOTHESIS_STATES.includes(status) ||
+        !exact(p, ["life", "source", "at"]) ||
+        !text(p.life) ||
+        !n(p.at, 2400) ||
+        !RESOLUTION_SCENES[p.source] ||
+        !["left", "right"].some((side) =>
+          RESOLUTION_SCENES[p.source][side].consequences?.some(
+            (e) =>
+              (e.op === "resolution-hypothesis" &&
+                e.id === id &&
+                e.value === status) ||
+              (e.op === "resolution-revise" &&
+                (e.id === id ||
+                  { circulation: "absorption", boundary: "isolation" }[e.id] ===
+                    id)),
+          ),
+        )
+      )
+        return false;
   }
   return true;
 }

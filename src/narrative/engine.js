@@ -9,6 +9,7 @@ import { now } from "./conditions.js";
 import { meet, remember, npcYear } from "./npc.js";
 import {
   ending,
+  rememberResolutionResult,
   ensureLegacy,
   collectLegacyEvidence,
   observeLegacyMoment,
@@ -32,6 +33,10 @@ import {
   advanceAwakening,
   awakeningMomentId,
 } from "../systems/awakening.js";
+import {
+  resolutionMomentId,
+  resolveResolutionChoice,
+} from "../systems/resolution.js";
 
 export function attachStory(s) {
   if (s.story) return s;
@@ -180,6 +185,8 @@ export function choose(s, meta, side, expectedId = s.story.current) {
     return { error: "Este recuerdo pertenece a un guardado anterior." };
   if (event.system === "awakening" && event.id !== awakeningMomentId(s))
     return { error: "Esta decisión ya cambió." };
+  if (event.system === "resolution" && event.id !== resolutionMomentId(s))
+    return { error: "Esta decisión ya cambió." };
   const next = structuredClone(s),
     nextMeta = structuredClone(meta);
   ensureLife(next);
@@ -204,6 +211,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   observeOccupation(next);
   applyLifeConsequences(next, event, side, evaluateRequirement, option);
   resolveMysteryChoice(next, event, side, evaluateRequirement, lifeContext);
+  resolveResolutionChoice(next, event, side);
   for (const flag of option.flags || []) next.flags[flag] = true;
   for (const flag of option.metaFlags || []) nextMeta.flags[flag] = true;
   if (event.chapter) {
@@ -242,6 +250,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   observeOccupation(next);
   const unlocked = updateAchievements(next, nextMeta);
   collectLegacyEvidence(next);
+  rememberResolutionResult(next, nextMeta);
   if (!next.alive) ending(next, nextMeta);
   const milestones = next.history
     .slice(historyStart)

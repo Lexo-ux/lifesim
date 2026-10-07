@@ -17,6 +17,7 @@ import { validField } from "./field-validation.js";
 import { validWorld } from "./world-validation.js";
 import { validLegacyState, validMeta } from "./meta-validation.js";
 import { validMystery } from "./mystery-validation.js";
+import { validResolution } from "./resolution-validation.js";
 export const SAVE_KEY = STORAGE_KEYS.current;
 const record = (x) => !!x && typeof x === "object" && !Array.isArray(x);
 const number = (n) => Number.isFinite(n) && n >= 0;
@@ -41,6 +42,7 @@ export function validStory(s) {
     validField(s, CARD_BY_ID) &&
     validLegacyState(s, CARD_BY_ID) &&
     validMystery(s) &&
+    validResolution(s, CARD_BY_ID) &&
     record(t) &&
     t.version === 3 &&
     Number.isInteger(t.month) &&

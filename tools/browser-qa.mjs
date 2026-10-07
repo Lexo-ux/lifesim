@@ -37,6 +37,7 @@ try {
     "tests/war.cjs",
     "tests/legacy.cjs",
     "tests/mysteries.cjs",
+    "tests/resolution.cjs",
   ]) {
     const test = spawn(process.execPath, [file], {
       env: { ...process.env, BASE_URL: base },
