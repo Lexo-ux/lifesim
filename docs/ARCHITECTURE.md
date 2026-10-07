@@ -115,3 +115,7 @@ Imports, tests y entrada HTML apuntan a las rutas nuevas. No hay copias duplicad
 ## Task 13 — bounded mystery evidence
 
 `content/mysteries` owns finite authored incidents; `content/moments/deep-mysteries.js` adapts them to the existing deck. `systems/mysteries.js` owns optional local evidence/cursor state, while Task 07 still selects/schedules and Task 12 still commits cross-life knowledge. Persistence validates references/choice provenance; UI projects delivered observations only. No new clock, RNG, renderer or meta owner. [DEEP_MYSTERIES](DEEP_MYSTERIES.md).
+
+## Task 14 — current-life synthesis and planetary operation
+
+The existing deck/queue adapts content/resolution; systems/resolution owns optional local evidence/preparation/cursor, with pure result predicates shared with persistence. World finalizes actual planetary results and War stores provenance. Legacy alone records player precedents; UI projects delivered knowledge and reuses semantic presentation. No added RNG, clock, renderer, dependency or duplicated world. [TRUE_RESOLUTION](TRUE_RESOLUTION.md).

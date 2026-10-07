@@ -16,6 +16,7 @@ import { applyWorldConsequence } from "./world.js";
 import { applyFieldConsequence } from "./field.js";
 import { applySocialConsequence, interpolateSocial } from "./social.js";
 import { applyLegacyConsequence } from "../narrative/meta.js";
+import { applyResolutionConsequence } from "./resolution.js";
 export const lifeMonth = (s) => s.age * 12 + (s.story?.month || 0);
 export function ensureLife(s) {
   if (!s.alive || s.life) return s.life;
@@ -108,6 +109,7 @@ export function lifeContext(s) {
     worldKnowledge: s.worldKnowledge,
     field: s.field,
     legacy: s.legacy,
+    resolution: s.resolution,
   };
 }
 // Common effects operate only on this extension; old operations still own degrees/jobs/money.
@@ -129,6 +131,7 @@ export function applyLifeConsequences(
   }
   for (const effect of option.consequences || []) {
     if (effect.when && !evaluate(lifeContext(s), effect.when)) continue;
+    if (applyResolutionConsequence(s, effect, event)) continue;
     if (applyLegacyConsequence(s, effect, event)) continue;
     if (applySocialConsequence(s, effect, event)) continue;
     if (applyWorldConsequence(s, effect, event)) continue;

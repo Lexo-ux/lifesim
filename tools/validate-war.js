@@ -1,3 +1,4 @@
+import { RESOLUTION_REPORTS } from "../content/resolution/catalog.js";
 import {
   FRONTS,
   CAMPAIGNS,
@@ -160,7 +161,15 @@ export function validateWarContent({
     )
   )
     errors.push("unsupported/malformed public outcome");
-  for (const [id, r] of Object.entries(reports))
+  for (const [id, r] of Object.entries(reports)) {
+    if (id === "resolution_confirmed") {
+      if (
+        JSON.stringify(r) !==
+        JSON.stringify(RESOLUTION_REPORTS.resolution_confirmed)
+      )
+        errors.push("invalid planetary outcome report");
+      continue;
+    }
     if (
       r.outcome &&
       (!publicIDs.includes(r.outcome) ||
@@ -169,6 +178,7 @@ export function validateWarContent({
         r.text !== outcomes[r.outcome]?.text)
     )
       errors.push(`invalid outcome report ${id}`);
+  }
   for (const id of publicIDs)
     if (Object.values(reports).filter((r) => r.outcome === id).length !== 1)
       errors.push(`missing/duplicate outcome report ${id}`);

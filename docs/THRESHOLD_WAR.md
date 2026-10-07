@@ -1,6 +1,6 @@
 # The Threshold War — Task 11
 
-Primary technical contract. Base `codex/hunters-field-operations@7f829166a52218209220163d176bfcdacea54ccd`; branch `codex/threshold-war`. Canonical meanings remain in `/lore`. **All geography, scales, thresholds, selection weights, outcome compatibility and dates below are IMPLEMENTATION TARGET**, not new canon. No True Resolution method, ultimate cause, repeated-life explanation or tactical combat is implemented.
+Primary technical contract. Base `codex/hunters-field-operations@7f829166a52218209220163d176bfcdacea54ccd`; branch `codex/threshold-war`. Canonical meanings remain in `/lore`. **All geography, scales, thresholds, selection weights, outcome compatibility and dates below are IMPLEMENTATION TARGET**, not new canon. Task 11 itself implements no True Resolution method, ultimate cause, repeated-life explanation or tactical combat. The narrow Task 14 extension is described at the end and in TRUE_RESOLUTION.md.
 
 ## Ownership and activation
 
@@ -97,3 +97,7 @@ Final validation on 2026-09-29: `npm run check` passed **140 modules** plus impo
 Task 11 browser QA played five viewport scenarios (360×640, 360×800, 390×844, 430×932, 1440×900), five actual decisions to learn each of the eight natural outcome fixtures, and a twenty-decision journey containing eighteen ordinary decisions while six campaigns accumulated. Civilian contribution, contextual SSS intervention, Task 10 migration/reload, frozen early death, known/unknown memorial and new life passed against pure-engine state comparisons. Seventeen axe audits found zero violations; console/asset errors were zero. Keyboard/touch, reduced motion, forced colors and 200% narrative text passed. Mobile/desktop, outcome, memorial and enlarged-text captures were visually reviewed. Existing presentation lifecycle/resource checks also passed.
 
 The final partial-drag sample recorded 247 frames, p95 10.2 ms, maximum 60.1 ms, no observed long tasks and unchanged gameplay state. This is desktop Edge at mobile viewport sizes, not a physical-phone/Safari certification. Evidence remains ignored under `output/qa/task11/`; full test and simulation logs remain under `output/`.
+
+## Task 14 extension
+
+Eight ordinary rules remain unchanged. World may now freeze the ninth public category early through a valid attributable planetary operation; War v2 stores that receipt and future invalid strategic windows become superseded. No Hunter-activity multiplier, rank modifier or new strategic RNG. [TRUE_RESOLUTION](TRUE_RESOLUTION.md) owns this narrow exception and delayed knowledge delivery.

@@ -58,3 +58,7 @@ Meta v2 is safely read into v3 with an empty modern ledger; old chapters, record
 ## Task 13 — optional mystery evidence
 
 `state.mystery.version = 1` is created only when a new incident is actually selected. Task 12 active/completed saves remain unexpanded on load; no fabricated past clues. Finite instance cursors, observation provenance and typed constants/scars are validated by `mystery-validation.js`. New discovery IDs reuse meta version 3 and its existing pending/commit/snapshot lifecycle with typed `mystery` / `mystery-constant` sources. No envelope or key change, no RNG migration and no inherited physical incidents. [DEEP_MYSTERIES](DEEP_MYSTERIES.md).
+
+## Task 14 — optional Resolution and attributable World result
+
+Resolution v1 is created lazily by selected adult content; existing saves remain unexpanded. War v2 is used only for a completed valid planetary operation, with immediate frozen provenance and superseded future campaigns. Player-only result/theory records extend the existing Legacy ledger but never its protagonist eligibility snapshot or inherited outcome whitelist. Unknown data fails closed. [TRUE_RESOLUTION](TRUE_RESOLUTION.md) owns the exact contract.

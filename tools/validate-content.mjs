@@ -22,6 +22,7 @@ import {
   SKILL_LABELS,
 } from "../content/catalog.js";
 
+import { validateResolution } from "./validate-resolution.js";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const record = (v) => !!v && typeof v === "object" && !Array.isArray(v);
 const text = (v) => typeof v === "string" && v.trim().length > 0;
@@ -158,7 +159,7 @@ export function validateContent({
     if (!text(m.text)) report(m.id, "missing dialogue");
     if (!(
       Number.isInteger(m.months) &&
-      m.months >= (m.system === "awakening" ? 0 : 1) &&
+      m.months >= (["awakening", "resolution"].includes(m.system) ? 0 : 1) &&
       m.months <= 12
     ))
       report(m.id, "invalid month duration");
@@ -245,6 +246,7 @@ export function validateContent({
     ...validateWarContent(),
     ...validateFieldContent(undefined, moments),
     ...validateMysteries(moments),
+    ...validateResolution(moments),
   ];
 }
 if (

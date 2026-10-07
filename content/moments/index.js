@@ -11,7 +11,9 @@ import { FIELD_MOMENTS } from "./field.js";
 import { WAR_MOMENTS } from "./war.js";
 import { ECHO_MOMENTS } from "./echoes.js";
 import { DEEP_MYSTERIES } from "./deep-mysteries.js";
+import { RESOLUTION_MOMENTS } from "./resolution.js";
 export const CARDS = [
+  ...RESOLUTION_MOMENTS,
   ...EARLY,
   ...ARCS,
   ...LATER,

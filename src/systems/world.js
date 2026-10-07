@@ -12,6 +12,8 @@ import {
   CONTRIBUTIONS,
 } from "../../content/world/catalog.js";
 import { WORLD_EVENTS, WORLD_EVENT_BY_ID } from "../../content/world/events.js";
+import { operationResult } from "./resolution-rules.js";
+import { SUPERSEDED_EVENTS } from "../../content/resolution/catalog.js";
 import { REPORTS } from "../../content/world/reports.js";
 import { CANONICAL_NPCS, INSTITUTIONS } from "../../content/social/catalog.js";
 
@@ -91,7 +93,9 @@ export function ensureWorld(s) {
       const w = s.world;
       w.version = 3;
       attachWar(w, true);
-      for (const e of WORLD_EVENTS.filter((e) => e.introduced === 3)) {
+      for (const e of WORLD_EVENTS.filter(
+        (e) => e.introduced === 3 && e.at !== null,
+      )) {
         if (e.war === "resolve" && e.at <= w.clock)
           w.pending.push({ id: e.id, due: w.clock + 1, source: "chronology" });
         else if (e.at <= w.clock)
@@ -223,7 +227,8 @@ export function advanceWorld(w, target) {
         e.variants.find((v) => (roll -= v.weight) < 0) || e.variants.at(-1);
     }
     for (const effect of [...e.effects, ...(variant?.effects || [])])
-      applyWorldEffect(w, effect);
+      if (w.outcome !== "true-resolution" || !e.anchor || effect.op === "era")
+        applyWorldEffect(w, effect);
     if (e.war) processWarEvent(w, e, applyWorldEffect);
     w.events[e.id] = {
       status: "occurred",
@@ -236,6 +241,78 @@ export function advanceWorld(w, target) {
 }
 export function advanceLifeWorld(s, elapsed) {
   if (s.world) advanceWorld(s.world, s.world.clock + Math.max(0, elapsed));
+}
+// The existing World owner accepts a completed, attributable planetary operation.
+// No random draw, knowledge delivery or character death occurs here.
+export function finalizeResolutionWorld(s, source) {
+  const w = s.world,
+    o = s.resolution?.operation;
+  if (
+    !w ||
+    w.outcome ||
+    !o?.activated ||
+    o.result !== "completed" ||
+    o.resolvedAt !== w.clock ||
+    !["harmonic", "forced"].includes(o.strategy) ||
+    !o.support ||
+    s.life?.decisions[source]?.side === undefined
+  )
+    throw Error("Invalid planetary operation provenance");
+  const decision = s.life.decisions[source];
+  if (
+    source !== "rs_hold" ||
+    o.cursor !== source ||
+    decision.at !== w.clock ||
+    operationResult(
+      o.strategy,
+      o.support,
+      decision.side === "left" ? "sustain" : "withdraw",
+    ) !== "completed" ||
+    s.life.decisions.rs_activation?.side !== "left" ||
+    (o.strategy === "forced" &&
+      (o.source !== "rs_forced_opening" ||
+        s.life.decisions.rs_forced_strategy?.side !== "left"))
+  )
+    throw Error("Unattributed operation result");
+  if (o.strategy === "harmonic" && !s.resolution.soulReference)
+    throw Error("Harmonic operation without reference");
+  // Concrete costs belong to this attributable intervention, never a global Hunter modifier.
+  if (o.strategy === "forced") {
+    w.dimensions.infrastructure = bound(w.dimensions.infrastructure - 2);
+    w.dimensions.civilians = bound(w.dimensions.civilians - 1);
+    w.regions.corridor = "displaced";
+  }
+  w.war.version = 2;
+  w.outcome = "true-resolution";
+  w.war.active = false;
+  w.war.resolution = {
+    at: w.clock,
+    category: w.outcome,
+    candidates: [w.outcome],
+    dimensions: { ...w.dimensions },
+    institutions: { ...w.institutions },
+    fronts: structuredClone(w.war.fronts),
+    evidence: { ...w.war.evidence },
+    campaigns: w.war.campaigns.map((c) => c.id),
+    baseline: { ...w.war.baseline },
+    operation: {
+      source,
+      strategy: o.strategy,
+      support: structuredClone(o.support),
+    },
+  };
+  w.events.resolution_result = {
+    status: "occurred",
+    at: w.clock,
+    variant: null,
+  };
+  // Future strategic windows remain historical dispositions, never fictitious campaigns.
+  w.pending = w.pending.filter((p) => {
+    if (!WORLD_EVENT_BY_ID[p.id]?.war && !SUPERSEDED_EVENTS.includes(p.id))
+      return true;
+    w.events[p.id] = { status: "superseded", at: w.clock, variant: null };
+    return false;
+  });
 }
 export function applyWorldConsequence(s, effect, moment) {
   if (effect.op === "world-war-contribute") {

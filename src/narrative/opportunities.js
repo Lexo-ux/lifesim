@@ -7,6 +7,7 @@ import {
   OPPORTUNITY_SPACING,
   LEVELS,
 } from "../../content/life-paths/catalog.js";
+import { resolutionRequirement } from "../systems/resolution-rules.js";
 // A small predicate tree. Missing external context fails closed, even under NOT.
 export function evaluateRequirement(context, rule) {
   if (!rule) return true;
@@ -23,6 +24,8 @@ export function evaluateRequirement(context, rule) {
     return v === undefined ? undefined : !v;
   }
   const { type, id, value } = rule;
+  if (type === "resolution-synthesis")
+    return resolutionRequirement(context, rule);
   if (type?.startsWith("meta-")) return legacyRequirement(context, rule);
   if (type?.startsWith("world-")) return worldRequirement(context, rule);
   if (type?.startsWith("field-")) return fieldRequirement(context, rule);

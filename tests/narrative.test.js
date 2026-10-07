@@ -44,7 +44,10 @@ test("130 original cards: exactly two choices, local speakers, connected arcs an
   for (const c of CARDS) {
     assert.ok(NPCS[c.npc] || SOCIAL_NPCS[c.npc] || c.npc === "self");
     assert.ok(c.left.label && c.right.label);
-    assert.ok((c.months > 0 || c.system === "awakening") && c.months <= 12);
+    assert.ok(
+      (c.months > 0 || ["awakening", "resolution"].includes(c.system)) &&
+        c.months <= 12,
+    );
     for (const o of [c.left, c.right])
       for (const q of o.follow || []) assert.ok(CARD_BY_ID[q.id]?.queued, q.id);
   }

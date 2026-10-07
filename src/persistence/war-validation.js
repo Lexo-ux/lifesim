@@ -58,7 +58,7 @@ export function validWar(w) {
       "contributions",
       "resolution",
     ]) ||
-    a.version !== 1 ||
+    ![1, 2].includes(a.version) ||
     !n(a.seed, 0xffffffff) ||
     !baseline(a.baseline, w) ||
     !evidence(a.evidence) ||
@@ -94,6 +94,14 @@ export function validWar(w) {
     if (pending && pending.due !== due) return false;
     if (done?.status === "occurred" && done.at !== due) return false;
     if (done?.status === "cancelled") return false;
+    if (
+      done?.status === "superseded" &&
+      (a.version !== 2 ||
+        a.resolution?.category !== "true-resolution" ||
+        done.at !== a.resolution.at ||
+        e.at <= done.at)
+    )
+      return false;
   }
   const factorKeys = [
     ...Object.keys(DIMENSIONS),
@@ -168,6 +176,8 @@ export function validWar(w) {
     )
   )
     return false;
+  if (a.version === 2 && a.resolution?.category !== "true-resolution")
+    return false;
   if (a.resolution === null)
     return (
       w.outcome === null &&
@@ -175,6 +185,7 @@ export function validWar(w) {
       w.events.war_resolution?.status !== "occurred"
     );
   const r = a.resolution;
+  const operation = r.category === "true-resolution";
   if (
     !exact(r, [
       "at",
@@ -186,11 +197,12 @@ export function validWar(w) {
       "campaigns",
       "baseline",
       "institutions",
+      ...(operation ? ["operation"] : []),
     ]) ||
-    !OUTCOME_RULES[r.category] ||
+    (!OUTCOME_RULES[r.category] && !operation) ||
     r.category !== w.outcome ||
     !n(r.at, w.clock) ||
-    r.at < 840 ||
+    (operation ? r.at < 504 : r.at < 840) ||
     a.active ||
     !map(r.dimensions, Object.keys(DIMENSIONS), (x) => n(x, 6)) ||
     !map(r.fronts, Object.keys(FRONTS), front) ||
@@ -202,10 +214,24 @@ export function validWar(w) {
     !Array.isArray(r.campaigns) ||
     JSON.stringify(r.campaigns) !==
       JSON.stringify(a.campaigns.map((c) => c.id)) ||
-    w.events.war_resolution?.at !== r.at ||
-    w.events.war_resolution?.status !== "occurred"
+    w.events[operation ? "resolution_result" : "war_resolution"]?.at !== r.at ||
+    w.events[operation ? "resolution_result" : "war_resolution"]?.status !==
+      "occurred"
   )
     return false;
+  if (operation)
+    return (
+      a.version === 2 &&
+      exact(r.operation, ["source", "strategy", "support"]) &&
+      ["harmonic", "forced"].includes(r.operation.strategy) &&
+      r.operation.source === "rs_hold" &&
+      JSON.stringify(r.candidates) === JSON.stringify(["true-resolution"]) &&
+      !!r.operation.support &&
+      WAR_EVENTS.filter((e) => e.at > r.at).every(
+        (e) => w.events[e.id]?.status === "superseded",
+      )
+    );
+  if (a.version !== 1) return false;
   const expected = outcomeCandidates({
     ...w,
     dimensions: r.dimensions,

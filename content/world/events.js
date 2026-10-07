@@ -208,7 +208,8 @@ export const WORLD_EVENTS = [
     ),
   ),
 ];
-WORLD_EVENTS.push(...WAR_EVENTS);
+import { RESOLUTION_EVENT } from "../resolution/catalog.js";
+WORLD_EVENTS.push(...WAR_EVENTS, RESOLUTION_EVENT);
 export const WORLD_EVENT_BY_ID = Object.fromEntries(
   WORLD_EVENTS.map((e) => [e.id, e]),
 );

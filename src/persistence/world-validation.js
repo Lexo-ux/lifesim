@@ -11,6 +11,7 @@ import { WORLD_EVENTS, WORLD_EVENT_BY_ID } from "../../content/world/events.js";
 import { REPORTS } from "../../content/world/reports.js";
 import { CANONICAL_NPCS, INSTITUTIONS } from "../../content/social/catalog.js";
 import { validWar, validWarSources } from "./war-validation.js";
+import { SUPERSEDED_EVENTS } from "../../content/resolution/catalog.js";
 const record = (o) => !!o && typeof o === "object" && !Array.isArray(o);
 const only = (o, keys) =>
   record(o) && Object.keys(o).every((k) => keys.includes(k));
@@ -47,6 +48,8 @@ export function validWorldState(w) {
     !ERAS.some((e) => e.id === w.era) ||
     !validWar(w)
   )
+    return false;
+  if (!!w.events?.resolution_result !== (w.outcome === "true-resolution"))
     return false;
   if (
     w.version >= 2 &&
@@ -90,6 +93,7 @@ export function validWorldState(w) {
         [
           "occurred",
           "cancelled",
+          "superseded",
           "unobserved-baseline",
           "unobserved-extension",
         ].includes(e.status) &&
@@ -98,6 +102,11 @@ export function validWorldState(w) {
             ? spec.variants.some((v) => v.id === e.variant)
             : e.variant === null
           : e.variant === null) &&
+        (e.status !== "superseded" ||
+          ((spec.war || SUPERSEDED_EVENTS.includes(id)) &&
+            w.war?.resolution?.category === "true-resolution" &&
+            spec.at > e.at &&
+            e.at === w.war.resolution.at)) &&
         (e.status !== "unobserved-baseline" ||
           (w.baseline.legacy && e.at === w.baseline.at)) &&
         (e.status !== "unobserved-extension" ||

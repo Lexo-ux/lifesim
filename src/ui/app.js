@@ -1,3 +1,4 @@
+import { resolutionCue } from "./resolution.js";
 import { createPresentation } from "./presentation/index.js";
 import { awakeningCue } from "./awakening.js";
 import { fieldCue } from "./field.js";
@@ -96,7 +97,8 @@ function render(focus = false, revealTitle = true) {
       awakeningCue(data.state, currentCard(data.state)) ||
       worldCue(currentCard(data.state)) ||
       fieldCue(currentCard(data.state)) ||
-      mysteryCue(currentCard(data.state));
+      mysteryCue(currentCard(data.state)) ||
+      resolutionCue(currentCard(data.state));
     if (cue) presentation.emphasize(cue);
     if (modal.open) presentation.pause();
     cleanup = mountSwipe(
@@ -191,7 +193,8 @@ async function commit(side) {
       !awakeningCue(data.state, currentCard(data.state)) &&
       !worldCue(currentCard(data.state)) &&
       !fieldCue(currentCard(data.state)) &&
-      !mysteryCue(currentCard(data.state))
+      !mysteryCue(currentCard(data.state)) &&
+      !resolutionCue(currentCard(data.state))
     )
       presentation?.emphasize(
         result.outcome.stage

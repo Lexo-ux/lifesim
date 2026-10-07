@@ -1,7 +1,9 @@
 // Knowledge is authored delivery, never a dump of simulation truth.
 // Variant-specific reports may be learned only after their historical event.
 import { WAR_REPORTS } from "./war-reports.js";
+import { RESOLUTION_REPORTS } from "../resolution/catalog.js";
 export const REPORTS = {
+  ...RESOLUTION_REPORTS,
   ...WAR_REPORTS,
   bastion: {
     event: "bastion_foundation",

@@ -7,6 +7,10 @@ import { SOCIAL_NPCS } from "../../content/social/catalog.js";
 import { npcAvailable } from "../systems/social.js";
 import { echoReasons } from "./meta.js";
 import { mysteryReasons } from "../systems/mysteries.js";
+import {
+  resolutionReasons,
+  resolutionMomentId,
+} from "../systems/resolution.js";
 
 export const now = (s) => s.age * 12 + s.story.month;
 export function matches(s, meta, r = {}) {
@@ -78,6 +82,8 @@ export function matches(s, meta, r = {}) {
   return true;
 }
 export function eligible(s, meta, event, { queued = false } = {}) {
+  if (event.resolution && resolutionReasons(s, event).length) return false;
+  if (event.system === "resolution") return event.id === resolutionMomentId(s);
   if (event.compatibilityOnly)
     return (
       queued &&
