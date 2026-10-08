@@ -331,3 +331,48 @@ body.at-threshold {
     display: none !important;
   }
 }
+
+/* Player-only first crossing; the existing Threshold remains the scene. */
+.threshold.in-prologue {
+  --title-ui-height: 360px;
+}
+.threshold[data-crossing="returning"] {
+  --title-note-height: 52px;
+}
+.threshold-title .continuity-note {
+  max-width: 340px;
+  margin: 10px auto 0;
+}
+.crossing-prologue {
+  max-width: 420px;
+  margin: auto;
+  text-align: center;
+}
+.crossing-prologue h2 {
+  font: 500 24px/1.25 var(--font-display);
+  margin: 6px 0 12px;
+}
+.crossing-prologue > p:not(.eyebrow) {
+  font: 16px/1.5 var(--font-story);
+  margin: 0 0 16px;
+}
+.crossing-prologue > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.crossing-prologue button {
+  min-height: 44px;
+}
+@media (forced-colors: active) {
+  .moment-flash,
+  .public-bulletin {
+    border: 1px solid CanvasText;
+  }
+  .stage-recap strong,
+  .consequence-cue,
+  .public-bulletin strong {
+    color: CanvasText;
+  }
+}

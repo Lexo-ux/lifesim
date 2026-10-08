@@ -21,6 +21,7 @@ try {
   }
   if (!ready) throw new Error("QA server did not start");
   for (const file of [
+    "tests/first-life.cjs",
     "tests/browser.cjs",
     "tests/accessibility.cjs",
     "tests/pages.cjs",

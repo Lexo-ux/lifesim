@@ -1,26 +1,51 @@
 .moment-flash {
-  position: fixed;
-  left: 50%;
-  bottom: 110px;
-  transform: translateX(-50%);
+  flex-shrink: 0;
   background: #1b2325f5;
-  border: 1px solid var(--border-strong);
+  border-left: 2px solid var(--human-warmth);
   color: var(--ink);
-  padding: 12px 18px;
-  text-align: center;
-  border-radius: var(--radius-control);
-  max-width: 360px;
-  width: 85%;
-  font-size: 12px;
-  opacity: 0;
-  pointer-events: none;
-  z-index: var(--z-feedback);
+  padding: 8px 12px;
+  margin: 4px 0;
+  font-size: 13px;
+  line-height: 1.4;
 }
-.moment-flash.chapter {
-  bottom: 45%;
-  font: 600 20px var(--heading);
-  padding: 28px 20px;
-  border-color: var(--human-warmth);
+.moment-flash[hidden] {
+  display: none;
+}
+.moment-flash p {
+  margin: 0;
+}
+.moment-flash .progress-response,
+.stage-recap {
+  margin-top: 6px;
+}
+.progress-response,
+.stage-recap {
+  font-size: 12px;
+}
+.stage-recap strong {
+  color: var(--human-warmth);
+}
+.public-bulletin {
+  padding: 10px 14px;
+  margin: 8px 0;
+  border: 1px solid var(--border-strong);
+  background: var(--panel);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.public-bulletin strong,
+.consequence-cue {
+  font-size: 12px;
+  color: var(--human-warmth);
+}
+.public-bulletin p {
+  margin: 6px 0;
+}
+.public-bulletin button {
+  min-height: 44px;
+}
+.consequence-cue {
+  margin-bottom: 6px;
 }
 .notification {
   visibility: hidden;

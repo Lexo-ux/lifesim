@@ -149,6 +149,8 @@ const dir = "output/qa/task05";
     assert.equal(await ageButton.getAttribute("aria-pressed"), "true");
     await page.locator("[data-action=preview-stage][data-value=elder]").click();
     await page.locator("button[type=submit]").click();
+    if (await page.locator("[data-action=prologue-skip]").count())
+      await page.locator("[data-action=prologue-skip]").click();
     await page.waitForSelector(".narrative-card");
     await settled();
     const initial = await read();
@@ -311,6 +313,8 @@ const dir = "output/qa/task05";
     assert.equal((await read()).state.alive, false);
     await page.locator("[data-action=creator]").click();
     await page.locator("button[type=submit]").click();
+    if (await page.locator("[data-action=prologue-skip]").count())
+      await page.locator("[data-action=prologue-skip]").click();
     await page.waitForSelector(".narrative-card");
     await settled();
     assert.equal((await read()).state.age, 0);

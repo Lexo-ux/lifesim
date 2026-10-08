@@ -63,7 +63,10 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
       // Still captures show the settled controls; the recording retains live feedback.
       await page.waitForFunction(() => {
         const feedback = document.querySelector("#moment-flash");
-        return !feedback || Number(getComputedStyle(feedback).opacity) === 0;
+        return (
+          !feedback ||
+          feedback.getAnimations().every((a) => a.playState === "finished")
+        );
       });
       await page.screenshot({
         path: dir + "/" + name + ".png",

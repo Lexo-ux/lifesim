@@ -3,6 +3,8 @@ import { THRESHOLD_ART } from "./art.js";
 import { animate, duration, reduced } from "./motion.js";
 import { thresholdSound } from "./audio.js";
 import { button, esc } from "./helpers.js";
+import { RETURNING } from "../../content/presentation/first-life.js";
+import { firstCrossing, crossingCopy } from "./first-life.js";
 
 let presented = false; // One reveal per document session; never stored in a save.
 const transitions = {
@@ -14,7 +16,7 @@ const transitions = {
   complete: ["hidden"],
 };
 
-export function thresholdScreen(data) {
+export function thresholdScreen(data, prologueStep = null) {
   const living = data.state?.alive,
     ended = data.state && !living;
   const primary = living
@@ -30,8 +32,8 @@ export function thresholdScreen(data) {
     : ended
       ? button("Recordar", "continue", "", "text-button")
       : "";
-  return `<section class="threshold ${data.state ? "has-save" : ""} ${data.warning || data.migrated ? "has-note" : ""}" data-threshold-state="idle" data-recognition="${thresholdDepth(data.meta)}" aria-labelledby="page-title">
-    <header class="threshold-title"><h1 id="page-title">LIFESIM</h1><p>${esc(thresholdEcho(data.meta))}</p></header>
+  return `<section class="threshold ${data.state ? "has-save" : ""} ${data.warning || data.migrated ? "has-note" : ""} ${prologueStep !== null ? "in-prologue" : ""}" data-crossing="${data.meta.completed ? "returning" : firstCrossing(data) ? "first" : "familiar"}" data-threshold-state="idle" data-recognition="${thresholdDepth(data.meta)}" aria-labelledby="page-title">
+    <header class="threshold-title"><h1 id="page-title">LIFESIM</h1><p>${esc(thresholdEcho(data.meta))}</p>${data.meta.completed ? `<p class="continuity-note">${RETURNING}</p>` : ""}</header>
     <div class="threshold-scene" aria-hidden="true"><div class="threshold-frame">
       <img class="threshold-environment" src="${THRESHOLD_ART.environment}" width="768" height="1024" alt="" fetchpriority="high" decoding="async">
       <div class="threshold-lumen"></div>
@@ -63,10 +65,14 @@ export function thresholdScreen(data) {
         )
         .join("")}</g></svg>
     </div></div>
-    <div class="threshold-controls"><div class="threshold-actions">${primary}${secondary}${button("Dejarlo al azar", "random", "", "text-button")}</div>
+    <div class="threshold-controls">${
+      prologueStep !== null
+        ? crossingCopy(prologueStep)
+        : `<div class="threshold-actions">${primary}${secondary}${button("Dejarlo al azar", "random", "", "text-button")}</div>
       <nav class="threshold-nav" aria-label="Entre vidas">${button("Legado", "legacy", "", "nav-link")}${button("Ajustes", "settings", "", "nav-link")}</nav>
       ${data.migrated ? '<p class="save-note">Tu partida anterior continúa aquí.</p>' : ""}
-      ${data.warning ? `<p class="save-note warning" role="status">${esc(data.warning)}</p>` : ""}
+      ${data.warning ? `<p class="save-note warning" role="status">${esc(data.warning)}</p>` : ""}`
+    }
     </div>
     <button class="threshold-skip" type="button" hidden>Omitir introducción</button>
   </section>`;

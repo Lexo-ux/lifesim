@@ -23,6 +23,7 @@ npm run validate:content
 npm test
 npx playwright install chromium
 npm run test:browser
+node tools/first-life-diagnostic.mjs 450
 ```
 
 En Windows con Edge: `$env:BROWSER_CHANNEL='msedge'; npm run test:browser`. En Linux CI se usa `npx playwright install --with-deps chromium`. `check` valida sintaxis, imports relativos, separación content/runtime, recursos y contenido. No hay ESLint configurado; no presentar el check como lint semántico. `npm run format` aplica Prettier.

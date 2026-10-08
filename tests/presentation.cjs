@@ -493,10 +493,12 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
     });
     await audit("production-no-fx");
     // Text enlargement must preserve the actual choice and narrative surfaces.
-    await page.waitForFunction(
-      () =>
-        getComputedStyle(document.querySelector("#moment-flash")).opacity ===
-        "0",
+    // Feedback now stays in flow until the next decision; no reading timeout.
+    assert.equal(
+      await page
+        .locator("#moment-flash")
+        .evaluate((e) => getComputedStyle(e).position),
+      "static",
     );
     await page.evaluate(() => {
       const sizes = [

@@ -15,7 +15,7 @@ Motion communicates contact, choice, consequence or narrative emphasis. Task 04 
 | Micro               | `--motion-fast` 140ms                 | Control response, caption entrance.                     |
 | Gameplay            | `--motion-standard` 280ms             | Exit, controlled card return, dialog entry.             |
 | Gameplay deliberate | `--motion-deliberate` 420ms           | Card arrival, indicator change.                         |
-| Narrative           | `--motion-narrative` 1400ms           | Memorial fade and outcome reading interval.             |
+| Narrative           | `--motion-narrative` 1400ms           | Memorial fade. Outcomes have no reading deadline.       |
 | Cinematic           | `--motion-cinematic` 2200ms, reserved | Future exceptional sequence, not connected to gameplay. |
 
 Micro stays 80–250ms; gameplay 200–600ms; narrative 0.6–2.5s. Cinematic is rare and may compose beats rather than extend every normal transition. `--ease-settle: cubic-bezier(.2,.75,.25,1)` decelerates without overshoot. `--ease-commit: cubic-bezier(.4,0,.75,.4)` exits decisively. Normal controls never bounce. Feedback reading time is not an input lock; the next card remains playable.
@@ -34,7 +34,7 @@ Task 06 keeps the protagonist perceptually in place across the bounded Awakening
 
 ## Reduced motion
 
-CSS disables animations/transitions and card translation/rotation under `prefers-reduced-motion`. Drag still reveals the same preview and commits at the same distance. WAAPI skips movement; live region, symbols, outcomes and readable values remain. Changing the preference during an animation finishes its finite effect and continues the transaction. Outcome text keeps the same 1400ms reading interval. No information is conveyed only by movement or hue.
+CSS disables animations/transitions and card translation/rotation under `prefers-reduced-motion`. Drag still reveals the same preview and commits at the same distance. WAAPI skips movement; live region, symbols, outcomes and readable values remain. Changing the preference during an animation finishes its finite effect and continues the transaction. Task 14.5 keeps outcomes in document flow until the next choice/navigation; opacity entrance is optional, reading has no timeout. No information is conveyed only by movement or hue.
 
 Future full-screen transitions must have an immediate stable alternative with the same narrative/result information. Never delay a screen-reader result for dramatic effect.
 
