@@ -49,7 +49,12 @@ test("130 original cards: exactly two choices, local speakers, connected arcs an
         c.months <= 12,
     );
     for (const o of [c.left, c.right])
-      for (const q of o.follow || []) assert.ok(CARD_BY_ID[q.id]?.queued, q.id);
+      for (const q of o.follow || [])
+        assert.ok(
+          CARD_BY_ID[q.id]?.queued ||
+            (c.resolution && CARD_BY_ID[q.id]?.resolution),
+          q.id,
+        );
   }
   assert.ok(
     CARDS.filter((c) => c.text.split(/\s+/).length <= 35).length /

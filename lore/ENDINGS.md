@@ -14,9 +14,9 @@
 | Exodus / Éxodo                         | La Tierra resulta insostenible y la humanidad se traslada.                                            |
 | Convergence / Convergencia             | Los mundos se fusionan permanentemente y las civilizaciones supervivientes se adaptan.                |
 | Extinction / Extinción                 | Desaparece la civilización humana. No añadir por inferencia una descripción biológica más específica. |
-| True Resolution / Resolución Verdadera | **RESERVED — PRIVATE CANON.** Solución exacta no definida.                                            |
+| True Resolution / Resolución Verdadera | **PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1**. Contrato técnico público en docs/TRUE_RESOLUTION.md. |
 
-Son categorías posibles, no una lista de finales ya implementados ni probabilidades. **TBD:** condiciones, compatibilidades, variantes, secuencia de evaluación y representación de la categoría resultante. No imponer una fórmula o una jerarquía de mérito entre ellas.
+Las ocho categorías ordinarias tienen implementación en Task 11; la novena en Task 14/14.1. Las condiciones del runtime son objetivos de implementación, no nuevas probabilidades canónicas. No imponer una fórmula o una jerarquía de mérito entre ellas.
 
 «Convergencia» como desenlace designa la fusión permanente; como fenómeno designa el proceso de superposición. Victoria militar y resolución del fenómeno no son equivalentes.
 
@@ -39,3 +39,5 @@ Esa formulación expresa propósito narrativo; no define una receta de clases ob
 [RESERVED FOR PRIVATE CANON]
 
 No se especifican causa última, respuesta, entidad final o giro. Política y metaprogreso: [METANARRATIVE](METANARRATIVE.md). Los finales V3 permanecen como implementación heredada, sin mapearse a estas categorías.
+
+La solución aprobada tiene implementación: **PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1**. La fuente externa no se copia aquí. World conserva el resultado inmediato, War su procedencia y Legacy un registro de intervención para quien juega. Un Memorial sin informe sigue mostrando destino mundial desconocido.

@@ -98,7 +98,7 @@ export const KNOWLEDGE_SCENES = [
     {
       ...o(
         "Escuchar su respuesta",
-        "La cercanía empieza en esta conversación.",
+        "Escuchas sin dar por supuesta su respuesta ni borrar el vínculo que ya existe.",
         [],
         "rs_noa_reply",
       ),
@@ -119,7 +119,7 @@ export const KNOWLEDGE_SCENES = [
     [],
     {
       ...o(
-        "Desearle un buen comienzo",
+        "Respetar su camino",
         "Conserváis la cercanía sin una promesa de destino.",
         [e("personal", "noa", "care")],
       ),

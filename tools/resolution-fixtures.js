@@ -6,6 +6,7 @@ import { choose } from "../src/narrative/engine.js";
 import { eligible } from "../src/narrative/conditions.js";
 import { CARD_BY_ID } from "../content/moments/index.js";
 import { prepareResolutionMoment } from "../src/systems/resolution.js";
+import { prepareWorldMoment } from "../src/systems/world.js";
 import { validStory, save, load } from "../src/persistence/storage.js";
 export function resolutionFixture(seed = 73, at = 432) {
   const first = worldFixture("civilian", 432, 73);
@@ -51,6 +52,7 @@ export function selectResolution(d, id) {
   if (m.queued)
     d.state.story.queue = d.state.story.queue.filter((q) => q.id !== id);
   prepareResolutionMoment(d.state, m);
+  prepareWorldMoment(d.state, m);
   return d;
 }
 export function resolutionStep(d, side = "left") {
@@ -65,10 +67,17 @@ export function awaitResolution(d, id) {
   for (let i = 0; i < 100; i++) {
     if (d.state.story.current === id) return d;
     const m = CARD_BY_ID[id];
-    if (!m.queued && eligible(d.state, d.meta, m))
+    if (!m.queued && !CARD_BY_ID[d.state.story.current]?.field && eligible(d.state, d.meta, m))
       return selectResolution(d, id);
     if (!d.state.alive) throw Error(`Died awaiting ${id}`);
-    d = resolutionStep(d, "right");
+    const current = d.state.story.current;
+    d = resolutionStep(
+      d,
+      current.startsWith("rx_") &&
+        !(current === "rx_preparation" && id === "rs_alternative")
+        ? "left"
+        : "right",
+    );
   }
   throw Error(`Unreachable ${id}`);
 }
@@ -85,7 +94,8 @@ export function civilianResolution() {
     "rs_recognition",
     "rs_prepare",
     "rs_protection",
-    "rs_opening",
+    "rx_window",
+    "rs_choice",
     "rs_strategy",
     "rs_activation",
     "rs_hold",
@@ -106,12 +116,16 @@ export function preparedResolution({
   let d = awaitResolution(data || resolutionFixture(), entry);
   const ids = [
     entry,
-    ...(entry !== "rs_archive" ? ["rs_archive_return"] : []),
-    "rs_measure",
-    "rs_hypothesis",
-    "rs_compare",
-    "rs_testimony",
-    "rs_pattern",
+    ...(entry === "rs_field_sample"
+      ? ["rx_field_crossing"]
+      : [
+          ...(entry !== "rs_archive" ? ["rs_archive_return"] : []),
+          "rs_measure",
+          "rs_hypothesis",
+          "rs_compare",
+          "rs_testimony",
+          "rs_pattern",
+        ]),
     "rs_boundary",
     ...(reference ? ["rs_recognition"] : []),
     ...(network === "full"
@@ -137,9 +151,10 @@ export function operationFixture({
     network,
     data,
   });
-  const opening = strategy === "forced" ? "rs_forced_opening" : "rs_opening";
+  const opening = strategy === "forced" ? "rx_window" : "rx_window";
   d = awaitResolution(d, opening);
   d = resolutionStep(d);
+  d = resolutionStep(d, strategy === "forced" ? "right" : "left");
   d = resolutionStep(d, abort ? "right" : "left");
   if (abort) return d;
   d = resolutionStep(d);

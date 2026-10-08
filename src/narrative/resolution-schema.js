@@ -31,15 +31,22 @@ export function resolutionConsequenceSchema(e) {
         : e.value === undefined)
       ? []
       : ["invalid Resolution identifier"];
-  if (["resolution-start", "resolution-abort"].includes(e.op))
+  if (
+    ["resolution-start", "resolution-request", "resolution-abort"].includes(
+      e.op,
+    )
+  )
     return !e.id &&
       (e.value === undefined ||
-        (e.op === "resolution-start" && e.value === "forced"))
+        (["resolution-start", "resolution-request"].includes(e.op) &&
+          e.value === "forced"))
       ? []
       : ["invalid operation declaration"];
   return e.op === "resolution-step" &&
     !e.id &&
     [
+      "consider-harmonic",
+      "consider-forced",
       "harmonic",
       "forced",
       "activate",

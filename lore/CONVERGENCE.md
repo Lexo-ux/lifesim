@@ -20,10 +20,14 @@ La coordinación aparente de algunos sucesos en la Gran Ruptura no prueba una vo
 
 ## Causa última
 
-**CANONICALLY UNRESOLVED — RESERVED FOR METANARRATIVE DESIGN**
+**PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1**
 
 **RESERVED — PRIVATE CANON**
 
 [RESERVED FOR PRIVATE CANON]
 
 No se define dios, villano cósmico, máquina antigua, simulación, entidad multiversal, jefe final u organización secreta como causa definitiva. Tampoco se niegan o confirman hipótesis para insinuar una solución. Véase [política metanarrativa](METANARRATIVE.md).
+
+## Estado de implementación
+
+**PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1**. La especificación externa aprobada y su Addendum siguen siendo la fuente completa; este documento público no reproduce sus respuestas. El runtime entrega evidencia gradual, no conocimiento automático a cada protagonista. Contrato técnico: [TRUE_RESOLUTION](../docs/TRUE_RESOLUTION.md). Las reservas no cubiertas por esa aprobación continúan reservadas.

@@ -1,4 +1,34 @@
 // Pure projections shared by runtime and validation. No RNG, clocks or state mutation.
+export const RECOGNITION_DISCOVERIES = [
+  "constant_mark",
+  "constant_phrase",
+  "constant_rhythm",
+  "rs_noa",
+  "rs_comparison",
+  "rs_contact",
+  "rs_pattern",
+  "rs_boundary",
+];
+export const RECOGNITION_ECHOES = [
+  "dream_room",
+  "dream_desk",
+  "phrase_wait",
+  "phrase_question",
+  "research_measure",
+  "research_silence",
+  "recognition_researcher",
+  "recognition_voice",
+  "contact_translation",
+  "contact_distance",
+];
+export const committedRecognition = (snapshot) =>
+  !!snapshot &&
+  (RECOGNITION_DISCOVERIES.some((id) => snapshot.discoveries?.includes(id)) ||
+    RECOGNITION_ECHOES.some((id) => snapshot.echoes?.includes(id)));
+export const synthesisEvidence = (r, spec) =>
+  [spec.observations, ...(spec.alternatives || [])].some((ids) =>
+    ids.every((id) => r.observations[id]),
+  );
 export function recognizedSynthesis(r, snapshot, id) {
   return !!(
     r?.syntheses[id] &&

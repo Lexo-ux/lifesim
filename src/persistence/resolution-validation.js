@@ -8,9 +8,10 @@ import {
 } from "../../content/resolution/catalog.js";
 import { RESOLUTION_SCENES } from "../../content/moments/resolution.js";
 import { OPERATION_SCENES } from "../../content/resolution/operation.js";
+import { CONTINUATIONS } from "../../content/resolution/continuations.js";
 import { EVIDENCE } from "../../content/world/war.js";
 import { operationResult } from "../systems/resolution-rules.js";
-import { soulReferenceReady } from "../systems/resolution.js";
+import { soulReferenceReady, explicitForced } from "../systems/resolution.js";
 const obj = (x) => x && typeof x === "object" && !Array.isArray(x);
 const exact = (x, keys) =>
   obj(x) &&
@@ -86,7 +87,26 @@ export function validResolution(s, moments) {
     Object.entries(r.observations).some(
       ([id, x]) =>
         !OBSERVATIONS[id] ||
-        !stamp(x) ||
+        !obj(x) ||
+        !stamp({ source: x.source, at: x.at }) ||
+        !exact(x, [
+          "source",
+          "at",
+          ...(OBSERVATIONS[id].bearer ? ["bearer"] : []),
+        ]) ||
+        (OBSERVATIONS[id].bearer &&
+          (!same(x.bearer, OBSERVATIONS[id].bearer) ||
+            (x.bearer.type === "institution" &&
+              !(s.social?.institutions[x.bearer.id]?.firstKnown <= x.at)) ||
+            (x.bearer.type === "field" &&
+              !["survey", "recon"].some((id) => {
+                const operation = s.field?.operations[id];
+                return (
+                  ["completed", "partial"].includes(operation?.outcome) &&
+                  Number.isInteger(operation.resolvedAt) &&
+                  operation.resolvedAt <= x.at
+                );
+              })))) ||
         !RESOLUTION_SCENES[x.source].observations?.includes(id) ||
         !(s.story.current === x.source || s.story.seen[x.source] === x.at),
     )
@@ -160,6 +180,7 @@ export function validResolution(s, moments) {
       if (e.op === "resolution-synthesize" && !r.syntheses[e.id]) return false;
       if (
         e.op === "resolution-hypothesis" &&
+        (e.value === "proposed" || r.hypotheses[e.id]) &&
         !r.hypotheses[e.id]?.some((x) => x.value === e.value && x.source === id)
       )
         return false;
@@ -174,7 +195,7 @@ export function validResolution(s, moments) {
         if (
           r.hypotheses[old] &&
           !["contradicted", "superseded"].every((value) =>
-            r.hypotheses[old].some((x) => x.source === id && x.value === value),
+            r.hypotheses[old].some((x) => x.at <= d.at && x.value === value),
           )
         )
           return false;
@@ -190,9 +211,10 @@ export function validResolution(s, moments) {
       ([id, x]) =>
         !SYNTHESIS[id] ||
         !proof(x, "resolution-synthesize", id) ||
-        !SYNTHESIS[id].observations.every(
-          (oid) => r.observations[oid]?.at <= x.at,
-        ),
+        ![
+          SYNTHESIS[id].observations,
+          ...(SYNTHESIS[id].alternatives || []),
+        ].some((ids) => ids.every((oid) => r.observations[oid]?.at <= x.at)),
     )
   )
     return false;
@@ -215,14 +237,28 @@ export function validResolution(s, moments) {
         "resolution-reference",
         "soul_reference",
       ) ||
-      !soulReferenceReady(s))
+      !(
+        soulReferenceReady(s) ||
+        (!r.observations.veil &&
+          s.legacy?.snapshot.discoveries.length &&
+          ["care", "service", "making", "everyday"].some((id) =>
+            s.legacy.snapshot.perspectives.includes(id),
+          ) &&
+          ["field", "displacement", "contact", "inquiry"].some((id) =>
+            s.legacy.snapshot.perspectives.includes(id),
+          ) &&
+          r.syntheses.flow &&
+          r.syntheses.boundary)
+      ))
   )
     return false;
   if (
     r.pending !== null &&
     (!RESOLUTION_SCENES[r.pending] ||
       !Object.entries(s.life.decisions).some(
-        ([id, d]) => RESOLUTION_SCENES[id]?.[d.side]?.next === r.pending,
+        ([id, d]) =>
+          RESOLUTION_SCENES[id]?.[d.side]?.next === r.pending ||
+          CONTINUATIONS[id]?.[d.side]?.some((x) => x.next === r.pending),
       ))
   )
     return false;
@@ -235,6 +271,7 @@ export function validResolution(s, moments) {
     );
   if (
     !exact(o, [
+      ...(o.protocol === undefined ? [] : ["protocol"]),
       "source",
       "at",
       "cursor",
@@ -245,15 +282,23 @@ export function validResolution(s, moments) {
       "resolvedAt",
       "support",
     ]) ||
-    !proof({ source: o.source, at: o.at }, "resolution-start") ||
+    (o.protocol !== undefined && o.protocol !== 2) ||
+    !(
+      proof({ source: o.source, at: o.at }, "resolution-start") ||
+      proof({ source: o.source, at: o.at }, "resolution-request")
+    ) ||
     ![null, "harmonic", "forced"].includes(o.strategy) ||
     typeof o.activated !== "boolean" ||
     typeof o.referenceAvailable !== "boolean" ||
-    ![null, "completed", "partial", "aborted"].includes(o.result)
+    ![null, "completed", "partial", "aborted", "superseded"].includes(o.result)
   )
     return false;
   let cursor =
-    o.source === "rs_forced_opening" ? "rs_forced_strategy" : "rs_strategy";
+    o.protocol === 2
+      ? "rs_choice"
+      : o.source === "rs_forced_opening"
+        ? "rs_forced_strategy"
+        : "rs_strategy";
   const visited = new Set();
   while (cursor && decision(cursor)) {
     if (
@@ -262,13 +307,38 @@ export function validResolution(s, moments) {
     )
       return false;
     visited.add(cursor);
+    if (
+      cursor === "rs_choice" &&
+      decision(cursor).side === "left" &&
+      !r.soulReference
+    ) {
+      cursor = "rs_reference_missing";
+      continue;
+    }
     cursor =
       OPERATION_SCENES.find((x) => x.id === cursor)?.[decision(cursor).side]
         ?.next || null;
   }
   if (
-    cursor !== o.cursor ||
+    (cursor !== o.cursor && o.result !== "superseded") ||
     OPERATION_SCENES.some((x) => decision(x.id) && !visited.has(x.id))
+  )
+    return false;
+  if (
+    s.world?.outcome &&
+    s.world.outcome !== "true-resolution" &&
+    o.result === null
+  )
+    return false;
+  if (
+    o.result === "superseded" &&
+    (o.cursor !== null ||
+      !s.world?.outcome ||
+      s.world.outcome === "true-resolution" ||
+      s.world.war?.resolution?.category !== s.world.outcome ||
+      o.resolvedAt < s.world.war.resolution.at ||
+      decision("rs_hold") ||
+      !cursor)
   )
     return false;
   const expectedStrategy =
@@ -287,7 +357,9 @@ export function validResolution(s, moments) {
   if (s.alive && o.cursor && s.story.current !== o.cursor) return false;
   if (
     o.strategy === "forced" &&
-    (o.source !== "rs_forced_opening" ||
+    ((o.protocol === 2
+      ? !explicitForced(s)
+      : o.source !== "rs_forced_opening") ||
       decision("rs_forced_strategy")?.side !== "left")
   )
     return false;

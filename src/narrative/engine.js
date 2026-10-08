@@ -35,6 +35,8 @@ import {
 } from "../systems/awakening.js";
 import {
   resolutionMomentId,
+  reconcileResolutionOperation,
+  resolutionOutcome,
   resolveResolutionChoice,
 } from "../systems/resolution.js";
 
@@ -192,6 +194,32 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   ensureLife(next);
   ensureWorld(next);
   ensureLegacy(next, nextMeta);
+  if (
+    event.resolution &&
+    next.world.outcome &&
+    next.world.outcome !== "true-resolution" &&
+    (event.system === "resolution" ||
+      [event.left, event.right].some((choice) =>
+        choice.consequences?.some((e) => e.op === "resolution-start"),
+      ))
+  ) {
+    reconcileResolutionOperation(next);
+    next.story.seen[event.id] ??=
+      next.resolution.entries[event.id] ?? now(next);
+    next.story.outcome = {
+      text: "La ventana de intervención ya se cerró. Los equipos suspenden el plan y esperan los informes.",
+      unlocked: [],
+    };
+    drawCard(next, nextMeta);
+    Object.assign(s, next);
+    Object.assign(meta, nextMeta);
+    return {
+      before: macroStats(s),
+      after: macroStats(s),
+      outcome: s.story.outcome,
+      unlocked: [],
+    };
+  }
   observeLegacyMoment(next, event);
   const before = macroStats(s),
     previousStage = stage(s).id,
@@ -223,7 +251,13 @@ export function choose(s, meta, side, expectedId = s.story.current) {
       (next.story.personality[option.behavior] || 0) + 1;
   remember(next, event.npc, event.id, side, option.bond);
   const timestamp = now(next);
-  for (const follow of option.follow || []) {
+  const follows =
+    event.resolution && event.system !== "resolution"
+      ? next.resolution.pending
+        ? [{ id: next.resolution.pending, months: 12 }]
+        : []
+      : option.follow || [];
+  for (const follow of follows) {
     if (!next.story.queue.some((q) => q.id === follow.id))
       next.story.queue.push({ id: follow.id, due: timestamp + follow.months });
   }
@@ -246,6 +280,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   }
   if (!next.alive) next.story.month = 0;
   advanceLifeWorld(next, now(next) - timestamp);
+  reconcileResolutionOperation(next);
   scheduleAwakening(next);
   observeOccupation(next);
   const unlocked = updateAchievements(next, nextMeta);
@@ -257,6 +292,7 @@ export function choose(s, meta, side, expectedId = s.story.current) {
     .filter((h) => h.milestone);
   next.story.outcome = {
     text:
+      resolutionOutcome(next, event, side) ||
       option.result ||
       milestones.at(-1)?.text ||
       outcomeLine(effects, event.npc),

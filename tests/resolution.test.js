@@ -116,7 +116,7 @@ test("Forced is explicit, works without Soul Reference, and costs collective res
   assert.equal(d.state.world.regions.corridor, "displaced");
   assert.equal(
     d.state.world.dimensions.infrastructure,
-    Math.max(0, d.state.resolution.operation.support.infrastructure - 2),
+    Math.max(0, d.state.resolution.operation.support.infrastructure - 3),
   );
   assert.ok(d.state.life.decisions.rs_forced_strategy);
   roundTrip(d);
@@ -138,6 +138,7 @@ test("Harmonic gate never accepts merely current synthesis; diversity has qualit
   assert.equal(soulReferenceReady(s), false);
   s.legacy.snapshot.perspectives = ["care", "inquiry"];
   s.legacy.snapshot.discoveries = [];
+  s.legacy.snapshot.echoes = [];
   assert.equal(soulReferenceReady(s), false);
 });
 test("cold synthesis and prior-recognition synthesis are disjoint and both require current evidence", () => {
@@ -194,7 +195,7 @@ test("hypothesis revision retains both the old model and the observations, with 
   const r = d.state.resolution;
   assert.deepEqual(
     r.hypotheses.absorption.map((x) => x.value),
-    ["proposed", "contradicted", "superseded"],
+    ["proposed", "reinforced", "contradicted", "superseded"],
   );
   assert.deepEqual(
     r.hypotheses.circulation.map((x) => x.value),
@@ -207,13 +208,13 @@ test("hypothesis revision retains both the old model and the observations, with 
   assert.match(resolutionLegacy(d.meta), /Sustituida/);
 });
 test("zero-time cursor survives every reload and does not consume any RNG or advance Earth time", () => {
-  let d = awaitResolution(preparedResolution(), "rs_opening");
+  let d = awaitResolution(preparedResolution(), "rx_window");
   d = resolutionStep(d);
   const clock = d.state.world.clock,
     seed = d.state.seed,
     worldSeed = d.state.world.seed,
     warSeed = d.state.world.war.seed;
-  for (const id of ["rs_strategy", "rs_activation", "rs_hold"]) {
+  for (const id of ["rs_choice", "rs_strategy", "rs_activation", "rs_hold"]) {
     assert.equal(d.state.story.current, id);
     d = resolutionStep(d);
     assert.equal(d.state.world.clock, clock);
@@ -371,8 +372,8 @@ test("Cores/classes/ranks survive resolution, including a field-capable Hunter r
     let d = preparedResolution();
     d.state.awakening = fieldArchetype(kind).state.awakening;
     const awakening = structuredClone(d.state.awakening);
-    d = awaitResolution(d, "rs_opening");
-    for (let i = 0; i < 5; i++) d = resolutionStep(d);
+    d = awaitResolution(d, "rx_window");
+    for (let i = 0; i < 6; i++) d = resolutionStep(d);
     assert.equal(d.state.world.outcome, "true-resolution");
     assert.deepEqual(d.state.awakening, awakening);
     roundTrip(d);
@@ -422,6 +423,9 @@ test("malformed containers and phantom result events are rejected without throwi
     (s) => {
       s.resolution.observations = [];
     },
+    (s) => {
+      s.resolution.observations.volcanic = null;
+    },
   ]) {
     const s = structuredClone(d.state);
     mutate(s);
@@ -457,11 +461,14 @@ test("Hunter/Field evidence and civilian archive converge in the same full produ
   assert.equal(d.state.field.operations.survey.outcome, "completed");
   d = preparedResolution({ data: d, entry: "rs_field_sample" });
   const core = structuredClone(d.state.awakening.result);
-  d = awaitResolution(d, "rs_opening");
-  for (let i = 0; i < 5; i++) d = resolutionStep(d);
+  d = awaitResolution(d, "rx_window");
+  for (let i = 0; i < 6; i++) d = resolutionStep(d);
   assert.equal(d.state.world.outcome, "true-resolution");
   assert.ok(d.state.resolution.observations.field_branch);
-  assert.ok(d.state.resolution.observations.strata);
+  assert.ok(d.state.resolution.observations.field_network);
+  const orphaned = structuredClone(d.state);
+  delete orphaned.field;
+  assert.equal(validStory(orphaned), false);
   assert.deepEqual(d.state.awakening.result, core);
   roundTrip(d);
 });

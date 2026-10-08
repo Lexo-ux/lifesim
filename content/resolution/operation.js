@@ -1,6 +1,37 @@
 // Finite acyclic cursor; no elapsed-world time between internal decisions.
 export const OPERATION_SCENES = [
   {
+    id: "rs_reference_missing",
+    text: "No hay una referencia de coherencia comprobada. Autorizar la coordinación en estas condiciones sería fingir una preparación que no existe. Puedes examinar la imposición y su coste, o detener el plan.",
+    left: {
+      label: "Examinar la alternativa forzada",
+      result: "Examinarla no la autoriza.",
+      action: "consider-forced",
+      next: "rs_forced_strategy",
+    },
+    right: {
+      label: "Detener el plan",
+      result: "No envías una autorización incompleta.",
+      action: "abort",
+    },
+  },
+  {
+    id: "rs_choice",
+    text: "Hay dos propuestas sobre la mesa. Coordinar las diferencias exige una referencia de coherencia y expone a quien la sostiene. Imponer el flujo no la necesita, pero sacrifica infraestructura y desplaza poblaciones. Ninguna está autorizada todavía.",
+    left: {
+      label: "Examinar la coordinación armónica",
+      result: "Pides revisar la referencia y sus límites antes de confirmar.",
+      action: "consider-harmonic",
+      next: "rs_strategy",
+    },
+    right: {
+      label: "Examinar la estabilización forzada",
+      result: "Pides revisar el daño previsto antes de confirmar.",
+      action: "consider-forced",
+      next: "rs_forced_strategy",
+    },
+  },
+  {
     id: "rs_forced_strategy",
     text: "Esta orden impone el flujo; no sustituye una coordinación fallida. El taller prevé pérdidas y viviendas desplazadas. Puedes detener la propuesta antes de autorizar ese daño.",
     left: {

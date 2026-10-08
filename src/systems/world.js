@@ -250,6 +250,8 @@ export function finalizeResolutionWorld(s, source) {
   if (
     !w ||
     w.outcome ||
+    !w.war?.active ||
+    w.war.resolution ||
     !o?.activated ||
     o.result !== "completed" ||
     o.resolvedAt !== w.clock ||
@@ -270,7 +272,13 @@ export function finalizeResolutionWorld(s, source) {
     ) !== "completed" ||
     s.life.decisions.rs_activation?.side !== "left" ||
     (o.strategy === "forced" &&
-      (o.source !== "rs_forced_opening" ||
+      ((o.protocol === 2
+        ? !(
+            s.life.decisions.rs_choice?.side === "right" ||
+            (s.life.decisions.rs_choice?.side === "left" &&
+              s.life.decisions.rs_reference_missing?.side === "left")
+          )
+        : o.source !== "rs_forced_opening") ||
         s.life.decisions.rs_forced_strategy?.side !== "left"))
   )
     throw Error("Unattributed operation result");
@@ -278,9 +286,19 @@ export function finalizeResolutionWorld(s, source) {
     throw Error("Harmonic operation without reference");
   // Concrete costs belong to this attributable intervention, never a global Hunter modifier.
   if (o.strategy === "forced") {
-    w.dimensions.infrastructure = bound(w.dimensions.infrastructure - 2);
-    w.dimensions.civilians = bound(w.dimensions.civilians - 1);
+    w.dimensions.infrastructure = bound(
+      w.dimensions.infrastructure - (o.protocol === 2 ? 3 : 2),
+    );
+    w.dimensions.civilians = bound(
+      w.dimensions.civilians - (o.protocol === 2 ? 2 : 1),
+    );
+    if (o.protocol === 2) {
+      w.dimensions.resources = bound(w.dimensions.resources - 2);
+      w.institutions.workshop = "damaged";
+    }
     w.regions.corridor = "displaced";
+  } else if (o.protocol === 2 && !o.support.services.includes("evacuation")) {
+    w.dimensions.infrastructure = bound(w.dimensions.infrastructure - 1);
   }
   w.war.version = 2;
   w.outcome = "true-resolution";
@@ -379,6 +397,17 @@ export function reportAvailable(context, id) {
 }
 export function reportText(s, id) {
   const r = REPORTS[id];
+  const event = s.world?.events[r?.event],
+    receipt = s.world?.war?.resolution;
+  if (
+    r?.postResolution &&
+    receipt?.category === "true-resolution" &&
+    event?.at >= receipt.at &&
+    r.postResolution[event.variant]
+  )
+    return r.postResolution[event.variant];
+  if (r?.strategies && s.world?.events[r.event]?.status === "occurred")
+    return r.strategies[s.world.war.resolution?.operation?.strategy] || r.text;
   return r?.text || r?.variants?.[s.world?.events[r.event]?.variant] || "";
 }
 // Seeing an authored news Moment is an information event. Commit before persisting/displaying,

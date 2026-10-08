@@ -1,84 +1,84 @@
-# True Resolution — Task 14
+# True Resolution — Task 14.1
 
-Technical contract on `codex/true-resolution`, based on merged Task 13 (`main@1c76b1a`). The external approved specification and Canon Resolution Addendum govern canon; this public document contains maintenance contracts and implemented evidence only. No Task 15 work.
+**PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1.** The external approved specification and Addendum are authoritative; this public technical contract does not reproduce them. Corrective branch: codex/task14-1-resolution-fixes, from merged main 7886420d26b118a1670fc6960939746da78b9894. No Task 15 or Steam work.
 
-## Owners and boundaries
+## Owners
 
-- **Resolution:** bounded current-life observation, hypothesis, synthesis, preparation and finite operation cursor.
-- **World:** Earth clock, historical events, effects and final world truth. The ninth public category is `true-resolution`; ordinary outcome rules remain eight.
-- **War:** existing strategic provenance, frozen campaign history and outcome receipt. No second war resolver/clock.
-- **Field:** existing survey/recon operation outcomes supply attributable first-hand evidence. Risk, return, uncertainty and colleague obligations still belong to Field/Social.
-- **Social / existing personal NPC owner:** institutional collaboration and personal relationships. No copied people, inherited trust or new institution simulator.
-- **Legacy:** only cross-life writer; pending evidence, death commit, frozen per-life eligibility. A separate field inside this SAME owner stores player-only theory history and result receipts, never protagonist answers.
-- **Presentation:** existing Mystic Card / semantic presentation owner. DOM/FX/read-only Profile do not select or mutate evidence.
+Resolution is the bounded current-life owner. World owns truth and the only Earth clock; War owns strategic provenance; Field owns operational experience; Social owns institutions and people; Legacy is the only cross-life owner. Presentation is read-only. No additional simulator, clock, RNG, framework or runtime dependency.
 
-Each player life has its own real world state. A new life does not roll back an earlier world. The bounded first result receipt per strategy remains immutable in Legacy. This is not an explicit realization/travel system: no catalog of previous worlds, return destination or duplicate world snapshots. The two authored connected-world contexts are locations contacted inside the current life/world; they are not previous player lives or the total Constellation.
+The two authored connected contexts and three preparation nodes are implementation samples, not cosmological totals. No rank, Awakening or global Hunter-instability modifier is introduced.
 
-## State and migration
+## Evidence and progression
 
-`state.resolution` is absent until a selected adult encounter. Version 1 contains:
+Content lives in content/resolution; the Moment adapter remains content/moments/resolution.js. The original IDs and authored consequences remain valid for saved history. The additive continuations registry supplies reviewed follow-ups using the existing queue. Old queued follow-ups remain legal; no missing historical observations are manufactured.
 
-`{version, baseline, entries, observations, hypotheses, syntheses, support, nodes, soulReference, pending, selected, operation}`.
+Rare initial discovery retains weight 0.18 and the 48-month entry spacing. Continued investment is intentional: documentary investigation, independent measurements, hypothesis, replication, contradiction, comparison, synthesis, boundary/recognition review, preparation and opening use authored continuation rather than fresh rare draws. Normal opportunity spacing and twelve-month follow-up delays keep ordinary life between investigation beats. The opening waits for an actual active World window. A limited set of second invitations lets deferred checkpoints resume; evidence is not repeatable loot.
 
-Maps use finite catalog IDs. An observation stores `{source, at}`; its text, source/date/reliability and optional connected context stay in content. A hypothesis stores chronological `{source, at, value}` stamps: proposed, reinforced, contradicted, superseded. Observation survives interpretation changes. Synthesis/support/node maps store attributable decision stamps; no arbitrary booleans, copied documents, inventory or numerical knowledge stat.
+The newly delivered evidence covers an ancient terrestrial network, relative chronology, competing flow interpretations, structured contacts and protective boundaries. A disputed perturbation report is evidence/debate only. It changes no World/War probability or Hunter stat. Hypothesis stages retain distinct timestamps; original observations survive later contradiction and supersession. Legacy Task 14 histories may legitimately retain their earlier simultaneous revision stamps.
 
-Soul Reference uses `soul_reference`. The unrelated Awakening class `anchor` is unchanged. Eligibility is an interior perspective OR branch, a frontier perspective OR branch, committed recognition and current flow/boundary synthesis. No life-count, profession-count, rank, rarity or power threshold. Frozen Legacy is the only prior input; newly collected evidence cannot retroactively satisfy it.
+Field discovery requires a completed/partial existing survey or recon. An accompanied, bounded observation at the recognized access supplies an alternative evidence set for major synthesis, followed by the same boundary trial and preparation. No new expedition engine or other-world calendar is created. All reception/observation dates use Earth time.
 
-`resolution-synthesis` is a typed existing opportunity predicate. `mode: current` and `mode: recognized` are disjoint; the latter requires both actual current synthesis AND matching frozen prior discovery. Neither reads private old World data. Generic ALL/ANY/NOT ownership remains Task 07's.
+## Save contract
 
-Save keys/envelope/meta versions stay unchanged. Old active/dead lives load unchanged without fabricated evidence. War remains v1 for ordinary worlds and becomes v2 only on a completed attributable planetary operation; World stays v3. Unknown extension versions, operation replay, missing decisions/observations, foreign clocks, unsupported support/theory IDs and invalid result provenance fail validation without overwriting the original save.
+The existing envelope and storage keys remain. state.resolution version 1 remains bounded by finite IDs: baseline, entries, observations, hypotheses, syntheses, support, nodes, soulReference, pending, selected and operation. Observations retain source/at; newly authored third-party observations additionally require an exact bearer record (type, stable id, delivery mode). Institution delivery registers actual Social knowledge. Received documents and personal observations remain distinguishable in Profile/Memorial.
 
-## Content and selection
+Hypotheses preserve ordered source/at/value stamps. Synthesis accepts explicitly authored alternative evidence sets. Legacy observations have no fabricated bearer. Archived Task 14 investigation, active cursor, completed and fatal fixtures are checked unchanged. Old valid Soul References retain their historical proof; new qualification uses finite reviewed recognition families from the frozen Legacy snapshot. Generic discoveries alone no longer qualify. Current-life synthesis and qualitatively different lived perspectives are still necessary, with semantic OR alternatives rather than a life-count recipe.
 
-`content/resolution/{catalog,knowledge,operation,presentation}.js` supplies the vocabulary, prose and acyclic transitions; `content/moments/resolution.js` adapts them to the existing binary schema. No runtime imports in content.
+## Final operation
 
-The initial slice contains 26 Resolution Moments plus one delayed report: 21 ordinary-time evidence/preparation/relationship beats and 5 finite operation beats. Twelve observations include independent documentary/measurement sources, translated contacts and a present Noa encounter; four competing hypotheses and three synthesis steps connect them. Ten finite safe recognition IDs enter the existing discovery registry. Three coordination nodes are an IMPLEMENTATION TARGET, not fixed cosmology.
+New operations carry protocol 2. After the ordinary six-month opening, the zero-time cursor presents a common comparison, then a separate Harmonic or Forced confirmation, activation, hold and result. No strategy is selected automatically. Missing reference leads to an explicit refusal/alternative discussion; it never activates Harmonic or silently converts it. Legacy cursors without protocol retain their original finite route.
 
-Entry is age 24+, with Awakening resolved and no active Awakening sequence. Weighted family `resolution` has base weight 0.18, once-only entries, a 48-month entry gap and one active investigation. Required continuations use Task 07's reflection queue and ordinary-card spacing. Follow-ups occur after at least twelve Earth months; they do not create another scheduler. An explicitly selected queued archive return is a closure, not a new entry. Refusal closes participation; ordinary life remains valid. No quota/pity modifier or elevated test probability.
+Before further operation work, an incompatible ordinary World freeze closes the cursor with a superseded disposition. After time advancement the same reconciliation runs before drawing. It records closure without replacing World truth or manufacturing an official report. Validators replay the authored cursor and reject active frozen-world operations, missing reference, implicit Forced, missing activation, altered support or unattributed results. Invalid direct injections remain invalid.
 
-Civilian path: archive → independent measurement → proposed interpretation → delayed comparison → revision → translated evidence → comparison → bounded trial. Field path reads a real successful/partial survey or recon, then requests documentary comparison. Retrospective precursor content requires the already-occurring World anomaly but delivers knowledge only through a new adult archival encounter. Nothing changes the childhood anomaly or golden.
+Completed hold freezes World immediately through its existing finalizer. War records source, strategy, support, fronts, dimensions and campaigns. Forced remains a successful variant with severe bounded costs: three infrastructure steps, two civilian and resource steps, displaced corridor and damaged workshop (dimensions are 0–6, not casualty counts). Harmonic exposure costs personal health/energy/stress; limited evacuation additionally consumes infrastructure. Actual protections/War support determine whether withdrawal can complete or stays partial. Neither partial nor abort becomes another world ending.
 
-Connected contexts: an estuary and terraces, with different interests and incomplete testimony. Earth reception dates and narrated local elapsed-time mismatch are evidence, not another calendar, travel coordinates, disappearance system or autonomous species simulation. Neither context speaks for a whole species.
+If the workshop cannot confirm real availability/access, the authored review and consequence explain the suspension. Planned support never fabricates available infrastructure. A later legitimate legacy opening can still become eligible if real support recovers and World remains unresolved.
 
-Noa is the one registered Personal Constant, using the existing personal identity/portrait/relationship system, an adult encounter and later letter. Current choices affect closeness; no previous bond, fate or memory is copied. The letter closes even if direct contact is no longer possible. Family, Iria and historical NPCs are not automatically Personal Constants; Okafor remains historical recognition. The older personal-NPC lifespan model remains a limitation, not an expanded fate simulation.
+## Post-freeze event audit
 
-## Preparation and operation
+| Event family                                             | Disposition                                                         |
+| -------------------------------------------------------- | ------------------------------------------------------------------- |
+| Future War activation/campaign/resolution windows        | Superseded with durable provenance                                  |
+| rupture_response, vale_defense                           | Superseded if still pending                                         |
+| Future era anchors                                       | Era order only; suppress obsolete crisis effects                    |
+| yuna/okafor/voss continuity                              | Personal/institutional continuity remains valid; no fixed fate      |
+| okafor/voss continued reports after intervention         | Reconstruction/research wording, not renewed catastrophe            |
+| medical_network, contact_evidence, relief and foundation | Ordinary society/contact activity remains valid                     |
+| bastion_disruption                                       | Institutional consequence of an actual absent founder remains valid |
+| archive/repair/care/supply/Field reviews                 | Prior contribution follow-up remains valid                          |
+| resolution_result/report                                 | Occurred result and independently delayed authored delivery         |
 
-Full preparation dedicates ordinary time, money, energy and stress to institutional collaboration, communications/care/infrastructure, then contact/evacuation and three nodes. Resource costs apply only when accepting preparation; declining creates neither its costs nor its supports. A limited workshop route prepares communications/care/infrastructure/nodes while leaving contact/evacuation dependent on existing World support. Existing World institutional availability and actual workshop association/access gate activation; damaged/restricted support is not invented. Strategy readiness requires current synthesis and a still-active unresolved War.
+A prior report learned late retains its original event meaning. No future event can recreate the resolved Convergence; civic work and loss may continue without reversing the frozen receipt.
 
-The opening is a normal six-month preparation/commitment Moment. Internal strategy → activation → hold → result beats are zero-time, acyclic, saved at every decision and bounded to four steps on either route. No animation completion, random draw, physics object or second clock participates. The activation snapshot stores finite services/nodes/source references, actual infrastructure and War evidence; it does not duplicate live World ownership.
+## Knowledge, Noa and Threshold
 
-- **Harmonic:** requires Soul Reference. Sustaining costs 12 health plus energy/stress and can kill the participant. Withdrawing costs less. Sufficient infrastructure or existing stabilization evidence is required. After reference loss, an actually protected network can finish; otherwise result is partial. Communication/evacuation War evidence can substitute for matching local support. Strategy never changes automatically.
-- **Forced:** available without Soul Reference, through its own opening and explicit strategy confirmation. Sustaining can complete with less coordination, costing four health and imposing actual infrastructure/civilian loss and displacement through World. Withdrawal is partial. It is never a fallback secretly selected for Harmonic.
-- **Partial:** operation result only, with activation support, decisions, interpretation and preserved nodes recorded. World remains unresolved and ordinary War can later settle one of its eight outcomes. No tenth ending and no automatic conversion.
-- **Abort:** possible before activation, with no world freeze; preparation costs already paid remain. Each life has at most one initiated operation.
-- **Delegation:** not implemented in this compact slice; no fake autonomous executor or immediate offscreen completion. The existing World queue remains the extension seam if future authored delegation is approved.
+World truth, protagonist knowledge and player history remain separate. Completion writes the first bounded player intervention receipt immediately, alive or dead; it records witnessed operational completion, not a report received by the person. Legacy wording explicitly preserves this distinction. Death commits ordinary pending evidence once. Starting a new life while alive does not commit pending discoveries. Reload cannot re-finalize or mutate the earlier result. The official report is eligible after six months; Harmonic/Forced have distinct human consequences. A protagonist dying before delivery retains unknown world fate in Memorial. No True Resolution procedure/result enters a new protagonist snapshot.
 
-At a completed `rs_hold` choice, `finalizeResolutionWorld` validates provenance and freezes World immediately. It does not wait for month 840 or player death. War records strategy, source, support, dimensions, fronts, evidence and campaign IDs. Invalid future strategic windows and the named crisis episodes in `SUPERSEDED_EVENTS` receive durable `superseded` dispositions; completed history is not removed. Era anchors still advance in order, but their future crisis effects do not recreate the catastrophe. Later personal/civic life continues.
+Noa uses the existing V3 identity, bond, partner/ex/friend and alive/deceased owners. First encounter implies no previous familiarity; later recognition is a subjective discrepancy, never Noa's inherited memory. The later response projects partner, friend, distant or unavailable text. Unavailable closure does not revive or change her relationship. No extra fate simulation or historical NPC requirement.
 
-The independent official report becomes eligible six Earth months later through the existing report system. Profile/Memorial show only current delivered observations and observed operational result; they cannot inspect private final truth. Existing Cores and abilities are unchanged; no global Awakening block is installed. There is no post-resolution society simulator.
+Threshold projects committed player recognition or intervention history into static layered arches. It writes no state, adds no random calls or animations, preserves reduced motion and hides decoration in forced colors. A new person is never made omniscient.
 
-## Cross-life knowledge
+## Validation and development
 
-Safe delivered observation IDs enter existing pending discoveries; death commits them once. Hypothesis states retain first provenance per finite theory/status inside `meta.legacy.resolution.theories`. A completed witnessed operation records the first receipt per strategy in `meta.legacy.resolution.records` while the participant is alive. Both are player-level history and excluded from frozen protagonist snapshots. True Resolution is still rejected in inherited `outcomes`, summaries and discovery IDs; the report does not write it there. New lives must reconstruct current synthesis and preparation.
+Use npm run check, npm test and npm run test:browser. tests/resolution-corrective.test.js covers natural production selection, archived saves, provenance, temporal theory revision, explicit strategies, Noa and knowledge separation. Month-boundary coverage spans 833, 834, 835, 839, 840 and 841 with reload/accept/refuse for both paths. The existing childhood golden and stream regressions remain authoritative.
 
-The bounded record retains first strategic precedents, not every full resolved world. Recent ordinary life summaries keep the established twenty-life limit. No private previous realization, unread report, complete procedure or numeric recipe is imported/displayed.
+Production reachability: node tools/simulate-resolution.mjs 100 10. It starts actual lives and uses only production choose/draw, with a curiosity-oriented player policy. No injected queue, selected Moment, reference or operation state. Full-selector benchmark: node tools/benchmark-selector.mjs (complete drawCard, naturally produced adult snapshots, clone excluded, 200 warmup and 2000 measured samples). tools/inspect-resolution.js continues to distinguish private truth, delivered evidence and player records.
 
-## Validation, inspection and performance
+Validation is provenance/structure checking for local saves, not cryptographic anti-tamper or exhaustive model checking. Browser emulation does not certify physical mobile or Safari. Each life has one initiated planetary operation; re-entry is bounded, not an infinite repeat manager.
 
-`resolution-validation.js` cross-checks authored decisions, immutable evidence, hypothesis transitions, support sources, finite cursor replay and pure result projection. `validate-resolution.js` checks registered zero-time scenes, references, acyclicity, exact authored effects/transitions and the delayed report contract. World/War validators admit True Resolution only with operation provenance; existing direct-injection/Legacy guards remain.
+## Corrective-pass measurements
 
-`npm run debug:life -- --seed 42 --steps 120 --resolution` uses the development-only inspector, separating private truth, character evidence, delivered reports, player receipts, pending/frozen input and eligibility. Production imports no dev harness.
+- B1 reachability, B2 missing cosmology, B3 strategy choice, B4 month-840 closure, B5 documentation status, B6 Noa continuity and B7 evidence bearer: **FIXED**. The adult entry remains rare; accepted continuations use existing production selection and queue, not a success quota.
+- `npm run check`: 191 modules, imports/assets/static publication guards pass. `npm test`: 244/244 pass; focused Resolution regressions: 32/32. Childhood golden and Awakening/Core/class/rarity/rank and independent stream tests remain green. No invalid injection guard was removed to produce these results.
+- `npm run test:browser`: all 17 browser suites pass on installed Edge, including `/` and `/lifesim/`. Task 14.1 covers 360×640, 360×800, 390×844, 430×932 and 1440×900; actual keyboard/touch decisions, reload, Harmonic/Forced/partial, delayed report, living continuation, new life, unknown Memorial, Noa first/recognized/partner/friend and Threshold. Its 27 axe audits report zero violations and zero console/resource errors. Reduced motion, forced colors and doubled text pass. Mobile/desktop, Noa and Threshold captures were visually inspected; temporal samples show pickup/return, confirmation and ordinary-life continuity. Local capture: `output/qa/task14-1/operation.webm` (551 captured frames). These are browser/emulated-viewport checks, not physical-device or Safari certification.
+- Production selector, 100 players × 10 lives: 191,534 choices, 149,548 ordinary (78.08%). Any Resolution evidence: 204 lives; documentary investigation: 116; hypotheses: 106; boundary synthesis: 88; relevant committed recognition: 739; Soul Reference: 55; preparation: 73; strategic comparison: 26. Harmonic attempted/completed: 10/10; Forced attempted/completed: 16/16; partial: 0; abort: 0; invalid saves: 0. This curiosity policy continues and sustains; directed tests separately exercise partial/abort/fatal outcomes. It is a reachability demonstration, not an estimated population probability. The original 1,000-life sample and independent curiosity audit reported zero final operations.
+- Complete adult `drawCard` benchmark on Node 24.18: 952 natural snapshots from 20 lives, 200 warmup calls, 2,000 measured calls. Median 0.737 ms, p95 1.478 ms, p99 1.707 ms. Snapshot cloning is outside the measurement. No claim about physical-phone FPS or directly comparable laboratory hardware.
+- Frozen Task 13 active/deceased and Task 14 investigation/cursor/completed/fatal saves retain their original state and knowledge. Fixture provenance is in tests/fixtures/README.md. New field observation bearers require an actual completed/partial expedition before delivery; null observation records fail closed without exceptions.
+- No production dependency or RNG owner was added. Initial discovery weights, PRNG algorithms and childhood golden are unchanged. Adult selection intentionally changes through authored eligible continuations. No rank/class probability, global Hunter multiplier, Task 15 or Steam work.
 
-`tools/simulate-mysteries.mjs` is the existing multi-life runner extended with Task 14 diagnostics, not another simulator. `tools/resolution-fixtures.js` drives chosen legal production transactions with real elapsed interleaving and save/load, without forcing production odds. `tests/resolution.cjs` joins browser QA.
+## Historical Task 14 validation (before corrective pass)
 
-Requirement work is bounded by this finite content/entry registry, outside rendering. No per-frame work, new runtime dependency, RNG owner or modified probability formula. Adult selection changes because the eligible content pool expands; all four existing RNG algorithms and the protected childhood projection remain unchanged.
-
-## Limits
-
-Finite initial hypotheses, two connected contexts, three preparation nodes and one attempt per life. No repeatable planetary-operation manager, autonomous expedition/world/NPC engine, delegation, full post-resolution society or full Noa fate simulator. Validation is structural/provenance validation for local saves, not cryptographic anti-tamper or exhaustive reachability proof. Native mobile hardware and non-Chromium engines require separate testing.
-
-## Validation evidence — 2026-10-07
+The results below describe the earlier implementation, not corrective-pass acceptance.
 
 - Static check: 184 modules, imports/assets/publication files valid; 379 binary Moments total, including 26 Resolution Moments and the report.
 - Full unit suite: 233/233. Twenty-one grouped Task 14 tests cover the civilian and actual Field→archive→operation paths, hypotheses, cold/recognized separation, qualitative OR alternatives, Forced/refusal/partial/support variants, preparation refusal without costs or fabricated supports, zero-time reloads, corruption/migration, knowledge isolation and immutable previous results. Additional paired progression reaches age 24 with identical Awakening/RNG; duplicate death finalization leaves meta unchanged. Existing 100-childhood golden and direct-injection guards remain green.

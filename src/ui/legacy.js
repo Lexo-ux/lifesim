@@ -2,6 +2,18 @@ import { PERSPECTIVES, DISCOVERIES } from "../../content/legacy/catalog.js";
 import { OUTCOME_RULES } from "../../content/world/war.js";
 import { DOMAINS } from "../../content/life-paths/catalog.js";
 import { esc } from "./helpers.js";
+import { committedRecognition } from "../systems/resolution-rules.js";
+export function thresholdDepth(meta) {
+  const l = meta?.legacy;
+  if (!l) return "ordinary";
+  if (Object.keys(l.resolution?.records || {}).length) return "intervention";
+  return committedRecognition({
+    discoveries: Object.keys(l.discoveries),
+    echoes: Object.keys(l.echoes),
+  }) && ["inquiry", "contact", "field"].some((id) => l.perspectives[id])
+    ? "recognition"
+    : "ordinary";
+}
 
 // Read-only player observations. Never read private World state here.
 export function legacyObservations(meta) {
