@@ -23,6 +23,14 @@ Estado: semilla, edad, estadísticas, habilidades, finanzas, estudios, carrera, 
 
 `load` no escribe; `save` valida V3, serializa y devuelve éxito/fallo. La UI avisa si no puede guardar. No hay sincronización, conflictos entre pestañas resueltos, backup remoto ni importador de archivos del jugador.
 
+### Compatibilidad Task 14.1A
+
+Tras validar la envoltura y antes de `validStory`, `src/persistence/resolution-migration.js` reconoce el defecto histórico de Task 14: apertura antigua sin protocolo en los meses 834–839, transición de seis meses, resultado mundial ordinario documentado en 840 y cursor de estrategia todavía sin responder. Comprueba procedencia de la apertura y preparación, y exige que el clon corregido supere los validadores completos existentes. Meta se valida antes de devolver cualquier resultado.
+
+Solo cambia cinco valores: operación `cursor = null`, `result = superseded`, `resolvedAt = world.clock`, última escena Resolution seleccionada a su apertura ya vivida, y Moment actual al fallback ordinario `quiet_day`. No ejecuta `drawCard`, decisiones, RNG, avance temporal, muerte ni colección/commit de Legado. World, War, decisiones, evidencia, meta, Legado y todos los streams permanecen exactos. No existe continuación pendiente en esta forma histórica; una cola operativa incompatible se rechaza, no se borra por conjetura.
+
+La carga devuelve `migrated = true` y aviso vacío. Guardar después produce un estado actual válido; recargar no vuelve a migrarlo. `load` no sobrescribe ni siquiera un original reconocido. Estados nuevos incompatibles, protocolos desconocidos y parecidos corruptos siguen rechazándose; las versiones y claves no cambian. Fixtures congelados y procedencia: `tests/fixtures/README.md`.
+
 ## Extensión de Despertar — Task 06
 
 Se conserva la envoltura y todas las claves. `state.awakening.version = 1` añade estado, fecha de exposición, resolución, cursor narrativo, Núcleo/clase/rareza/rango, evaluación y respuesta. La ausencia del campo en V2/V3 sigue siendo válida: cargar o renderizar no crea la extensión ni añade tiradas de Despertar. El adaptador V2 conserva su comportamiento previo. En la siguiente decisión de una vida viva se incorpora un estado pendiente y se programa una exposición futura según la regla documentada. Una vida fallecida anterior permanece intacta. El resultado se resuelve dentro de la transacción de elección y se guarda antes de presentarlo; recargar conserva resultado y cursor. Versiones desconocidas, enums inválidos y cursores inconsistentes se rechazan conservando el original. Contrato completo: [AWAKENING_SYSTEM](AWAKENING_SYSTEM.md).

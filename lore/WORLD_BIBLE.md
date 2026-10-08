@@ -16,7 +16,7 @@ La Primera Apertura hace visibles regiones donde la Tierra se superpone con ento
 
 **PROVISIONAL CANON:** nombre del periodo central: **The Threshold War / La Guerra del Umbral**. Su carácter provisional no vuelve provisionales los principios aprobados del mundo.
 
-La causa última permanece **CANONICALLY UNRESOLVED — RESERVED FOR METANARRATIVE DESIGN**. Ninguna criatura, institución o clase nombrada aquí implica una respuesta.
+El modelo causal aprobado es **PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1**. La especificación completa permanece externa; el runtime entrega evidencia autorizada. Ninguna criatura, institución o clase nombrada aquí permite inferir causas adicionales. Contrato público: [TRUE_RESOLUTION](../docs/TRUE_RESOLUTION.md).
 
 ## Vidas civiles y vidas despertadas
 
@@ -71,4 +71,4 @@ La guerra necesita contraste: cumpleaños, humor, amistades, romance, familia, c
 
 ## Alcance y reservas
 
-La especificación establece conceptos, no fórmulas, fechas exactas ni sistemas ejecutables. La [metanarrativa pública](METANARRATIVE.md) reserva la explicación de vidas repetidas y la resolución última. No se adoptan automáticamente profesiones, NPCs, eventos, finales ni metanarrativa de V3. Task 02 termina con documentación; Task 03 no se inicia aquí.
+La especificación establece conceptos, no fórmulas, fechas exactas ni sistemas ejecutables. La [metanarrativa pública](METANARRATIVE.md) mantiene reservada la explicación de vidas repetidas; la Resolución Verdadera aprobada ya tiene implementación, sin reproducir aquí su especificación privada. No se adoptan automáticamente profesiones, NPCs, eventos, finales ni metanarrativa de V3. Task 02 termina con documentación; Task 03 no se inicia aquí.

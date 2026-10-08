@@ -1,6 +1,6 @@
 # Canon de LifeSim
 
-**Fuente:** especificación del usuario «Task 02/16 — Canonical World Bible and Narrative Specification», incorporada en Task 02. Este conjunto define el mundo futuro; no afirma que sus sistemas estén implementados.
+**Fuente:** especificación del usuario «Task 02/16 — Canonical World Bible and Narrative Specification», incorporada en Task 02, con actualizaciones posteriores aprobadas. El estado de implementación se indica por materia; Tasks 14/14.1 implementan el modelo causal y la Resolución Verdadera autorizados.
 
 ## Jerarquía y estados
 
@@ -38,4 +38,4 @@ Una revisión canónica debe identificar regla previa, propuesta, motivo, autori
 
 ## Política pública
 
-El repositorio y el runtime estático pueden inspeccionarse. No publicar causa última de la Convergencia, solución exacta de la Resolución Verdadera, explicación definitiva de vidas repetidas ni giro final. Las reservas no afirman que ya exista una respuesta secreta escrita. No se ha inventado ni trasladado material privado, ni creado otro repositorio. Quitar enlaces o ignorar archivos no protege secretos publicados.
+El repositorio y el runtime estático pueden inspeccionarse. No copiar la especificación privada externa completa ni su receta interna de diseño en lore/docs públicos. El runtime puede contener la evidencia escrita y las operaciones aprobadas necesarias para jugar; los documentos públicos pueden reconocer su implementación sin convertirse en una referencia completa de spoilers. El modelo causal y la Resolución Verdadera tienen estado PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1; véase [TRUE_RESOLUTION](../docs/TRUE_RESOLUTION.md). La explicación definitiva de vidas repetidas y los giros o entidades no aprobados siguen reservados. No inventar respuestas ni crear otro repositorio sin autorización. Quitar enlaces o ignorar archivos no protege secretos publicados.

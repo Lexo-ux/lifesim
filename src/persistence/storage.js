@@ -18,6 +18,7 @@ import { validWorld } from "./world-validation.js";
 import { validLegacyState, validMeta } from "./meta-validation.js";
 import { validMystery } from "./mystery-validation.js";
 import { validResolution } from "./resolution-validation.js";
+import { migrateTask14Boundary } from "./resolution-migration.js";
 export const SAVE_KEY = STORAGE_KEYS.current;
 const record = (x) => !!x && typeof x === "object" && !Array.isArray(x);
 const number = (n) => Number.isFinite(n) && n >= 0;
@@ -138,7 +139,10 @@ export function load(storage = globalThis.localStorage) {
         throw new Error("Unknown meta version");
       if (data.state?.legacy && data.meta?.version !== 3)
         throw new Error("Missing snapshot provenance");
-      if (data.version !== 3 || (data.state && !validStory(data.state)))
+      if (data.version !== 3) throw new Error("Invalid V3 save version");
+      const migrated = migrateTask14Boundary(data.state, validStory);
+      if (migrated) data.state = migrated;
+      if (data.state && !validStory(data.state))
         throw new Error("Invalid V3 save");
       if (
         data.meta?.version === 3 &&
@@ -146,6 +150,7 @@ export function load(storage = globalThis.localStorage) {
       )
         throw new Error("Invalid legacy provenance");
       result.state = data.state || null;
+      result.migrated = !!migrated;
       result.meta = readMeta(data.meta);
       result.settings = {
         sound: data.settings?.sound === true,

@@ -34,10 +34,6 @@ La vida personal puede ser satisfactoria aunque la humanidad pierda, o dolorosa 
 
 Esa formulación expresa propósito narrativo; no define una receta de clases obligatorias, número de partidas, pruebas coleccionables ni solución final.
 
-**RESERVED — PRIVATE CANON**
-
-[RESERVED FOR PRIVATE CANON]
-
-No se especifican causa última, respuesta, entidad final o giro. Política y metaprogreso: [METANARRATIVE](METANARRATIVE.md). Los finales V3 permanecen como implementación heredada, sin mapearse a estas categorías.
+El modelo causal y la solución aprobados están implementados mediante evidencia y operaciones del runtime; este documento no reproduce la especificación privada externa. La explicación de vidas repetidas, una eventual entidad final y giros no aprobados permanecen reservados. Política y metaprogreso: [METANARRATIVE](METANARRATIVE.md). Los finales personales heredados siguen separados de las ocho categorías mundiales ordinarias y la Resolución Verdadera.
 
 La solución aprobada tiene implementación: **PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1**. La fuente externa no se copia aquí. World conserva el resultado inmediato, War su procedencia y Legacy un registro de intervención para quien juega. Un Memorial sin informe sigue mostrando destino mundial desconocido.
