@@ -35,6 +35,7 @@ export function simulateOpportunities(lives = 300) {
     invalidSaves: 0,
     onceRepeats: 0,
     consecutiveOpportunities: 0,
+    finiteOperationSteps: 0,
     repeatCooldownViolations: 0,
     selectionMs: [],
     field: {
@@ -99,7 +100,8 @@ export function simulateOpportunities(lives = 300) {
         sequence.push(m.id);
         count(report.opportunities, m.id);
         if (m.once !== false && visited.has(m.id)) report.onceRepeats++;
-        if (CARD_BY_ID[previous]?.opportunity)
+        if (m.system === "resolution") report.finiteOperationSteps++;
+        if (m.system !== "resolution" && CARD_BY_ID[previous]?.opportunity)
           report.consecutiveOpportunities++;
         const before = s.story.seen[m.id];
         if (

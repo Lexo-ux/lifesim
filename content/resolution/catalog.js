@@ -47,7 +47,9 @@ export const SUPPORTS = [
   "infrastructure",
   "contact",
 ];
+import { CORRECTIVE_OBSERVATIONS } from "./corrective-scenes.js";
 export const OBSERVATIONS = {
+  ...CORRECTIVE_OBSERVATIONS,
   precursor: {
     text: "Un parte de vibraciones anterior a las Aperturas describe una perturbación subterránea, sin atribuirla a Cazadores.",
     source: "Parte municipal conservado",
@@ -142,9 +144,14 @@ export const OBSERVATIONS = {
 export const SYNTHESIS = {
   vein: {
     observations: ["strata", "pulse"],
+    alternatives: [["field_branch", "field_network"]],
     domains: ["ancient", "terrestrial", "vein"],
   },
-  flow: { observations: ["loss", "downstream"], domains: ["flow"] },
+  flow: {
+    observations: ["loss", "downstream"],
+    alternatives: [["field_branch", "field_flow"]],
+    domains: ["flow"],
+  },
   boundary: {
     observations: ["contact", "pattern", "boundary"],
     domains: ["worlds", "constellation", "boundary"],
@@ -172,6 +179,12 @@ export const RESOLUTION_REPORTS = {
     channel: "public",
     outcome: "true-resolution",
     text: RESOLUTION_OUTCOME.text,
+    strategies: {
+      harmonic:
+        "Las comprobaciones independientes confirman el cese del estado catastrófico. La coordinación armónica conservó contactos controlados sin destruir la Resonancia. Hubo exposición, cuidados y recursos consumidos; las pérdidas anteriores siguen aquí.",
+      forced:
+        "Las comprobaciones independientes confirman el cese del estado catastrófico mediante estabilización forzada. El balance registra infraestructura inutilizada, servicios perdidos y población desplazada. La Resonancia no desapareció. Haber detenido el colapso no repara ese daño.",
+    },
     presentation: "historical",
   },
 };

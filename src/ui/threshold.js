@@ -1,4 +1,4 @@
-import { thresholdEcho } from "./legacy.js";
+import { thresholdEcho, thresholdDepth } from "./legacy.js";
 import { THRESHOLD_ART } from "./art.js";
 import { animate, duration, reduced } from "./motion.js";
 import { thresholdSound } from "./audio.js";
@@ -30,11 +30,12 @@ export function thresholdScreen(data) {
     : ended
       ? button("Recordar", "continue", "", "text-button")
       : "";
-  return `<section class="threshold ${data.state ? "has-save" : ""} ${data.warning || data.migrated ? "has-note" : ""}" data-threshold-state="idle" aria-labelledby="page-title">
+  return `<section class="threshold ${data.state ? "has-save" : ""} ${data.warning || data.migrated ? "has-note" : ""}" data-threshold-state="idle" data-recognition="${thresholdDepth(data.meta)}" aria-labelledby="page-title">
     <header class="threshold-title"><h1 id="page-title">LIFESIM</h1><p>${esc(thresholdEcho(data.meta))}</p></header>
     <div class="threshold-scene" aria-hidden="true"><div class="threshold-frame">
       <img class="threshold-environment" src="${THRESHOLD_ART.environment}" width="768" height="1024" alt="" fetchpriority="high" decoding="async">
       <div class="threshold-lumen"></div>
+      <div class="threshold-depth"><i></i><i></i><i></i></div>
       <div class="threshold-possibilities">${THRESHOLD_ART.fragments
         .slice(0, 2)
         .map(

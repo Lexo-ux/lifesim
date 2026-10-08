@@ -55,3 +55,7 @@ The eight original mystery IDs are excluded from all fresh selection. Already se
 ## Task 13 — authorized local mystery premises
 
 The six requested incident premises are authored local fiction, not explanations of cosmology. Town Between Worlds is physical inter-world Convergence displacement with a local/Earth elapsed-time offset, never travel to an Earth date. Orphan Object has an observed closed transfer route but no observed creator. The dead person arrives displaced relative to their documented death; no general time machine is inferred. Reverse Sequence uses a fixed prior machine cycle, never future player input. Missing Day repairs a local service prospectively without rewriting history. Phantom accounts do not confirm rewritten history or alternate timelines. Generic witnesses/settings are not new historical canon; Constants are recurring observations, not a True Resolution recipe. Scope and evidence firewall: [DEEP_MYSTERIES](DEEP_MYSTERIES.md).
+
+## Task 14/14.1 — current disposition
+
+**PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1.** Earlier entries above describe their historical task boundaries, not current prohibitions. Approved external canon now governs delivered Resolution evidence, final intervention and recognition; the complete private specification stays outside this repository. Original Archive fiction is still compatibility-only. No current protagonist inherits another life’s solution or private World. See [TRUE_RESOLUTION](TRUE_RESOLUTION.md) for incremental save handling, ownership and the public implementation contract.

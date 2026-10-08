@@ -296,3 +296,38 @@ body.at-threshold {
     opacity: 0.1;
   }
 }
+.threshold-depth {
+  position: absolute;
+  inset: 13% 29% 21%;
+  pointer-events: none;
+  display: none;
+  opacity: 0.22;
+}
+.threshold[data-recognition="recognition"] .threshold-depth,
+.threshold[data-recognition="intervention"] .threshold-depth {
+  display: block;
+}
+.threshold-depth i {
+  position: absolute;
+  inset: 8% 12% 0;
+  border: 1px solid #c2bd9c;
+  border-bottom: 0;
+  border-radius: 47% 44% 0 0;
+  transform: skewY(-4deg);
+}
+.threshold-depth i:nth-child(2) {
+  inset: 18% 22% 0;
+  transform: skewY(5deg);
+}
+.threshold-depth i:nth-child(3) {
+  inset: 28% 32% 0;
+  border-left-color: transparent;
+}
+.threshold[data-recognition="intervention"] .threshold-depth {
+  opacity: 0.36;
+}
+@media (forced-colors: active) {
+  .threshold-depth {
+    display: none !important;
+  }
+}

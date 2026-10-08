@@ -4,15 +4,18 @@ const assert = require("node:assert/strict"),
 const AxeBuilder = require("@axe-core/playwright").default;
 const { record } = require("./recording.cjs");
 const base = process.env.BASE_URL || "http://127.0.0.1:4173",
-  dir = "output/qa/task14";
+  dir = "output/qa/task14-1";
 (async () => {
   const {
     preparedResolution,
     awaitResolution,
     resolutionStep,
     operationFixture,
+    resolutionFixture,
+    selectResolution,
   } = await import("../tools/resolution-fixtures.js");
-  const { choose } = await import("../src/narrative/engine.js");
+  const { choose, startLife } = await import("../src/narrative/engine.js");
+  const { finishLegacy } = await import("../tools/legacy-fixtures.js");
   const { save } = await import("../src/persistence/storage.js");
   const browser = await chromium.launch({
     headless: true,
@@ -100,7 +103,17 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
       assert.deepEqual(actual.meta, expected.meta);
       return actual;
     }
-    const opening = awaitResolution(preparedResolution(), "rs_opening");
+    const opening = awaitResolution(preparedResolution(), "rx_window");
+    let investigation = selectResolution(resolutionFixture(), "rs_archive");
+    for (const id of [
+      "rs_archive",
+      "rx_geology",
+      "rx_interval",
+      "rs_measure",
+    ]) {
+      investigation = resolutionStep(awaitResolution(investigation, id));
+    }
+    investigation = awaitResolution(investigation, "rx_debate");
     for (const [width, height] of [
       [360, 640],
       [360, 800],
@@ -109,6 +122,14 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
       [1440, 900],
     ]) {
       await page.setViewportSize({ width, height });
+      await restore(investigation);
+      await shot("investigation-" + width + "x" + height);
+      await audit("investigation-" + width);
+      const evidence = await saved();
+      await page.reload();
+      await page.locator("[data-action=continue]").click();
+      await ready();
+      assert.deepEqual(await saved(), evidence);
       await restore(opening);
       assert.ok(
         await page.evaluate(
@@ -155,7 +176,8 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
     await page.waitForTimeout(500);
     assert.deepEqual((await saved()).state, opening.state);
     for (const id of [
-      "rs_opening",
+      "rx_window",
+      "rs_choice",
       "rs_strategy",
       "rs_activation",
       "rs_hold",
@@ -178,6 +200,8 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
     await decide();
     const receipt = (await saved()).meta.legacy.resolution.records.harmonic;
     await page.locator("[data-action=home]").click();
+    await shot("threshold-intervention");
+    await audit("threshold-intervention");
     await page.locator("[data-action=creator]").click();
     await page.locator("button[type=submit]").click();
     await page.locator("[data-action=confirm-new]").click();
@@ -195,10 +219,11 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
           reference: !forced,
           network: forced ? "full" : "limited",
         }),
-        forced ? "rs_forced_opening" : "rs_opening",
+        "rx_window",
       );
       await restore(fixture);
       await decide("left");
+      await decide(forced ? "right" : "left");
       await decide("left");
       await decide("left");
       await shot(scenario + "-commit");
@@ -245,6 +270,44 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
       await audit(mode);
       await decide("right", true);
     }
+    await page.emulateMedia({ reducedMotion: "reduce", forcedColors: "none" });
+    const firstNoa = selectResolution(resolutionFixture(), "rs_noa");
+    await restore(firstNoa);
+    assert.match(
+      await page.locator(".narrative-card").textContent(),
+      /no trae una historia de otra vida/,
+    );
+    await shot("noa-first");
+    await audit("noa-first");
+    const reply = awaitResolution(resolutionStep(firstNoa), "rs_noa_reply");
+    for (const type of ["partner", "friend"]) {
+      const variant = structuredClone(reply);
+      variant.state.relationships.find((r) => r.id === "noa").type = type;
+      await restore(variant);
+      assert.match(
+        await page.locator(".narrative-card").textContent(),
+        type === "partner" ? /vida juntos/ : /amistad/,
+      );
+      await shot("noa-" + type);
+      await audit("noa-" + type);
+      await decide("left");
+    }
+    const prior = finishLegacy(resolutionStep(structuredClone(reply)));
+    const later = {
+      ...prior,
+      state: startLife({ name: "Otra persona" }, prior.meta, 72),
+    };
+    while (later.state.alive && later.state.age < 24)
+      choose(later.state, later.meta, "right");
+    assert.ok(later.state.alive);
+    selectResolution(later, "rs_noa");
+    await restore(later);
+    assert.match(
+      await page.locator(".narrative-card").textContent(),
+      /no sabes situar/,
+    );
+    await shot("noa-recognized");
+    await audit("noa-recognized");
     const fatal = operationFixture({ health: 8 });
     await page.emulateMedia({ reducedMotion: "reduce", forcedColors: "none" });
     await page.goto(base);
@@ -270,7 +333,7 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
     await browser.close();
   }
   console.log(
-    "Task 14 browser QA passed: five sizes, operation, reload, private-knowledge firewall, new life, reduced motion, 200% text and forced colors.",
+    "Task 14.1 browser QA passed: five sizes, investigation, operation, reload, private-knowledge firewall, new life, Threshold, reduced motion, 200% text and forced colors.",
   );
 })().catch((e) => {
   console.error(e);

@@ -24,6 +24,7 @@ import {
 import {
   resolutionMomentId,
   prepareResolutionMoment,
+  resolutionText,
 } from "../systems/resolution.js";
 import { OPERATION_TEXT } from "../../content/resolution/presentation.js";
 
@@ -108,6 +109,8 @@ export function drawCard(s, meta) {
 }
 export const currentCard = (s) => CARD_BY_ID[s.story.current];
 export function cardText(s, meta, event = currentCard(s)) {
+  if (event.resolution && resolutionText(s, event))
+    return resolutionText(s, event);
   if (event.id === "rs_result")
     return OPERATION_TEXT[s.resolution.operation.result] || event.text;
   if (event.id === "rs_hold") {

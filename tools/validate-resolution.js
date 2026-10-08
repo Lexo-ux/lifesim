@@ -9,6 +9,7 @@ import {
   RESOLUTION_EVENT,
 } from "../content/resolution/catalog.js";
 import { resolutionConsequenceSchema } from "../src/narrative/resolution-schema.js";
+import { CONTINUATIONS } from "../content/resolution/continuations.js";
 export function validateResolution(moments = RESOLUTION_MOMENTS) {
   const errors = [],
     byId = new Map(moments.map((m) => [m.id, m]));
@@ -58,6 +59,15 @@ export function validateResolution(moments = RESOLUTION_MOMENTS) {
     if (!s) return;
     for (const side of ["left", "right"])
       if (s[side].next) walk(s[side].next, new Set([...seen, id]));
+    for (const routes of Object.values(CONTINUATIONS[id] || {}))
+      for (const route of routes) {
+        if (
+          !RESOLUTION_SCENES[route.next] ||
+          (route.gate && route.gate !== "reference")
+        )
+          errors.push(`Invalid authored route ${id}`);
+        else walk(route.next, new Set([...seen, id]));
+      }
   };
   Object.keys(RESOLUTION_SCENES).forEach((id) => walk(id));
   return errors;

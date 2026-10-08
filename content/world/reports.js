@@ -84,6 +84,10 @@ export const REPORTS = {
     },
   },
   okafor: {
+    postResolution: {
+      continued:
+        "Llegaron nuevas observaciones de Amara Okafor sobre los contactos que permanecen. La investigación continúa después de la intervención; no anuncia otro colapso.",
+    },
     event: "okafor_continuity",
     delay: 24,
     channel: "public",
@@ -97,6 +101,10 @@ export const REPORTS = {
     },
   },
   voss_later: {
+    postResolution: {
+      continued:
+        "Adrian Voss sigue participando en protección y reconstrucción. Su presencia no repara por sí sola las pérdidas anteriores.",
+    },
     event: "voss_continuity",
     delay: 18,
     channel: "public",

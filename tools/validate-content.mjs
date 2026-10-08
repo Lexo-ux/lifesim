@@ -214,7 +214,10 @@ export function validateContent({
       for (const follow of Array.isArray(o.follow) ? o.follow : []) {
         if (
           !record(follow) ||
-          !byId.get(follow.id)?.queued ||
+          !(
+            byId.get(follow.id)?.queued ||
+            (m.resolution && byId.get(follow.id)?.resolution)
+          ) ||
           !nonnegative(follow.months)
         )
           report(m.id, "broken narrative follow-up");

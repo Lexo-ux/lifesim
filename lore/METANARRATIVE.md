@@ -8,7 +8,7 @@ Varias vidas forman parte de LifeSim. La progresión entre vidas debe abrir prin
 
 No aumentar de forma oculta las probabilidades de S/SS/SSS. Una oportunidad narrativa rara y una tirada de rango son sistemas distintos; la primera no justifica manipular la segunda. Véase [RANKS_AND_RARITIES](RANKS_AND_RARITIES.md).
 
-Lo aprendido entre partidas no implica que el siguiente protagonista conozca literalmente todo. La relación exacta entre conocimiento del jugador, del personaje y descubrimientos persistentes es **TBD**, sujeta a los límites de [ENDINGS](ENDINGS.md).
+Lo aprendido entre partidas no implica que el siguiente protagonista conozca literalmente todo. La implementación de Tasks 12–14.1 separa conocimiento del personaje, historia del jugador y verdad privada del mundo. Los contratos públicos están en [TRUE_RESOLUTION](../docs/TRUE_RESOLUTION.md); la especificación externa aprobada conserva la autoridad canónica.
 
 ## Espacio canónico para anomalías
 
@@ -20,10 +20,10 @@ Esto autoriza posibilidades sutiles, no garantiza que aparezcan en todas las vid
 
 | Materia                                                         | Estado                                                             |
 | --------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Causa última de la Convergencia                                 | **CANONICALLY UNRESOLVED — RESERVED FOR METANARRATIVE DESIGN**     |
+| Causa última de la Convergencia                                 | **PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1**                    |
 | Explicación de reencarnación o vidas repetidas                  | **RESERVED — PRIVATE METANARRATIVE**                               |
 | Identidad de entidad final, si el diseño llegara a requerir una | **RESERVED — PRIVATE CANON**; no se afirma que exista una entidad. |
-| Solución exacta de la Resolución Verdadera                      | **RESERVED — PRIVATE CANON**                                       |
+| Solución exacta de la Resolución Verdadera                      | **PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1**                    |
 | Giro final o grandes revelaciones de cierre                     | **RESERVED — PRIVATE CANON**                                       |
 
 [RESERVED FOR PRIVATE CANON]
@@ -31,3 +31,7 @@ Esto autoriza posibilidades sutiles, no garantiza que aparezcan en todas las vid
 No completar esas reservas con dioses, máquinas, simulaciones, villanos, entidades u organizaciones supuestas. No establecer un número de vidas ni una secuencia definitiva de revelaciones. «El Archivo» y sus decisiones de V3 no se adoptan como explicación del nuevo mundo.
 
 No se crea repositorio privado ni se publica material privado. Si futuras tareas definen respuestas sensibles, separar la fuente canónica privada de lo que deba distribuirse como runtime público. Véanse [política](README.md) y [migración](../docs/CANON_MIGRATION.md).
+
+## Estado de implementación
+
+**PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1**. La especificación externa aprobada y su Addendum siguen siendo la fuente completa; este documento público no reproduce sus respuestas. El runtime entrega evidencia gradual, no conocimiento automático a cada protagonista. Contrato técnico: [TRUE_RESOLUTION](../docs/TRUE_RESOLUTION.md). Las reservas no cubiertas por esa aprobación continúan reservadas.

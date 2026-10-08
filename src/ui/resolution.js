@@ -15,6 +15,8 @@ const resultNames = {
     "La coordinación se completó; su confirmación pertenece a los informes recibidos.",
   partial: "La intervención fue parcial. El resultado mundial seguía abierto.",
   aborted: "Decidiste detener la operación antes de activarla.",
+  superseded:
+    "La ventana de intervención se cerró antes de completar el plan. Quedaron informes por recibir.",
   failed: "La operación no pudo sostenerse.",
 };
 export function resolutionMemory(s) {
@@ -30,6 +32,12 @@ export function resolutionMemory(s) {
           esc(d.text) +
           '</p><p class="small muted">' +
           esc(d.source) +
+          (x.bearer
+            ? " · " +
+              (x.bearer.mode === "received"
+                ? "Hallazgo recibido"
+                : "Observación propia")
+            : "") +
           " · " +
           esc(d.date) +
           "<br>" +
@@ -73,7 +81,7 @@ export function resolutionLegacy(meta) {
         (r) =>
           "<p>Una vida completó una intervención " +
           (r.strategy === "forced" ? "forzada" : "armónica") +
-          ". Aquella historia permanece resuelta.</p>",
+          ". Es un registro de la intervención, no un informe que la persona hubiera recibido. Su Memorial conserva únicamente lo que llegó a conocer.</p>",
       )
       .join("") +
     Object.entries(ledger.theories)

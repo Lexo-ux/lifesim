@@ -68,3 +68,7 @@ Local Edge 153, headless Windows, 360×640, 4× CPU slowdown, 750 kbit/s down, 2
 Desktop Chromium emulation does not replace physical iOS/Android testing. Constrained startup still has measurable long tasks; no permanent animation cost is carried into gameplay. Symbolic scenes are four composited groups, not ten independently moving characters. The portal uses layered depth and occlusion, not an articulated walk cycle. The creator preview and most gameplay age/NPC assets remain legacy, as required by Task 04 scope. No new class, rank, awakening, war, historical-NPC system, Core, Moment or canon interpretation was added.
 
 Future tasks may supply additional reviewed groups through `THRESHOLD_ART`, or a presentation variant derived from approved existing metadata at mount time. No speculative progression fields or spoilers are stored. Task 04 is ready to hand off; Task 05 is not started. Review Task 03/04 branch ancestry before merging because Task 04 includes the prior visual foundation.
+
+## Task 14.1 recognition projection
+
+The existing renderer adds a static, aria-hidden set of three shallow arches when committed player recognition exists; intervention receipts slightly strengthen their contrast. No new animation, listener, RNG or save field. Reduced motion retains the static composition; forced colors hides the decoration. This is player presentation, never a claim that the next protagonist remembers a solution. See TRUE_RESOLUTION.md.
