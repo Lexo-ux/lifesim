@@ -29,7 +29,7 @@
 | Personal NPC / NPC personal                | Persona del entorno de una vida cuya identidad puede variar; puede generarse desde pools controlados.                                                             |
 | Moment                                     | Unidad significativa de gameplay narrativo. «Tarjeta» describe su presentación actual, no limita su duración o interacción futura.                                |
 | Historical Footprint / Huella histórica    | Forma conceptual de describir contribuciones de una vida; no puntuación ni medidor moral implementado.                                                            |
-| True Resolution / Resolución Verdadera     | Resultado último reservado; no se consigue solo mediante fuerza. «Final verdadero» remite a este concepto, no a otra categoría.                                   |
+| True Resolution / Resolución Verdadera     | PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1; no se consigue solo mediante fuerza. «Final verdadero» remite a este concepto, no a otra categoría.                  |
 | Unknown / Desconocido                      | Estado del conocimiento sobre el destino humano; no un desenlace mundial adicional.                                                                               |
 
 Los nombres de familias y clases se registran en [CLASSES](CLASSES.md); no cambiar nombres históricos de [HISTORICAL_NPCS](HISTORICAL_NPCS.md) al traducir. Para decisiones editoriales consultar [CANON_RULES](CANON_RULES.md).

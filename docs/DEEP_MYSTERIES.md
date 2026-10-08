@@ -79,7 +79,7 @@ Existing Veiled Identity, Mystic Cards, semantic `unusual`/`memory`/`convergence
 
 `node tools/simulate-mysteries.mjs 300 10` exercises 3,000 natural full lives over 300 histories with an independent deterministic input policy. It reports incident/beat/observation distribution, closure/interruption, constant/scar recurrence, first-life/rare/ambient encounters, ordinary ratio, duplicates, invalid states, dead ends, queue and save sizes. Directed fixtures cover rare routes without altering production probability. See the QA record below for measured results; unobserved rare branches are not treated as proof of failure or justification for pity.
 
-Future Tasks may add reviewed local evidence or typed existing context without taking ownership of time, selection, meta or NPC knowledge. This contract offers no planned True Resolution recipe. No ultimate cause, repeated-life explanation, historical-NPC awareness or Task 14 system is implemented.
+Future Tasks may add reviewed local evidence or typed existing context without taking ownership of time, selection, meta or NPC knowledge. This Task 13 incident system supplies no True Resolution recipe, repeated-life explanation or historical-NPC awareness. Tasks 14/14.1 subsequently implemented the approved causal model and Resolution in their separate owner; see [TRUE_RESOLUTION](TRUE_RESOLUTION.md). The earlier Task 13 scope does not prohibit that approved implementation.
 
 ## QA record
 

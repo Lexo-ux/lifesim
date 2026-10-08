@@ -16,7 +16,7 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
   } = await import("../tools/resolution-fixtures.js");
   const { choose, startLife } = await import("../src/narrative/engine.js");
   const { finishLegacy } = await import("../tools/legacy-fixtures.js");
-  const { save } = await import("../src/persistence/storage.js");
+  const { save, load } = await import("../src/persistence/storage.js");
   const browser = await chromium.launch({
     headless: true,
     ...(process.env.BROWSER_CHANNEL
@@ -102,6 +102,62 @@ const base = process.env.BASE_URL || "http://127.0.0.1:4173",
       assert.deepEqual(actual.state, expected.state);
       assert.deepEqual(actual.meta, expected.meta);
       return actual;
+    }
+    // Actual historical envelopes bypass save(): current saves must reject the
+    // obsolete cursor. Only load may perform this narrow compatibility repair.
+    const boundary = JSON.parse(
+      await fs.readFile("tests/fixtures/task14-boundary-saves.json", "utf8"),
+    );
+    for (const [source, historical] of Object.entries(boundary)) {
+      await page.setViewportSize(
+        source === "rs_opening"
+          ? { width: 360, height: 640 }
+          : { width: 1440, height: 900 },
+      );
+      const raw = JSON.stringify(historical);
+      const expected = load({ getItem: () => raw });
+      assert.equal(expected.migrated, true);
+      assert.equal(expected.warning, "");
+      await page.goto(base);
+      await page.evaluate(
+        (raw) => localStorage.setItem("lifesim.v3", raw),
+        raw,
+      );
+      await page.reload();
+      assert.match(
+        await page.locator(".save-note").textContent(),
+        /Tu partida anterior continúa aquí/,
+      );
+      assert.equal(
+        await page.evaluate(() => localStorage.getItem("lifesim.v3")),
+        raw,
+      );
+      await page.waitForSelector('.threshold[data-threshold-state="idle"]');
+      await shot("migration-notice-" + source);
+      await page.locator("[data-action=continue]").click();
+      await ready();
+      assert.equal(
+        await page.locator(".narrative-card").getAttribute("data-card"),
+        "quiet_day",
+      );
+      await shot("migrated-" + source);
+      await audit("migrated-" + source);
+      choose(expected.state, expected.meta, "left");
+      await page.locator('[data-action=choose][data-value="left"]').click();
+      await page.waitForFunction(
+        (id) => document.querySelector(".narrative-card")?.dataset.card === id,
+        expected.state.story.current,
+      );
+      await ready();
+      assert.deepEqual((await saved()).state, expected.state);
+      assert.deepEqual((await saved()).meta, expected.meta);
+      await page.reload();
+      await page.locator("[data-action=continue]").click();
+      await ready();
+      assert.deepEqual((await saved()).state, expected.state);
+      report.journeys.push(
+        source + " historical migration → ordinary choice → reload",
+      );
     }
     const opening = awaitResolution(preparedResolution(), "rx_window");
     let investigation = selectResolution(resolutionFixture(), "rs_archive");

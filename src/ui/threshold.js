@@ -65,7 +65,7 @@ export function thresholdScreen(data) {
     </div></div>
     <div class="threshold-controls"><div class="threshold-actions">${primary}${secondary}${button("Dejarlo al azar", "random", "", "text-button")}</div>
       <nav class="threshold-nav" aria-label="Entre vidas">${button("Legado", "legacy", "", "nav-link")}${button("Ajustes", "settings", "", "nav-link")}</nav>
-      ${data.migrated ? '<p class="save-note">Tu vida de V2 continúa aquí. El guardado anterior se conserva.</p>' : ""}
+      ${data.migrated ? '<p class="save-note">Tu partida anterior continúa aquí.</p>' : ""}
       ${data.warning ? `<p class="save-note warning" role="status">${esc(data.warning)}</p>` : ""}
     </div>
     <button class="threshold-skip" type="button" hidden>Omitir introducción</button>

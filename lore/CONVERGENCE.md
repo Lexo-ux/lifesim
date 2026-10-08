@@ -22,11 +22,7 @@ La coordinación aparente de algunos sucesos en la Gran Ruptura no prueba una vo
 
 **PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1**
 
-**RESERVED — PRIVATE CANON**
-
-[RESERVED FOR PRIVATE CANON]
-
-No se define dios, villano cósmico, máquina antigua, simulación, entidad multiversal, jefe final u organización secreta como causa definitiva. Tampoco se niegan o confirman hipótesis para insinuar una solución. Véase [política metanarrativa](METANARRATIVE.md).
+El modelo causal aprobado tiene implementación mediante evidencia escrita para el runtime. La respuesta completa permanece en la especificación privada externa y no se reproduce en este lore público. Lo que cada persona puede observar o aprender depende de su época, acceso y experiencia. Los detalles no aprobados siguen reservados; no inventar entidades, causas ni explicaciones adicionales. Véase [política metanarrativa](METANARRATIVE.md).
 
 ## Estado de implementación
 

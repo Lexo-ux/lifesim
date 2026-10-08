@@ -1,6 +1,6 @@
 # Metanarrativa — límites públicos
 
-Este archivo es una especificación pública de restricciones, **no contiene la especificación secreta ni afirma que exista una solución escrita en otro lugar**.
+Este archivo es una especificación pública de restricciones; **no reproduce la especificación privada externa**. Tasks 14/14.1 implementan el modelo causal y la solución aprobados, sin resolver por extensión otras reservas.
 
 ## CANON — metaprogreso
 
@@ -16,7 +16,7 @@ Se reserva espacio para sueños, déjà vu, lugares familiares, frases repetidas
 
 Esto autoriza posibilidades sutiles, no garantiza que aparezcan en todas las vidas, ni identifica qué NPCs saben algo. No atribuir esa conciencia automáticamente a los cuatro personajes históricos o a la Iria de V3.
 
-## Reservas sin respuesta
+## Materias implementadas y reservas
 
 | Materia                                                         | Estado                                                             |
 | --------------------------------------------------------------- | ------------------------------------------------------------------ |
@@ -26,9 +26,7 @@ Esto autoriza posibilidades sutiles, no garantiza que aparezcan en todas las vid
 | Solución exacta de la Resolución Verdadera                      | **PRIVATE CANON — IMPLEMENTED IN TASK 14/14.1**                    |
 | Giro final o grandes revelaciones de cierre                     | **RESERVED — PRIVATE CANON**                                       |
 
-[RESERVED FOR PRIVATE CANON]
-
-No completar esas reservas con dioses, máquinas, simulaciones, villanos, entidades u organizaciones supuestas. No establecer un número de vidas ni una secuencia definitiva de revelaciones. «El Archivo» y sus decisiones de V3 no se adoptan como explicación del nuevo mundo.
+No completar las materias aún reservadas con dioses, máquinas, simulaciones, villanos, entidades u organizaciones supuestas. No establecer un número de vidas ni una secuencia definitiva de revelaciones. «El Archivo» y sus decisiones de V3 no se adoptan como explicación del nuevo mundo.
 
 No se crea repositorio privado ni se publica material privado. Si futuras tareas definen respuestas sensibles, separar la fuente canónica privada de lo que deba distribuirse como runtime público. Véanse [política](README.md) y [migración](../docs/CANON_MIGRATION.md).
 
