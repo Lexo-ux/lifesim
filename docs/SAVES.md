@@ -1,5 +1,7 @@
 # Persistencia y compatibilidad
 
+Task 14.5 añade únicamente ajustes opcionales: `crossed: true` (prólogo visto/omitido) y `openingLife` (ID de la vida cuyo boletín público cerró el jugador, hasta 80 caracteres). Su ausencia conserva el formato anterior. No se migran estados de personajes, relojes, semillas, recuerdos ni meta; no se fabrican resúmenes anteriores. [FIRST_LIFE_EXPERIENCE](FIRST_LIFE_EXPERIENCE.md).
+
 Task 01 conserva claves, versiones e IDs. Las rutas de módulos no forman parte del guardado: no hace falta migración nueva. `src/config/persistence.js` centraliza claves; ambos adaptadores siguen exportando `SAVE_KEY`.
 
 | Nivel                  | Valor                                                 |

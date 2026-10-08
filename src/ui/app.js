@@ -31,6 +31,13 @@ import {
 import { animateIndicators } from "./indicators.js";
 import { updateCreatorPreview } from "./creator.js";
 import { mountThreshold, revealLife } from "./threshold.js";
+import {
+  firstCrossing,
+  choiceFeedback,
+  feedbackHTML,
+  openingBulletin,
+} from "./first-life.js";
+import { CROSSING } from "../../content/presentation/first-life.js";
 
 const data = load(),
   app = document.querySelector("#app"),
@@ -45,14 +52,20 @@ let screen = "home",
 let titleScene = null;
 let presentation = null;
 let visualQuality = "auto";
+let prologueStep = null,
+  pendingSeed = null;
 function announce(text) {
   document.querySelector("#announcer").textContent = text;
 }
-function notice(text) {
+function notice(text, appendAnnouncement = false) {
   const el = document.querySelector("#notification");
   el.textContent = text;
   el.classList.add("shown");
-  announce(text);
+  announce(
+    appendAnnouncement
+      ? `${document.querySelector("#announcer").textContent} ${text}`
+      : text,
+  );
   clearTimeout(notice.timer);
   notice.timer = setTimeout(() => el.classList.remove("shown"), 4500);
 }
@@ -70,7 +83,7 @@ function render(focus = false, revealTitle = true) {
   );
   const html =
     screen === "home"
-      ? landing(data)
+      ? landing(data, prologueStep)
       : !data.state?.alive
         ? deathScreen(data.state, data.meta, revealDeath)
         : gameScreen(data);
@@ -150,6 +163,8 @@ async function commit(side) {
     .querySelectorAll(".decision-controls button")
     .forEach((b) => (b.disabled = true));
   const oldCard = document.querySelector(".narrative-card");
+  const previous = structuredClone(data.state),
+    decidedMoment = currentCard(data.state);
   const wasAwakening = currentCard(data.state).system === "awakening";
   const result = choose(data.state, data.meta, side, oldCard?.dataset.card);
   if (result.error) {
@@ -158,6 +173,16 @@ async function commit(side) {
     notice(result.error);
     return;
   }
+  const feedback = choiceFeedback(
+    previous,
+    data.state,
+    decidedMoment,
+    side,
+    result,
+  );
+  const bulletin =
+    !openingBulletin(previous, data.settings) &&
+    openingBulletin(data.state, data.settings);
   data.settings.onboarded = true;
   persist();
   if (data.state.alive) {
@@ -183,10 +208,11 @@ async function commit(side) {
   revealDeath = false;
   render(true);
   animateIndicators(result.before, result.after);
+  transitionMoment(feedbackHTML(feedback));
   if (!data.state.alive) {
     sound("death", data.settings.sound);
     announce(
-      `La vida de ${data.state.name} terminó a los ${data.state.age} años.`,
+      `${feedback.text} La vida de ${data.state.name} terminó a los ${data.state.age} años.`,
     );
   } else {
     if (
@@ -206,27 +232,32 @@ async function commit(side) {
               : "normal",
         { gesture: true },
       );
-    if (!continuousIncident)
-      transitionMoment(
-        result.outcome.stage
-          ? `Nuevo capítulo · ${result.outcome.stage}`
-          : result.outcome.text,
-        result.outcome.stage ? "chapter" : "",
-      );
     announce(
-      `${result.outcome.text} ${result.outcome.aged ? `Ahora tienes ${data.state.age} años.` : ""}`,
+      `${feedback.text} ${feedback.milestone} ${feedback.stage ? `Una nueva etapa: ${feedback.stage}. ${feedback.observations.join(" ")}` : ""} ${feedback.aftermath} ${result.outcome.aged ? `Ahora tienes ${data.state.age} años.` : ""} ${bulletin ? `Contexto público para quien juega. ${bulletin.text}` : ""}`,
     );
   }
   if (result.unlocked.length) {
     notice(
       `Recuerdo desbloqueado · ${result.unlocked.map((a) => a.name).join(", ")}`,
+      true,
     );
     sound("achievement", data.settings.sound);
   }
   busy = false;
 }
 function begin(options) {
-  if (busy) return;
+  if (busy || prologueStep !== null) return;
+  if (firstCrossing(data)) {
+    pending = options;
+    // Same single creation seed, captured before either read or skip can branch.
+    pendingSeed = crypto.getRandomValues(new Uint32Array(1))[0];
+    prologueStep = 0;
+    close();
+    screen = "home";
+    render(false, false);
+    document.querySelector("#crossing-title")?.focus();
+    return;
+  }
   if (data.state?.alive) {
     pending = options;
     open(
@@ -236,10 +267,20 @@ function begin(options) {
   }
   commitNew(options);
 }
-async function commitNew(options) {
+function finishPrologue() {
+  if (prologueStep === null || busy) return;
+  const options = pending,
+    seed = pendingSeed;
+  prologueStep = null;
+  pendingSeed = null;
+  data.settings.crossed = true;
+  render(false, false);
+  commitNew(options, seed);
+}
+async function commitNew(options, selectedSeed) {
   if (busy || !options) return;
   busy = true;
-  const seed = crypto.getRandomValues(new Uint32Array(1))[0];
+  const seed = selectedSeed ?? crypto.getRandomValues(new Uint32Array(1))[0];
   data.state = startLife(options, data.meta, seed);
   data.warning = "";
   data.migrated = false;
@@ -277,7 +318,20 @@ document.addEventListener("click", (e) => {
   if (!target || target.disabled || busy) return;
   const action = target.dataset.action,
     value = target.dataset.value;
-  if (action === "choose") commit(value);
+  if (action === "prologue-skip") finishPrologue();
+  else if (action === "prologue-next") {
+    if (prologueStep + 1 >= CROSSING.length) finishPrologue();
+    else {
+      prologueStep++;
+      render(false, false);
+      document.querySelector("#crossing-title")?.focus();
+    }
+  } else if (action === "dismiss-bulletin") {
+    data.settings.openingLife = data.state.id;
+    persist();
+    document.querySelector(".public-bulletin")?.remove();
+    document.querySelector(".narrative-card")?.focus({ preventScroll: true });
+  } else if (action === "choose") commit(value);
   else if (action === "home") {
     screen = "home";
     render(true);
@@ -346,6 +400,12 @@ document.addEventListener("click", (e) => {
     screen = "home";
     render(true);
     notice("Un comienzo nuevo.");
+  }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && prologueStep !== null) {
+    e.preventDefault();
+    finishPrologue();
   }
 });
 document.addEventListener("submit", (e) => {

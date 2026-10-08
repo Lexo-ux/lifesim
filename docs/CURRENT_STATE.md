@@ -1,4 +1,8 @@
-# Estado real — V3 con síntesis y Resolución Verdadera (Task 14.1)
+# Estado real — V3 con Resolución Verdadera y primera vida (Task 14.5)
+
+## Task 14.5 — primera vida y feedback
+
+Dos beats opcionales antes de la primera vida, continuidad del Umbral para vidas completadas, respuestas separadas de hitos/etapas y un boletín público oportuno para el jugador. Simulación y conocimiento del protagonista intactos. Edad relativa, feedback en flujo y procedencia comprobada para seguimientos. Contrato: [FIRST_LIFE_EXPERIENCE](FIRST_LIFE_EXPERIENCE.md).
 
 ## Task 14.1 — corrective implementation
 

@@ -27,6 +27,8 @@ const BASE = process.env.BASE_URL || "http://127.0.0.1:4173";
     await page.locator("[name=name]").fill("Valentina");
     await page.screenshot({ path: "output/qa/v3-creation.png" });
     await page.locator("button[type=submit]").click();
+    if (await page.locator("[data-action=prologue-skip]").count())
+      await page.locator("[data-action=prologue-skip]").click();
     await page.waitForSelector(".narrative-card");
     await page.waitForFunction(() =>
       document
@@ -266,6 +268,8 @@ const BASE = process.env.BASE_URL || "http://127.0.0.1:4173";
     assert.ok(await page.locator(".final-story").isVisible());
     await page.locator("[data-action=creator]").click();
     await page.locator("button[type=submit]").click();
+    if (await page.locator("[data-action=prologue-skip]").count())
+      await page.locator("[data-action=prologue-skip]").click();
     await page.waitForSelector(".narrative-card");
     await stable();
     assert.equal((await read()).state.age, 0);

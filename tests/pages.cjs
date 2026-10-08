@@ -37,6 +37,7 @@ let browser;
   });
   await page.goto(base);
   await page.getByRole("button", { name: "Dejarlo al azar" }).click();
+  await page.locator("[data-action=prologue-skip]").click();
   await page.waitForSelector(".narrative-card");
   await page.waitForFunction(() =>
     document

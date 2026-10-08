@@ -155,6 +155,11 @@ export function load(storage = globalThis.localStorage) {
       result.settings = {
         sound: data.settings?.sound === true,
         onboarded: data.settings?.onboarded === true,
+        ...(data.settings?.crossed === true ? { crossed: true } : {}),
+        ...(typeof data.settings?.openingLife === "string" &&
+        data.settings.openingLife.length <= 80
+          ? { openingLife: data.settings.openingLife }
+          : {}),
       };
     } else {
       const old = loadV2(storage);

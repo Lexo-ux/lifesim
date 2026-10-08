@@ -89,6 +89,7 @@ const dir = "output/qa/task04";
       b.click();
       b.click();
     });
+    await page.locator("[data-action=prologue-skip]").click();
     await page.waitForTimeout(480);
     await shot("crossing");
     await play();
@@ -122,6 +123,8 @@ const dir = "output/qa/task04";
     assert.equal(fragments, 2);
     assert.equal(await page.locator(".threshold-dust circle").count(), 10);
     await page.locator("[data-action=random]").click();
+    if (await page.locator("[data-action=prologue-skip]").count())
+      await page.locator("[data-action=prologue-skip]").click();
     await settled();
     assert.equal(await state(), "preparing");
     assert.equal(await animations(), 0);
@@ -262,11 +265,15 @@ const dir = "output/qa/task04";
     await shot("reduced-motion");
     assert.equal(await animations(), 0);
     await page.locator("[data-action=random]").click();
+    if (await page.locator("[data-action=prologue-skip]").count())
+      await page.locator("[data-action=prologue-skip]").click();
     await play();
     assert.equal((await read()).meta.lives, 1);
     await page.locator("[data-action=home]").click();
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.locator("[data-action=random]").click();
+    if (await page.locator("[data-action=prologue-skip]").count())
+      await page.locator("[data-action=prologue-skip]").click();
     await page.locator("[data-action=confirm-new]").click();
     await page.emulateMedia({ reducedMotion: "reduce" });
     await play();
@@ -274,6 +281,8 @@ const dir = "output/qa/task04";
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.locator("[data-action=home]").click();
     await page.locator("[data-action=random]").click();
+    if (await page.locator("[data-action=prologue-skip]").count())
+      await page.locator("[data-action=prologue-skip]").click();
     await page.locator("[data-action=confirm-new]").click();
     await page.getByRole("button", { name: "Omitir transición" }).click();
     await play();
@@ -281,6 +290,8 @@ const dir = "output/qa/task04";
     // Hiding during a committed crossing must finish without leaving an input lock.
     await page.locator("[data-action=home]").click();
     await page.locator("[data-action=random]").click();
+    if (await page.locator("[data-action=prologue-skip]").count())
+      await page.locator("[data-action=prologue-skip]").click();
     await page.locator("[data-action=confirm-new]").click();
     await page.evaluate(() => {
       Object.defineProperty(document, "hidden", {
@@ -299,6 +310,8 @@ const dir = "output/qa/task04";
     // Refresh in transit recovers the already committed life, never creates a second one.
     await page.locator("[data-action=home]").click();
     await page.locator("[data-action=random]").click();
+    if (await page.locator("[data-action=prologue-skip]").count())
+      await page.locator("[data-action=prologue-skip]").click();
     await page.locator("[data-action=confirm-new]").click();
     const inTransit = await read();
     await page.reload();
@@ -334,6 +347,8 @@ const dir = "output/qa/task04";
     await page.locator("[data-action=home]").click();
     await page.getByRole("button", { name: "Cruzar de nuevo" }).click();
     await page.locator("button[type=submit]").click();
+    if (await page.locator("[data-action=prologue-skip]").count())
+      await page.locator("[data-action=prologue-skip]").click();
     await play();
     assert.equal((await read()).meta.completed, 1);
     // Browser image error must leave actionable title; no decode/loading lock.
@@ -345,6 +360,7 @@ const dir = "output/qa/task04";
     await failed.goto(base);
     await failed.screenshot({ path: `${dir}/failed-art.png` });
     await failed.locator("[data-action=random]").click();
+    await failed.locator("[data-action=prologue-skip]").click();
     await failed.waitForSelector(".narrative-card");
     await failed.close();
     report.checks.push(
