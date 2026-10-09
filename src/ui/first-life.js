@@ -60,11 +60,19 @@ export function bulletinHTML(s, settings) {
 // actual historical distance legible rather than presenting it as breaking news.
 export function newsContext(s, m) {
   const report = REPORTS[m.worldReport],
-    e = s.world?.events[report?.event];
-  return report?.channel === "public" &&
+    e = s.world?.events?.[report?.event];
+  const labels = {
+    public: "Un boletín de años atrás",
+    professional: "Un informe profesional de años atrás",
+    institution: "Un comunicado institucional de años atrás",
+  };
+  return Object.hasOwn(WORLD_EVENT_BY_ID, report?.event) &&
     e?.status === "occurred" &&
+    Number.isFinite(e.at) &&
+    e.at >= 0 &&
+    Number.isFinite(s.world.clock) &&
     s.world.clock - e.at >= 24
-    ? "Un boletín de años atrás"
+    ? labels[report.channel] || ""
     : "";
 }
 const incoming = new Map();
@@ -103,7 +111,15 @@ export function consequenceCue(s, m) {
 }
 export const readableHistory = (text) =>
   text.replace(/\ben una (un|una) /g, "en $1 ");
-export function stageSummary(s) {
+// Exact presentation equivalence only: keep case, accents, words and internal
+// punctuation. No semantic/fuzzy matching and no replacement facts.
+export const presentationFact = (text) =>
+  readableHistory(text.replace(/\s+/gu, " "))
+    .trim()
+    .replace(/\s+([.,;:!?…])/gu, "$1")
+    .replace(/[.!?…;:,]+$/u, "")
+    .trim();
+export function stageSummary(s, displayed = []) {
   const result = [],
     partner = s.relationships.find((r) => r.type === "partner" && !r.deceased),
     relation =
@@ -123,7 +139,15 @@ export function stageSummary(s) {
     );
     if (memory) result.push(readableHistory(memory.text));
   }
-  return result.slice(0, 2);
+  const seen = new Set(displayed.map(presentationFact));
+  return result
+    .filter((text) => {
+      const key = presentationFact(text);
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 2);
 }
 export function choiceFeedback(before, after, moment, side, result) {
   const option = socialChoice(before, moment, side),
@@ -155,7 +179,9 @@ export function choiceFeedback(before, after, moment, side, result) {
     generic: !special && !authored && !option.result,
     milestone: milestone || "",
     stage: changed ? stage(after).name : "",
-    observations: changed ? stageSummary(after) : [],
+    observations: changed
+      ? stageSummary(after, [text, milestone || "", aftermath])
+      : [],
     aftermath,
   };
 }

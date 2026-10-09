@@ -21,6 +21,9 @@ import {
 } from "../src/ui/first-life.js";
 
 import { awakeningFixture } from "../tools/awakening-fixtures.js";
+import { REPORTS } from "../content/world/reports.js";
+import { JOBS, COURSES } from "../content/catalog.js";
+import { presentationFact } from "../src/ui/first-life.js";
 
 const fresh = (seed = 1) => {
   const meta = extendMeta(emptyMeta());
@@ -156,6 +159,9 @@ test("authored immediate response survives both a milestone and a chapter; summa
   assert.match(feedbackHTML(f), /Una nueva etapa/);
   assert.ok(f.observations.length <= 2);
   assert.ok(!f.observations.some((t) => t.startsWith("Un nuevo capítulo:")));
+  assert.equal(f.milestone, "Inés te enseñó una canción que nunca olvidaste.");
+  assert.equal(feedbackHTML(f).split(f.milestone).length - 1, 1);
+  assert.ok(f.observations.includes("Elena forma parte de tu vida."));
   const noStage = fresh();
   noStage.state.story.current = "vera_intro";
   const prev = structuredClone(noStage.state),
@@ -257,4 +263,123 @@ test("presentation response catalog has stable existing IDs and two concise auth
         id,
       );
   }
+});
+
+test("stage comparisons normalize only whitespace, terminal punctuation and history cleanup", () => {
+  assert.equal(
+    presentationFact("  Naciste en una un hogar tranquilo .\n"),
+    presentationFact("Naciste en un hogar tranquilo!"),
+  );
+  assert.notEqual(
+    presentationFact("Terminaste el colegio."),
+    presentationFact("No terminaste el colegio."),
+  );
+  assert.notEqual(presentationFact("A, B."), presentationFact("A B."));
+  assert.notEqual(presentationFact("Aprendió."), presentationFact("Aprendio."));
+  const { state: s } = fresh();
+  s.relationships = [{ name: "Alex", type: "family", bond: 80 }];
+  s.history = [
+    { age: 12, milestone: true, text: "Alex forma parte de tu vida!" },
+  ];
+  assert.deepEqual(stageSummary(s), ["Alex forma parte de tu vida."]);
+  assert.deepEqual(stageSummary(s, [" Alex  forma parte de tu vida… "]), []);
+  assert.equal(s.history[0].text, "Alex forma parte de tu vida!");
+});
+
+test("distinct job/education and relationship survive while excluded observations are never backfilled", () => {
+  const { state: s } = fresh();
+  s.relationships = [{ name: "Alex", type: "family", bond: 80 }];
+  s.history = [
+    { age: 5, milestone: true, text: "Una memoria anterior." },
+    { age: 13, milestone: true, text: "El mismo hito." },
+  ];
+  assert.deepEqual(stageSummary(s, ["El mismo hito."]), [
+    "Alex forma parte de tu vida.",
+  ]);
+  s.career = { id: JOBS[0].id };
+  assert.deepEqual(stageSummary(s, ["El mismo hito."]), [
+    "Alex forma parte de tu vida.",
+    `Trabajas como ${JOBS[0].name.toLowerCase()}.`,
+  ]);
+  s.education.current = { id: COURSES[0].id };
+  assert.deepEqual(stageSummary(s, ["El mismo hito."]), [
+    "Alex forma parte de tu vida.",
+    `Sigues estudiando ${COURSES[0].name.toLowerCase()}.`,
+  ]);
+  assert.equal(stageSummary(s).length, 2);
+});
+
+test("response, milestone and Awakening aftermath retain ownership even when recap has zero observations", () => {
+  const { state: before } = fresh();
+  before.age = 12;
+  const after = structuredClone(before);
+  after.age = 13;
+  after.relationships = [];
+  before.awakening.step = "reaction";
+  after.awakening.step = null;
+  after.awakening.status = "awakened";
+  const immediate = RESPONSES.first_light[0];
+  for (const repeated of [
+    immediate,
+    "El mismo hito.",
+    "El Despertar forma parte de tu vida. Tu oficio y tu camino siguen siendo decisiones tuyas.",
+  ]) {
+    after.history = [
+      ...before.history,
+      { age: 13, milestone: true, text: "El mismo hito." },
+      { age: 13, milestone: true, text: repeated },
+    ];
+    const f = choiceFeedback(before, after, CARD_BY_ID.first_light, "left", {
+      outcome: { text: "El mismo hito." },
+    });
+    assert.equal(f.text, immediate);
+    assert.equal(f.milestone, "El mismo hito.");
+    assert.match(f.aftermath, /decisiones tuyas/);
+    assert.deepEqual(f.observations, []);
+    assert.match(feedbackHTML(f), /Una nueva etapa/);
+    assert.ok(feedbackHTML(f).includes(f.aftermath));
+  }
+});
+
+test("historical context covers only occurred, valid old public/professional/institution reports without writes", () => {
+  const d = fresh(),
+    s = d.state;
+  const cases = {
+    openings: "Un boletín de años atrás",
+    medical: "Un informe profesional de años atrás",
+    relocated: "Un comunicado institucional de años atrás",
+    repair: "",
+  };
+  for (const [id, label] of Object.entries(cases)) {
+    const event = REPORTS[id].event;
+    s.world.events[event] = { status: "occurred", at: 200 };
+    s.world.clock = 224;
+    const exact = structuredClone(d);
+    assert.equal(newsContext(s, { worldReport: id }), label);
+    assert.deepEqual(d, exact);
+    for (const age of [200, 223]) {
+      s.world.clock = age;
+      assert.equal(newsContext(s, { worldReport: id }), "");
+    }
+    s.world.clock = 300;
+    for (const invalid of [
+      undefined,
+      {},
+      { status: "scheduled", at: 200 },
+      { status: "occurred", at: "200" },
+      { status: "occurred", at: NaN },
+      { status: "occurred", at: Infinity },
+      { status: "occurred", at: -1 },
+    ]) {
+      s.world.events[event] = invalid;
+      const snapshot = structuredClone(d);
+      assert.equal(newsContext(s, { worldReport: id }), "");
+      assert.deepEqual(d, snapshot);
+    }
+    s.world.events[event] = { status: "occurred", at: 200 };
+    s.world.clock = NaN;
+    assert.equal(newsContext(s, { worldReport: id }), "");
+  }
+  assert.equal(newsContext(s, { worldReport: "unknown" }), "");
+  assert.equal(newsContext({}, { worldReport: "medical" }), "");
 });

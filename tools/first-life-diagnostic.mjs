@@ -1,10 +1,47 @@
 // Development-only observational diagnostic; no quotas or seed selection in runtime.
 import { writeFile } from "node:fs/promises";
-import { startLife, choose } from "../src/narrative/engine.js";
-import { currentCard } from "../src/narrative/deck.js";
-import { emptyMeta } from "../src/systems/achievements.js";
-import { extendMeta } from "../src/narrative/meta.js";
-import { openingBulletin, choiceFeedback } from "../src/ui/first-life.js";
+import { createHash } from "node:crypto";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+// Optional third argument: an unmodified git archive for differential QA.
+// The default command continues to exercise the working tree, never a fixture.
+const root = process.argv[3]
+  ? pathToFileURL(path.resolve(process.argv[3]) + path.sep)
+  : new URL("../", import.meta.url);
+const [
+  { startLife, choose },
+  { currentCard },
+  { emptyMeta },
+  { extendMeta },
+  { openingBulletin, choiceFeedback, newsContext, readableHistory },
+  { REPORTS },
+] = await Promise.all(
+  [
+    "src/narrative/engine.js",
+    "src/narrative/deck.js",
+    "src/systems/achievements.js",
+    "src/narrative/meta.js",
+    "src/ui/first-life.js",
+    "content/world/reports.js",
+  ].map((file) => import(new URL(file, root))),
+);
+Date.now = () => 1700000000000; // Same external creation time in both diagnostic processes.
+const mechanical = createHash("sha256"),
+  momentFrequencies = {};
+const stages = { transitions: 0, duplicates: 0 };
+const historical = Object.fromEntries(
+  ["public", "professional", "institution"].map((channel) => [
+    channel,
+    { eligible: 0, unlabelled: 0 },
+  ]),
+);
+// Independent diagnostic comparison of rendered facts, not a call to the filter.
+const fact = (text) =>
+  readableHistory(text.replace(/\s+/gu, " "))
+    .trim()
+    .replace(/\s+([.,;:!?…])/gu, "$1")
+    .replace(/[.!?…;:,]+$/u, "")
+    .trim();
 const count = Number(process.argv[2] || 450),
   rows = [];
 const legacyFallbacks = new Set([
@@ -28,6 +65,7 @@ for (let seed = 1; seed <= count; seed++) {
       meta,
       seed * 7919,
     );
+  mechanical.update(JSON.stringify({ s, meta }));
   const row = {
     seed,
     ages: {},
@@ -44,6 +82,18 @@ for (let seed = 1; seed <= count; seed++) {
   while (s.alive && n < 500) {
     const m = currentCard(s),
       point = { decision: n + 1, age: s.age + s.story.month / 12 };
+    momentFrequencies[m.id] = (momentFrequencies[m.id] || 0) + 1;
+    const report = REPORTS[m.worldReport],
+      occurrence = s.world?.events[report?.event];
+    if (
+      report &&
+      historical[report.channel] &&
+      occurrence?.status === "occurred" &&
+      s.world.clock - occurrence.at >= 24
+    ) {
+      historical[report.channel].eligible++;
+      if (!newsContext(s, m)) historical[report.channel].unlabelled++;
+    }
     if (
       !row.extraordinary &&
       (m.system === "awakening" ||
@@ -73,6 +123,18 @@ for (let seed = 1; seed <= count; seed++) {
       r = choose(s, meta, side);
     if (r.error) throw Error(r.error);
     const f = choiceFeedback(before, s, m, side, r);
+    mechanical.update(JSON.stringify({ s, meta }));
+    if (f.stage) {
+      stages.transitions++;
+      const seen = new Set([f.text, f.milestone, f.aftermath].map(fact));
+      let duplicate = false;
+      for (const observation of f.observations) {
+        const key = fact(observation);
+        if (seen.has(key)) duplicate = true;
+        seen.add(key);
+      }
+      if (duplicate) stages.duplicates++;
+    }
     n++;
     if (!row.stage && f.stage) row.stage = { decision: n, age: s.age };
     if (before.age < 24) {
@@ -121,8 +183,25 @@ const summary = {
   note: "Before = unchanged selected Moments/receipts. After = read-only player public bulletin or existing receipt. Mechanical sequence is identical; see independent main@21de097 full-state golden. Missing exposure includes deaths before exposure. Prologue is outside life time.",
 };
 const report = { summary, rows };
+report.polish = {
+  stages: {
+    ...stages,
+    rate: stages.transitions ? stages.duplicates / stages.transitions : 0,
+  },
+  historical,
+};
+report.mechanical = { sha256: mechanical.digest("hex"), momentFrequencies };
 await writeFile(
-  "output/task145-diagnostic.json",
+  process.argv[3]
+    ? "output/task145a-diagnostic-before.json"
+    : "output/task145-diagnostic.json",
   JSON.stringify(report, null, 2),
 );
 console.log(JSON.stringify(summary, null, 2));
+console.log(
+  JSON.stringify(
+    { polish: report.polish, mechanicalSHA256: report.mechanical.sha256 },
+    null,
+    2,
+  ),
+);
