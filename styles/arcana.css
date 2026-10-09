@@ -1,0 +1,1109 @@
+/* Arcana of Lives — the visual system for gameplay, memory and secondary screens.
+   Every Moment is held as a small Threshold: an arched miniature set into vellum,
+   a title ribbon and the written Moment below. One grammar, controlled materials.
+   Presentation only: no state, timing, input or PRNG is owned here. */
+
+/* ---------- Night around the life ---------- */
+body.playing {
+  background: var(--night);
+}
+.playing .mystic-atmosphere {
+  background:
+    radial-gradient(ellipse 70% 48% at 50% 40%, #2b2216b0, transparent 72%),
+    radial-gradient(ellipse 120% 60% at 50% 110%, #1a130c, transparent 70%),
+    var(--night);
+}
+.playing .atmosphere-pigment {
+  background:
+    radial-gradient(ellipse at 16% 30%, #4f6f6a14, transparent 36%),
+    radial-gradient(ellipse at 82% 68%, #9a7a4a18, transparent 42%),
+    url("../assets/ui/paper-grain.svg");
+}
+/* Two faint arches stand behind every card: the Threshold is never far away. */
+.play-screen:before,
+.play-screen:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid #b9965c17;
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0 / 190px 190px 0 0;
+}
+.play-screen:before {
+  inset: 84px -18px 36px;
+}
+.play-screen:after {
+  inset: 104px -2px 36px;
+  border-color: #b9965c0d;
+}
+
+/* ---------- Header: wordmark, utilities and four medallions ---------- */
+.wordmark {
+  font: 400 15px/1 var(--font-ceremony);
+  letter-spacing: 0.3em;
+  color: var(--vellum-text);
+}
+.wordmark span {
+  color: var(--human-warmth);
+}
+.wordmark i {
+  font: italic 10px var(--font-ceremony);
+  letter-spacing: 0.12em;
+  color: #b39a6c;
+  margin-left: 4px;
+}
+.top-tools .icon-button {
+  border: 1px solid #b9965c2e;
+  color: #cdbf9f;
+}
+.top-tools .icon-button:hover {
+  background: #b9965c14;
+  border-color: #b9965c66;
+}
+.indicators {
+  gap: 14px;
+  padding: 0 8px 8px;
+}
+.indicator.health {
+  --tone: #d98a78;
+}
+.indicator.happiness {
+  --tone: #ddbb80;
+}
+.indicator.development {
+  --tone: #92bdb4;
+}
+.indicator.economy {
+  --tone: #c2ab6b;
+}
+.indicator > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 6px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--tone) 55%, transparent);
+  background: radial-gradient(
+    circle at 50% 32%,
+    color-mix(in srgb, var(--tone) 22%, transparent),
+    #05070a 78%
+  );
+  box-shadow:
+    inset 0 0 0 3px #06080c,
+    inset 0 0 0 4px color-mix(in srgb, var(--tone) 22%, transparent),
+    0 4px 10px #0008;
+}
+.indicator .icon {
+  width: 16px;
+  height: 16px;
+}
+.stat-direction {
+  right: -7px;
+  bottom: -5px;
+  font: 600 12px var(--font-ui);
+  color: var(--tone);
+  text-shadow: 0 0 4px #000;
+}
+.indicator-track {
+  height: 2px;
+  background: #ffffff12;
+  border-radius: 2px;
+}
+.indicator-track i {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--tone) 40%, transparent),
+    var(--tone)
+  );
+}
+.indicator small {
+  margin-top: 6px;
+  font: 600 9px/1.2 var(--font-ui);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8f8676;
+}
+
+/* ---------- The deck ---------- */
+.playing .card-stage {
+  margin: 4px 0 12px;
+}
+.playing .card-stage:before {
+  inset: 10% 4% -3%;
+  opacity: 0.5;
+  box-shadow: 0 26px 40px #000;
+}
+.playing .deck-shadow {
+  inset: 9px 3px -8px;
+  background:
+    linear-gradient(#2c241a, #1b160f), url("../assets/ui/paper-grain.svg");
+  transform: rotate(-1.8deg);
+  opacity: 0.9;
+}
+.playing .deck-shadow:after {
+  inset: 9px;
+  border: 1px solid #b9965c26;
+  transform: none;
+}
+
+/* ---------- The card: vellum, iron-gall ink and controlled material variants ---------- */
+.playing .narrative-card {
+  --k-vellum: #e7d9b9;
+  --k-vellum-2: #cfba8f;
+  --k-ink: var(--iron);
+  --k-line: #5c4731;
+  --k-accent: var(--oxblood);
+  --k-ribbon: #211910;
+  --k-ribbon-text: var(--vellum-text);
+  --k-glow: transparent;
+  --k-art: none;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 6px;
+  color: var(--k-ink);
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, #fff8e626, transparent 60%),
+    radial-gradient(ellipse 60% 45% at 8% 96%, #7a5a2a33, transparent 70%),
+    radial-gradient(ellipse 50% 35% at 96% 14%, #7a5a2a1f, transparent 70%),
+    url("../assets/ui/paper-grain.svg"),
+    linear-gradient(var(--k-vellum), var(--k-vellum-2));
+}
+.playing .narrative-card:not([data-sequence="awakening"]) {
+  animation: arcana-deal var(--motion-deliberate) var(--ease-settle) both;
+}
+/* Inner engraved double rule. */
+.playing .narrative-card:before {
+  inset: 7px;
+  z-index: 4;
+  border: 1px solid color-mix(in srgb, var(--k-line) 75%, transparent);
+  border-radius: 2px;
+  outline: 1px solid color-mix(in srgb, var(--k-line) 30%, transparent);
+  outline-offset: -5px;
+}
+.arcana-frame {
+  position: absolute;
+  inset: 4px;
+  z-index: 5;
+  pointer-events: none;
+  color: var(--k-line);
+}
+.arcana-frame i {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: currentColor;
+  mask: var(--ornament-corner) center / contain no-repeat;
+  opacity: 0.85;
+}
+.arcana-frame i:nth-child(1) {
+  top: 0;
+  left: 0;
+}
+.arcana-frame i:nth-child(2) {
+  top: 0;
+  right: 0;
+  scale: -1 1;
+}
+.arcana-frame i:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  scale: 1 -1;
+}
+.arcana-frame i:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  scale: -1 -1;
+}
+/* Decision threshold: the edge you pull toward warms with intent, never value. */
+.arcana-edge {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+}
+.narrative-card[data-direction="left"] .arcana-edge {
+  opacity: calc(var(--strength, 0) * 0.95);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--k-accent) 55%, transparent),
+    transparent 28%
+  );
+}
+.narrative-card[data-direction="right"] .arcana-edge {
+  opacity: calc(var(--strength, 0) * 0.95);
+  background: linear-gradient(
+    270deg,
+    color-mix(in srgb, var(--k-accent) 55%, transparent),
+    transparent 28%
+  );
+}
+
+/* Head: sigil · age numeral · stage glyph. */
+.arcana-head {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 20px 0;
+  min-height: 34px;
+  color: var(--k-line);
+}
+.playing .arcana-head .card-corner {
+  position: static;
+  justify-self: start;
+  display: flex;
+  color: var(--k-accent);
+  opacity: 1;
+  border: 0;
+  transform: none;
+}
+.arcana-head .icon {
+  width: 15px;
+  height: 15px;
+}
+.arcana-numeral {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 14px/1 var(--font-ceremony);
+  letter-spacing: 0.26em;
+  padding-left: 0.26em;
+  color: var(--k-ink);
+}
+.arcana-numeral:before,
+.arcana-numeral:after {
+  content: "";
+  width: 16px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+.arcana-stage {
+  justify-self: end;
+  display: flex;
+  opacity: 0.85;
+}
+
+/* The arched miniature: a small doorway into this moment of a life. */
+.playing .portrait-window {
+  flex: 1;
+  min-height: 110px;
+  margin: 8px 15px 0;
+  border-radius: 50% 50% 2px 2px / 124px 124px 2px 2px;
+  background: #141716;
+  box-shadow:
+    0 0 0 1px var(--k-line),
+    0 0 0 5px color-mix(in srgb, var(--k-vellum) 92%, transparent),
+    0 0 0 6px color-mix(in srgb, var(--k-line) 45%, transparent),
+    0 0 26px var(--k-glow);
+}
+.playing .portrait-window:after {
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 22%, var(--k-glow), transparent 70%),
+    linear-gradient(transparent 62%, #0b0907a6 100%);
+  box-shadow: inset 0 0 34px #000b;
+}
+.playing .npc-portrait,
+.playing .scene-depth {
+  filter: var(--k-art);
+}
+
+/* Title ribbon straddling the arch. */
+.playing .speaker {
+  position: relative;
+  inset: auto;
+  z-index: 7;
+  align-self: center;
+  max-width: calc(100% - 52px);
+  margin: -24px auto 0;
+  padding: 7px 30px 9px;
+  text-align: center;
+  color: var(--k-ribbon-text);
+  background:
+    linear-gradient(#ffffff0d, #0000001f),
+    var(--k-ribbon) url("../assets/ui/paper-grain.svg");
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    calc(100% - 13px) 50%,
+    100% 100%,
+    0 100%,
+    13px 50%
+  );
+}
+.playing .speaker p {
+  margin: 0 0 2px;
+  font: 600 9px/1.3 var(--font-ui);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--k-ribbon-text) 62%, var(--brass));
+}
+.playing .speaker h1 {
+  font: 500 24px/1.1 var(--font-ceremony);
+  letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
+}
+
+/* The written Moment: ink on the same vellum, with a pigment initial. */
+.playing .dialogue {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 12px 24px 4px;
+  min-height: 0;
+  color: var(--k-ink);
+  background: none;
+  clip-path: none;
+}
+.playing .dialogue:before {
+  display: none;
+}
+.playing .dialogue:after {
+  content: "";
+  display: block;
+  width: 116px;
+  height: 12px;
+  margin: 8px auto 2px;
+  background: var(--k-line);
+  mask: var(--ornament-rule) center / contain no-repeat;
+  opacity: 0.6;
+}
+.dialogue p {
+  font: 17px/1.5 var(--font-story);
+  color: var(--k-ink, var(--text-on-paper));
+}
+/* Two-line pigment initial. A float, not initial-letter: the latter re-lays out
+   the paragraph on every drag frame, the float measured zero layouts. */
+.playing .dialogue p::first-letter {
+  float: left;
+  margin: 0.08em 0.1em 0 0;
+  font: 600 3.05em/0.82 var(--font-ceremony);
+  color: var(--k-accent);
+}
+.playing .consequence-cue {
+  display: block;
+  font: italic 12px/1.3 var(--font-ceremony);
+  color: var(--k-accent);
+  margin-bottom: 6px;
+}
+
+/* Drag slips: the action phrase written on a small ink tab. */
+.playing .choice-preview {
+  top: 52px;
+  max-width: calc(100% - 84px);
+  padding: 11px 16px 12px;
+  color: var(--vellum-text);
+  background:
+    linear-gradient(#ffffff0a, #00000024),
+    var(--iron) url("../assets/ui/paper-grain.svg");
+  font: italic 500 19px/1.2 var(--font-ceremony);
+  box-shadow: none;
+  z-index: 8;
+}
+
+/* ---------- Material variants (one system, nine controlled moods) ---------- */
+.playing .narrative-card[data-kind="intimate"] {
+  --k-vellum: #ecd6bf;
+  --k-vellum-2: #d6b394;
+  --k-line: #7a4836;
+  --k-accent: #8a3520;
+  --k-ribbon: #33170f;
+  --k-glow: #ffc89a2e;
+}
+.playing .narrative-card[data-kind="work"] {
+  --k-vellum: #dfdcd0;
+  --k-vellum-2: #c3bfae;
+  --k-ink: #1e201f;
+  --k-line: #3c464a;
+  --k-accent: #23495a;
+  --k-ribbon: #172126;
+}
+/* Ledger margin rule, as on a working notebook. */
+.playing .narrative-card[data-kind="work"] .dialogue {
+  background: linear-gradient(
+    90deg,
+    transparent 13px,
+    #8c3a2f40 13px,
+    #8c3a2f40 14px,
+    transparent 14px
+  );
+}
+.playing .narrative-card[data-kind="awakening"] {
+  --k-vellum: #d3ddd8;
+  --k-vellum-2: #aec1bb;
+  --k-ink: #142120;
+  --k-line: #2e5a5b;
+  --k-accent: #1d5c5a;
+  --k-ribbon: #0c2223;
+  --k-ribbon-text: #def3ef;
+  --k-glow: #c6fff566;
+}
+/* Alien light arrives before its explanation: a cold wash from the arch. */
+.playing .narrative-card[data-kind="awakening"] .portrait-window {
+  box-shadow:
+    0 0 0 1px var(--k-line),
+    0 0 0 5px color-mix(in srgb, var(--k-vellum) 92%, transparent),
+    0 0 0 6px color-mix(in srgb, var(--k-line) 45%, transparent),
+    0 0 34px #b9fff2b0;
+}
+.playing .narrative-card[data-kind="awakening"]:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 34% at 50% 10%, #d9fff833, transparent 70%),
+    linear-gradient(115deg, transparent 30%, #c9fff514 46%, transparent 58%);
+}
+.playing .narrative-card[data-kind="anomaly"] {
+  --k-vellum: #1c1f25;
+  --k-vellum-2: #0f1115;
+  --k-ink: #ebe5d5;
+  --k-line: #9db6b2;
+  --k-accent: var(--spectral);
+  --k-ribbon: #e7e1d0;
+  --k-ribbon-text: #121418;
+  --k-glow: #bfe3df30;
+}
+/* The frame is drawn twice, slightly out of register; the numeral is mirrored. */
+.playing .narrative-card[data-kind="anomaly"] .arcana-frame {
+  translate: 2px 3px;
+  opacity: 0.6;
+}
+.playing .narrative-card[data-kind="anomaly"] .arcana-numeral {
+  transform: scaleX(-1);
+}
+.playing .narrative-card[data-kind="echo"] {
+  --k-vellum: #e7d5ae;
+  --k-vellum-2: #c9ac78;
+  --k-line: #6a5333;
+  --k-accent: #5e4522;
+  --k-ribbon: #36291a;
+  --k-art: sepia(0.45) saturate(0.62) contrast(0.96);
+}
+.playing .narrative-card[data-kind="front"] {
+  --k-vellum: #d4c4a3;
+  --k-vellum-2: #a28c6c;
+  --k-ink: #1b1510;
+  --k-line: #3b2a1e;
+  --k-accent: #873719;
+  --k-ribbon: #1c120c;
+  --k-art: saturate(0.72) contrast(1.08);
+}
+/* Soot creeping from the lower corners. */
+.playing .narrative-card[data-kind="front"]:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 34% 18% at 0% 100%, #24170daa, transparent 70%),
+    radial-gradient(ellipse 30% 15% at 100% 100%, #24170d88, transparent 70%);
+}
+.playing .narrative-card[data-kind="chronicle"] {
+  --k-vellum: #ddd9cc;
+  --k-vellum-2: #c8c3b1;
+  --k-ink: #191917;
+  --k-line: #272723;
+  --k-accent: #191917;
+  --k-ribbon: #191917;
+  --k-art: grayscale(0.55) contrast(1.1);
+}
+.playing .narrative-card[data-kind="chronicle"] .dialogue {
+  margin: 8px 20px 0;
+  padding: 10px 4px 2px;
+  border-top: 3px double #272723;
+}
+.playing .narrative-card[data-kind="threshold"] {
+  --k-vellum: #f5e8c6;
+  --k-vellum-2: #e2c88f;
+  --k-line: #8a6935;
+  --k-accent: #74501a;
+  --k-ribbon: #2a1e0d;
+  --k-glow: #ffe6a8a8;
+}
+.playing .narrative-card[data-kind="threshold"] .portrait-window {
+  box-shadow:
+    0 0 0 1px var(--k-line),
+    0 0 0 5px color-mix(in srgb, var(--k-vellum) 92%, transparent),
+    0 0 0 6px color-mix(in srgb, var(--k-line) 45%, transparent),
+    0 0 46px #ffdc94e6,
+    0 0 90px #ffdf9c66;
+}
+.playing .narrative-card[data-kind="threshold"]:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 70% 40% at 50% 26%,
+    #fff3d244,
+    transparent 72%
+  );
+}
+/* Legacy meta-pool marker stays compatible but adopts the anomaly mark. */
+.playing .strange .card-corner {
+  border-bottom: 0;
+  transform: none;
+}
+
+/* ---------- Decisions: two ink tabs pointing where the card will go ---------- */
+.decision-controls {
+  gap: 10px;
+}
+.decision {
+  position: relative;
+  isolation: isolate;
+  min-height: 58px;
+  padding: 10px 16px 10px 24px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--vellum-text);
+  font: italic 500 15px/1.25 var(--font-ceremony);
+}
+.decision.right {
+  padding: 10px 24px 10px 16px;
+  background: transparent;
+}
+.decision:before,
+.decision:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  transition: background var(--motion-fast);
+}
+.decision:before {
+  inset: 0;
+  background: #6f5b3c;
+}
+.decision:after {
+  inset: 1px;
+  background:
+    linear-gradient(#1b1711, #0d0b08), url("../assets/ui/paper-grain.svg");
+}
+.decision.left:before,
+.decision.left:after {
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%);
+}
+.decision.right:before,
+.decision.right:after {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 14px) 0,
+    100% 50%,
+    calc(100% - 14px) 100%,
+    0 100%
+  );
+}
+.decision .icon {
+  color: var(--brass);
+}
+.decision:hover {
+  background: transparent;
+  color: #fff4dc;
+}
+.decision:hover:before {
+  background: var(--brass);
+}
+.decision:hover:after {
+  background:
+    linear-gradient(#251f16, #120f0b), url("../assets/ui/paper-grain.svg");
+}
+/* While the card is pulled, the matching tab answers in the same warm ink. */
+.play-screen:has(.narrative-card[data-direction="left"]) .decision.left:before,
+.play-screen:has(.narrative-card[data-direction="right"])
+  .decision.right:before {
+  background: var(--human-warmth);
+}
+.play-screen:has(.narrative-card[data-direction="left"]) .decision.left,
+.play-screen:has(.narrative-card[data-direction="right"]) .decision.right {
+  color: #fff4dc;
+}
+
+/* ---------- Margins of the page: age, stage, onboarding, navigation ---------- */
+.moment {
+  margin-top: 10px;
+  font: 600 10px/1.2 var(--font-ui);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9a8f7b;
+}
+.chapter {
+  font: italic 14px/1.2 var(--font-ceremony);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--human-warmth);
+}
+.onboarding {
+  font: italic 13px/1.2 var(--font-ceremony);
+  color: #a59a83;
+}
+.quiet-nav {
+  position: relative;
+  border-top: 0;
+  padding-top: 6px;
+}
+.quiet-nav:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 10px;
+  background: #b9965c;
+  mask: var(--ornament-rule) center / auto 10px no-repeat;
+  opacity: 0.45;
+}
+.quiet-nav .nav-link,
+.nav-link {
+  font: 600 10px/1 var(--font-ui);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #a99c82;
+}
+.nav-link:hover {
+  color: var(--human-warmth);
+}
+
+/* ---------- Immediate response: a marginal note in the same ink ---------- */
+.playing .moment-flash,
+.moment-flash {
+  margin: 0 0 10px;
+  padding: 9px 14px 10px;
+  border: 0;
+  border-left: 2px solid var(--brass);
+  border-radius: 0;
+  box-shadow: 0 8px 22px #0009;
+  background:
+    linear-gradient(90deg, #1d1912f5, #110f0cf0),
+    url("../assets/ui/paper-grain.svg");
+  color: var(--vellum-text);
+}
+.moment-flash .choice-response {
+  font: italic 15px/1.45 var(--font-ceremony);
+}
+.moment-flash .progress-response {
+  font: 13px/1.4 var(--font-story);
+  color: var(--human-warmth);
+}
+.stage-recap {
+  padding-top: 8px;
+  border-top: 1px solid #b9965c33;
+}
+.stage-recap strong {
+  display: block;
+  font: 600 10px/1.4 var(--font-ui);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--human-warmth);
+}
+.stage-recap p {
+  font: italic 13px/1.45 var(--font-ceremony);
+  color: #d8cdb6;
+}
+/* A public bulletin is newsprint, not a system dialog. */
+.public-bulletin {
+  margin: 0 0 10px;
+  padding: 10px 14px 4px;
+  color: #1c1b18;
+  background:
+    url("../assets/ui/paper-grain.svg"), linear-gradient(#dfdbcd, #ccc6b4);
+  border: 0;
+  border-top: 3px double #2a2823;
+  box-shadow: 0 10px 24px #0009;
+}
+.public-bulletin strong {
+  font: 700 10px/1.3 var(--font-ui);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #1c1b18;
+}
+.public-bulletin p {
+  font: 14px/1.45 var(--font-story);
+}
+.public-bulletin .text-button {
+  color: #1c1b18;
+  font: italic 14px/1.2 var(--font-ceremony);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.notification {
+  border: 0;
+  border-radius: 1px;
+  color: var(--iron);
+  background:
+    url("../assets/ui/paper-grain.svg"),
+    linear-gradient(var(--vellum), var(--vellum-deep));
+  box-shadow:
+    inset 0 0 0 3px var(--vellum),
+    inset 0 0 0 4px #4b3c2c66,
+    0 12px 30px #000c;
+  font: italic 14px/1.4 var(--font-ceremony);
+}
+
+/* ---------- Awakening findings use the same engraved plaque ---------- */
+/* Findings sit low in the arch, clear of its curve and above the ribbon. */
+.playing .awakening-mark,
+.playing .awakening-mark:not(.rank-mark) {
+  top: auto;
+  bottom: 40px;
+  right: 14px;
+}
+.awakening-mark {
+  background: #05080ae6;
+  border-left: 1px solid #bfe3df99;
+  box-shadow: 0 0 22px #bfe3df26;
+}
+.awakening-mark small {
+  font: 600 9px/1.3 var(--font-ui);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--spectral);
+}
+.awakening-mark strong {
+  font: 500 21px/1.15 var(--font-ceremony);
+}
+.rank-mark strong {
+  font: 400 clamp(42px, 12vw, 64px)/1 var(--font-ceremony);
+}
+
+/* ---------- Secondary screens: one vellum-and-night family ---------- */
+dialog {
+  color: var(--text-primary);
+  background:
+    radial-gradient(ellipse 90% 40% at 50% 0%, #2a2116, transparent 70%),
+    url("../assets/ui/paper-grain.svg"), #0f0e0b;
+  border: 1px solid #b9965c59;
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 5px #0f0e0b,
+    inset 0 0 0 6px #b9965c26,
+    var(--shadow-overlay);
+}
+dialog::backdrop {
+  background: radial-gradient(ellipse at 50% 40%, #0a0907d9, #030405f2);
+}
+dialog h2 {
+  font: 500 28px/1.15 var(--font-ceremony);
+  color: #f2e8d2;
+}
+dialog .eyebrow,
+.eyebrow {
+  font: 600 10px/1.3 var(--font-ui);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+.button {
+  border-radius: 1px;
+  border-color: #8a7e6899;
+  background: #17140f;
+  font: italic 15px/1.2 var(--font-ceremony);
+  color: var(--text-primary);
+}
+.button:hover {
+  background: #221d15;
+  border-color: var(--brass);
+}
+.button.primary {
+  color: var(--iron);
+  border-color: transparent;
+  background:
+    linear-gradient(#fffaf01c, #6f532a1c),
+    var(--vellum) url("../assets/ui/paper-grain.svg");
+  box-shadow:
+    inset 0 0 0 3px var(--vellum),
+    inset 0 0 0 4px #4b3c2c80,
+    0 10px 24px #0009;
+  font: 600 15px/1.2 var(--font-ceremony);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.16em;
+}
+.button.primary:hover {
+  background:
+    linear-gradient(#fffaf033, #6f532a12),
+    var(--vellum) url("../assets/ui/paper-grain.svg");
+}
+.button.danger {
+  background: #3a1d19;
+  border-color: #a3625a;
+  color: #ffd9d3;
+}
+input,
+select {
+  border-radius: 1px;
+  border-color: #6f6450;
+  background: #0b0a08;
+  font-family: var(--font-story);
+}
+label {
+  font: 600 10px/1.4 var(--font-ui);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #b9ad94;
+}
+.creator-modal .identity-preview {
+  background:
+    radial-gradient(ellipse 44% 58% at 50% 54%, #ffe2a426, transparent 70%),
+    radial-gradient(ellipse 62% 70% at 50% 60%, #b9965c14, transparent 72%);
+  border-radius: 50% 50% 2px 2px / 90px 90px 2px 2px;
+  box-shadow: inset 0 0 0 1px #b9965c40;
+}
+.creator-modal button[type="submit"] {
+  margin-top: 6px;
+}
+.creation-note {
+  font-family: var(--font-ceremony);
+}
+.age-previews button[aria-pressed="true"] {
+  border-color: var(--brass);
+  background: #b9965c1a;
+}
+.appearance.selected {
+  border-color: var(--brass);
+  background: #b9965c14;
+}
+details {
+  border-top-color: #b9965c33;
+}
+summary {
+  font: italic 15px/1.3 var(--font-ceremony);
+}
+.story-timeline time {
+  font: 500 17px var(--font-ceremony);
+  color: var(--human-warmth);
+}
+.story-timeline li:not(:last-child):before {
+  background: linear-gradient(#b9965c66, #b9965c14);
+}
+.story-timeline p {
+  font: 14px/1.6 var(--font-story);
+}
+.legacy-number strong {
+  font: 400 62px/1 var(--font-ceremony);
+  color: var(--vellum);
+}
+
+/* ---------- Memorial: the last card is held in the same arch ---------- */
+.death-screen {
+  position: relative;
+}
+.death-screen .eyebrow {
+  color: var(--brass);
+}
+.memorial {
+  background: radial-gradient(
+    ellipse 40% 50% at 50% 55%,
+    #ffe2a41f,
+    transparent 70%
+  );
+}
+.memorial img.veiled-portrait {
+  border-radius: 50% 50% 2px 2px / 80px 80px 2px 2px;
+  background:
+    radial-gradient(ellipse at 50% 30%, #3a2d1c, #0d0c0a 75%), #0d0c0a;
+  box-shadow:
+    0 0 0 1px #b9965c80,
+    0 0 0 5px #06080c,
+    0 0 0 6px #b9965c33,
+    0 18px 50px #000;
+}
+.memorial > span {
+  color: var(--lumen);
+  text-shadow: 0 0 14px #ffe2a4aa;
+}
+.death-screen h1 {
+  font: 400 42px/1.05 var(--font-ceremony);
+  letter-spacing: 0.04em;
+  color: #f4ead4;
+}
+.death-screen h1:after {
+  content: "";
+  display: block;
+  width: 150px;
+  height: 14px;
+  margin: 14px auto 0;
+  background: var(--brass);
+  mask: var(--ornament-rule) center / contain no-repeat;
+  opacity: 0.7;
+}
+.life-age {
+  font: italic 15px/1.4 var(--font-ceremony);
+  color: #c9bea6;
+}
+.final-story h2 {
+  font: 500 24px/1.2 var(--font-ceremony);
+}
+.final-story > p,
+.final-story > section > p {
+  font-family: var(--font-story);
+}
+.mystery-hint {
+  font: italic 17px/1.6 var(--font-ceremony);
+  color: var(--human-warmth);
+}
+
+/* ---------- Motion: cards are dealt, not slid ---------- */
+@keyframes arcana-deal {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+    rotate: -1.4deg;
+    scale: 0.975;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    rotate: 0deg;
+    scale: 1;
+  }
+}
+
+/* ---------- Short screens keep every control; ornament yields first ---------- */
+@media (max-height: 700px) {
+  .play-screen:before,
+  .play-screen:after {
+    display: none;
+  }
+  .indicator > span {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 4px;
+  }
+  .indicator .icon {
+    width: 14px;
+    height: 14px;
+  }
+  .arcana-head {
+    padding-top: 9px;
+    min-height: 24px;
+  }
+  .arcana-head .icon {
+    width: 13px;
+    height: 13px;
+  }
+  .arcana-numeral {
+    font-size: 12px;
+  }
+  .playing .portrait-window {
+    margin-top: 5px;
+    border-radius: 50% 50% 2px 2px / 84px 84px 2px 2px;
+  }
+  .playing .speaker {
+    margin-top: -20px;
+    padding: 5px 26px 6px;
+  }
+  .playing .speaker h1 {
+    font-size: 20px;
+  }
+  .playing .dialogue {
+    padding: 8px 18px 2px;
+  }
+  .playing .dialogue:after {
+    display: none;
+  }
+  .playing .dialogue {
+    padding-bottom: 6px;
+  }
+  .dialogue p {
+    font-size: 15px;
+    line-height: 1.42;
+  }
+  .decision {
+    min-height: 50px;
+    font-size: 14px;
+  }
+  .moment {
+    margin-top: 8px;
+  }
+}
+@media (min-width: 700px) {
+  .playing .mystic-atmosphere {
+    background:
+      linear-gradient(#06080cd6, #06080ceb),
+      url("../assets/threshold/environment_v1.webp") center 38% / auto 118%
+        no-repeat,
+      var(--night);
+  }
+}
+
+/* ---------- Accessibility fallbacks ---------- */
+@media (forced-colors: active) {
+  .arcana-frame,
+  .arcana-edge,
+  .arcana-head,
+  .play-screen:before,
+  .play-screen:after,
+  .quiet-nav:before,
+  .playing .dialogue:after,
+  .death-screen h1:after,
+  .playing .narrative-card[data-kind="front"]:after,
+  .playing .narrative-card[data-kind="awakening"]:after,
+  .playing .narrative-card[data-kind="threshold"]:after {
+    display: none;
+  }
+  .playing .speaker {
+    clip-path: none;
+    border: 1px solid CanvasText;
+  }
+  .decision {
+    border: 1px solid ButtonText;
+  }
+  .decision:before,
+  .decision:after {
+    display: none;
+  }
+  .playing .portrait-window {
+    box-shadow: none;
+    border: 1px solid CanvasText;
+  }
+  /* Arcana pigments are author colors; hand every text surface to the system. */
+  :root {
+    --night: Canvas;
+    --vellum: Canvas;
+    --vellum-deep: Canvas;
+    --vellum-text: CanvasText;
+    --iron: CanvasText;
+    --iron-soft: CanvasText;
+    --iron-faded: CanvasText;
+    --brass: CanvasText;
+    --brass-dim: CanvasText;
+    --human-warmth: CanvasText;
+    --lumen: CanvasText;
+  }
+  .playing .narrative-card[data-kind] {
+    --k-vellum: Canvas;
+    --k-vellum-2: Canvas;
+    --k-ink: CanvasText;
+    --k-line: CanvasText;
+    --k-accent: CanvasText;
+    --k-ribbon: Canvas;
+    --k-ribbon-text: CanvasText;
+    --k-glow: transparent;
+  }
+  .play-screen,
+  .play-screen *,
+  .death-screen,
+  .death-screen *,
+  dialog,
+  dialog *,
+  .notification {
+    color: CanvasText !important;
+  }
+  .play-screen button,
+  .death-screen button,
+  dialog button {
+    color: ButtonText !important;
+  }
+}

@@ -1,6 +1,27 @@
-# Design system — Task 03
+# Design system — Task 03, superseded chrome: Arcana of Lives
 
-The runtime remains static HTML + ES modules. `style.css` imports local fonts and twelve stylesheets using relative URLs. No preprocessor/framework or production dependency.
+The runtime remains static HTML + ES modules. `style.css` imports local fonts and thirteen stylesheets using relative URLs. No preprocessor/framework or production dependency.
+
+## Arcana of Lives — current component system
+
+`styles/arcana.css` (thirteenth module, loaded after game feel and Awakening) owns the gameplay, memory and dialog chrome; `styles/threshold.css` owns the title. Art direction and the rejected alternatives: [ART_DIRECTION](ART_DIRECTION.md#visual-redesign--arcana-of-lives-current-presentation-authority). Where this section conflicts with the Task 03 notes below, this section wins.
+
+| Role                         | Choice                                                                                     |
+| ---------------------------- | ------------------------------------------------------------------------------------------ |
+| Title, names, choices, notes | `--font-ceremony`: Iowan Old Style / Palatino Linotype / Palatino / Book Antiqua → Georgia |
+| Written Moment               | `--font-story`: Georgia, 17px/1.5 (15px/1.42 on short screens), pigment initial letter     |
+| Labels, meters, age, nav     | DM Sans 9–10px uppercase, 0.14–0.24em tracking                                             |
+
+- **Title:** full-bleed doorway sized by available height (`--threshold-top/controls/note/overlap`), so every Task 04 layer keeps its percentage position. Static god-rays (screen blend), vignette, a double-hairline ornament frame with four corner flourishes, arch sigil, `LIFE`/`SIM` title and a fleuron rule. Actions rest on the lit floor: vellum plaque CTA with oxblood diamonds, italic secondary actions in one row, uppercase Legado/Ajustes. The first-crossing prologue is a small arched vellum card in the same place.
+- **Moment card:** deckled vellum (existing edge polygon) with engraved double rule and four corner flourishes; head row with material sigil, Roman age numeral (0 for the first year) and stage glyph (all `aria-hidden`); arched miniature for scene and character; a swallowtail ribbon carries role and name (`#page-title`); Georgia text with a pigment initial; fleuron at the foot. Speaker moved below the miniature but remains inside the article for the presentation owner.
+- **Materials:** `data-kind` from `momentKind()` in `src/ui/arcana.js` selects CSS custom properties only (`--k-vellum`, `--k-ink`, `--k-line`, `--k-accent`, `--k-ribbon`, `--k-glow`, `--k-art`). No per-Moment CSS and no saved field.
+- **Decision affordance:** the card edge being pulled warms in proportion to the existing `--strength`; the matching tab answers via `:has()`. Neither suggests a good or bad choice.
+- **Decisions:** two ink tabs whose outer edge points in the swipe direction. The shapes live on pseudo-elements so the focus ring is never clipped; ≥50px (58px normally) and >100px wide.
+- **Meters:** four medallions (pigment-tinted ring, original glyph) above a 2px ink track; still `scaleX`, progressbar values and ↑/↓ direction.
+- **Feedback:** the in-flow response is a dark marginal note with a brass rule; stage recap in small caps; the public bulletin is newsprint with a double rule; achievements use a vellum plaque.
+- **Night:** two faint arches stand behind the card; on wide screens the atmosphere shows the darkened title doorway instead of the legacy park.
+- **Memorial / dialogs:** arched portrait with ring, ceremonial name and fleuron; night panel with inner hairline and vellum primary buttons.
+- **Accessibility:** contrast checked by axe across the suite; forced colors removes ornaments, ribbons' clip shapes and tab pseudo-shapes and restores plain borders; reduced motion keeps every state static; 200% text grows the card/page instead of clipping.
 
 ## Tokens and typography
 

@@ -33,9 +33,10 @@ export function thresholdScreen(data, prologueStep = null) {
       ? button("Recordar", "continue", "", "text-button")
       : "";
   return `<section class="threshold ${data.state ? "has-save" : ""} ${data.warning || data.migrated ? "has-note" : ""} ${prologueStep !== null ? "in-prologue" : ""}" data-crossing="${data.meta.completed ? "returning" : firstCrossing(data) ? "first" : "familiar"}" data-threshold-state="idle" data-recognition="${thresholdDepth(data.meta)}" aria-labelledby="page-title">
-    <header class="threshold-title"><h1 id="page-title">LIFESIM</h1><p>${esc(thresholdEcho(data.meta))}</p>${data.meta.completed ? `<p class="continuity-note">${RETURNING}</p>` : ""}</header>
+    <header class="threshold-title"><span class="title-sigil" aria-hidden="true"></span><h1 id="page-title"><span>LIFE</span><span>SIM</span></h1><span class="title-rule" aria-hidden="true"></span><p>${esc(thresholdEcho(data.meta))}</p>${data.meta.completed ? `<p class="continuity-note">${RETURNING}</p>` : ""}</header>
     <div class="threshold-scene" aria-hidden="true"><div class="threshold-frame">
       <img class="threshold-environment" src="${THRESHOLD_ART.environment}" width="768" height="1024" alt="" fetchpriority="high" decoding="async">
+      <div class="threshold-rays"></div>
       <div class="threshold-lumen"></div>
       <div class="threshold-depth"><i></i><i></i><i></i></div>
       <div class="threshold-possibilities">${THRESHOLD_ART.fragments
@@ -64,7 +65,8 @@ export function thresholdScreen(data, prologueStep = null) {
             `<circle cx="${x}" cy="${y}" r="${i % 3 === 0 ? ".24" : ".14"}"/>`,
         )
         .join("")}</g></svg>
-    </div></div>
+    </div><div class="threshold-vignette"></div></div>
+    <div class="threshold-ornament" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="threshold-controls">${
       prologueStep !== null
         ? crossingCopy(prologueStep)

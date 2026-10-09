@@ -1,5 +1,19 @@
 # Art direction — LifeSim
 
+## Visual redesign — Arcana of Lives (current presentation authority)
+
+Branch `codex/visual-redesign-home-and-cards` replaces the Task 03 card chrome and the Task 04 title layout with one direction: **every Moment is a small Threshold**. The title doorway is the first arcana; each gameplay card repeats its arch as a painted miniature set into aged vellum. Gameplay, content, saves, timing and both RNG streams are unchanged; this is presentation only.
+
+Three directions were compared before implementation: _cosmic ink minimalism_ (black lacquer, white line art, constellations — striking but cold and close to sci-fi, losing the human tactile palette), _illuminated manuscript folio_ (open-book pages and marginalia — literary but dense and hard to read at 360px) and **Arcana of Lives** (dark storybook ceremony: night, vellum, iron-gall ink and one impossible warm light). Arcana was chosen because it keeps faces and text dominant, connects title and gameplay through a single motif (the arch), and gives ordinary and extraordinary Moments a controlled material scale instead of loot colors.
+
+- **Palette:** night `#06080c` around every life; vellum `#e5d7b7` with iron-gall ink `#241b12`; brass only as hairlines and ornaments; oxblood, ember, verdigris and spectral cyan as small pigments. Warm Threshold light stays exceptional: the title doorway and late-game `threshold` cards. Tokens live in `styles/tokens.css`.
+- **Typography:** a ritual operating-system serif stack (`Iowan Old Style`, `Palatino Linotype`, Palatino, Book Antiqua, … Georgia) for titles, names, choices and notes; Georgia for the written Moment; DM Sans only for small uppercase labels. No font download was added.
+- **Ornament:** three hand-drawn SVG masks (corner flourish, fleuron rule, arch sigil) embedded as data URIs and colored by `currentColor`. They frame, never carry information, and disappear in forced colors.
+- **Card materials:** one card grammar with nine variants derived at render time from existing Moment metadata (`src/ui/arcana.js`): life, intimate (warm rose vellum), work (cool ledger with margin rule), awakening (ash-cyan vellum, cold light from the arch), anomaly (inverted night vellum, frame out of register, mirrored numeral), echo (sepia memory), front (soot-darkened field/war), chronicle (newsprint for delivered reports) and threshold (luminous vellum, warm arch light). Variants never encode outcomes, ranks or probabilities and are not saved.
+- **Memorial and dialogs** reuse the arch, vellum plaque and night panel so the whole loop — title, life, death, legacy — reads as one object family.
+
+The Task 03–05.5 rules below remain valid for character art, environments, motion budgets, rank presentation and anti-patterns unless this section explicitly replaces their chrome.
+
 Task 03 establishes **hand-drawn modern dark fantasy**. This supersedes the pixel-art direction in ART.md and ART-V3.md, which remain provenance records. The canon in `/lore` governs what exists; art does not invent historical events, powers or identities.
 
 ## Audit of V3

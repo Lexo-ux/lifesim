@@ -1,34 +1,60 @@
-/* Shared by static CSS and src/ui/motion.js. No build step. */
+/* Shared by static CSS and src/ui/motion.js. No build step.
+   Arcana direction: night ink, aged vellum and one impossible warm light. */
 :root {
   color-scheme: dark;
-  --surface-world: #101719;
-  --surface-card: #1b2325;
-  --surface-raised: #263033;
-  --surface-hover: #354144;
-  --surface-paper: #e8e0cf;
-  --text-primary: #f1eee5;
-  --text-secondary: #bcc3c1;
-  --text-on-paper: #282e2c;
-  --human-warmth: #d5ba8e;
-  --danger: #dc9497;
-  --danger-surface: #40282b;
-  --convergence: #b7d4d4;
-  --spectral-ivory: #f1f3df;
-  --border-subtle: #445254;
-  --border-strong: #788582;
-  --radius-card: 5px;
-  --radius-control: 4px;
-  --radius-overlay: 8px;
-  --shadow-card: 0 14px 28px #0005, 0 2px 4px #0005;
-  --shadow-raised: 0 24px 36px #0007;
-  --shadow-overlay: 0 24px 80px #0009;
+  /* Night: the world around every life. */
+  --night: #06080c;
+  --night-raised: #0d1117;
+  --night-panel: #12151b;
+  --night-line: #2b2f36;
+  /* Vellum and iron-gall ink: the material of a lived Moment. */
+  --vellum: #e5d7b7;
+  --vellum-deep: #cdb98f;
+  --vellum-edge: #9c8259;
+  --vellum-text: #e9dfc8;
+  --iron: #241b12;
+  --iron-soft: #4b3c2c;
+  --iron-faded: #6f5d47;
+  /* Restrained pigments. Brass is a hairline, never a fill. */
+  --brass: #b9965c;
+  --brass-dim: #7a6340;
+  --oxblood: #8c3a2f;
+  --ember: #b8562f;
+  --verdigris: #5d8a80;
+  --spectral: #bfe3df;
+  --lumen: #ffe7b0;
+  --surface-world: var(--night);
+  --surface-card: var(--night-panel);
+  --surface-raised: #1a1e25;
+  --surface-hover: #262b33;
+  --surface-paper: var(--vellum);
+  --text-primary: #efe7d5;
+  --text-secondary: #b3ab9c;
+  --text-on-paper: var(--iron);
+  --human-warmth: #d9b77f;
+  --danger: #e09a8f;
+  --danger-surface: #3f2522;
+  --convergence: #b9dcd8;
+  --spectral-ivory: #f1f0dc;
+  --border-subtle: #373b42;
+  --border-strong: #8a7e68;
+  --radius-card: 3px;
+  --radius-control: 2px;
+  --radius-overlay: 4px;
+  --shadow-card: 0 18px 34px #000a, 0 3px 6px #0008;
+  --shadow-raised: 0 30px 46px #000c;
+  --shadow-overlay: 0 30px 90px #000c;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
   --space-5: 24px;
   --space-6: 32px;
-  --font-display: "Outfit", sans-serif;
+  /* Ritual display serif from the operating system: no font download. */
+  --font-ceremony:
+    "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
+    "URW Palladio L", P052, Georgia, serif;
+  --font-display: var(--font-ceremony);
   --font-ui: "DM Sans", sans-serif;
   --font-story: Georgia, "Times New Roman", serif;
   --motion-fast: 140ms;
@@ -43,8 +69,8 @@
   --motion-threshold-cycle: 6800ms;
   --motion-threshold-breath: 8500ms;
   --motion-threshold-drift: 12000ms;
-  --threshold-night: #080d10;
-  --threshold-ivory: #f2e5c8;
+  --threshold-night: #05070a;
+  --threshold-ivory: #f4e6c4;
   --ease-settle: cubic-bezier(0.2, 0.75, 0.25, 1);
   --ease-commit: cubic-bezier(0.4, 0, 0.75, 0.4);
   --z-environment: 0;
@@ -54,6 +80,10 @@
   --z-hud: 10;
   --z-feedback: 20;
   --z-notification: 100;
+  /* Hand-drawn ornaments as masks; color always comes from currentColor. */
+  --ornament-corner: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='black' stroke-linecap='round'%3E%3Cpath d='M2 46V14C2 7 7 2 14 2h32' stroke-width='1.5'/%3E%3Cpath d='M7 46V17c0-6 4-10 10-10h29' stroke-width='.8'/%3E%3Cpath d='M12 30c0-10 8-18 18-18' stroke-width='.7'/%3E%3C/g%3E%3Cpath d='M13 13c5 0 9 3 10 9-5 0-9-3-10-9z'/%3E%3Ccircle cx='25' cy='25' r='1.7'/%3E%3Cpath d='M30 4l2 2-2 2-2-2z M4 30l2 2-2 2-2-2z'/%3E%3C/svg%3E");
+  --ornament-rule: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 16'%3E%3Cg fill='none' stroke='black' stroke-linecap='round'%3E%3Cpath d='M2 8h58M100 8h58' stroke-width='.9'/%3E%3Cpath d='M60 8c6-6 12-6 14 0M100 8c-6 6-12 6-14 0' stroke-width='.9'/%3E%3C/g%3E%3Cpath d='M80 2l6 6-6 6-6-6z'/%3E%3Ccircle cx='66' cy='8' r='1.2'/%3E%3Ccircle cx='94' cy='8' r='1.2'/%3E%3C/svg%3E");
+  --ornament-arch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 48'%3E%3Cg fill='none' stroke='black' stroke-linecap='round'%3E%3Cpath d='M4 46V20C4 10 11 3 20 3s16 7 16 17v26' stroke-width='1.6'/%3E%3Cpath d='M10 46V21c0-6 4-11 10-11s10 5 10 11v25' stroke-width='.9'/%3E%3Cpath d='M1 46h38' stroke-width='1.2'/%3E%3C/g%3E%3Cpath d='M20 16c3 4 3 9 0 13-3-4-3-9 0-13z'/%3E%3C/svg%3E");
   /* Existing secondary components share the same semantic palette. */
   --bg: var(--surface-world);
   --panel: var(--surface-card);

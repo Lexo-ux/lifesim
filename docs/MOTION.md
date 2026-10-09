@@ -29,7 +29,7 @@ Task 06 keeps the protagonist perceptually in place across the bounded Awakening
 - Intent ramps to full opacity at threshold and includes direction plus action phrase. No consequence probabilities or stat deltas.
 - Vertical intent, pointer cancellation or capture loss returns the card. Below threshold returns in 280ms with no choice. Successful commit keeps its current pose and exits; implicit capture loss cannot snap it back.
 - Arrow keys and visible buttons resolve the same choice once. Held-key repeats are ignored. Modal controls retain keyboard ownership. AbortController removes all gesture listeners on remount, and pointer capture is released.
-- Exit 280ms and entrance 420ms separate visual phases; the new card fades/translates just 14px. Indicators use `scaleX`, not width, and display direction arrows.
+- Exit 280ms and entrance 420ms separate visual phases; the Arcana redesign deals the new card (`arcana-deal`: fade, 18px rise, −1.4° → 0°, 0.975 → 1 scale on individual transform properties, so drag transforms never compete). Awakening incident beats keep `animation: none`. Indicators use `scaleX`, not width, and display direction arrows.
 - Native Web Animations effects cancel after completion, releasing fill styles/targets; rest state lives in CSS. A new outcome cancels the preceding caption timer/effect, and navigation clears it.
 
 ## Reduced motion
