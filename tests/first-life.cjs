@@ -223,6 +223,83 @@ const dir = "output/qa/task145";
     assert.doesNotMatch(await page.locator("dialog").innerText(), /en una un /);
     await shot("history");
     await page.keyboard.press("Escape");
+    // Presentation-only stress projection, never saved or passed to choose().
+    // Combine all feedback slots with the longest authored ordinary Moment.
+    const stack = await page.evaluate(async (data) => {
+      const url = (file) => new URL(file, document.baseURI).href;
+      const { choiceFeedback, feedbackHTML } = await import(
+        url("src/ui/first-life.js")
+      );
+      const { transitionMoment } = await import(url("src/ui/transitions.js"));
+      const { CARDS } = await import(url("content/moments/index.js"));
+      const { JOBS } = await import(url("content/catalog.js"));
+      const moment = CARDS.filter(
+        (m) =>
+          typeof m.text === "string" &&
+          !m.system &&
+          !m.mystery &&
+          !m.resolution &&
+          !m.field &&
+          m.pool !== "meta",
+      ).sort((a, b) => b.text.length - a.text.length)[0];
+      const before = structuredClone(data.state);
+      before.age = 29;
+      const after = structuredClone(before);
+      after.age = 30;
+      after.education.current = null;
+      after.career = { id: JOBS[0].id };
+      after.relationships = [{ name: "Elena", type: "friend", bond: 80 }];
+      after.history.push({
+        age: 30,
+        milestone: true,
+        text: "Te mudaste a una casa que puedes llamar tuya.",
+      });
+      const feedback = choiceFeedback(before, after, moment, "left", {
+        outcome: { text: "Respuesta de prueba" },
+      });
+      transitionMoment(feedbackHTML(feedback));
+      document.querySelector("#card-dialogue").textContent = moment.text;
+      return { feedback, textLength: moment.text.length };
+    }, saved);
+    assert.ok(
+      stack.feedback.text && stack.feedback.milestone && stack.feedback.stage,
+    );
+    assert.equal(stack.feedback.observations.length, 2);
+    assert.ok(stack.textLength > 150);
+    assert.equal(await page.locator(".stage-recap p").count(), 2);
+    for (const [width, height] of [
+      [360, 640],
+      [390, 844],
+      [430, 932],
+      [1440, 900],
+    ]) {
+      await page.setViewportSize({ width, height });
+      await fits();
+      await shot(`polish-full-stack-${width}`);
+    }
+    await audit("full-feedback-stack");
+    await page.setViewportSize({ width: 360, height: 640 });
+    await page.emulateMedia({ forcedColors: "active" });
+    await fits();
+    await shot("polish-full-stack-forced-colors");
+    await page.emulateMedia({ forcedColors: "none" });
+    await page.evaluate(() => {
+      for (const e of document.querySelectorAll(
+        ".dialogue p,.decision,.moment-flash p,.moment-flash strong",
+      )) {
+        e.style.fontSize = `${parseFloat(getComputedStyle(e).fontSize) * 2}px`;
+      }
+    });
+    await fits();
+    await shot("polish-full-stack-text200");
+    await audit("full-feedback-stack-text200");
+    assert.deepEqual(
+      await read(),
+      saved,
+      "stress projection cannot write state, meta or settings",
+    );
+    await page.reload();
+    await page.locator("[data-action=continue]").click();
     // Reach this natural life's last decision, then commit death through the UI.
     await page.evaluate(async (data) => {
       const { choose } = await import(
