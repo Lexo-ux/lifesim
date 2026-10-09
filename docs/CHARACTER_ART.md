@@ -8,7 +8,7 @@ Veiled Identity is intentional incomplete visibility of a fully drawn human. Use
 
 Recognition comes from hair shape, head/body proportions, silhouette, posture, wardrobe palette and small repeatable visual motifs. These motifs are art direction, not possessions, skills, wealth or narrative facts. A civilian life is complete in itself. No automatic profession, weapon, armor or exceptional power in the base appearances.
 
-Maintain the Threshold's ink/material family and warm restrained edges against cool shadows. The illustration remains full color; avoid sepia-only rendering, gold auras, anime/Disney anatomy, photorealism, 3D and pixelated display. Background washes should feel like pigment on paper, not magical energy. Neutral reflective expressions must not make every life seem miserable.
+Portraits are shown through the Fissure card's window onto the scene, inside obsidian, with the card's light rising from below (see [ART_DIRECTION](ART_DIRECTION.md#art-redirection--fissure-current-presentation-authority)). Keep the ink/gouache technique, natural local color and directional shadow; do not paint the UI's fissure light, rim glow or colored aura into the artwork — the interface supplies context light. The illustration remains full color; avoid sepia-only rendering, gold auras, anime/Disney anatomy, photorealism, 3D and pixelated display. Background washes should feel like pigment, not magical energy. _(Replaced in the Fissure redirection: "Maintain the Threshold's ink/material family and warm restrained edges" — the Threshold is no longer an ink painting.)_ Neutral reflective expressions must not make every life seem miserable.
 
 ## Stable appearance identities
 

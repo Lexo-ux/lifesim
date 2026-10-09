@@ -1,8 +1,10 @@
 # Estado real — V3 con Resolución Verdadera y primera vida (Task 14.5)
 
-## Rediseño visual — Arcanos de vidas
+## Redirección artística — Fisura
 
-Presentación nueva del Umbral y de las tarjetas: puerta a sangre completa, cada Moment como un pequeño Umbral (miniatura en arco sobre pergamino, cinta con nombre, numeral romano de edad) y nueve materiales derivados de metadatos existentes. Sin cambios de reglas, contenido, guardados, tiempos ni RNG. Contrato: [DESIGN_SYSTEM](DESIGN_SYSTEM.md) y [ART_DIRECTION](ART_DIRECTION.md).
+Nueva dirección vigente (sustituye a Arcanos de vidas): la luz es otra realidad vista por las grietas de la materia. Umbral en SVG con monolitos, fragmentos flotantes, portal ornamentado con engastes de legado y una figura diminuta; se cruza manteniendo pulsado el portal (con alternativa de botón y teclado) y su luz se convierte en la primera carta. Las cartas son losas de obsidiana con ventana a la escena y alabastro iluminado; seis estados legibles sin depender del color (cotidiano, crisis, misterio, eco, despertar, resolución) y elegir parte la carta en fragmentos. Luz contextual por tipo de carta, era conocida, clase y legado. Tres prototipos en `lab/`. Sin cambios de reglas, Moments, guardados, migraciones, tiempos de transacción, canon ni RNG. Contrato: [ART_DIRECTION](ART_DIRECTION.md), [DESIGN_SYSTEM](DESIGN_SYSTEM.md), [MOTION](MOTION.md) y [THRESHOLD](THRESHOLD.md).
+
+_Histórico — Arcanos de vidas:_ puerta a sangre completa, miniatura en arco sobre pergamino y nueve materiales; reemplazado por Fisura.
 
 ## Task 14.5 — primera vida y feedback
 

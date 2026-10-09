@@ -1,0 +1,1767 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="dark" />
+    <title>Concepto A · Fisura</title>
+    <link rel="stylesheet" href="../../assets/fonts/fonts.css" />
+    <style>
+      /* CONCEPTO A — FISURA PRISMÁTICA
+         La luz no ilumina la materia: es otra realidad vista a través de sus grietas.
+         Prototipo aislado: no importa nada del juego. */
+      :root {
+        color-scheme: dark;
+        --night: #030409;
+        --stone: #0a0b12;
+        --stone-hi: #171a26;
+        --rim: #2a2e42;
+        --l1: #fff4e0;
+        --l2: #ff6ec7;
+        --l3: #59e6ff;
+        --l4: #ffc25c;
+        --text: #f1ece3;
+        --muted: #a6a2b4;
+        --charge: 0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: var(--night);
+        color: var(--text);
+        font:
+          15px/1.5 "DM Sans",
+          system-ui,
+          sans-serif;
+        overflow: hidden;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+        border: 0;
+        background: none;
+      }
+      button:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 4px;
+      }
+      .screen {
+        position: fixed;
+        inset: 0;
+      }
+      /* ───────── UMBRAL ───────── */
+      .threshold {
+        background:
+          radial-gradient(
+            ellipse 60% 45% at 50% 52%,
+            #1d1e2b 0%,
+            #10111a 55%,
+            #07080d 100%
+          ),
+          var(--night);
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        transform-origin: 50% 54%;
+        transition: transform 1.4s cubic-bezier(0.6, 0, 0.2, 1);
+      }
+      .opening .scene {
+        transform: scale(1.6);
+      }
+      .stone {
+        fill: url(#stoneGrad);
+      }
+      .stone-far {
+        fill: #07080e;
+      }
+      .rimlight {
+        fill: none;
+        stroke: url(#spec);
+        stroke-width: 1.1;
+        opacity: calc(0.18 + var(--charge) * 0.5);
+      }
+      .crack path {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .crack .glow {
+        stroke: url(#spec);
+        stroke-width: 7;
+        opacity: 0.16;
+      }
+      .crack .fringe {
+        stroke: url(#spec2);
+        stroke-width: 2.4;
+        opacity: 0.8;
+        mix-blend-mode: screen;
+      }
+      .crack .core {
+        stroke: #fff;
+        stroke-width: 0.8;
+        opacity: 0.92;
+      }
+      .shard {
+        transition: transform 1.2s cubic-bezier(0.5, 0, 0.1, 1);
+      }
+      .opening .shard {
+        transform: translate(var(--fx, 0px), var(--fy, -120px))
+          rotate(var(--fr, 0deg));
+      }
+      .portal-light {
+        opacity: calc(0.55 + var(--charge) * 0.45);
+      }
+      .portal-veil-l,
+      .portal-veil-r {
+        transition: transform 0.9s cubic-bezier(0.7, 0, 0.2, 1);
+        transform-box: fill-box;
+      }
+      .opening .portal-veil-l {
+        transform: translateX(-100%);
+      }
+      .opening .portal-veil-r {
+        transform: translateX(100%);
+      }
+      .socket {
+        fill: #0d0e16;
+        stroke: #2c3044;
+        stroke-width: 1;
+      }
+      .socket.lit {
+        stroke: none;
+      }
+      .rune {
+        fill: none;
+        stroke: url(#spec);
+        stroke-width: 1.4;
+        stroke-linecap: round;
+        opacity: calc(0.12 + var(--charge) * 0.88);
+      }
+      .pool {
+        opacity: calc(0.5 + var(--charge) * 0.5);
+      }
+      .figure {
+        transition: transform 1.2s cubic-bezier(0.6, 0, 0.2, 1);
+        transform-box: fill-box;
+        transform-origin: 50% 100%;
+      }
+      .opening .figure {
+        transform: translateY(-70px) scale(0.55);
+        opacity: 0;
+        transition:
+          transform 1.2s cubic-bezier(0.6, 0, 0.2, 1),
+          opacity 0.8s 0.4s;
+      }
+      .title {
+        position: absolute;
+        top: max(26px, env(safe-area-inset-top));
+        left: 0;
+        right: 0;
+        text-align: center;
+        pointer-events: none;
+        transition: opacity 0.5s;
+      }
+      .opening .title,
+      .opening .controls,
+      .opening .hint {
+        opacity: 0;
+      }
+      .wordmark {
+        position: relative;
+        display: inline-block;
+        margin: 0;
+        font:
+          250 clamp(34px, 9vw, 64px) / 1 Outfit,
+          sans-serif;
+        letter-spacing: 0.42em;
+        padding-left: 0.42em;
+        color: #e9e6f2;
+      }
+      .wordmark span {
+        display: block;
+      }
+      .wordmark .b {
+        position: absolute;
+        inset: 0;
+        padding-left: 0.42em;
+        clip-path: polygon(
+          0 64%,
+          22% 52%,
+          41% 60%,
+          63% 41%,
+          80% 50%,
+          100% 38%,
+          100% 100%,
+          0 100%
+        );
+        transform: translateX(0.07em);
+        color: #cfc9e0;
+      }
+      .wordmark .a {
+        clip-path: polygon(
+          0 0,
+          100% 0,
+          100% 38%,
+          80% 50%,
+          63% 41%,
+          41% 60%,
+          22% 52%,
+          0 64%
+        );
+      }
+      .wordmark i {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          var(--l3),
+          var(--l1) 30%,
+          var(--l2) 55%,
+          var(--l4) 80%,
+          var(--l3)
+        );
+        clip-path: polygon(
+          0 63%,
+          22% 51%,
+          41% 59%,
+          63% 40%,
+          80% 49%,
+          100% 37%,
+          100% 41%,
+          80% 53%,
+          63% 44%,
+          41% 63%,
+          22% 55%,
+          0 67%
+        );
+        filter: blur(0.3px);
+      }
+      .title p {
+        margin: 14px 0 0;
+        font:
+          italic 15px Georgia,
+          serif;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+      }
+      .portal-hit {
+        position: absolute;
+        border-radius: 48% 48% 6px 6px / 30% 30% 6px 6px;
+        touch-action: none;
+      }
+      .portal-hit:focus-visible {
+        outline-offset: 10px;
+      }
+      .hint {
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 11px;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: #cfcbe0;
+        pointer-events: none;
+        transition: opacity 0.4s;
+      }
+      .hint b {
+        display: block;
+        width: 120px;
+        height: 1px;
+        margin: 10px auto 0;
+        background: #ffffff22;
+        overflow: hidden;
+      }
+      .hint b::after {
+        content: "";
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--l3), var(--l1), var(--l2));
+        transform: scaleX(var(--charge));
+        transform-origin: left;
+      }
+      .controls {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: max(18px, env(safe-area-inset-bottom));
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 18px;
+        justify-content: center;
+        transition: opacity 0.4s;
+      }
+      .controls button {
+        min-height: 44px;
+        padding: 10px 6px;
+        font-size: 13px;
+        color: #d9d5e6;
+        letter-spacing: 0.06em;
+      }
+      .controls button:hover {
+        color: #fff;
+      }
+      /* ───────── VELO DE LUZ (transición) ───────── */
+      .veil {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 20;
+      }
+      .veil-night {
+        position: absolute;
+        inset: 0;
+        background: #020307;
+        opacity: 0;
+      }
+      .veil-light {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        background:
+          radial-gradient(
+            ellipse at 50% 40%,
+            #fff 0%,
+            #fffaf0 35%,
+            transparent 75%
+          ),
+          linear-gradient(
+            115deg,
+            var(--l3),
+            var(--l1) 35%,
+            var(--l2) 65%,
+            var(--l4)
+          );
+      }
+      /* ───────── JUEGO ───────── */
+      .play {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: max(14px, env(safe-area-inset-top)) 18px
+          max(12px, env(safe-area-inset-bottom));
+        background:
+          radial-gradient(
+            ellipse 70% 40% at 50% 38%,
+            color-mix(in srgb, var(--glow) 12%, transparent),
+            transparent 70%
+          ),
+          radial-gradient(ellipse at 50% 120%, #11121f, #030409 60%);
+      }
+      .play[hidden] {
+        display: none;
+      }
+      .play.measuring {
+        visibility: hidden;
+      }
+      .play-top {
+        width: min(100%, 420px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 40px;
+        font: 250 15px Outfit;
+        letter-spacing: 0.38em;
+        color: #cfcbe0;
+      }
+      .meters {
+        width: min(100%, 420px);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin: 6px 0 10px;
+      }
+      .meter {
+        font-size: 9px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .meter i {
+        display: block;
+        height: 2px;
+        margin-bottom: 6px;
+        background: #ffffff1a;
+        position: relative;
+      }
+      .meter i::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        transform: scaleX(var(--v));
+        transform-origin: left;
+        background: var(--c);
+        box-shadow: 0 0 8px var(--c);
+      }
+      .deck {
+        position: relative;
+        width: min(100%, 420px);
+        flex: 1;
+        min-height: 0;
+        margin-bottom: 12px;
+      }
+      .card {
+        --glow: #ffc982;
+        --alab: #efe3cf;
+        --alab-2: #d9c4a3;
+        --ink: #23170f;
+        position: absolute;
+        inset: 0;
+        transform: translateX(var(--x, 0px)) rotate(var(--rot, 0deg));
+        transform-origin: 50% 85%;
+        transition: transform 0.35s cubic-bezier(0.2, 0.75, 0.25, 1);
+        filter: drop-shadow(0 24px 30px #000c)
+          drop-shadow(0 0 22px color-mix(in srgb, var(--glow) 22%, transparent));
+        touch-action: pan-y;
+        cursor: grab;
+      }
+      .card.dragging {
+        transition: none;
+        cursor: grabbing;
+      }
+      .slab {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 9px;
+        background:
+          radial-gradient(
+            ellipse 80% 50% at 30% 0%,
+            #20243488,
+            transparent 70%
+          ),
+          linear-gradient(165deg, #191b27, #0a0b11 55%, #06070b);
+        clip-path: polygon(
+          2.4% 0,
+          97% 0.6%,
+          100% 3%,
+          99.4% 97%,
+          97.6% 100%,
+          3% 99.4%,
+          0 97.4%,
+          0.5% 2.6%
+        );
+      }
+      .slab::before {
+        /* carved bevel: a hairline of the card's own light */
+        content: "";
+        position: absolute;
+        inset: 4px;
+        border: 1px solid color-mix(in srgb, var(--glow) 30%, #2a2d3d);
+        clip-path: inherit;
+        pointer-events: none;
+        opacity: 0.7;
+      }
+      .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 26px;
+        padding: 0 6px;
+        font-size: 9px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: #bdb8cc;
+      }
+      .head .label {
+        color: var(--glow);
+      }
+      .window {
+        position: relative;
+        flex: 1;
+        min-height: 120px;
+        overflow: hidden;
+        clip-path: polygon(0 1.5%, 46% 0, 100% 1%, 100% 100%, 0 100%);
+        background: #0b0c12;
+      }
+      .window .bg {
+        position: absolute;
+        inset: -4%;
+        width: 108%;
+        height: 108%;
+        object-fit: cover;
+        filter: saturate(0.85) brightness(0.72);
+      }
+      .window .who {
+        position: absolute;
+        left: 50%;
+        bottom: -26%;
+        height: 118%;
+        transform: translateX(-50%);
+      }
+      .window::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(transparent 55%, #07080ccc),
+          radial-gradient(
+            ellipse 90% 60% at 50% 110%,
+            color-mix(in srgb, var(--glow) 35%, transparent),
+            transparent 70%
+          );
+        mix-blend-mode: normal;
+      }
+      .speaker {
+        position: absolute;
+        left: 18px;
+        bottom: 18px;
+        z-index: 2;
+      }
+      .speaker small {
+        display: block;
+        font-size: 9px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: #d6d1e2;
+      }
+      .speaker h2 {
+        margin: 2px 0 0;
+        font:
+          500 30px/1 "Iowan Old Style",
+          "Palatino Linotype",
+          Georgia,
+          serif;
+      }
+      .fissures {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 3;
+        overflow: visible;
+      }
+      .fissures path {
+        fill: none;
+        vector-effect: non-scaling-stroke;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .fissures .g {
+        stroke: var(--glow);
+        stroke-width: 6;
+        opacity: 0.25;
+      }
+      .fissures .c {
+        stroke: #fff;
+        stroke-width: 1;
+      }
+      .fissures .f {
+        stroke: url(#cardSpec);
+        stroke-width: 2.2;
+      }
+      .alabaster {
+        position: relative;
+        margin-top: -9px;
+        padding: 24px 20px 20px;
+        color: var(--ink);
+        background:
+          radial-gradient(
+            ellipse 70% 90% at 50% 0%,
+            color-mix(in srgb, var(--glow) 55%, #fff) 0%,
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            104deg,
+            transparent 0 22px,
+            #ffffff12 22px 23px,
+            transparent 23px 61px
+          ),
+          linear-gradient(var(--alab), var(--alab-2));
+        clip-path: polygon(
+          0 9px,
+          13% 5px,
+          27% 10px,
+          42% 3px,
+          56% 8px,
+          70% 2px,
+          85% 7px,
+          100% 4px,
+          100% 100%,
+          0 100%
+        );
+      }
+      .alabaster p {
+        margin: 0;
+        font:
+          17px/1.5 Georgia,
+          serif;
+        text-wrap: pretty;
+      }
+      .seam {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -2px;
+        height: 14px;
+        width: 100%;
+        overflow: visible;
+        pointer-events: none;
+      }
+      .grow {
+        clip-path: inset(0 100% 0 0);
+      }
+      .ghost,
+      .loose {
+        display: none;
+      }
+      .preview {
+        position: absolute;
+        top: 46px;
+        z-index: 5;
+        max-width: 60%;
+        padding: 8px 12px;
+        font:
+          600 19px/1.15 "Iowan Old Style",
+          Georgia,
+          serif;
+        color: #fff;
+        text-shadow:
+          0 0 12px var(--glow),
+          0 0 2px #fff;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .preview.l {
+        right: 18px;
+        text-align: right;
+      }
+      .preview.r {
+        left: 18px;
+      }
+      [data-dir="left"] .preview.l,
+      [data-dir="right"] .preview.r {
+        opacity: var(--s, 0);
+      }
+      /* Estados: forma, fractura y comportamiento de la luz, no solo color. */
+      .card[data-state="cotidiano"][data-kind="intimate"] {
+        --glow: #ff9fb6;
+        --alab: #f3e1dc;
+        --alab-2: #e3c3bd;
+      }
+      .card[data-state="cotidiano"][data-kind="work"] {
+        --glow: #7fe0c4;
+        --alab: #e4ece3;
+        --alab-2: #c7d6c9;
+      }
+      .card[data-state="crisis"] {
+        --glow: #ff6236;
+        --alab: #eedbd0;
+        --alab-2: #d7b29f;
+        --rot0: -0.7deg;
+      }
+      .card[data-state="crisis"] .slab {
+        clip-path: polygon(
+          2.4% 0,
+          38% 0.4%,
+          41% 3.5%,
+          44% 0.2%,
+          97% 0.6%,
+          100% 3%,
+          99.6% 46%,
+          96.5% 49%,
+          99.6% 52%,
+          99.4% 97%,
+          97.6% 100%,
+          63% 99.5%,
+          60% 96.6%,
+          57% 99.6%,
+          3% 99.4%,
+          0 97.4%,
+          0.4% 30%,
+          3.4% 27%,
+          0.3% 24%,
+          0.5% 2.6%
+        );
+      }
+      .card[data-state="crisis"] .alabaster {
+        transform: translateX(4px);
+      }
+      .card[data-state="misterio"] {
+        --glow: #b18cff;
+        --alab: #e6e1f0;
+        --alab-2: #c9c2db;
+      }
+      .card[data-state="misterio"] .slab {
+        transform: skewX(-1.4deg);
+        clip-path: polygon(
+          2.4% 0,
+          71% 0.4%,
+          78% 9%,
+          100% 13%,
+          99.4% 97%,
+          97.6% 100%,
+          3% 99.4%,
+          0 97.4%,
+          0.5% 2.6%
+        );
+      }
+      .card[data-state="misterio"] .loose {
+        display: block;
+        position: absolute;
+        right: -14px;
+        top: -18px;
+        width: 31%;
+        height: 15%;
+        background: linear-gradient(165deg, #1d1f2c, #0a0b11);
+        clip-path: polygon(0 0, 97% 4%, 100% 100%, 26% 70%);
+        transform: rotate(7deg);
+        box-shadow: inset 0 0 0 1px #b18cff55;
+      }
+      .card[data-state="misterio"] .loose::after {
+        content: "";
+        position: absolute;
+        left: 6%;
+        top: 18%;
+        width: 70%;
+        height: 2px;
+        background: linear-gradient(90deg, #c6ff5a, #b18cff);
+        transform: rotate(14deg);
+        box-shadow: 0 0 10px #b18cff;
+      }
+      .card[data-state="eco"] {
+        --glow: #8fe9ff;
+        --alab: #e2eef2;
+        --alab-2: #c3d5de;
+      }
+      .card[data-state="eco"] .ghost {
+        display: block;
+        position: absolute;
+        inset: 0;
+        transform: translate(-10px, -12px) rotate(-1.2deg);
+        border: 1px solid #8fe9ff66;
+        clip-path: inherit;
+        background: linear-gradient(165deg, #8fe9ff14, #c7a8ff0d);
+        z-index: -1;
+      }
+      .card[data-state="eco"] .alabaster {
+        background-image:
+          repeating-linear-gradient(transparent 0 3px, #0000000a 3px 4px),
+          radial-gradient(ellipse 70% 90% at 50% 0%, #fff 0%, transparent 65%),
+          linear-gradient(var(--alab), var(--alab-2));
+      }
+      .card[data-state="eco"] .alabaster p {
+        text-shadow: -3px -2px 0 #2a6c8a1f;
+      }
+      .card[data-state="despertar"] {
+        --glow: #ffffff;
+        --alab: #f6f2ea;
+        --alab-2: #e3dccf;
+        filter: drop-shadow(0 24px 30px #000c)
+          drop-shadow(-6px 0 18px #ff5fc8aa) drop-shadow(6px 0 18px #4fe6ffaa);
+      }
+      .card[data-state="resolucion"] {
+        --glow: #ffe3a3;
+        --alab: #fbf3e2;
+        --alab-2: #eedcb7;
+      }
+      .card[data-state="resolucion"] .slab {
+        clip-path: none;
+        border-radius: 50% 50% 4px 4px / 18% 18% 4px 4px;
+      }
+      .card[data-state="resolucion"] .window {
+        clip-path: none;
+        border-radius: 50% 50% 0 0 / 22% 22% 0 0;
+      }
+      .card .split {
+        display: none;
+      }
+      .card[data-state="despertar"] .split {
+        display: block;
+      }
+      .card[data-state="crisis"] .net,
+      .card[data-state="eco"] .double,
+      .card[data-state="resolucion"] .halo {
+        display: inline;
+      }
+      .net,
+      .double,
+      .halo {
+        display: none;
+      }
+      .shards {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 4;
+      }
+      .breach {
+        position: absolute;
+        inset: 4%;
+        background: radial-gradient(
+          ellipse at 50% 45%,
+          #fff,
+          var(--glow) 40%,
+          transparent 72%
+        );
+        filter: blur(6px);
+      }
+      .shards .slab {
+        will-change: transform, opacity;
+      }
+      .card.emerging .slab {
+        animation: emerge 0.65s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+      .card.emerging::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          115deg,
+          var(--l3),
+          #fff 40%,
+          var(--l2) 70%,
+          var(--l4)
+        );
+        mix-blend-mode: screen;
+        animation: cool 0.9s ease-out both;
+        pointer-events: none;
+      }
+      @keyframes emerge {
+        from {
+          clip-path: inset(0 49.5% 0 49.5%);
+        }
+      }
+      @keyframes cool {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+      .choices {
+        width: min(100%, 420px);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .choice {
+        position: relative;
+        min-height: 58px;
+        padding: 10px 16px;
+        font-size: 13px;
+        text-align: left;
+        color: #f1ece3;
+        background: linear-gradient(165deg, #191b27, #0b0c12);
+        clip-path: polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%);
+      }
+      .choice.left {
+        clip-path: polygon(8% 0, 100% 0, 100% 100%, 8% 100%, 0 50%);
+        text-align: right;
+      }
+      .choice::before {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--l3), var(--l1), var(--l2));
+        opacity: 0.6;
+      }
+      .choice:hover {
+        background: linear-gradient(165deg, #222534, #10111a);
+      }
+      .lab {
+        position: fixed;
+        z-index: 50;
+        right: 10px;
+        top: 10px;
+        max-width: 230px;
+        padding: 10px 12px;
+        font-size: 11px;
+        background: #0c0d16ee;
+        border: 1px solid #2a2d3d;
+        border-radius: 6px;
+      }
+      .lab summary {
+        cursor: pointer;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        min-height: 24px;
+      }
+      .lab fieldset {
+        border: 0;
+        padding: 0;
+        margin: 8px 0 0;
+      }
+      .lab legend {
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .lab button {
+        padding: 4px 7px;
+        margin: 0 3px 3px 0;
+        border: 1px solid #343850;
+        border-radius: 3px;
+        min-height: 26px;
+      }
+      .lab button[aria-pressed="true"] {
+        background: #f1ece3;
+        color: #111;
+      }
+      .lab a {
+        color: #9fdcff;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .scene,
+        .shard,
+        .figure,
+        .portal-veil-l,
+        .portal-veil-r,
+        .card {
+          transition: none !important;
+        }
+        .card.emerging .slab,
+        .card.emerging::after {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="screen threshold" id="threshold" aria-labelledby="t">
+      <svg
+        class="scene"
+        viewBox="0 0 1000 1000"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient
+            id="spec"
+            gradientUnits="userSpaceOnUse"
+            x1="200"
+            y1="100"
+            x2="820"
+            y2="900"
+          >
+            <stop offset="0" style="stop-color: var(--l3)" />
+            <stop offset=".3" style="stop-color: var(--l1)" />
+            <stop offset=".55" style="stop-color: var(--l2)" />
+            <stop offset=".8" style="stop-color: var(--l4)" />
+            <stop offset="1" style="stop-color: var(--l3)" />
+          </linearGradient>
+          <linearGradient
+            id="spec2"
+            gradientUnits="userSpaceOnUse"
+            x1="900"
+            y1="0"
+            x2="100"
+            y2="1000"
+          >
+            <stop offset="0" style="stop-color: var(--l2)" />
+            <stop offset=".35" style="stop-color: var(--l3)" />
+            <stop offset=".7" style="stop-color: var(--l4)" />
+            <stop offset="1" style="stop-color: var(--l2)" />
+          </linearGradient>
+          <linearGradient id="stoneGrad" x1="0" y1="0" x2=".4" y2="1">
+            <stop offset="0" stop-color="#0b0c13" />
+            <stop offset=".5" stop-color="#05060a" />
+            <stop offset="1" stop-color="#020204" />
+          </linearGradient>
+          <radialGradient id="openGrad" cx=".5" cy=".62" r=".7">
+            <stop offset="0" stop-color="#ffffff" />
+            <stop offset=".35" style="stop-color: var(--l1)" />
+            <stop offset=".7" style="stop-color: var(--l3)" stop-opacity=".9" />
+            <stop offset="1" style="stop-color: var(--l2)" stop-opacity=".8" />
+          </radialGradient>
+          <radialGradient id="poolGrad" cx=".5" cy=".5" r=".5">
+            <stop offset="0" style="stop-color: var(--l1)" stop-opacity=".55" />
+            <stop
+              offset=".4"
+              style="stop-color: var(--l3)"
+              stop-opacity=".18"
+            />
+            <stop offset="1" stop-color="#000" stop-opacity="0" />
+          </radialGradient>
+          <clipPath id="openingClip">
+            <path
+              d="M446 712 V470 C446 420 470 398 500 398 C530 398 554 420 554 470 V712 Z"
+            />
+          </clipPath>
+        </defs>
+        <!-- Monolitos lejanos -->
+        <g class="far">
+          <path
+            class="stone-far"
+            d="M0 1000 V560 L90 470 L140 500 L230 380 L290 430 L330 610 L300 1000 Z"
+          />
+          <path
+            class="stone-far"
+            d="M1000 1000 V520 L930 440 L880 470 L800 330 L740 420 L700 600 L720 1000 Z"
+          />
+        </g>
+        <!-- Monolitos cercanos -->
+        <g class="near">
+          <path
+            class="stone"
+            d="M-20 1000 V250 L120 120 L300 160 L345 300 L320 520 L380 640 L330 1000 Z"
+          />
+          <path
+            class="rimlight"
+            d="M120 120 L300 160 L345 300 L320 520 L380 640"
+          />
+          <path
+            class="stone"
+            d="M1020 1000 V300 L900 180 L760 60 L700 230 L720 470 L650 640 L690 1000 Z"
+          />
+          <path class="rimlight" d="M760 60 L700 230 L720 470 L650 640" />
+        </g>
+        <!-- Fragmentos flotantes -->
+        <g class="shards">
+          <g class="shard" style="--fx: -160px; --fy: -220px; --fr: -24deg">
+            <path class="stone" d="M380 120 L560 70 L620 210 L470 260 Z" />
+          </g>
+          <g class="shard" style="--fx: 140px; --fy: -260px; --fr: 30deg">
+            <path class="stone" d="M650 150 L690 70 L720 120 L700 300 Z" />
+          </g>
+          <g class="shard" style="--fx: -90px; --fy: -160px; --fr: 40deg">
+            <path class="stone" d="M402 300 L420 268 L436 300 L420 352 Z" />
+          </g>
+          <g class="shard" style="--fx: 120px; --fy: -140px; --fr: -50deg">
+            <path class="stone" d="M585 318 L596 296 L608 320 L596 350 Z" />
+          </g>
+          <g class="shard" style="--fx: -30px; --fy: -200px; --fr: 18deg">
+            <path class="stone" d="M497 250 L505 238 L512 252 L505 268 Z" />
+          </g>
+        </g>
+        <!-- Suelo -->
+        <ellipse
+          class="pool"
+          cx="500"
+          cy="728"
+          rx="250"
+          ry="60"
+          fill="url(#poolGrad)"
+        />
+        <path
+          class="stone"
+          d="M0 1000 V830 C200 790 330 760 420 740 L580 740 C680 760 820 800 1000 830 V1000 Z"
+        />
+        <g id="cracks"></g>
+        <!-- Portal -->
+        <g class="portal">
+          <path class="stone" d="M380 726 H620 V742 H380 Z" />
+          <path
+            class="stone"
+            d="M404 716 V452 C404 372 446 330 500 330 C554 330 596 372 596 452 V716 Z"
+          />
+          <path
+            class="rimlight"
+            d="M404 716 V452 C404 372 446 330 500 330 C554 330 596 372 596 452 V716"
+          />
+          <path class="stone" d="M392 330 H608 L590 304 H410 Z" />
+          <path class="stone" d="M462 304 C462 266 538 266 538 304 Z" />
+          <path class="rune" d="M478 296 C478 280 522 280 522 296" />
+          <circle
+            cx="500"
+            cy="291"
+            r="5"
+            fill="url(#openGrad)"
+            class="portal-light"
+          />
+          <g id="sockets"></g>
+          <g class="runes">
+            <path class="rune" d="M418 470 l8 -10 l4 14 l8 -8" />
+            <path class="rune" d="M418 560 c8 -6 16 6 22 -2" />
+            <path class="rune" d="M418 640 l10 6 l-6 8 l12 2" />
+            <path class="rune" d="M582 470 l-8 -10 l-4 14 l-8 -8" />
+            <path class="rune" d="M582 560 c-8 -6 -16 6 -22 -2" />
+            <path class="rune" d="M582 640 l-10 6 l6 8 l-12 2" />
+          </g>
+          <g clip-path="url(#openingClip)">
+            <rect
+              class="portal-light"
+              x="440"
+              y="390"
+              width="120"
+              height="330"
+              fill="url(#openGrad)"
+            />
+            <image
+              href="../../assets/threshold/lives_bonds_v1.webp"
+              x="440"
+              y="470"
+              width="120"
+              height="160"
+              opacity=".28"
+              style="mix-blend-mode: multiply"
+            />
+            <rect
+              class="portal-veil-l"
+              x="440"
+              y="390"
+              width="60"
+              height="330"
+              fill="#0b0c14"
+              opacity=".72"
+            />
+            <rect
+              class="portal-veil-r"
+              x="500"
+              y="390"
+              width="60"
+              height="330"
+              fill="#0b0c14"
+              opacity=".72"
+            />
+            <path
+              d="M500 400 V712"
+              stroke="#fff"
+              stroke-width="1.2"
+              class="portal-light"
+            />
+          </g>
+        </g>
+        <!-- Figura diminuta y su reflejo -->
+        <g class="figure" transform="translate(0 70)">
+          <path
+            fill="#020205"
+            d="M496 812 c-6 -2 -8 -30 -6 -44 c1 -8 5 -12 6 -14 c-4 -2 -5 -7 -4 -11 c1 -5 5 -7 8 -7 c3 0 7 2 8 7 c1 4 0 9 -4 11 c1 2 5 6 6 14 c2 14 0 42 -6 44 Z"
+          />
+          <path
+            fill="#0b0c18"
+            opacity=".5"
+            d="M496 812 c-6 2 -8 22 -6 30 h20 c2 -8 0 -28 -6 -30 Z"
+          />
+        </g>
+      </svg>
+      <header class="title">
+        <h1 class="wordmark" id="t" aria-label="LifeSim">
+          <span class="a" aria-hidden="true">LIFESIM</span
+          ><span class="b" aria-hidden="true">LIFESIM</span><i></i>
+        </h1>
+        <p>Cada vida deja algo.</p>
+      </header>
+      <button
+        class="portal-hit"
+        id="portal"
+        aria-label="Umbral. Mantén pulsado para abrirlo."
+        aria-describedby="hint"
+      ></button>
+      <p class="hint" id="hint">Mantén pulsado el Umbral<b></b></p>
+      <nav class="controls" aria-label="Opciones">
+        <button id="auto">Abrir sin mantener</button>
+        <button>Elegir quién ser</button>
+        <button>Legado</button>
+      </nav>
+    </section>
+
+    <section class="screen play" id="play" hidden aria-label="Tu vida">
+      <div class="play-top">
+        <span>LIFESIM</span><span id="age">24 AÑOS</span>
+      </div>
+      <div class="meters">
+        <div class="meter" style="--c: #ff7a8a; --v: 0.8"><i></i>Salud</div>
+        <div class="meter" style="--c: #ffd36a; --v: 0.6"><i></i>Ánimo</div>
+        <div class="meter" style="--c: #7fe0c4; --v: 0.45">
+          <i></i>Desarrollo
+        </div>
+        <div class="meter" style="--c: #9fb4ff; --v: 0.3"><i></i>Economía</div>
+      </div>
+      <div class="deck" id="deck"></div>
+      <div class="choices">
+        <button class="choice left" data-side="left" id="cl">
+          No esta vez
+        </button>
+        <button class="choice right" data-side="right" id="cr">
+          Ir con ella
+        </button>
+      </div>
+    </section>
+
+    <div class="veil" aria-hidden="true">
+      <div class="veil-night"></div>
+      <div class="veil-light"></div>
+    </div>
+
+    <details class="lab" open>
+      <summary>Concepto A · Fisura</summary>
+      <fieldset>
+        <legend>Estado de la carta</legend>
+        <div id="states"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Contexto de la luz</legend>
+        <div id="contexts"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Legado (vidas)</legend>
+        <div id="legacy"></div>
+      </fieldset>
+      <p>
+        <button id="back">Volver al Umbral</button> <a href="../">Comparar</a>
+      </p>
+    </details>
+
+    <script type="module">
+      // Geometría determinista: semilla fija, independiente de cualquier PRNG del juego.
+      const prng = (seed) => () => {
+        seed = (seed + 0x6d2b79f5) | 0;
+        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+      const $ = (s, r = document) => r.querySelector(s);
+      const root = document.documentElement;
+      const NS = "http://www.w3.org/2000/svg";
+
+      function fracture(rand, x, y, angle, length, steps, wander) {
+        let d = `M${x.toFixed(1)} ${y.toFixed(1)}`;
+        const branches = [];
+        for (let i = 0; i < steps; i++) {
+          angle += (rand() - 0.5) * wander;
+          const step = (length / steps) * (0.55 + rand() * 0.9);
+          x += Math.cos(angle) * step;
+          y += Math.sin(angle) * step;
+          d += ` L${x.toFixed(1)} ${y.toFixed(1)}`;
+          if (rand() < 0.22 && i < steps - 2)
+            branches.push([
+              x,
+              y,
+              angle + (rand() < 0.5 ? -1 : 1) * (0.5 + rand() * 0.6),
+            ]);
+        }
+        return { d, branches };
+      }
+      const cracks = [];
+      function addCrack(group, d, from, to) {
+        const g = document.createElementNS(NS, "g");
+        g.setAttribute("class", "crack");
+        for (const cls of ["glow", "fringe", "core"]) {
+          const p = document.createElementNS(NS, "path");
+          p.setAttribute("d", d);
+          p.setAttribute("class", cls);
+          p.setAttribute("pathLength", "1");
+          p.style.strokeDasharray = "1 1";
+          g.append(p);
+        }
+        group.append(g);
+        cracks.push({ g, from, to });
+      }
+      const group = $("#cracks"),
+        rand = prng(9721);
+      // Grietas del mundo: ya existen, con luz baja (from < 0 => siempre visibles).
+      const world = [
+        [150, 300, 0.6, 160],
+        [260, 520, -0.4, 130],
+        [820, 260, 2.4, 150],
+        [700, 560, 2.9, 120],
+        [540, 110, 2.2, 90],
+        [690, 120, 1.7, 110],
+      ];
+      for (const [x, y, a, l] of world) {
+        const c = fracture(rand, x, y, a, l, 7, 0.9);
+        addCrack(group, c.d, -1, 0);
+        for (const [bx, by, ba] of c.branches)
+          addCrack(
+            group,
+            fracture(rand, bx, by, ba, l * 0.35, 3, 0.8).d,
+            -1,
+            0,
+          );
+      }
+      // Sello: grietas del suelo y del marco que crecen con la carga.
+      for (let i = 0; i < 9; i++) {
+        const x = 430 + i * 17.5,
+          a = Math.PI / 2 + (i - 4) * 0.32;
+        const c = fracture(rand, x, 742, a, 120 + rand() * 120, 7, 0.7);
+        addCrack(
+          group,
+          c.d,
+          0.05 + (Math.abs(i - 4) / 4) * 0.35,
+          0.75 + rand() * 0.2,
+        );
+        for (const [bx, by, ba] of c.branches)
+          addCrack(group, fracture(rand, bx, by, ba, 50, 3, 0.8).d, 0.5, 0.95);
+      }
+      for (const [x, y, a] of [
+        [404, 520, Math.PI + 0.3],
+        [404, 640, Math.PI - 0.2],
+        [596, 500, -0.25],
+        [596, 610, 0.3],
+        [440, 330, -2.2],
+        [560, 330, -0.9],
+      ]) {
+        const c = fracture(rand, x, y, a, 150, 6, 0.8);
+        addCrack(group, c.d, 0.15 + rand() * 0.3, 0.85 + rand() * 0.15);
+      }
+      // Engastes del dintel: uno por vida recordada, con el color de esa vida.
+      const lifeHues = [
+        "#ffb35c",
+        "#ff6ec7",
+        "#59e6ff",
+        "#a9ff6e",
+        "#b18cff",
+        "#ff6236",
+        "#fff1c9",
+      ];
+      function sockets(count) {
+        const g = $("#sockets");
+        g.replaceChildren();
+        for (let i = 0; i < 7; i++) {
+          const angle = Math.PI + (i + 1) * (Math.PI / 8);
+          const c = document.createElementNS(NS, "circle");
+          c.setAttribute("cx", (500 + Math.cos(angle) * 84).toFixed(1));
+          c.setAttribute("cy", (388 + Math.sin(angle) * 40).toFixed(1));
+          c.setAttribute("r", "4.4");
+          c.setAttribute("class", i < count ? "socket lit" : "socket");
+          if (i < count) c.setAttribute("fill", lifeHues[i]);
+          g.append(c);
+        }
+      }
+      sockets(0);
+
+      const threshold = $("#threshold"),
+        portal = $("#portal");
+      function placePortal() {
+        const r = $(".portal > path:nth-child(2)").getBoundingClientRect();
+        Object.assign(portal.style, {
+          left: `${r.left}px`,
+          top: `${r.top}px`,
+          width: `${r.width}px`,
+          height: `${r.height}px`,
+        });
+        $("#hint").style.top = `${r.bottom + Math.max(28, r.height * 0.42)}px`;
+      }
+      addEventListener("resize", placePortal);
+      placePortal();
+
+      let charge = 0,
+        holding = false,
+        auto = false,
+        raf = 0,
+        last = 0,
+        opened = false;
+      function paint() {
+        threshold.style.setProperty("--charge", charge.toFixed(3));
+        for (const c of cracks) {
+          const k =
+            c.from < 0
+              ? 1
+              : Math.min(1, Math.max(0, (charge - c.from) / (c.to - c.from)));
+          const off = (1 - k).toFixed(3);
+          for (const p of c.g.children) p.style.strokeDashoffset = off;
+          c.g.style.opacity =
+            c.from < 0 ? (0.35 + charge * 0.65).toFixed(2) : "1";
+        }
+      }
+      function frame(t) {
+        const dt = last ? Math.min(48, t - last) : 16;
+        last = t;
+        charge += holding || auto ? dt / (auto ? 1300 : 1100) : -dt / 520;
+        charge = Math.min(1, Math.max(0, charge));
+        paint();
+        if (charge >= 1) {
+          raf = 0;
+          last = 0;
+          open();
+          return;
+        }
+        if (holding || auto || charge > 0) raf = requestAnimationFrame(frame);
+        else {
+          raf = 0;
+          last = 0;
+        }
+      }
+      function kick() {
+        if (!raf && !opened) raf = requestAnimationFrame(frame);
+      }
+      function press() {
+        if (opened) return;
+        if (reduced.matches) return open();
+        holding = true;
+        kick();
+      }
+      function release() {
+        holding = false;
+      }
+      portal.addEventListener("pointerdown", (e) => {
+        portal.setPointerCapture(e.pointerId);
+        press();
+      });
+      portal.addEventListener("pointerup", release);
+      portal.addEventListener("pointercancel", release);
+      portal.addEventListener("keydown", (e) => {
+        if ((e.key === " " || e.key === "Enter") && !e.repeat) {
+          e.preventDefault();
+          press();
+        }
+      });
+      portal.addEventListener("keyup", (e) => {
+        if (e.key === " " || e.key === "Enter") release();
+      });
+      portal.addEventListener("click", (e) => e.preventDefault());
+      $("#auto").addEventListener("click", () => {
+        if (reduced.matches) return open();
+        auto = true;
+        kick();
+      });
+      paint();
+
+      // ───────── Cartas ─────────
+      const SAMPLES = [
+        {
+          who: "Vera",
+          role: "Amiga de la infancia",
+          img: "../../assets/npcs/npc_vera_neutral_v1.webp",
+          bg: "../../assets/backgrounds/bg_park_normal_v1.webp",
+          text: "Vera se muda a otra ciudad. Te pide que la acompañes el primer fin de semana, aunque tengas examen el lunes.",
+          l: "No esta vez",
+          r: "Ir con ella",
+          kind: "intimate",
+        },
+        {
+          who: "Amara Okafor",
+          role: "Investigadora",
+          img: "../../assets/characters/social-v1/okafor.webp",
+          bg: "../../assets/backgrounds/archive.webp",
+          text: "Okafor deja una carpeta abierta sobre la mesa. Las mediciones no coinciden con ningún portal conocido.",
+          l: "Cerrarla",
+          r: "Leer en silencio",
+          kind: "work",
+        },
+        {
+          who: "Tu voz interior",
+          role: "Algo fuera de lugar",
+          img: "../../assets/characters/veiled-v1/0-adult.webp",
+          bg: "../../assets/backgrounds/home.webp",
+          text: "La taza que dejaste en la mesa está al otro lado. Nadie más vive aquí.",
+          l: "Ignorarlo",
+          r: "Mirar de cerca",
+          kind: "life",
+        },
+      ];
+      let sample = 0,
+        state = "cotidiano";
+      const deck = $("#deck");
+      function cardHTML(m) {
+        const label = {
+          cotidiano: "",
+          crisis: "Fractura",
+          misterio: "Anomalía",
+          eco: "Eco",
+          despertar: "Despertar",
+          resolucion: "Umbral",
+        }[state];
+        return `<article class="card" data-state="${state}" data-kind="${m.kind}" tabindex="0" aria-label="Tarjeta de ${m.who}">
+          <div class="ghost"></div>
+          <div class="slab">
+            <div class="head"><span>XXIV</span><span class="label">${label}</span></div>
+            <div class="window"><img class="bg" src="${m.bg}" alt=""><img class="who" src="${m.img}" alt="${m.who}" draggable="false">
+              <div class="speaker"><small>${m.role}</small><h2>${m.who}</h2></div></div>
+            <div class="alabaster"><svg class="seam" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path class="g" d="M0 8 L13 4.5 L27 9 L42 2.5 L56 7 L70 1.5 L85 6 L100 3.5" fill="none" stroke="var(--glow)" stroke-width="6" vector-effect="non-scaling-stroke" opacity=".45"/><path d="M0 8 L13 4.5 L27 9 L42 2.5 L56 7 L70 1.5 L85 6 L100 3.5" fill="none" stroke="#fff" stroke-width="1.4" vector-effect="non-scaling-stroke"/><path class="double" d="M0 11 L13 7.5 L27 12 L42 5.5 L56 10 L70 4.5 L85 9 L100 6.5" fill="none" stroke="#8fe9ff" stroke-width="1" vector-effect="non-scaling-stroke"/></svg><p>${m.text}</p></div>
+            <svg class="fissures" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <defs><linearGradient id="cardSpec" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#59e6ff"/><stop offset=".33" stop-color="#fff4e0"/><stop offset=".66" stop-color="#ff6ec7"/><stop offset="1" stop-color="#ffc25c"/></linearGradient></defs>
+              <g class="net"><path class="g" d="M0 18 L12 22 L19 31 L30 33 L36 44"/><path class="c" d="M0 18 L12 22 L19 31 L30 33 L36 44"/><path class="c" d="M19 31 L14 42 L17 50"/><path class="g" d="M100 61 L88 58 L80 49 L70 50"/><path class="c" d="M100 61 L88 58 L80 49 L70 50 L66 41"/></g>
+              <g class="split"><path class="g" d="M52 0 L49 14 L54 27 L47 41 L53 56 L48 70 L52 84 L50 100" style="stroke-width:14;opacity:.5"/><path class="f" d="M52 0 L49 14 L54 27 L47 41 L53 56 L48 70 L52 84 L50 100"/><path class="c" d="M52 0 L49 14 L54 27 L47 41 L53 56 L48 70 L52 84 L50 100"/></g>
+              <g class="halo"><path class="g" d="M8 96 V40 C8 14 28 4 50 4 C72 4 92 14 92 40 V96" style="opacity:.4"/><path class="c" d="M8 96 V40 C8 14 28 4 50 4 C72 4 92 14 92 40 V96" style="opacity:.6"/></g>
+            </svg>
+            <svg class="fissures grow grow-l" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="g" d="M0 46 L10 49 L17 45 L26 52 L33 50 L41 58 L47 56"/><path class="c" d="M0 46 L10 49 L17 45 L26 52 L33 50 L41 58 L47 56"/><path class="c" d="M17 45 L21 36 L19 30"/></svg>
+            <svg class="fissures grow grow-r" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="g" d="M100 40 L91 44 L84 41 L76 48 L68 46 L60 55 L53 53"/><path class="c" d="M100 40 L91 44 L84 41 L76 48 L68 46 L60 55 L53 53"/><path class="c" d="M84 41 L80 33 L83 27"/></svg>
+          </div>
+          <div class="loose"></div>
+          <div class="preview l">${m.l}</div><div class="preview r">${m.r}</div>
+        </article>`;
+      }
+      function deal(emerge = false) {
+        const m = SAMPLES[sample % SAMPLES.length];
+        deck.innerHTML = cardHTML(m);
+        $("#cl").textContent = `← ${m.l}`;
+        $("#cr").textContent = `${m.r} →`;
+        const card = $(".card", deck);
+        root.style.setProperty(
+          "--glow",
+          getComputedStyle(card).getPropertyValue("--glow"),
+        );
+        if (emerge && !reduced.matches) {
+          card.classList.add("emerging");
+          setTimeout(() => card.classList.remove("emerging"), 950);
+        }
+        mountDrag(card);
+      }
+      // La grieta avanza desde el borde del que tiras.
+      function reveal(card, side, s) {
+        const g = card.querySelector(`.grow-${side}`);
+        const hidden = ((1 - s) * 100).toFixed(1) + "%";
+        g.style.clipPath =
+          side === "l" ? `inset(0 ${hidden} 0 0)` : `inset(0 0 0 ${hidden})`;
+      }
+      function mountDrag(card) {
+        let drag = null;
+        card.addEventListener("pointerdown", (e) => {
+          if (busy) return;
+          drag = {
+            x: e.clientX,
+            id: e.pointerId,
+            th: Math.min(96, card.clientWidth * 0.25),
+          };
+          card.setPointerCapture(e.pointerId);
+          card.classList.add("dragging");
+        });
+        card.addEventListener("pointermove", (e) => {
+          if (!drag) return;
+          const dx = e.clientX - drag.x,
+            s = Math.min(1, Math.abs(dx) / drag.th);
+          drag.dx = dx;
+          card.style.setProperty("--x", `${dx}px`);
+          card.style.setProperty(
+            "--rot",
+            `${Math.max(-5, Math.min(5, dx / 26))}deg`,
+          );
+          card.style.setProperty("--s", s.toFixed(3));
+          card.dataset.dir = dx < 0 ? "left" : "right";
+          const side = dx < 0 ? "l" : "r",
+            other = dx < 0 ? "r" : "l";
+          reveal(card, side, s);
+          reveal(card, other, 0);
+        });
+        const end = () => {
+          if (!drag) return;
+          const dx = drag.dx || 0;
+          if (Math.abs(dx) >= drag.th) decide(dx < 0 ? "left" : "right");
+          else {
+            card.classList.remove("dragging");
+            for (const k of ["--x", "--rot", "--s"])
+              card.style.removeProperty(k);
+            delete card.dataset.dir;
+            reveal(card, "l", 0);
+            reveal(card, "r", 0);
+          }
+          drag = null;
+        };
+        card.addEventListener("pointerup", end);
+        card.addEventListener("pointercancel", end);
+      }
+      let busy = false;
+      // El acto: la carta se parte por la grieta y sus fragmentos flotan, como los del Umbral.
+      async function decide(side) {
+        if (busy) return;
+        busy = true;
+        const card = $(".card", deck);
+        if (!reduced.matches) {
+          const sign = side === "left" ? -1 : 1;
+          reveal(card, side[0], 1);
+          const slab = $(".slab", card),
+            box = document.createElement("div");
+          box.className = "shards";
+          const polys = [
+            "0 0,58% 0,44% 31%,0 47%",
+            "58% 0,100% 0,100% 41%,61% 55%,44% 31%",
+            "0 47%,44% 31%,61% 55%,38% 72%,0 78%",
+            "61% 55%,100% 41%,100% 100%,52% 100%,38% 72%",
+            "0 78%,38% 72%,52% 100%,0 100%",
+          ];
+          const pieces = polys.map((poly, i) => {
+            const piece = slab.cloneNode(true);
+            piece.style.clipPath = `polygon(${poly})`;
+            box.append(piece);
+            return piece;
+          });
+          const flash = document.createElement("div");
+          flash.className = "breach";
+          box.prepend(flash);
+          flash.animate(
+            [{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 0 }],
+            { duration: 900, fill: "forwards" },
+          );
+          card.append(box);
+          slab.style.visibility = "hidden";
+          card.style.filter = "none";
+          await Promise.all(
+            pieces.map((piece, i) =>
+              piece
+                .animate(
+                  [
+                    {
+                      transform: "translate(0,0) rotate(0)",
+                      opacity: 1,
+                      filter: "brightness(1)",
+                    },
+                    {
+                      transform: `translate(${sign * (10 + i * 6)}px, ${-8 - i * 3}px) rotate(${sign * (i - 2)}deg)`,
+                      opacity: 1,
+                      filter: "brightness(1.6)",
+                      offset: 0.18,
+                    },
+                    {
+                      transform: `translate(${sign * (90 + i * 46)}px, ${-120 - ((i * 53) % 150)}px) rotate(${sign * (8 + i * 7)}deg)`,
+                      opacity: 0,
+                      filter: "brightness(2.4)",
+                    },
+                  ],
+                  {
+                    duration: 900 + i * 60,
+                    easing: "cubic-bezier(.3,.1,.2,1)",
+                    delay: i * 30,
+                    fill: "forwards",
+                  },
+                )
+                .finished.catch(() => {}),
+            ),
+          );
+        }
+        sample++;
+        deal(true);
+        busy = false;
+      }
+      $("#cl").addEventListener("click", () => decide("left"));
+      $("#cr").addEventListener("click", () => decide("right"));
+      addEventListener("keydown", (e) => {
+        if ($("#play").hidden) return;
+        if (e.key === "ArrowLeft") decide("left");
+        if (e.key === "ArrowRight") decide("right");
+      });
+
+      // ───────── El cruce: la luz del Umbral se convierte en la carta ─────────
+      async function open() {
+        if (opened) return;
+        opened = true;
+        holding = auto = false;
+        charge = 1;
+        paint();
+        const play = $("#play");
+        if (reduced.matches) {
+          threshold.hidden = true;
+          play.hidden = false;
+          deal();
+          return;
+        }
+        threshold.classList.add("opening");
+        const veil = $(".veil"),
+          light = $(".veil-light"),
+          night = $(".veil-night");
+        await new Promise((r) => setTimeout(r, 650));
+        const o = $(".portal > path:nth-child(2)").getBoundingClientRect();
+        play.hidden = false;
+        play.classList.add("measuring");
+        deal();
+        const c = $(".card", deck).getBoundingClientRect();
+        const inset = (r, round) =>
+          `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px round ${round})`;
+        const arch = `${o.width / 2}px ${o.width / 2}px 4px 4px`;
+        light.animate(
+          [
+            { clipPath: inset(o, arch), opacity: 0 },
+            { clipPath: inset(o, arch), opacity: 1, offset: 0.25 },
+            { clipPath: inset(c, "10px"), opacity: 1 },
+          ],
+          {
+            duration: 900,
+            easing: "cubic-bezier(.65,0,.2,1)",
+            fill: "forwards",
+          },
+        );
+        await night.animate([{ opacity: 0 }, { opacity: 1 }], {
+          duration: 700,
+          delay: 200,
+          fill: "forwards",
+        }).finished;
+        threshold.hidden = true;
+        play.classList.remove("measuring");
+        const card = $(".card", deck);
+        card.classList.add("emerging");
+        night.animate([{ opacity: 1 }, { opacity: 0 }], {
+          duration: 600,
+          fill: "forwards",
+        });
+        await light.animate([{ opacity: 1 }, { opacity: 0 }], {
+          duration: 700,
+          delay: 100,
+          fill: "forwards",
+        }).finished;
+        setTimeout(() => card.classList.remove("emerging"), 300);
+      }
+      $("#back").addEventListener("click", () => {
+        opened = false;
+        charge = 0;
+        threshold.hidden = false;
+        threshold.classList.remove("opening");
+        $("#play").hidden = true;
+        for (const el of [".veil-light", ".veil-night"])
+          $(el)
+            .getAnimations()
+            .forEach((a) => a.cancel());
+        paint();
+        placePortal();
+      });
+
+      // ───────── Panel de laboratorio ─────────
+      const CONTEXTS = {
+        "Mundo anterior": ["#fff4e0", "#ffb3c8", "#9fe8ff", "#ffd59a"],
+        Aperturas: ["#e8fbff", "#59e6ff", "#b18cff", "#7fffd4"],
+        "Gran Ruptura": ["#fff0e6", "#ff6236", "#ff3d9a", "#ffc25c"],
+        "Clase: apoyo": ["#f0fff4", "#7fe0c4", "#ffe08a", "#9fd8ff"],
+        "Clase: combate": ["#fff3ea", "#ff7a45", "#ffd36a", "#ff4f7b"],
+        "Clase: magia": ["#f6f0ff", "#b18cff", "#ff6ec7", "#59e6ff"],
+      };
+      const pressed = (wrap, b) =>
+        wrap
+          .querySelectorAll("button")
+          .forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      for (const [name] of Object.entries({
+        cotidiano: 1,
+        crisis: 1,
+        misterio: 1,
+        eco: 1,
+        despertar: 1,
+        resolucion: 1,
+      })) {
+        const b = document.createElement("button");
+        b.textContent = name;
+        b.setAttribute("aria-pressed", String(name === state));
+        b.onclick = () => {
+          state = name;
+          pressed($("#states"), b);
+          deal(true);
+        };
+        $("#states").append(b);
+      }
+      for (const [name, tones] of Object.entries(CONTEXTS)) {
+        const b = document.createElement("button");
+        b.textContent = name;
+        b.onclick = () => {
+          ["--l1", "--l2", "--l3", "--l4"].forEach((k, i) =>
+            root.style.setProperty(k, tones[i]),
+          );
+          pressed($("#contexts"), b);
+        };
+        $("#contexts").append(b);
+      }
+      for (const n of [0, 3, 7]) {
+        const b = document.createElement("button");
+        b.textContent = String(n);
+        b.onclick = () => {
+          sockets(n);
+          pressed($("#legacy"), b);
+        };
+        $("#legacy").append(b);
+      }
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          holding = auto = false;
+          cancelAnimationFrame(raf);
+          raf = 0;
+          last = 0;
+        }
+      });
+    </script>
+  </body>
+</html>

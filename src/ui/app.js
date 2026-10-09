@@ -95,6 +95,8 @@ function render(focus = false, revealTitle = true) {
   if (screen === "home") {
     titleScene = mountThreshold(document.querySelector(".threshold"), {
       reveal: revealTitle,
+      onOpen: openThreshold,
+      sound: () => data.settings.sound,
     });
     const ownedScene = titleScene;
     cleanup = () => ownedScene.destroy();
@@ -102,6 +104,10 @@ function render(focus = false, revealTitle = true) {
     presentation ||= createPresentation(document.body, {
       quality: visualQuality,
     });
+    // The night around the card takes the same contextual light.
+    const lit = document.querySelector(".play-screen");
+    for (const key of ["--k1", "--k2", "--k3", "--k-era"])
+      document.body.style.setProperty(key, lit.style.getPropertyValue(key));
     presentation.attach(document.querySelector(".narrative-card"));
     presentation.setState(
       currentCard(data.state).pool === "meta" ? "unusual" : "normal",
@@ -267,6 +273,35 @@ function begin(options) {
   }
   commitNew(options);
 }
+const pickRandom = (list) => list[Math.floor(Math.random() * list.length)];
+// Creation inputs only; the life's own seed is still drawn once in commitNew.
+function randomLife() {
+  return {
+    name: pickRandom(NAMES),
+    appearance: Math.round(Math.random()),
+    origin: pickRandom(Object.keys(ORIGINS)),
+    traits: [pickRandom(Object.keys(TRAITS))],
+  };
+}
+// A held Threshold performs the transaction of its visible button alternative.
+function openThreshold(action) {
+  if (busy || screen !== "home") return;
+  if (action === "continue" && data.state?.alive) enterLife();
+  else if (action === "random") begin(randomLife());
+}
+async function enterLife() {
+  busy = true;
+  const arrived = await titleScene.cross(data.settings.sound);
+  if (!arrived) {
+    busy = false;
+    return;
+  }
+  revealDeath = false;
+  screen = "play";
+  render(true);
+  await revealLife();
+  busy = false;
+}
 function finishPrologue() {
   if (prologueStep === null || busy) return;
   const options = pending,
@@ -349,13 +384,7 @@ document.addEventListener("click", (e) => {
   } else if (action === "preview-stage") {
     updateCreatorPreview(modal, appearance, value);
   } else if (action === "random") {
-    const pick = (list) => list[Math.floor(Math.random() * list.length)];
-    begin({
-      name: pick(NAMES),
-      appearance: Math.round(Math.random()),
-      origin: pick(Object.keys(ORIGINS)),
-      traits: [pick(Object.keys(TRAITS))],
-    });
+    begin(randomLife());
   } else if (action === "confirm-new") {
     commitNew(pending);
   } else if (action === "profile") open(profile(data.state));

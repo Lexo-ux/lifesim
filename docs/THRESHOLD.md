@@ -1,6 +1,36 @@
-# El Umbral — Task 04
+# El Umbral — Task 04, current scene: Fissure
 
-**Visual redesign (Arcana of Lives):** the same artwork, lifecycle owner, reveal/crossing timings, ten dust circles and two fragment buffers are now composed full-bleed. `.threshold-frame` is sized by height below a reserved title band and above the actions, so all percentage-positioned layers (person, fragments, lumen, seam, shutter) stay aligned with the doorway. Added static, aria-hidden layers: god-rays, vignette, ornament frame and title sigil/rule. No new timer, loop, listener, asset file or save field. See [DESIGN_SYSTEM](DESIGN_SYSTEM.md).
+## Fissure Threshold (current authority)
+
+The title is a still, monumental place: obsidian monoliths standing in a lit mist, fragments floating without explanation, an ornate portal with real weight, and a tiny cloaked figure backlit on the floor before it. Light is not a lamp: it is another reality seen through the fissures, in the triad given by the player's legacy. Direction and the superseded-rules register: [ART_DIRECTION](ART_DIRECTION.md#art-redirection--fissure-current-presentation-authority).
+
+**Layers.** `src/ui/threshold-scene.js` produces three SVG layers from fixed authoring data (geometry generated once from a constant seed; no state, save or PRNG involved): `.threshold-environment` (far/near monoliths, mist pool, floor, living cracks, seal fractures, portal frame, crest and eye, arch band of six glyphs and seven sockets, grooved pillars and runes, a ghost arch for recognition/intervention), `.threshold-figure` and `.threshold-dust` (seven shards with their own fissures and exactly ten motes). HTML layers inside the size container `.threshold-scene` add `.threshold-opening` (`.threshold-lumen`, two `.life-fragment` glimpse buffers, the two seal halves and the seam) and the hold target `.threshold-portal`, anchored to the art with container units. Portrait screens `slice` the square (crop the sides); landscape screens `meet` it and reveal extra monoliths drawn beyond it, masked at the edges. `PORTAL` in the module mirrors the CSS coordinates.
+
+**Legacy and context.** `thresholdLight(meta, depth)` lights one socket per remembered life (up to seven) in the color of that life's direction and sets the portal triad (`--l1…--l4`): ordinary pale white with rose/cyan fringes ending in the last life's color; recognition violet/acid with a ghost arch; intervention white-gold. Read-only meta; nothing is written.
+
+**Interaction — crossing is an act.**
+
+| Input                                 | Result                                                                                                                                                    |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Press and hold the portal (≈1.15 s)   | The seal charges: floor and frame fractures grow, shards are pulled, glyphs/sockets/runes light, the seal parts. At full charge the owner calls `onOpen`. |
+| Release early                         | The seal heals in 0.52 s. Nothing is saved.                                                                                                               |
+| Tap (<320 ms)                         | No crossing. The hint `Mantén pulsado el Umbral` answers (`.hinting`).                                                                                    |
+| Focus the portal, hold Space or Enter | Same charge and result as the pointer.                                                                                                                    |
+| Buttons                               | `Continuar` / `Dejarlo al azar` perform the same transactions with one activation; `Elegir quién ser` / `Cruzar de nuevo` open the creator.               |
+
+The held portal maps to the transaction of a visible button: a living save continues that life; no save or an ended life starts a life chosen by the existing random-creation inputs (`randomLife()` in `app.js`, same `Math.random` creation calls as before; the life seed is still drawn once in `commitNew`). Its accessible name (`Umbral: mantén pulsado…`) never repeats a button's name, and `aria-describedby` points to the visible hint. The first-crossing prologue renders with the portal held open (`.in-prologue`).
+
+**Crossing and handoff.** After the exactly-once save, the camera falls 1.5× toward the opening, the seal parts, the figure walks into the light and the shaped light grows from the opening; `revealLife()` then morphs that light into the first card's rectangle and lets it cool into the card. A living save held open uses the same crossing (`enterLife()`); the `Continuar` button keeps its immediate cut so the existing transaction timing is unchanged. Skip/Escape, reduced motion, hidden documents and failures resolve immediately.
+
+**Assets.** No raster file was added. `environment_v1.webp` and `person_v1.webp` are archived (manifest, art review and provenance kept; no runtime reference, no preload); the four `lives_*_v1.webp` glimpses remain inside the opening. The unused preload was removed from `index.html`.
+
+**Measured.** 4× CPU, slow-network mobile load (threshold suite): CLS 0.0002, frame p95 10.1ms, long tasks 96/515/115ms vs 104/412/330ms before; threshold bytes 251 KB vs 271 KB. Idle runs exactly two compositor animations; six title/play navigation cycles leave document listeners unchanged; hidden documents stop animations, rotation and the charge loop.
+
+**Accessibility.** The hold target is ≥44px, keyboard focusable and named; holding is never required because each result has a one-activation button. Reduced motion keeps a still, complete scene and cuts crossings. Forced colors hide the art and outline the portal with system colors. 200% zoom and 812×375 landscape keep every control reachable.
+
+The sections below are the Task 04/14 history. Lifecycle states, skip, prologue, save-aware entry and recognition semantics still apply; the painted doorway, ivory veil and god-ray/ornament layers are superseded.
+
+**Superseded — Arcana of Lives:** the same artwork, lifecycle owner, reveal/crossing timings, ten dust circles and two fragment buffers are now composed full-bleed. `.threshold-frame` is sized by height below a reserved title band and above the actions, so all percentage-positioned layers (person, fragments, lumen, seam, shutter) stay aligned with the doorway. Added static, aria-hidden layers: god-rays, vignette, ornament frame and title sigil/rule. No new timer, loop, listener, asset file or save field. See [DESIGN_SYSTEM](DESIGN_SYSTEM.md).
 
 Task 14.5 layers a skippable two-beat first-crossing prologue and a completed-life continuity line onto this scene. The original motion owner, artwork and crossing transaction remain authoritative. New copy/settings and knowledge boundaries: [FIRST_LIFE_EXPERIENCE](FIRST_LIFE_EXPERIENCE.md).
 

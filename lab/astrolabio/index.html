@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="dark" />
+    <title>Concepto C · Astrolabio</title>
+    <link rel="stylesheet" href="../../assets/fonts/fonts.css" />
+    <style>
+      /* CONCEPTO C — ASTROLABIO DE LO IMPOSIBLE
+         La luz es estructura: líneas exactas sobre la noche. El Umbral es un instrumento
+         de anillos que no deberían poder cruzarse. Cruzar es alinearlos. */
+      :root {
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        color: #e8ecf6;
+        background: #03050d;
+        font:
+          15px/1.5 "DM Sans",
+          system-ui,
+          sans-serif;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        border: 0;
+        background: none;
+        cursor: pointer;
+      }
+      button:focus-visible,
+      [role="slider"]:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 4px;
+      }
+      .screen {
+        position: fixed;
+        inset: 0;
+      }
+      .sky {
+        background:
+          radial-gradient(
+            circle at 50% 46%,
+            #0d1430 0%,
+            #050816 45%,
+            #02030a 80%
+          ),
+          #02030a;
+        touch-action: none;
+        user-select: none;
+      }
+      .sky::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(#ffffff38 0.7px, transparent 0.8px);
+        background-size: 26px 26px;
+        mask-image: radial-gradient(
+          circle at 50% 46%,
+          #000 0%,
+          transparent 70%
+        );
+      }
+      .instrument {
+        position: absolute;
+        left: 50%;
+        top: 46%;
+        width: min(86vw, 62vh, 520px);
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+      }
+      .instrument svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+      .ring {
+        transform-origin: 200px 200px;
+        transition: filter 0.3s;
+      }
+      .ring circle.track {
+        fill: none;
+        stroke-width: 1.4;
+      }
+      .ring .tick {
+        stroke-width: 1;
+      }
+      .ring.active {
+        filter: drop-shadow(0 0 6px #fff8);
+      }
+      .beam {
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+      .aligned .beam {
+        opacity: 1;
+      }
+      .title {
+        position: absolute;
+        top: max(26px, env(safe-area-inset-top));
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+      .title h1 {
+        margin: 0;
+        font:
+          200 clamp(30px, 8vw, 54px) / 1 Outfit,
+          sans-serif;
+        letter-spacing: 0.5em;
+        padding-left: 0.5em;
+      }
+      .title p {
+        margin: 8px 0 0;
+        font-size: 10px;
+        letter-spacing: 0.4em;
+        text-transform: uppercase;
+        color: #8d96b8;
+      }
+      .readout {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: calc(max(16px, env(safe-area-inset-bottom)) + 64px);
+        text-align: center;
+        font: 11px/1.6 "DM Sans";
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #c5cbe4;
+      }
+      .readout output {
+        display: block;
+        font: 300 13px Outfit;
+        letter-spacing: 0.2em;
+        color: #8d96b8;
+      }
+      .controls {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: max(16px, env(safe-area-inset-bottom));
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+      }
+      .controls button {
+        min-height: 44px;
+        padding: 10px 6px;
+        font-size: 13px;
+        color: #cfd5ee;
+      }
+      .sliders {
+        position: absolute;
+        left: 50%;
+        top: 46%;
+        transform: translate(-50%, -50%);
+      }
+      .sliders [role="slider"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+      .collapse .instrument {
+        transition:
+          transform 1s cubic-bezier(0.7, 0, 0.2, 1),
+          opacity 0.4s 0.8s;
+        transform: translate(-50%, -50%) scaleX(0.004) scaleY(1.6);
+        opacity: 0;
+      }
+      .collapse .title,
+      .collapse .readout,
+      .collapse .controls {
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+      .play {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: max(14px, env(safe-area-inset-top)) 18px
+          max(12px, env(safe-area-inset-bottom));
+        background: radial-gradient(circle at 50% 35%, #0b1230, #03050d 70%);
+      }
+      .play[hidden] {
+        display: none;
+      }
+      .top {
+        width: min(100%, 420px);
+        height: 34px;
+        display: flex;
+        justify-content: space-between;
+        font: 200 14px Outfit;
+        letter-spacing: 0.4em;
+        color: #8d96b8;
+      }
+      .table {
+        position: relative;
+        width: min(100%, 420px);
+        flex: 1;
+        min-height: 0;
+        margin-bottom: 12px;
+      }
+      .plate {
+        --hue: #ffd36a;
+        position: absolute;
+        inset: 0;
+        border: 1px solid #ffffff26;
+        border-radius: 2px;
+        background:
+          radial-gradient(circle at 50% 33%, #10183a 0%, #060918 55%), #060918;
+        overflow: hidden;
+        transform: translateX(var(--x, 0px));
+        transition: transform 0.3s;
+        touch-action: pan-y;
+        cursor: grab;
+      }
+      .plate.dragging {
+        transition: none;
+      }
+      .plate .orbit {
+        position: absolute;
+        left: 50%;
+        top: 33%;
+        width: 92%;
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        overflow: visible;
+      }
+      .plate .lens {
+        position: absolute;
+        left: 50%;
+        top: 33%;
+        width: 52%;
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 1px var(--hue),
+          0 0 30px color-mix(in srgb, var(--hue) 40%, transparent);
+      }
+      .lens img.bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.7;
+      }
+      .lens img.who {
+        position: absolute;
+        left: 50%;
+        top: 8%;
+        height: 130%;
+        transform: translateX(-50%);
+      }
+      .plate .copy {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0 22px 20px;
+        text-align: center;
+      }
+      .copy small {
+        font-size: 9px;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: #8d96b8;
+      }
+      .copy h2 {
+        margin: 4px 0 10px;
+        font: 300 26px/1 Outfit;
+        letter-spacing: 0.12em;
+      }
+      .copy p {
+        margin: 0;
+        font:
+          15px/1.5 Georgia,
+          serif;
+        color: #dfe4f2;
+      }
+      .dial-label {
+        font: 10px "DM Sans";
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        fill: #c5cbe4;
+      }
+      .plate .label {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        font-size: 9px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--hue);
+      }
+      .plate[data-state="crisis"] {
+        --hue: #ff6a4f;
+      }
+      .plate[data-state="misterio"] {
+        --hue: #c6ff5a;
+      }
+      .plate[data-state="eco"] {
+        --hue: #8fe9ff;
+      }
+      .plate[data-state="despertar"] {
+        --hue: #ffffff;
+      }
+      .plate[data-state="resolucion"] {
+        --hue: #ffe3a3;
+      }
+      .choices {
+        width: min(100%, 420px);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .choices button {
+        min-height: 56px;
+        border: 1px solid #ffffff2a;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+      }
+      .lab {
+        position: fixed;
+        z-index: 50;
+        right: 10px;
+        top: 10px;
+        max-width: 230px;
+        padding: 10px 12px;
+        font-size: 11px;
+        background: #0c0d16ee;
+        border: 1px solid #2a2d3d;
+        border-radius: 6px;
+      }
+      .lab summary {
+        cursor: pointer;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+      .lab button {
+        padding: 4px 7px;
+        margin: 0 3px 3px 0;
+        border: 1px solid #343850;
+        border-radius: 3px;
+        min-height: 26px;
+      }
+      .lab button[aria-pressed="true"] {
+        background: #f1ece3;
+        color: #111;
+      }
+      .lab a {
+        color: #9fdcff;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .collapse .instrument,
+        .plate {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="screen sky" id="sky" aria-labelledby="t">
+      <header class="title">
+        <h1 id="t">LIFESIM</h1>
+        <p>Alinea lo que no debería cruzarse</p>
+      </header>
+      <div class="instrument" id="instrument">
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="r0" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ff6ec7" />
+              <stop offset=".5" stop-color="#ffd36a" />
+              <stop offset="1" stop-color="#7fffd4" />
+            </linearGradient>
+            <linearGradient id="r1" x1="1" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#59a7ff" />
+              <stop offset=".5" stop-color="#b18cff" />
+              <stop offset="1" stop-color="#ff6ec7" />
+            </linearGradient>
+            <linearGradient id="r2" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#7fffd4" />
+              <stop offset=".5" stop-color="#fff4e0" />
+              <stop offset="1" stop-color="#59e6ff" />
+            </linearGradient>
+            <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#fff" stop-opacity="0" />
+              <stop offset=".5" stop-color="#fff" />
+              <stop offset="1" stop-color="#fff" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          <path d="M200 200 L200 520" stroke="#ffffff22" stroke-width=".6" />
+          <path d="M60 520 H340" stroke="#ffffff30" stroke-width=".8" />
+          <rect x="197" y="500" width="6" height="20" rx="3" fill="#cfd5ee" />
+          <ellipse
+            id="impossibleBack"
+            cx="200"
+            cy="200"
+            rx="176"
+            ry="54"
+            fill="none"
+            stroke="url(#r1)"
+            stroke-width="1"
+            stroke-dasharray="0 176 600"
+            transform="rotate(-24 200 200)"
+            opacity=".6"
+          />
+          <g id="rings"></g>
+          <ellipse
+            cx="200"
+            cy="200"
+            rx="176"
+            ry="54"
+            fill="none"
+            stroke="url(#r1)"
+            stroke-width="1.6"
+            stroke-dasharray="276 600"
+            transform="rotate(-24 200 200)"
+          />
+          <rect
+            class="beam"
+            x="198"
+            y="-40"
+            width="4"
+            height="480"
+            fill="url(#beam)"
+          />
+          <circle cx="200" cy="200" r="6" fill="#fff" />
+        </svg>
+      </div>
+      <div class="readout" aria-live="polite">
+        Gira los anillos<output id="out">desalineado · 3 de 3</output>
+      </div>
+      <div class="sliders" id="sliders"></div>
+      <nav class="controls">
+        <button id="auto">Alinear por mí</button
+        ><button>Elegir quién ser</button><button>Legado</button>
+      </nav>
+    </section>
+    <section class="screen play" id="play" hidden aria-label="Tu vida">
+      <div class="top"><span>LIFESIM</span><span>24 AÑOS</span></div>
+      <div class="table" id="table"></div>
+      <div class="choices">
+        <button id="cl">← No esta vez</button
+        ><button id="cr">Ir con ella →</button>
+      </div>
+    </section>
+    <details class="lab" open>
+      <summary>Concepto C · Astrolabio</summary>
+      <p>Estado</p>
+      <div id="states"></div>
+      <p><button id="back">Volver</button> <a href="../">Comparar</a></p>
+    </details>
+    <script type="module">
+      const $ = (s) => document.querySelector(s);
+      const NS = "http://www.w3.org/2000/svg";
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+      const rings = [
+        { r: 150, gap: 26, angle: 118, stroke: "url(#r0)" },
+        { r: 112, gap: 30, angle: -76, stroke: "url(#r1)" },
+        { r: 74, gap: 36, angle: 203, stroke: "url(#r2)" },
+      ];
+      const g = $("#rings");
+      rings.forEach((ring, i) => {
+        const el = document.createElementNS(NS, "g");
+        el.setAttribute("class", "ring");
+        const c = 2 * Math.PI * ring.r,
+          gapLen = (ring.gap / 360) * c;
+        let ticks = "";
+        for (let a = 0; a < 360; a += i === 0 ? 6 : 12) {
+          if (a > 360 - ring.gap / 2 || a < ring.gap / 2) continue;
+          const rad = ((a - 90) * Math.PI) / 180,
+            l = a % 30 === 0 ? 9 : 4;
+          ticks += `<line class="tick" stroke="${ring.stroke}" x1="${200 + Math.cos(rad) * ring.r}" y1="${200 + Math.sin(rad) * ring.r}" x2="${200 + Math.cos(rad) * (ring.r - l)}" y2="${200 + Math.sin(rad) * (ring.r - l)}"/>`;
+        }
+        el.innerHTML = `<circle class="track" cx="200" cy="200" r="${ring.r}" stroke="${ring.stroke}" stroke-dasharray="${c - gapLen} ${gapLen}" stroke-dashoffset="${-gapLen / 2}" transform="rotate(-90 200 200)"/>${ticks}<circle cx="200" cy="${200 - ring.r}" r="3" fill="none" stroke="#fff" stroke-width=".8"/>`;
+        g.append(el);
+        ring.el = el;
+        const s = document.createElement("div");
+        s.setAttribute("role", "slider");
+        s.tabIndex = 0;
+        s.setAttribute("aria-label", `Anillo ${i + 1}`);
+        s.setAttribute("aria-valuemin", "0");
+        s.setAttribute("aria-valuemax", "359");
+        s.addEventListener("keydown", (e) => {
+          if (["ArrowLeft", "ArrowDown"].includes(e.key)) turn(i, -6);
+          if (["ArrowRight", "ArrowUp"].includes(e.key)) turn(i, 6);
+        });
+        s.addEventListener("focus", () => activate(i));
+        $("#sliders").append(s);
+        ring.slider = s;
+      });
+      const norm = (a) => (((a % 360) + 540) % 360) - 180;
+      function paint() {
+        rings.forEach((r) => {
+          r.el.style.transform = `rotate(${r.angle}deg)`;
+          r.slider.setAttribute(
+            "aria-valuenow",
+            String(Math.round(((r.angle % 360) + 360) % 360)),
+          );
+        });
+        const off = rings.filter((r) => Math.abs(norm(r.angle)) > 7).length;
+        $("#out").textContent = off ? `desalineado · ${off} de 3` : "alineado";
+        $("#sky").classList.toggle("aligned", !off);
+        if (!off) setTimeout(open, reduced.matches ? 0 : 700);
+      }
+      let active = 0,
+        drag = null,
+        opened = false;
+      function activate(i) {
+        active = i;
+        rings.forEach((r, j) => r.el.classList.toggle("active", j === i));
+      }
+      function turn(i, d) {
+        if (opened) return;
+        rings[i].angle += d;
+        if (Math.abs(norm(rings[i].angle)) < 5)
+          rings[i].angle = Math.round(rings[i].angle / 360) * 360;
+        paint();
+      }
+      const center = () => {
+        const b = $("#instrument").getBoundingClientRect();
+        return [b.left + b.width / 2, b.top + b.height / 2, b.width / 400];
+      };
+      $("#sky").addEventListener("pointerdown", (e) => {
+        if (e.target.closest("button,.lab")) return;
+        const [cx, cy, k] = center(),
+          dist = Math.hypot(e.clientX - cx, e.clientY - cy) / k;
+        let best = 0;
+        rings.forEach((r, i) => {
+          if (Math.abs(r.r - dist) < Math.abs(rings[best].r - dist)) best = i;
+        });
+        activate(best);
+        drag = { a: Math.atan2(e.clientY - cy, e.clientX - cx) };
+        $("#sky").setPointerCapture(e.pointerId);
+      });
+      $("#sky").addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        const [cx, cy] = center(),
+          a = Math.atan2(e.clientY - cy, e.clientX - cx);
+        turn(active, norm(((a - drag.a) * 180) / Math.PI));
+        drag.a = a;
+      });
+      $("#sky").addEventListener("pointerup", () => (drag = null));
+      $("#auto").onclick = () => {
+        if (reduced.matches) {
+          rings.forEach((r) => (r.angle = 0));
+          return paint();
+        }
+        const from = rings.map((r) => norm(r.angle)),
+          t0 = performance.now();
+        const step = (t) => {
+          const k = Math.min(1, (t - t0) / 1200),
+            e = 1 - (1 - k) ** 3;
+          rings.forEach((r, i) => (r.angle = from[i] * (1 - e)));
+          paint();
+          if (k < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      };
+      paint();
+      async function open() {
+        if (opened) return;
+        opened = true;
+        if (!reduced.matches) {
+          $("#sky").classList.add("collapse");
+          await new Promise((r) => setTimeout(r, 1000));
+        }
+        $("#sky").hidden = true;
+        $("#play").hidden = false;
+        deal(true);
+      }
+      let state = "cotidiano",
+        sample = 0;
+      const SAMPLES = [
+        {
+          who: "Vera",
+          role: "Amiga de la infancia",
+          img: "../../assets/npcs/npc_vera_neutral_v1.webp",
+          bg: "../../assets/backgrounds/bg_park_normal_v1.webp",
+          text: "Vera se muda a otra ciudad. Te pide que la acompañes el primer fin de semana.",
+          l: "No esta vez",
+          r: "Ir con ella",
+        },
+        {
+          who: "Amara Okafor",
+          role: "Investigadora",
+          img: "../../assets/characters/social-v1/okafor.webp",
+          bg: "../../assets/backgrounds/archive.webp",
+          text: "Las mediciones no coinciden con ningún portal conocido.",
+          l: "Cerrarla",
+          r: "Leer",
+        },
+      ];
+      function orbit(stateName, l, r) {
+        const broken = stateName === "crisis";
+        const rings = [0.98, 0.78, 0.64]
+          .map((k, i) => {
+            const rr = 200 * k;
+            const cx = broken ? 200 + (i - 1) * 9 : 200,
+              cy = broken ? 200 + i * 6 : 200;
+            const dash = broken
+              ? `stroke-dasharray="${18 + i * 9} ${11 + i * 4}"`
+              : "";
+            return `<circle cx="${cx}" cy="${cy}" r="${rr}" fill="none" stroke="var(--hue)" stroke-width="${i === 1 ? 1.2 : 0.7}" opacity="${0.7 - i * 0.15}" ${dash}/>`;
+          })
+          .join("");
+        const extra =
+          {
+            misterio: `<ellipse cx="200" cy="200" rx="215" ry="52" fill="none" stroke="#c6ff5a" stroke-width="1.4" transform="rotate(28 200 200)"/>`,
+            eco: `<circle cx="186" cy="188" r="196" fill="none" stroke="#8fe9ff" stroke-width=".6" opacity=".5"/><circle cx="172" cy="176" r="196" fill="none" stroke="#8fe9ff" stroke-width=".4" opacity=".25"/>`,
+            despertar: `<circle cx="200" cy="200" r="250" fill="none" stroke="url(#pr)" stroke-width="2"/><circle cx="200" cy="200" r="300" fill="none" stroke="url(#pr)" stroke-width="1" opacity=".6"/>`,
+            resolucion: `<path d="M200 -60 V460" stroke="#ffe3a3" stroke-width="1.2"/>`,
+          }[stateName] || "";
+        return `<svg class="orbit" viewBox="0 0 400 400" aria-hidden="true"><defs><linearGradient id="pr"><stop offset="0" stop-color="#ff6ec7"/><stop offset=".33" stop-color="#ffd36a"/><stop offset=".66" stop-color="#7fffd4"/><stop offset="1" stop-color="#59a7ff"/></linearGradient><path id="dial" d="M24 200 A176 176 0 0 1 376 200"/></defs>${rings}${extra}<g class="dial"><text class="dial-label"><textPath href="#dial" startOffset="8%">← ${l}</textPath></text><text class="dial-label"><textPath href="#dial" startOffset="72%">${r} →</textPath></text><circle cx="200" cy="24" r="4" fill="var(--hue)"/></g></svg>`;
+      }
+      const table = $("#table");
+      function deal(unfold) {
+        const m = SAMPLES[sample % 2];
+        const label = {
+          cotidiano: "",
+          crisis: "Fractura",
+          misterio: "Anomalía",
+          eco: "Eco",
+          despertar: "Despertar",
+          resolucion: "Umbral",
+        }[state];
+        table.innerHTML = `<article class="plate" data-state="${state}" tabindex="0" aria-label="Tarjeta de ${m.who}">${orbit(state, m.l, m.r)}<div class="lens"><img class="bg" src="${m.bg}" alt=""><img class="who" src="${m.img}" alt="${m.who}" draggable="false"></div><span class="label">${label}</span><div class="copy"><small>${m.role}</small><h2>${m.who}</h2><p>${m.text}</p></div></article>`;
+        $("#cl").textContent = `← ${m.l}`;
+        $("#cr").textContent = `${m.r} →`;
+        const plate = table.querySelector(".plate");
+        if (unfold && !reduced.matches)
+          plate.animate(
+            [
+              { transform: "scaleX(.004) scaleY(1.2)", opacity: 0.6 },
+              { transform: "scaleX(.004) scaleY(1)", opacity: 1, offset: 0.3 },
+              { transform: "none" },
+            ],
+            { duration: 900, easing: "cubic-bezier(.6,0,.2,1)" },
+          );
+        const dial = plate.querySelector(".dial");
+        let d = null;
+        plate.addEventListener("pointerdown", (e) => {
+          d = { x: e.clientX };
+          plate.setPointerCapture(e.pointerId);
+          plate.classList.add("dragging");
+        });
+        plate.addEventListener("pointermove", (e) => {
+          if (!d) return;
+          d.dx = e.clientX - d.x;
+          dial.style.transformOrigin = "200px 200px";
+          dial.style.transform = `rotate(${Math.max(-62, Math.min(62, d.dx / 2))}deg)`;
+        });
+        plate.addEventListener("pointerup", () => {
+          if (!d) return;
+          const dx = d.dx || 0;
+          d = null;
+          plate.classList.remove("dragging");
+          if (Math.abs(dx) > 90) decide(dx < 0 ? "left" : "right");
+          else dial.style.transform = "";
+        });
+      }
+      let busy = false;
+      // El acto: el dial encaja con un chasquido; la placa se pliega en una línea y se va por su órbita.
+      async function decide(side) {
+        if (busy) return;
+        busy = true;
+        const plate = table.querySelector(".plate");
+        if (!reduced.matches) {
+          const dial = plate.querySelector(".dial");
+          dial.style.transformOrigin = "200px 200px";
+          await dial.animate(
+            [
+              {
+                transform:
+                  getComputedStyle(dial).transform === "none"
+                    ? "rotate(0)"
+                    : dial.style.transform,
+              },
+              { transform: `rotate(${side === "left" ? -70 : 70}deg)` },
+            ],
+            {
+              duration: 220,
+              easing: "cubic-bezier(.2,1.6,.4,1)",
+              fill: "forwards",
+            },
+          ).finished;
+          await plate.animate(
+            [
+              { transform: "none", opacity: 1 },
+              { transform: "scaleY(.006)", opacity: 1, offset: 0.45 },
+              {
+                transform: `translate(${side === "left" ? -60 : 60}vw, -30vh) scale(.2, .006) rotate(${side === "left" ? -20 : 20}deg)`,
+                opacity: 0,
+              },
+            ],
+            {
+              duration: 1000,
+              easing: "cubic-bezier(.6,0,.3,1)",
+              fill: "forwards",
+            },
+          ).finished;
+        }
+        sample++;
+        deal(true);
+        busy = false;
+      }
+      $("#cl").onclick = () => decide("left");
+      $("#cr").onclick = () => decide("right");
+      $("#back").onclick = () => {
+        opened = false;
+        rings.forEach((r, i) => (r.angle = [118, -76, 203][i]));
+        $("#sky").classList.remove("collapse", "aligned");
+        $("#sky").hidden = false;
+        $("#play").hidden = true;
+        paint();
+      };
+      for (const s of [
+        "cotidiano",
+        "crisis",
+        "misterio",
+        "eco",
+        "despertar",
+        "resolucion",
+      ]) {
+        const b = document.createElement("button");
+        b.textContent = s;
+        b.setAttribute("aria-pressed", String(s === state));
+        b.onclick = () => {
+          state = s;
+          document
+            .querySelectorAll("#states button")
+            .forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+          deal(true);
+        };
+        $("#states").append(b);
+      }
+    </script>
+  </body>
+</html>

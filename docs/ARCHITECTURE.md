@@ -22,7 +22,7 @@ Vanilla JavaScript con ES modules, HTML y CSS. Sin framework, backend, compilaci
 | `lore/`                    | Canon futuro de Task 02, con estados y reservas explícitos; no es runtime.             |
 | `tests/`, `tools/`         | Verificación, servidor local, replay y preparación de recursos.                        |
 
-No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. `style.css` es una entrada estática de trece módulos en `styles/` (el último, `arcana.css`, es el sistema visual vigente); tokens y motion son compartidos por CSS y `src/ui/motion.js`. Los imports y assets CSS resuelven desde cada archivo; la URL de escena dinámica se normaliza contra `document.baseURI` para evitar resolverla desde `/styles/`. Los subcatálogos se dividirán cuando su crecimiento lo justifique.
+No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. `style.css` es una entrada estática de trece módulos en `styles/` (el último, `fissure.css`, es el sistema visual vigente: obsidiana, alabastro y luz por las fisuras; su vocabulario se deriva en `src/ui/fissure.js` y la escena del Umbral en `src/ui/threshold-scene.js`, sin guardar nada ni tocar el RNG). Los prototipos de dirección viven en `lab/`, fuera del juego; tokens y motion son compartidos por CSS y `src/ui/motion.js`. Los imports y assets CSS resuelven desde cada archivo; la URL de escena dinámica se normaliza contra `document.baseURI` para evitar resolverla desde `/styles/`. Los subcatálogos se dividirán cuando su crecimiento lo justifique.
 
 ## Flujo y propiedad del estado
 

@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="dark" />
+    <title>Concepto B · Espejo negro</title>
+    <link rel="stylesheet" href="../../assets/fonts/fonts.css" />
+    <style>
+      /* CONCEPTO B — ESPEJO NEGRO
+         La realidad es gris; el color solo existe en el reflejo, que nunca es idéntico.
+         Cruzar es levantar el reflejo hasta que reemplaza al mundo. */
+      :root {
+        color-scheme: dark;
+        --horizon: 58%;
+        --lift: 0;
+        --tilt: 0deg;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #050608;
+        color: #ecebe8;
+        font:
+          15px/1.5 "DM Sans",
+          system-ui,
+          sans-serif;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        border: 0;
+        background: none;
+        cursor: pointer;
+      }
+      button:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 4px;
+      }
+      .screen {
+        position: fixed;
+        inset: 0;
+      }
+      .world {
+        perspective: 900px;
+        touch-action: none;
+        user-select: none;
+      }
+      .flipper {
+        position: absolute;
+        inset: 0;
+        transform-origin: 50% var(--horizon);
+        transform-style: preserve-3d;
+      }
+      .reality {
+        position: absolute;
+        inset: 0 0 calc(100% - var(--horizon)) 0;
+        background: linear-gradient(#b9bcc0, #8d9197 45%, #5e6268 85%, #3c3f44);
+        overflow: hidden;
+        filter: grayscale(1);
+      }
+      .reality .fog {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse 40% 25% at 50% 100%,
+            #ffffff55,
+            transparent 70%
+          ),
+          linear-gradient(transparent 60%, #ffffff22);
+      }
+      .door {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        width: 26vmin;
+        max-width: 140px;
+        height: 44vmin;
+        max-height: 240px;
+        transform: translateX(-50%);
+        background: #2f3237;
+        border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+        box-shadow: inset 0 0 0 8px #43474d;
+      }
+      .door::after {
+        content: "";
+        position: absolute;
+        inset: 18px 18px 0;
+        border-radius: inherit;
+        background: #24272b;
+      }
+      .person {
+        position: absolute;
+        left: calc(50% + 34px);
+        bottom: 0;
+        width: 9px;
+        height: 30px;
+        background: #1b1d20;
+        border-radius: 5px 5px 2px 2px;
+      }
+      .person::before {
+        content: "";
+        position: absolute;
+        left: 1px;
+        top: -8px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #1b1d20;
+      }
+      .mirror {
+        position: absolute;
+        inset: var(--horizon) 0 0 0;
+        background: #030405;
+        overflow: hidden;
+        transform: translateY(calc(var(--lift) * -1 * (var(--horizon))));
+        height: calc(100% - var(--horizon) + var(--lift) * var(--horizon));
+      }
+      .mirror::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(#ffffff10, transparent 12%),
+          repeating-linear-gradient(#ffffff05 0 1px, transparent 1px 7px);
+      }
+      .refl {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 26vmin;
+        max-width: 140px;
+        height: 44vmin;
+        max-height: 240px;
+        transform: translateX(-50%);
+        border-radius: 0 0 50% 50% / 0 0 30% 30%;
+        background: #191b1f;
+        box-shadow: inset 0 0 0 8px #2a2d33;
+        overflow: hidden;
+      }
+      .film {
+        position: absolute;
+        inset: 18px 18px 0;
+        top: 0;
+        border-radius: 0 0 50% 50% / 0 0 34% 34%;
+        background: conic-gradient(
+          from var(--a, 0deg) at 50% 30%,
+          #ff6ec7,
+          #ffd36a,
+          #7fffd4,
+          #59a7ff,
+          #b18cff,
+          #ff6ec7
+        );
+        filter: saturate(1.3) blur(2px);
+        opacity: 0.92;
+      }
+      .film::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(
+          ellipse at 50% 20%,
+          #ffffffcc,
+          transparent 60%
+        );
+        mix-blend-mode: soft-light;
+      }
+      .refl-person {
+        position: absolute;
+        left: calc(50% - 44px);
+        top: 0;
+        width: 9px;
+        height: 30px;
+        background: linear-gradient(#ffe7c9, #ff9ac9);
+        border-radius: 2px 2px 5px 5px;
+        box-shadow: 0 0 16px #ffd3ea;
+      }
+      .refl-person::before {
+        content: "";
+        position: absolute;
+        left: 1px;
+        bottom: -8px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #fff1e0;
+      }
+      .ripple {
+        position: absolute;
+        width: 10px;
+        height: 4px;
+        border-radius: 50%;
+        border: 1.5px solid;
+        border-image: none;
+        border-color: #ffb3e1 #a7f3ff #ffe08a #c7a8ff;
+        transform: translate(-50%, -50%) scale(1);
+        animation: ripple 1.6s cubic-bezier(0.2, 0.6, 0.3, 1) forwards;
+        pointer-events: none;
+      }
+      @keyframes ripple {
+        to {
+          transform: translate(-50%, -50%) scale(30);
+          opacity: 0;
+        }
+      }
+      .title {
+        position: absolute;
+        top: max(28px, env(safe-area-inset-top));
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #2a2c30;
+      }
+      .title h1 {
+        margin: 0;
+        font:
+          300 clamp(30px, 8vw, 54px) / 1 Outfit,
+          sans-serif;
+        letter-spacing: 0.36em;
+        padding-left: 0.36em;
+      }
+      .title p {
+        margin: 8px 0 0;
+        font:
+          italic 15px Georgia,
+          serif;
+        color: #3e4146;
+      }
+      .mirror-title {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 6%;
+        text-align: center;
+        transform: scaleY(-1);
+        font:
+          300 clamp(30px, 8vw, 54px) / 1 Outfit,
+          sans-serif;
+        letter-spacing: 0.36em;
+        padding-left: 0.36em;
+        background: linear-gradient(90deg, #ff6ec7, #ffd36a, #7fffd4, #59a7ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        opacity: 0.4;
+        filter: blur(1px);
+      }
+      .hint {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: calc(100% - var(--horizon) - 120px);
+        text-align: center;
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #d6d3e0;
+        pointer-events: none;
+      }
+      .hint::before {
+        content: "↑";
+        display: block;
+        font-size: 18px;
+        letter-spacing: 0;
+        margin-bottom: 4px;
+        animation: none;
+      }
+      .controls {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: max(16px, env(safe-area-inset-bottom));
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+      }
+      .controls button {
+        min-height: 44px;
+        padding: 10px 6px;
+        font-size: 13px;
+        color: #cfccd9;
+      }
+      .crossing .flipper {
+        transition: transform 1.3s cubic-bezier(0.7, 0, 0.2, 1);
+        transform: rotateX(-180deg);
+      }
+      /* ───────── JUEGO ───────── */
+      .play {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: max(14px, env(safe-area-inset-top)) 18px
+          max(12px, env(safe-area-inset-bottom));
+        background: linear-gradient(
+          #0c0d12 0%,
+          #07080b 64%,
+          #020203 64.2%,
+          #050608
+        );
+      }
+      .play[hidden] {
+        display: none;
+      }
+      .top {
+        width: min(100%, 420px);
+        display: flex;
+        justify-content: space-between;
+        font: 300 14px Outfit;
+        letter-spacing: 0.34em;
+        color: #9c9aa6;
+        height: 34px;
+      }
+      .pond {
+        position: relative;
+        width: min(100%, 420px);
+        flex: 1;
+        min-height: 0;
+        perspective: 800px;
+      }
+      .pane {
+        --sheen: #ffd36a;
+        position: absolute;
+        left: 6%;
+        right: 6%;
+        top: 2%;
+        bottom: 30%;
+        border-radius: 4px;
+        background: #07080b;
+        box-shadow:
+          0 0 0 1px #ffffff1c,
+          0 30px 40px #000;
+        transform: translateX(var(--x, 0px)) rotateY(var(--tilt));
+        transform-style: preserve-3d;
+        transition: transform 0.35s cubic-bezier(0.2, 0.75, 0.25, 1);
+        overflow: hidden;
+        touch-action: pan-y;
+        cursor: grab;
+        -webkit-box-reflect: below 8px
+          linear-gradient(transparent 52%, #ffffff3a);
+      }
+      .pane.dragging {
+        transition: none;
+      }
+      .pane img.bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 62%;
+        object-fit: cover;
+        opacity: 0.8;
+      }
+      .pane img.who {
+        position: absolute;
+        left: 50%;
+        bottom: 38%;
+        height: 66%;
+        transform: translateX(-50%);
+      }
+      .pane .sheen {
+        position: absolute;
+        inset: 0;
+        background: conic-gradient(
+          from calc(var(--tilt) * 6) at 50% 40%,
+          transparent,
+          #ff6ec740,
+          #ffd36a40,
+          #7fffd440,
+          #59a7ff40,
+          #b18cff40,
+          transparent
+        );
+        mix-blend-mode: color-dodge;
+        pointer-events: none;
+      }
+      .pane .text {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 38%;
+        padding: 16px 18px;
+        background: linear-gradient(#07080bdd, #07080b);
+        border-top: 1px solid #ffffff22;
+      }
+      .pane .text small {
+        font-size: 9px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: #a9a6b6;
+      }
+      .pane .text h2 {
+        margin: 2px 0 8px;
+        font:
+          400 26px/1 "Iowan Old Style",
+          Georgia,
+          serif;
+      }
+      .pane .text p {
+        margin: 0;
+        font:
+          15px/1.45 Georgia,
+          serif;
+        color: #e4e2ea;
+      }
+      .pane .label {
+        position: absolute;
+        right: 12px;
+        top: 10px;
+        font-size: 9px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #fff;
+      }
+      .waterline {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 70%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #ffffff40, transparent);
+      }
+      .pane[data-state="crisis"] img {
+        filter: url(#chop);
+      }
+      .pane[data-state="crisis"] .sheen {
+        background: linear-gradient(
+          170deg,
+          transparent 30%,
+          #ff4f3a55 45%,
+          transparent 60%
+        );
+      }
+      .pane[data-state="misterio"] {
+        -webkit-box-reflect: below 8px
+          linear-gradient(transparent 40%, #b18cff66);
+        transform: translateX(var(--x, 0px)) rotateY(var(--tilt)) skewY(-1deg);
+      }
+      .pane[data-state="eco"] {
+        box-shadow:
+          0 0 0 1px #8fe9ff66,
+          -14px -10px 0 -2px #8fe9ff14,
+          -14px -10px 0 -1px #8fe9ff33,
+          0 30px 40px #000;
+      }
+      .pane[data-state="despertar"] .sheen {
+        background: conic-gradient(
+          from calc(var(--tilt) * 6) at 50% 40%,
+          #ff6ec7aa,
+          #ffd36aaa,
+          #7fffd4aa,
+          #59a7ffaa,
+          #b18cffaa,
+          #ff6ec7aa
+        );
+      }
+      .pane[data-state="resolucion"] {
+        border-radius: 50% 50% 4px 4px / 22% 22% 4px 4px;
+        box-shadow:
+          0 0 0 1px #ffe3a3,
+          0 0 40px #ffe3a355,
+          0 30px 40px #000;
+      }
+      .pane[data-state="resolucion"] .sheen {
+        background: linear-gradient(
+          transparent 48%,
+          #fff4d6 50%,
+          transparent 52%
+        );
+        mix-blend-mode: screen;
+      }
+      .choices {
+        width: min(100%, 420px);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .choices button {
+        min-height: 56px;
+        border-radius: 28px;
+        border: 1px solid #ffffff2a;
+        background:
+          radial-gradient(ellipse at 50% 120%, #ffffff14, transparent 70%),
+          #0b0c10;
+        font-size: 13px;
+      }
+      .lab {
+        position: fixed;
+        z-index: 50;
+        right: 10px;
+        top: 10px;
+        max-width: 230px;
+        padding: 10px 12px;
+        font-size: 11px;
+        background: #0c0d16ee;
+        border: 1px solid #2a2d3d;
+        border-radius: 6px;
+      }
+      .lab summary {
+        cursor: pointer;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+      .lab button {
+        padding: 4px 7px;
+        margin: 0 3px 3px 0;
+        border: 1px solid #343850;
+        border-radius: 3px;
+        min-height: 26px;
+      }
+      .lab button[aria-pressed="true"] {
+        background: #f1ece3;
+        color: #111;
+      }
+      .lab a {
+        color: #9fdcff;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .ripple {
+          display: none;
+        }
+        .crossing .flipper,
+        .pane {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" aria-hidden="true" style="position: absolute">
+      <filter id="chop">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency=".012 .09"
+          numOctaves="2"
+          seed="4"
+        />
+        <feDisplacementMap in="SourceGraphic" scale="14" />
+      </filter>
+    </svg>
+    <section class="screen world" id="world" aria-labelledby="t">
+      <div class="flipper">
+        <div class="reality">
+          <div class="fog"></div>
+          <div class="door"></div>
+          <div class="person"></div>
+        </div>
+        <div class="mirror" id="mirror">
+          <div class="refl"><div class="film"></div></div>
+          <div class="refl-person"></div>
+          <div class="mirror-title" aria-hidden="true">LIFESIM</div>
+        </div>
+      </div>
+      <header class="title">
+        <h1 id="t">LIFESIM</h1>
+        <p>El reflejo nunca es idéntico.</p>
+      </header>
+      <p class="hint">Arrastra el reflejo hacia arriba</p>
+      <nav class="controls">
+        <button id="auto">Atravesar el reflejo</button
+        ><button>Elegir quién ser</button><button>Legado</button>
+      </nav>
+    </section>
+    <section class="screen play" id="play" hidden aria-label="Tu vida">
+      <div class="top"><span>LIFESIM</span><span>24 AÑOS</span></div>
+      <div class="pond" id="pond"><div class="waterline"></div></div>
+      <div class="choices">
+        <button id="cl">← No esta vez</button
+        ><button id="cr">Ir con ella →</button>
+      </div>
+    </section>
+    <details class="lab" open>
+      <summary>Concepto B · Espejo</summary>
+      <p>Estado</p>
+      <div id="states"></div>
+      <p><button id="back">Volver</button> <a href="../">Comparar</a></p>
+    </details>
+    <script type="module">
+      const $ = (s) => document.querySelector(s);
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+      const world = $("#world"),
+        mirror = $("#mirror");
+      let lift = 0,
+        drag = null,
+        crossed = false,
+        state = "cotidiano",
+        sample = 0,
+        filmAngle = 0;
+      const set = (v) =>
+        world.style.setProperty(
+          "--lift",
+          (lift = Math.max(0, Math.min(1, v))).toFixed(3),
+        );
+      function ripple(x, y) {
+        if (reduced.matches || mirror.querySelectorAll(".ripple").length > 5)
+          return;
+        const r = document.createElement("i");
+        r.className = "ripple";
+        const box = mirror.getBoundingClientRect();
+        r.style.left = `${x - box.left}px`;
+        r.style.top = `${y - box.top}px`;
+        mirror.append(r);
+        r.addEventListener("animationend", () => r.remove());
+      }
+      world.addEventListener("pointerdown", (e) => {
+        if (crossed || e.target.closest("button")) return;
+        drag = { y: e.clientY, start: lift };
+        world.setPointerCapture(e.pointerId);
+        ripple(e.clientX, e.clientY);
+      });
+      world.addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        set(drag.start + (drag.y - e.clientY) / (innerHeight * 0.5));
+        filmAngle += 2;
+        $(".film").style.setProperty("--a", `${filmAngle}deg`);
+        if (Math.random() < 0.15) ripple(e.clientX, e.clientY);
+      });
+      world.addEventListener("pointerup", () => {
+        if (!drag) return;
+        drag = null;
+        if (lift > 0.55) cross();
+        else settle();
+      });
+      function settle() {
+        const from = lift,
+          t0 = performance.now();
+        const step = (t) => {
+          const k = Math.min(1, (t - t0) / 420);
+          set(from * (1 - k * (2 - k)));
+          if (k < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }
+      async function cross() {
+        if (crossed) return;
+        crossed = true;
+        set(1);
+        if (!reduced.matches) {
+          world.classList.add("crossing");
+          await new Promise((r) => setTimeout(r, 1250));
+        }
+        world.hidden = true;
+        $("#play").hidden = false;
+        deal(true);
+      }
+      $("#auto").onclick = () => {
+        if (reduced.matches) return cross();
+        const t0 = performance.now();
+        const step = (t) => {
+          const k = Math.min(1, (t - t0) / 900);
+          set(k * k);
+          if (k < 1) requestAnimationFrame(step);
+          else cross();
+        };
+        requestAnimationFrame(step);
+      };
+      const SAMPLES = [
+        {
+          who: "Vera",
+          role: "Amiga de la infancia",
+          img: "../../assets/npcs/npc_vera_neutral_v1.webp",
+          bg: "../../assets/backgrounds/bg_park_normal_v1.webp",
+          text: "Vera se muda a otra ciudad. Te pide que la acompañes el primer fin de semana.",
+          other: "../../assets/characters/veiled-v1/1-adult.webp",
+        },
+        {
+          who: "Amara Okafor",
+          role: "Investigadora",
+          img: "../../assets/characters/social-v1/okafor.webp",
+          bg: "../../assets/backgrounds/archive.webp",
+          text: "Las mediciones no coinciden con ningún portal conocido.",
+          other: "../../assets/characters/social-v1/yuna.webp",
+        },
+      ];
+      const pond = $("#pond");
+      function deal(rise) {
+        const m = SAMPLES[sample % 2];
+        const label = {
+          cotidiano: "",
+          crisis: "Marea",
+          misterio: "Anomalía",
+          eco: "Eco",
+          despertar: "Despertar",
+          resolucion: "Umbral",
+        }[state];
+        pond.innerHTML = `<div class="waterline"></div><article class="pane" data-state="${state}" tabindex="0" aria-label="Tarjeta de ${m.who}"><img class="bg" src="${m.bg}" alt=""><img class="who" src="${state === "misterio" ? m.other : m.img}" alt="${m.who}" draggable="false"><span class="label">${label}</span><div class="sheen"></div><div class="text"><small>${m.role}</small><h2>${m.who}</h2><p>${m.text}</p></div></article>`;
+        const pane = pond.querySelector(".pane");
+        if (rise && !reduced.matches)
+          pane.animate(
+            [
+              { transform: "translateY(60%) rotateX(70deg)", opacity: 0 },
+              { transform: "none", opacity: 1 },
+            ],
+            { duration: 900, easing: "cubic-bezier(.2,.7,.2,1)" },
+          );
+        let d = null;
+        pane.addEventListener("pointerdown", (e) => {
+          d = { x: e.clientX };
+          pane.setPointerCapture(e.pointerId);
+          pane.classList.add("dragging");
+        });
+        pane.addEventListener("pointermove", (e) => {
+          if (!d) return;
+          d.dx = e.clientX - d.x;
+          pane.style.setProperty("--x", `${d.dx * 0.5}px`);
+          pane.style.setProperty(
+            "--tilt",
+            `${Math.max(-35, Math.min(35, d.dx / 4))}deg`,
+          );
+        });
+        pane.addEventListener("pointerup", () => {
+          if (!d) return;
+          const dx = d.dx || 0;
+          d = null;
+          if (Math.abs(dx) > 90) decide(dx < 0 ? "left" : "right");
+          else {
+            pane.classList.remove("dragging");
+            pane.style.removeProperty("--x");
+            pane.style.removeProperty("--tilt");
+          }
+        });
+      }
+      let busy = false;
+      // El acto: la carta se posa en el agua y se hunde; quedan las ondas.
+      async function decide(side) {
+        if (busy) return;
+        busy = true;
+        const pane = pond.querySelector(".pane");
+        if (!reduced.matches) {
+          const box = pond.getBoundingClientRect();
+          for (let i = 0; i < 3; i++)
+            setTimeout(
+              () => {
+                const r = document.createElement("i");
+                r.className = "ripple";
+                r.style.left = `${box.width / 2}px`;
+                r.style.top = `${box.height * 0.72}px`;
+                pond.append(r);
+                r.addEventListener("animationend", () => r.remove());
+              },
+              380 + i * 160,
+            );
+          await pane.animate(
+            [
+              { transform: getComputedStyle(pane).transform, opacity: 1 },
+              {
+                transform: `translateY(20%) rotateX(78deg) rotateZ(${side === "left" ? -6 : 6}deg)`,
+                opacity: 1,
+                offset: 0.55,
+              },
+              {
+                transform: "translateY(55%) rotateX(84deg) scale(.9)",
+                opacity: 0,
+              },
+            ],
+            {
+              duration: 1000,
+              easing: "cubic-bezier(.5,0,.3,1)",
+              fill: "forwards",
+            },
+          ).finished;
+        }
+        sample++;
+        deal(true);
+        busy = false;
+      }
+      $("#cl").onclick = () => decide("left");
+      $("#cr").onclick = () => decide("right");
+      $("#back").onclick = () => {
+        crossed = false;
+        world.classList.remove("crossing");
+        world.hidden = false;
+        $("#play").hidden = true;
+        set(0);
+      };
+      for (const s of [
+        "cotidiano",
+        "crisis",
+        "misterio",
+        "eco",
+        "despertar",
+        "resolucion",
+      ]) {
+        const b = document.createElement("button");
+        b.textContent = s;
+        b.setAttribute("aria-pressed", String(s === state));
+        b.onclick = () => {
+          state = s;
+          document
+            .querySelectorAll("#states button")
+            .forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+          deal(true);
+        };
+        $("#states").append(b);
+      }
+    </script>
+  </body>
+</html>

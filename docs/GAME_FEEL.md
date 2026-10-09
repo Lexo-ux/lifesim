@@ -1,12 +1,12 @@
-# Game feel — Task 05.5
+# Game feel — Task 05.5 (current matter: Fissure)
 
 This is the focused production authority for the Mystic Card and gameplay atmosphere. [ART_DIRECTION](ART_DIRECTION.md), [CHARACTER_ART](CHARACTER_ART.md) and [MOTION](MOTION.md) retain their respective material, identity and interaction rules. Task 05.5 adds presentation vocabulary; it implements no Awakening, rank, class, world event, probability or narrative canon.
 
 ## Mystic Card anatomy
 
-**Arcana redesign:** the card keeps every semantic and presentation hook (`.scene-depth`, `.npc-portrait`, `.material-light`, `.speaker`, previews, `data-direction`, `--strength`) but its chrome changes: vellum body, arched miniature, swallowtail name ribbon, Roman age numeral and nine material variants. The atmosphere, quality tiers and emphasis states below are unchanged. See [DESIGN_SYSTEM](DESIGN_SYSTEM.md).
+**Fissure redesign (current):** the card keeps every semantic and presentation hook (`.scene-depth`, `.npc-portrait`, `.material-light`, `.speaker`, previews, `data-direction`, `--strength`) and the whole owner contract below. Its matter changes: an obsidian slab, a window onto the scene with per-Moment fractures, a lit seam and alabaster writing; six readable states (everyday, crisis, mystery, echo, awakening, resolution). The atmosphere becomes obsidian night with a nebula in the card's and the known era's light (`--k1/--k2/--k3/--k-era` copied to `body`), prismatic motes, and background fissures (`.atmosphere-fold`) that open with feel level; level 5 notches the slab through `--card-shape`. Choosing breaks the card into shards (see [MOTION](MOTION.md#fissure-motion-current-authority)). Semantics, tiers, budgets and cleanup are unchanged. See [DESIGN_SYSTEM](DESIGN_SYSTEM.md).
 
-The existing accessible article remains the input and narrative surface. Its silhouette is now deckled, with a fine irregular ink edge, a darker displaced reverse, pigment/paper texture and a slightly torn overlap between scene and writing. A cached scene layer and the existing character form two shallow depth planes; a single light wash ties handling to the world. Text remains HTML and never moves into a renderer. The semantic tree does not include decorative layers.
+_History (Task 05.5 material, superseded where it mentions paper, ink or deckled edges):_ The existing accessible article remains the input and narrative surface. Its silhouette is now deckled, with a fine irregular ink edge, a darker displaced reverse, pigment/paper texture and a slightly torn overlap between scene and writing. A cached scene layer and the existing character form two shallow depth planes; a single light wash ties handling to the world. Text remains HTML and never moves into a renderer. The semantic tree does not include decorative layers.
 
 Pickup is immediate. Horizontal drag follows the finger 1:1; rotation caps at 4.2°, shallow perspective at 1.2°, art parallax at 7px and vertical art response at 2px. A paper slip carries the actual left/right action. The contact light and reverse react without suggesting that a choice is good or bad. Return releases all temporary transforms. Commit preserves its departure pose, resolves/saves first, exits, then presents the next Moment and its existing consequence. The atmosphere owner survives this card replacement, so ambient motion does not restart each turn. Character identity and all 130 Moments are unchanged.
 
@@ -37,18 +37,18 @@ view.destroy();
 
 Unknown states fall back to normal. `setState` routes intensity ≥3 through finite emphasis, rather than permitting indefinite exceptional spectacle. Completion/reset restores the base context. `inspect()` provides bounded resource counters for development QA, not game data. `lifesim:presentation` emits `{state, level, tier}` for optional presentation consumers; a future narrative caller must supply the meaningful accessible event text. The development harness displays a textual state label. Art movement never carries exclusive information.
 
-| State       | Intensity | Visual meaning                                                                                                                                                 |
-| ----------- | --------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| normal      |         0 | Ink, paper, charcoal, restrained human warmth and very sparse dust.                                                                                            |
-| unusual     |         1 | Slight cool light disturbance; existing V3 meta cards map only here, not to canonical Convergence.                                                             |
-| danger      |         1 | Restrained crimson contact/consequence accent.                                                                                                                 |
-| memory      |         1 | Quiet amber material accent.                                                                                                                                   |
-| convergence |         2 | Foreign pale light, displaced distant planes and dust attraction.                                                                                              |
-| awakening   |         3 | Suspended field and unfamiliar illumination; a demo, not a power.                                                                                              |
-| historical  |         3 | Quieted environment and spatial weight, no invented history.                                                                                                   |
-| rank-s      |         3 | Familiar space recedes and recognizes an exceptional presence.                                                                                                 |
-| rank-ss     |         4 | Reverse, environment and light fall out of alignment.                                                                                                          |
-| rank-sss    |         5 | Brief broken boundary, impossible light seams, receding environment, displaced type and shallow opposing spatial response. No loot beam, explosion or rainbow. |
+| State       | Intensity | Visual meaning                                                                                                                                                                              |
+| ----------- | --------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| normal      |         0 | Obsidian night lit from within the card; era nebula; very sparse prismatic motes.                                                                                                           |
+| unusual     |         1 | Slight cool light disturbance; existing V3 meta cards map only here, not to canonical Convergence.                                                                                          |
+| danger      |         1 | Restrained crimson contact/consequence accent.                                                                                                                                              |
+| memory      |         1 | Quiet amber material accent.                                                                                                                                                                |
+| convergence |         2 | Foreign pale light, displaced distant planes and dust attraction.                                                                                                                           |
+| awakening   |         3 | Suspended field and unfamiliar illumination; a demo, not a power.                                                                                                                           |
+| historical  |         3 | Quieted environment and spatial weight, no invented history.                                                                                                                                |
+| rank-s      |         3 | Familiar space recedes and recognizes an exceptional presence.                                                                                                                              |
+| rank-ss     |         4 | Reverse, environment and light fall out of alignment.                                                                                                                                       |
+| rank-sss    |         5 | Brief broken boundary: background fissures fully open, the slab is notched, the scene recedes and type shifts. Dispersion stays inside fissures; no loot beam, explosion or rainbow rarity. |
 
 Finite emphasis lasts 850ms at intensity 0–1, 2600ms at 2–3 and 3400ms at 4–5. CSS tokens live in `styles/game-feel.css`. Deliberate opacity changes avoid flashes. Normal production play uses normal/unusual bases and normal/danger/memory/unusual consequence accents only. All higher states require an explicit future caller; they are currently exercised only in the unlinked development harness.
 

@@ -366,6 +366,117 @@ const dir = "output/qa/task04";
     report.checks.push(
       "creator retains all fields; exactly-once commit; random, continue, dead memorial/replay, cancellation, crossing skip, reduced-motion changes, 200% zoom, failed images, hidden crossing, refresh during crossing",
     );
+    // The held portal: a tap answers with the hint, holding performs the same
+    // transaction as its visible button, the keyboard can hold too, and a hidden
+    // document cancels the charge without crossing.
+    const hold = await browser.newPage({
+      viewport: { width: 390, height: 844 },
+    });
+    hold.on("pageerror", (e) => errors.push(e.message));
+    await hold.goto(base);
+    await hold.evaluate(() => localStorage.clear());
+    await hold.reload();
+    await hold.keyboard.press("Escape");
+    const holdIdle = () =>
+      hold.waitForFunction(
+        () =>
+          document.querySelector(".threshold")?.dataset.thresholdState ===
+          "idle",
+      );
+    await holdIdle();
+    const portal = hold.locator(".threshold-portal");
+    const target = await portal.boundingBox();
+    assert.ok(target.width >= 44 && target.height >= 44, "hold target size");
+    assert.match(await portal.getAttribute("aria-label"), /mantén pulsado/i);
+    assert.equal(
+      await portal.getAttribute("aria-describedby"),
+      "threshold-hint",
+    );
+    const cx = target.x + target.width / 2,
+      cy = target.y + target.height * 0.6;
+    await hold.mouse.move(cx, cy);
+    await hold.mouse.down();
+    await hold.waitForTimeout(90);
+    await hold.mouse.up();
+    assert.ok(
+      await hold
+        .locator(".threshold")
+        .evaluate((e) => e.classList.contains("hinting")),
+      "a tap shows the instruction",
+    );
+    await hold.waitForTimeout(800);
+    assert.equal(
+      await hold.locator(".threshold").getAttribute("data-threshold-state"),
+      "idle",
+    );
+    assert.equal(
+      await hold.evaluate(() => localStorage.getItem("lifesim.v3")),
+      null,
+      "a tap never starts a life",
+    );
+    // Hidden mid-hold: the charge heals and nothing crosses.
+    await hold.mouse.down();
+    await hold.waitForTimeout(400);
+    await hold.evaluate(() => {
+      Object.defineProperty(document, "hidden", {
+        configurable: true,
+        value: true,
+      });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    assert.equal(
+      await hold
+        .locator(".threshold")
+        .evaluate((e) => e.style.getPropertyValue("--charge")),
+      "0.000",
+    );
+    await hold.mouse.up();
+    await hold.evaluate(() => {
+      delete document.hidden;
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    assert.equal(
+      await hold.evaluate(() => localStorage.getItem("lifesim.v3")),
+      null,
+    );
+    await hold.mouse.down();
+    await hold.waitForTimeout(650);
+    await hold.screenshot({ path: `${dir}/hold-charging.png` });
+    await hold.waitForTimeout(900);
+    await hold.mouse.up();
+    await hold.locator("[data-action=prologue-skip]").click();
+    await hold.waitForSelector(".narrative-card");
+    const held = await hold.evaluate(() =>
+      JSON.parse(localStorage.getItem("lifesim.v3")),
+    );
+    assert.equal(held.meta.lives, 1, "exactly one life from one hold");
+    assert.equal(held.state.story.count, 0);
+    const holdSettled = () =>
+      hold.waitForFunction(() =>
+        document
+          .getAnimations()
+          .every((a) => a.playState === "finished" || a.id === "feel-ambient"),
+      );
+    await holdSettled();
+    // Keyboard hold with a living save returns to that life without changing it.
+    await hold.locator("[data-action=home]").click();
+    await holdIdle();
+    await portal.focus();
+    await hold.keyboard.down(" ");
+    await hold.waitForTimeout(1500);
+    await hold.keyboard.up(" ");
+    await hold.waitForSelector(".narrative-card");
+    await holdSettled();
+    assert.deepEqual(
+      await hold.evaluate(
+        () => JSON.parse(localStorage.getItem("lifesim.v3")).state,
+      ),
+      held.state,
+    );
+    await hold.close();
+    report.checks.push(
+      "held portal: tap shows hint only, hidden document cancels charge, pointer hold = one random life, keyboard hold = continue unchanged",
+    );
     assert.deepEqual(errors, []);
     await cdp.detach();
     await context.close();

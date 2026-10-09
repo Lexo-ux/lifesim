@@ -61,7 +61,7 @@ La guerra necesita contraste: cumpleaños, humor, amistades, romance, familia, c
 
 **CANON — dirección simbólica:** el Umbral representa nacimiento, posibilidad, transición, otra vida, otro mundo y futuros desconocidos.
 
-**Dirección visual para una tarea posterior:** pantalla de título con un Umbral ornamentado dibujado a mano, luz cálida saliendo de la oscuridad y vislumbres de vidas posibles en su interior. Es una metáfora; no demuestra una mecánica literal de reencarnación. Task 02 no modifica pantalla, assets ni animaciones.
+**Dirección visual para una tarea posterior:** pantalla de título con un Umbral ornamentado dibujado a mano, luz cálida saliendo de la oscuridad y vislumbres de vidas posibles en su interior. Es una metáfora; no demuestra una mecánica literal de reencarnación. Task 02 no modifica pantalla, assets ni animaciones. _Nota de presentación (no canon):_ sustituida por la redirección artística Fisura (luz espectral y contextual a través de fisuras), que conserva el Umbral ornamentado y los vislumbres de vidas; ver [ART_DIRECTION](../docs/ART_DIRECTION.md). El significado CANON no cambia.
 
 **PROVISIONAL CANON — copy, no lore inmutable:**
 
