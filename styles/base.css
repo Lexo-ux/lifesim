@@ -44,7 +44,7 @@ input:focus-visible,
 select:focus-visible,
 summary:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid var(--blue);
+  outline: 2px solid var(--lumen);
 }
 a {
   color: var(--blue);

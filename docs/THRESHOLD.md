@@ -1,5 +1,7 @@
 # El Umbral — Task 04
 
+**Visual redesign (Arcana of Lives):** the same artwork, lifecycle owner, reveal/crossing timings, ten dust circles and two fragment buffers are now composed full-bleed. `.threshold-frame` is sized by height below a reserved title band and above the actions, so all percentage-positioned layers (person, fragments, lumen, seam, shutter) stay aligned with the doorway. Added static, aria-hidden layers: god-rays, vignette, ornament frame and title sigil/rule. No new timer, loop, listener, asset file or save field. See [DESIGN_SYSTEM](DESIGN_SYSTEM.md).
+
 Task 14.5 layers a skippable two-beat first-crossing prologue and a completed-life continuity line onto this scene. The original motion owner, artwork and crossing transaction remain authoritative. New copy/settings and knowledge boundaries: [FIRST_LIFE_EXPERIENCE](FIRST_LIFE_EXPERIENCE.md).
 
 Task 04 replaces the conventional title image (Iria plus the legacy young protagonist) with a dedicated portrait scene. Those old assets remain available to gameplay. Branch: `codex/the-threshold`, based on Task 03 commit `2052a95`. No merge into main and no Task 05 implementation.

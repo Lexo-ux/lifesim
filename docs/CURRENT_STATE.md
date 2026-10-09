@@ -1,5 +1,9 @@
 # Estado real — V3 con Resolución Verdadera y primera vida (Task 14.5)
 
+## Rediseño visual — Arcanos de vidas
+
+Presentación nueva del Umbral y de las tarjetas: puerta a sangre completa, cada Moment como un pequeño Umbral (miniatura en arco sobre pergamino, cinta con nombre, numeral romano de edad) y nueve materiales derivados de metadatos existentes. Sin cambios de reglas, contenido, guardados, tiempos ni RNG. Contrato: [DESIGN_SYSTEM](DESIGN_SYSTEM.md) y [ART_DIRECTION](ART_DIRECTION.md).
+
 ## Task 14.5 — primera vida y feedback
 
 Dos beats opcionales antes de la primera vida, continuidad del Umbral para vidas completadas, respuestas separadas de hitos/etapas y un boletín público oportuno para el jugador. Simulación y conocimiento del protagonista intactos. Edad relativa, feedback en flujo y procedencia comprobada para seguimientos. Contrato: [FIRST_LIFE_EXPERIENCE](FIRST_LIFE_EXPERIENCE.md).

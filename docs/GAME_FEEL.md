@@ -4,6 +4,8 @@ This is the focused production authority for the Mystic Card and gameplay atmosp
 
 ## Mystic Card anatomy
 
+**Arcana redesign:** the card keeps every semantic and presentation hook (`.scene-depth`, `.npc-portrait`, `.material-light`, `.speaker`, previews, `data-direction`, `--strength`) but its chrome changes: vellum body, arched miniature, swallowtail name ribbon, Roman age numeral and nine material variants. The atmosphere, quality tiers and emphasis states below are unchanged. See [DESIGN_SYSTEM](DESIGN_SYSTEM.md).
+
 The existing accessible article remains the input and narrative surface. Its silhouette is now deckled, with a fine irregular ink edge, a darker displaced reverse, pigment/paper texture and a slightly torn overlap between scene and writing. A cached scene layer and the existing character form two shallow depth planes; a single light wash ties handling to the world. Text remains HTML and never moves into a renderer. The semantic tree does not include decorative layers.
 
 Pickup is immediate. Horizontal drag follows the finger 1:1; rotation caps at 4.2°, shallow perspective at 1.2°, art parallax at 7px and vertical art response at 2px. A paper slip carries the actual left/right action. The contact light and reverse react without suggesting that a choice is good or bad. Return releases all temporary transforms. Commit preserves its departure pose, resolves/saves first, exits, then presents the next Moment and its existing consequence. The atmosphere owner survives this card replacement, so ambient motion does not restart each turn. Character identity and all 130 Moments are unchanged.

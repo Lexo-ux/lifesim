@@ -1,60 +1,62 @@
-/* One portrait composition. Artwork carries the symbol; HTML carries the actions. */
+/* The Threshold as the first arcana: a full-bleed doorway, one impossible light,
+   a ceremonial title above and the actions resting on the lit floor below.
+   Artwork carries the symbol; HTML carries every word and action. */
 body.at-threshold {
   background: var(--threshold-night);
 }
 .threshold {
-  --title-ui-height: 266px;
-  --title-note-height: 0px;
+  /* Height reserved for the actions; the doorway uses everything else. */
+  --threshold-controls: 182px;
+  --threshold-overlap: 64px;
+  --threshold-note: 0px;
+  --threshold-top: 92px;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
   overflow: clip;
-  color: var(--ink);
-  background: radial-gradient(ellipse at 50% 48%, #39342920, transparent 65%);
+  isolation: isolate;
+  color: var(--text-primary);
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 78%, #3b2a1440, transparent 70%),
+    var(--threshold-night);
 }
 .threshold.has-save {
-  --title-ui-height: 314px;
+  --threshold-controls: 200px;
 }
 .threshold.has-note {
-  --title-note-height: 64px;
+  --threshold-note: 54px;
 }
-.threshold-title {
-  padding: max(24px, env(safe-area-inset-top)) 20px 10px;
-  text-align: center;
-  z-index: var(--z-moment);
+.threshold[data-crossing="returning"] {
+  --threshold-note: 46px;
 }
-.threshold-title h1 {
-  font: 450 32px/1.2 var(--font-display);
-  letter-spacing: 7px;
-  padding-left: 7px;
+.threshold.in-prologue {
+  --threshold-controls: 296px;
+  --threshold-overlap: 96px;
 }
-.threshold-title p {
-  font: italic 13px/1.5 var(--font-story);
-  color: #c2b9a7;
-  margin-top: 8px;
-}
+
+/* ---- Scene: the doorway is sized by height, so every layer keeps its place. */
 .threshold-scene {
-  display: grid;
-  place-items: center;
-  flex: 1;
-  width: 100%;
-  min-height: 0;
-  position: relative;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
 }
 .threshold-frame {
-  position: relative;
-  width: min(
-    100%,
-    max(
-      216px,
-      calc((100svh - var(--title-ui-height) - var(--title-note-height)) * 0.75)
-    ),
-    510px
+  position: absolute;
+  top: calc(var(--threshold-top) + var(--threshold-note));
+  left: 50%;
+  height: max(
+    300px,
+    calc(
+      100% - var(--threshold-top) - var(--threshold-controls) - 2 *
+        var(--threshold-note) + var(--threshold-overlap)
+    )
   );
   aspect-ratio: 3 / 4;
-  transform-origin: 50% 48%;
+  translate: -50% 0;
+  transform-origin: 50% 46%;
   pointer-events: none;
 }
 .threshold-environment {
@@ -62,21 +64,41 @@ body.at-threshold {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  /* Only the outer darkness dissolves; the arch and ground stay intact. */
+  object-fit: cover;
+  /* The floor dissolves into night; only the far sides fade on wide screens. */
   mask-image:
-    linear-gradient(to right, transparent, #000 9%, #000 91%, transparent),
-    linear-gradient(transparent, #000 8%, #000 88%, transparent);
+    linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+    linear-gradient(transparent, #000 7%, #000 72%, transparent 99%);
   mask-composite: intersect;
+}
+/* Static god-rays: light leaving the doorway. Screen blend can only add light. */
+.threshold-rays {
+  position: absolute;
+  inset: 8% -18% -6%;
+  background: repeating-conic-gradient(
+    from 166deg at 50% 38%,
+    #ffe9b800 0deg,
+    #ffe9b830 2.2deg,
+    #ffe9b800 5.5deg,
+    #ffe9b800 9deg
+  );
+  mask-image: radial-gradient(
+    ellipse 52% 58% at 50% 46%,
+    #000 18%,
+    transparent 72%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.55;
 }
 .threshold-lumen {
   position: absolute;
-  left: 31%;
-  top: 22%;
-  width: 37%;
-  height: 56%;
-  opacity: 0.12;
-  background: radial-gradient(ellipse at 50% 36%, #fff4c4, transparent 68%);
+  left: 24%;
+  top: 14%;
+  width: 52%;
+  height: 72%;
+  opacity: 0.14;
+  background: radial-gradient(ellipse at 50% 40%, #fff1c9, transparent 66%);
+  mix-blend-mode: screen;
 }
 .threshold-possibilities {
   position: absolute;
@@ -108,6 +130,7 @@ body.at-threshold {
   object-position: bottom;
   transform: translateX(-50%);
   transform-origin: 50% 90%;
+  filter: drop-shadow(0 -2px 10px #ffe1a033);
 }
 .threshold-shutter {
   position: absolute;
@@ -134,66 +157,247 @@ body.at-threshold {
   inset: 0;
   width: 100%;
   height: 100%;
-  color: var(--threshold-ivory);
+  color: var(--lumen);
   opacity: 0;
 }
+.threshold-dust circle {
+  r: 0.32px;
+}
+.threshold-dust circle:nth-child(3n + 1) {
+  r: 0.5px;
+}
+/* Night closes in from the edges; the title and the floor stay legible. */
+.threshold-vignette {
+  position: absolute;
+  inset: -1px;
+  background:
+    radial-gradient(
+      ellipse 62% 54% at 50% 44%,
+      transparent 38%,
+      #05070a99 78%,
+      #05070af0 100%
+    ),
+    linear-gradient(#05070ae6, transparent 14%);
+}
+
+/* ---- The whole screen is held like a card: double hairline and four flourishes. */
+.threshold-ornament {
+  position: absolute;
+  top: max(10px, env(safe-area-inset-top));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  left: max(10px, calc(50% - 300px));
+  right: max(10px, calc(50% - 300px));
+  z-index: 1;
+  pointer-events: none;
+  border: 1px solid #b9965c40;
+  color: var(--brass);
+}
+.threshold-ornament:before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid #b9965c1f;
+}
+.threshold-ornament i {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  background: currentColor;
+  mask: var(--ornament-corner) center / contain no-repeat;
+  opacity: 0.78;
+}
+.threshold-ornament i:nth-child(1) {
+  top: -3px;
+  left: -3px;
+}
+.threshold-ornament i:nth-child(2) {
+  top: -3px;
+  right: -3px;
+  scale: -1 1;
+}
+.threshold-ornament i:nth-child(3) {
+  bottom: -3px;
+  left: -3px;
+  scale: 1 -1;
+}
+.threshold-ornament i:nth-child(4) {
+  bottom: -3px;
+  right: -3px;
+  scale: -1 -1;
+}
+
+/* ---- Ceremonial title. */
+.threshold-title {
+  position: relative;
+  z-index: var(--z-moment);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: max(30px, calc(env(safe-area-inset-top) + 20px)) 24px 0;
+  text-align: center;
+}
+.title-sigil {
+  width: 22px;
+  height: 27px;
+  margin-bottom: 10px;
+  background: var(--brass);
+  mask: var(--ornament-arch) center / contain no-repeat;
+  opacity: 0.9;
+}
+.threshold-title h1 {
+  display: flex;
+  font: 400 40px/1 var(--font-ceremony);
+  letter-spacing: 0.3em;
+  padding-left: 0.3em;
+  color: #f6ecd6;
+  text-shadow:
+    0 0 26px #ffdf9f40,
+    0 2px 0 #000;
+}
+.threshold-title h1 span + span {
+  color: var(--human-warmth);
+}
+.title-rule {
+  width: 150px;
+  height: 15px;
+  margin: 12px 0 8px;
+  background: var(--brass);
+  mask: var(--ornament-rule) center / contain no-repeat;
+  opacity: 0.75;
+}
+.threshold-title p {
+  font: italic 15px/1.45 var(--font-ceremony);
+  color: #d8ccb2;
+  text-shadow: 0 1px 8px #000;
+}
+.threshold-title .continuity-note {
+  max-width: 300px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #c9bea6;
+}
+
+/* ---- Actions rest on the lit floor. */
 .threshold-controls {
   position: relative;
-  width: min(100% - 48px, 320px);
-  text-align: center;
-  padding: 0 0 max(12px, env(safe-area-inset-bottom));
   z-index: var(--z-moment);
+  width: min(100% - 56px, 330px);
+  margin-top: auto;
+  padding: 0 0 max(24px, calc(env(safe-area-inset-bottom) + 18px));
+  text-align: center;
 }
 .threshold-actions {
-  display: grid;
-  gap: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2px 6px;
 }
 .threshold-primary {
-  min-height: 52px;
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid #b8aa8b;
-  border-radius: 3px;
-  background: #e5d9bf;
-  color: #252822;
-  font: 600 12px/1.3 var(--font-ui);
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  position: relative;
+  flex: 1 0 100%;
+  min-height: 56px;
+  padding: 14px 40px;
+  border: 0;
+  border-radius: 1px;
+  color: var(--iron);
+  background:
+    linear-gradient(#fffaf01f, #6f532a1c),
+    var(--vellum) url("../assets/ui/paper-grain.svg");
+  box-shadow:
+    inset 0 0 0 3px var(--vellum),
+    inset 0 0 0 4px #4b3c2c99,
+    0 0 0 1px #00000080,
+    0 14px 40px #ffd99a26,
+    0 10px 24px #000c;
+  font: 600 15px/1.2 var(--font-ceremony);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.2em;
   transition:
-    background var(--motion-fast),
-    transform var(--motion-fast);
+    transform var(--motion-fast),
+    box-shadow var(--motion-fast);
+}
+.threshold-primary:before,
+.threshold-primary:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--oxblood);
+  transform: translateY(-50%) rotate(45deg);
+}
+.threshold-primary:before {
+  left: 18px;
+}
+.threshold-primary:after {
+  right: 18px;
 }
 .threshold-primary:hover {
-  background: #f2e8d4;
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 0 3px var(--vellum),
+    inset 0 0 0 4px #4b3c2ccc,
+    0 0 0 1px #000,
+    0 18px 48px #ffd99a3a,
+    0 12px 26px #000c;
 }
 .threshold-primary:active {
   transform: translateY(1px);
 }
 .threshold-actions .text-button {
+  position: relative;
   margin: 0;
   padding: 10px 14px;
-  font-size: 12px;
+  min-height: 44px;
+  font: italic 16px/1.2 var(--font-ceremony);
+  color: #eadfc6;
+  text-shadow: 0 1px 6px #000;
+}
+.threshold-actions .text-button + .text-button {
+  padding-left: 22px;
+}
+.threshold-actions .text-button + .text-button:before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  background: var(--brass);
+  transform: translateY(-50%) rotate(45deg);
+}
+.threshold-actions .text-button:hover {
+  color: var(--lumen);
 }
 .threshold-nav {
   display: flex;
   justify-content: center;
-  gap: 28px;
+  gap: 18px;
+  margin-top: 2px;
 }
 .threshold-nav .nav-link {
-  font-size: 11px;
-  min-width: 74px;
+  min-width: 80px;
+  font: 600 10px/1 var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: #a99c82;
+}
+.threshold-nav .nav-link:hover {
+  color: var(--human-warmth);
 }
 .threshold-skip {
   position: absolute;
-  top: max(10px, env(safe-area-inset-top));
-  right: max(10px, env(safe-area-inset-right));
+  top: max(18px, env(safe-area-inset-top));
+  right: max(18px, env(safe-area-inset-right));
   min-height: 44px;
-  padding: 10px 12px;
-  font: 11px/1.4 var(--font-ui);
-  color: var(--ink);
-  background: #080d10d9;
-  border: 1px solid #6a706a;
-  border-radius: var(--radius-control);
+  padding: 10px 14px;
+  font: italic 13px/1.4 var(--font-ceremony);
+  color: var(--text-primary);
+  background: #05070ad9;
+  border: 1px solid #b9965c66;
+  border-radius: 1px;
   z-index: calc(var(--z-feedback) + 1);
 }
 .threshold-skip[hidden] {
@@ -203,105 +407,91 @@ body.at-threshold {
   position: fixed;
 }
 .save-note {
-  font-size: 11px;
-  line-height: 1.5;
-  margin-top: 8px;
-  color: var(--muted);
+  font: italic 12px/1.5 var(--font-ceremony);
+  margin-top: 6px;
+  color: var(--text-secondary);
 }
 .save-note.warning {
-  color: #edb0ab;
+  color: #f0b4ab;
 }
 #life-entry-veil {
   position: fixed;
   inset: 0;
-  background: var(--threshold-ivory);
+  background:
+    radial-gradient(ellipse at 50% 42%, #fff8e4, var(--threshold-ivory) 70%),
+    var(--threshold-ivory);
   opacity: 0;
   pointer-events: none;
   z-index: var(--z-feedback);
 }
-/* The native creator keeps every field, with the paper/ink treatment of a life. */
-.creator-modal {
-  border-color: #7c7c6c;
-  background: #1b2324;
+
+/* ---- First crossing: a small vellum arcana rising from the floor. */
+.crossing-prologue {
+  position: relative;
+  max-width: 340px;
+  margin: 0 auto;
+  padding: 34px 24px 14px;
+  text-align: center;
+  color: var(--iron);
+  background:
+    radial-gradient(ellipse at 50% 0%, #fff6dd, transparent 60%),
+    var(--vellum) url("../assets/ui/paper-grain.svg");
+  border-radius: 50% 50% 2px 2px / 54px 54px 2px 2px;
+  box-shadow:
+    inset 0 0 0 5px var(--vellum),
+    inset 0 0 0 6px #4b3c2c80,
+    0 0 50px #ffd99a30,
+    0 18px 40px #000d;
 }
-.creator-modal .eyebrow {
-  color: var(--human-warmth);
+.crossing-prologue .eyebrow {
+  margin-bottom: 4px;
+  font: 600 10px/1.3 var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #5a4935;
 }
-.creator-modal h2 {
-  font-size: 29px;
-  font-weight: 450;
+.crossing-prologue h2 {
+  font: 500 23px/1.2 var(--font-ceremony);
+  color: var(--iron);
+  margin: 4px 0 10px;
 }
-.creator-modal .creation-portrait {
-  border-bottom: 1px solid #565d50;
-  background: radial-gradient(ellipse at bottom, #9f946625, transparent 68%);
+.crossing-prologue > p:not(.eyebrow) {
+  font: 16px/1.5 var(--font-story);
+  margin: 0 0 14px;
 }
-.creator-modal input,
-.creator-modal select {
-  border-radius: 2px;
-  border-color: #74796e;
-  background: #252d2d;
+.crossing-prologue > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
-.creator-modal button[type="submit"] {
-  margin-top: 6px;
-  letter-spacing: 0.8px;
+.crossing-prologue .threshold-primary {
+  flex: none;
+  width: 100%;
+  color: var(--vellum-text);
+  background: var(--iron);
+  box-shadow:
+    inset 0 0 0 3px var(--iron),
+    inset 0 0 0 4px #b9965c88,
+    0 8px 18px #0006;
 }
-@media (min-width: 700px) {
-  .threshold {
-    background: radial-gradient(ellipse at 50% 50%, #4942312e, transparent 62%);
-  }
-  .threshold-title {
-    padding-top: 26px;
-  }
+.crossing-prologue .threshold-primary:before,
+.crossing-prologue .threshold-primary:after {
+  background: var(--brass);
 }
-@media (max-height: 700px) {
-  .threshold {
-    --title-ui-height: 248px;
-  }
-  .threshold.has-save {
-    --title-ui-height: 296px;
-  }
-  .threshold-title {
-    padding-top: 14px;
-    padding-bottom: 6px;
-  }
-  .threshold-title h1 {
-    font-size: 28px;
-  }
-  .threshold-title p {
-    margin-top: 4px;
-  }
+.crossing-prologue .text-button {
+  min-height: 44px;
+  font: italic 14px/1.2 var(--font-ceremony);
+  color: var(--iron-soft);
 }
-@media (max-height: 500px) and (orientation: landscape) {
-  .threshold {
-    min-height: 600px;
-  }
-  .threshold-frame {
-    width: 240px;
-  }
-  .threshold-title {
-    padding-top: 16px;
-  }
-  .threshold-scene {
-    flex: 0;
-  }
-  .threshold-controls {
-    margin-top: 8px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .threshold-dust {
-    display: none;
-  }
-  .threshold-lumen {
-    opacity: 0.1;
-  }
-}
+
+/* ---- Recognition: committed player history adds three faint arches. */
 .threshold-depth {
   position: absolute;
   inset: 13% 29% 21%;
   pointer-events: none;
   display: none;
-  opacity: 0.22;
+  opacity: 0.24;
 }
 .threshold[data-recognition="recognition"] .threshold-depth,
 .threshold[data-recognition="intervention"] .threshold-depth {
@@ -310,7 +500,7 @@ body.at-threshold {
 .threshold-depth i {
   position: absolute;
   inset: 8% 12% 0;
-  border: 1px solid #c2bd9c;
+  border: 1px solid #e3cf9d;
   border-bottom: 0;
   border-radius: 47% 44% 0 0;
   transform: skewY(-4deg);
@@ -324,48 +514,99 @@ body.at-threshold {
   border-left-color: transparent;
 }
 .threshold[data-recognition="intervention"] .threshold-depth {
-  opacity: 0.36;
-}
-@media (forced-colors: active) {
-  .threshold-depth {
-    display: none !important;
-  }
+  opacity: 0.38;
 }
 
-/* Player-only first crossing; the existing Threshold remains the scene. */
-.threshold.in-prologue {
-  --title-ui-height: 360px;
+/* ---- Wide screens: the doorway stays a tall card in the night. */
+@media (min-width: 700px) {
+  .threshold {
+    background:
+      radial-gradient(ellipse 34% 60% at 50% 46%, #4a3a1f38, transparent 72%),
+      var(--threshold-night);
+  }
+  .threshold-title h1 {
+    font-size: 46px;
+  }
 }
-.threshold[data-crossing="returning"] {
-  --title-note-height: 52px;
+@media (max-height: 700px) {
+  .threshold {
+    --threshold-top: 76px;
+    --threshold-controls: 172px;
+    --threshold-overlap: 44px;
+  }
+  .threshold.has-save {
+    --threshold-controls: 188px;
+  }
+  .threshold.in-prologue {
+    --threshold-controls: 284px;
+    --threshold-overlap: 120px;
+  }
+  .threshold-title {
+    padding-top: max(20px, calc(env(safe-area-inset-top) + 14px));
+  }
+  .title-sigil {
+    width: 18px;
+    height: 22px;
+    margin-bottom: 6px;
+  }
+  .threshold-title h1 {
+    font-size: 32px;
+  }
+  .title-rule {
+    margin: 8px 0 4px;
+  }
+  .threshold-title p {
+    font-size: 14px;
+  }
+  .threshold-controls {
+    padding-bottom: max(18px, calc(env(safe-area-inset-bottom) + 12px));
+  }
+  .crossing-prologue {
+    padding: 28px 20px 10px;
+  }
+  .crossing-prologue h2 {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  .crossing-prologue > p:not(.eyebrow) {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
 }
-.threshold-title .continuity-note {
-  max-width: 340px;
-  margin: 10px auto 0;
+@media (max-height: 500px) and (orientation: landscape) {
+  .threshold {
+    min-height: 620px;
+  }
 }
-.crossing-prologue {
-  max-width: 420px;
-  margin: auto;
-  text-align: center;
-}
-.crossing-prologue h2 {
-  font: 500 24px/1.25 var(--font-display);
-  margin: 6px 0 12px;
-}
-.crossing-prologue > p:not(.eyebrow) {
-  font: 16px/1.5 var(--font-story);
-  margin: 0 0 16px;
-}
-.crossing-prologue > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-.crossing-prologue button {
-  min-height: 44px;
+@media (prefers-reduced-motion: reduce) {
+  .threshold-dust {
+    display: none;
+  }
+  .threshold-lumen {
+    opacity: 0.12;
+  }
 }
 @media (forced-colors: active) {
+  .threshold-depth,
+  .threshold-ornament,
+  .threshold-rays,
+  .threshold-vignette,
+  .title-sigil,
+  .title-rule {
+    display: none !important;
+  }
+  .threshold-primary,
+  .crossing-prologue {
+    border: 1px solid ButtonText;
+  }
+  .threshold,
+  .threshold * {
+    color: CanvasText !important;
+    text-shadow: none !important;
+  }
+  .threshold button {
+    color: ButtonText !important;
+  }
   .moment-flash,
   .public-bulletin {
     border: 1px solid CanvasText;
