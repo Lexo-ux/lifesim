@@ -5,7 +5,22 @@ import { fieldCue } from "./field.js";
 import { worldCue } from "./world.js";
 import { mysteryCue } from "../systems/mysteries.js";
 import { NAMES, TRAITS, ORIGINS } from "../../content/catalog.js";
-import { startLife, choose } from "../narrative/engine.js";
+import {
+  startLife,
+  choose,
+  prepare,
+  startHold,
+  holdStep,
+} from "../narrative/engine.js";
+import { actionView } from "../systems/actions.js";
+import { mountHold } from "./hold.js";
+import { reduced } from "./motion.js";
+import { holdTone } from "./audio.js";
+import { OUTCOME_WORDS } from "../../content/actions/catalog.js";
+const outcomeWords = (f) => {
+  const key = f.outcome?.action?.outcome || f.outcome?.resolved;
+  return key ? `${OUTCOME_WORDS[key]}. ` : "";
+};
 import { load, save, reset } from "../persistence/storage.js";
 import { emptyMeta } from "../systems/achievements.js";
 import { extendMeta } from "../narrative/meta.js";
@@ -54,6 +69,9 @@ let presentation = null;
 let visualQuality = "auto";
 let prologueStep = null,
   pendingSeed = null;
+// Task 15 ephemeral UI: which approach panel is open, and the hold tone if any.
+let approachPanel = null,
+  tone = null;
 function announce(text) {
   document.querySelector("#announcer").textContent = text;
 }
@@ -86,7 +104,7 @@ function render(focus = false, revealTitle = true) {
       ? landing(data, prologueStep)
       : !data.state?.alive
         ? deathScreen(data.state, data.meta, revealDeath)
-        : gameScreen(data);
+        : gameScreen(data, undefined, { panel: approachPanel });
   if (screen !== "play" || !data.state?.alive) {
     presentation?.destroy();
     presentation = null;
@@ -120,11 +138,16 @@ function render(focus = false, revealTitle = true) {
       resolutionCue(currentCard(data.state));
     if (cue) presentation.emphasize(cue);
     if (modal.open) presentation.pause();
-    cleanup = mountSwipe(
-      document.querySelector(".narrative-card"),
-      commit,
-      presentation,
-    );
+    const card = document.querySelector(".narrative-card");
+    // While a hold is under way the card is held, not swiped.
+    if (card?.dataset.holding) {
+      const stopHold = mountHold(card, stepHoldAction);
+      cleanup = () => {
+        stopHold();
+        tone?.stop();
+        tone = null;
+      };
+    } else cleanup = mountSwipe(card, commit, presentation);
   } else cleanup = () => {};
   document
     .querySelector("[data-action=sound]")
@@ -162,23 +185,34 @@ function close() {
   else
     document.querySelector(".narrative-card")?.focus({ preventScroll: true });
 }
-async function commit(side) {
+// `intent.action` commits a contextual approach (or releases a hold) through the same
+// transaction, persistence and feedback path as an authored side.
+async function commit(side, intent = null) {
   if (busy || screen !== "play" || !data.state?.alive || modal.open) return;
   busy = true;
   document
-    .querySelectorAll(".decision-controls button")
+    .querySelectorAll(
+      ".decision-controls button, .approaches button, .hold-controls button",
+    )
     .forEach((b) => (b.disabled = true));
   const oldCard = document.querySelector(".narrative-card");
   const previous = structuredClone(data.state),
     decidedMoment = currentCard(data.state);
   const wasAwakening = currentCard(data.state).system === "awakening";
-  const result = choose(data.state, data.meta, side, oldCard?.dataset.card);
+  const result = intent
+    ? choose(data.state, data.meta, "action", oldCard?.dataset.card, intent)
+    : choose(data.state, data.meta, side, oldCard?.dataset.card);
+  tone?.stop();
+  tone = null;
   if (result.error) {
     busy = false;
     render();
     notice(result.error);
     return;
   }
+  // An approach continues as one authored side; feedback and the break follow it.
+  side = result.side || side;
+  approachPanel = null;
   const feedback = choiceFeedback(
     previous,
     data.state,
@@ -239,7 +273,7 @@ async function commit(side) {
         { gesture: true },
       );
     announce(
-      `${feedback.text} ${feedback.milestone} ${feedback.stage ? `Una nueva etapa: ${feedback.stage}. ${feedback.observations.join(" ")}` : ""} ${feedback.aftermath} ${result.outcome.aged ? `Ahora tienes ${data.state.age} años.` : ""} ${bulletin ? `Contexto público para quien juega. ${bulletin.text}` : ""}`,
+      `${outcomeWords(feedback)}${feedback.text} ${feedback.milestone} ${feedback.stage ? `Una nueva etapa: ${feedback.stage}. ${feedback.observations.join(" ")}` : ""} ${feedback.aftermath} ${result.outcome.aged ? `Ahora tienes ${data.state.age} años.` : ""} ${bulletin ? `Contexto público para quien juega. ${bulletin.text}` : ""}`,
     );
   }
   if (result.unlocked.length) {
@@ -250,6 +284,93 @@ async function commit(side) {
     sound("achievement", data.settings.sound);
   }
   busy = false;
+}
+const cardId = () => document.querySelector(".narrative-card")?.dataset.card;
+// Preparation is its own small transaction: committed costs persist immediately and
+// the same Moment stays in front of the player.
+function prepareAction(id) {
+  if (busy || screen !== "play" || modal.open) return;
+  const result = prepare(data.state, id, cardId());
+  if (result.error) {
+    notice(result.error);
+    return;
+  }
+  persist();
+  render();
+  const results = actionView(data.state, currentCard(data.state)).prep?.results;
+  announce(results?.at(-1) || "Preparado.");
+  document
+    .querySelector("[data-action=approach-panel][data-value=prep]")
+    ?.focus({ preventScroll: true });
+}
+function startHoldAction(id) {
+  if (busy || screen !== "play" || modal.open) return;
+  const result = startHold(data.state, id, cardId());
+  if (result.error) {
+    notice(result.error);
+    render();
+    return;
+  }
+  persist();
+  approachPanel = null;
+  render();
+  const hold = actionView(data.state, currentCard(data.state)).hold;
+  tone = holdTone(data.settings.sound);
+  document
+    .querySelector("[data-action=hold-step]")
+    ?.focus({ preventScroll: true });
+  announce(
+    `${hold.label}. ${hold.text} Mantén pulsada la carta o pulsa «Sostener un tramo más». Puedes soltar cuando quieras.`,
+  );
+}
+// Update the hold in place so a press in progress keeps its pointer capture.
+function refreshHold(hold) {
+  const card = document.querySelector(".narrative-card"),
+    section = document.querySelector(".hold-controls");
+  if (!card || !section) return;
+  card.style.setProperty("--hold", (hold.step / hold.goal).toFixed(2));
+  card.dataset.holdPhase = hold.phase;
+  section
+    .querySelectorAll(".hold-notch")
+    .forEach((n, i) => n.classList.toggle("held", i < hold.step));
+  const meter = section.querySelector(".hold-meter");
+  meter.setAttribute("aria-valuenow", hold.step);
+  meter.setAttribute(
+    "aria-valuetext",
+    `Tramo ${hold.step} de ${hold.goal}. ${hold.text} ${hold.cue}`.trim(),
+  );
+  section.querySelector(".hold-text").textContent = hold.text;
+  section.querySelector(".hold-cue").textContent = hold.cue;
+  const step = section.querySelector("[data-action=hold-step]");
+  step.dataset.value = hold.step;
+  step.disabled = hold.complete;
+  section.querySelector(".hold-release span").textContent = hold.complete
+    ? "Terminar"
+    : "Soltar";
+}
+// One discrete step, from a press-and-hold tick, a click, Enter or Space.
+function stepHoldAction() {
+  if (busy || screen !== "play" || modal.open) return false;
+  const current = actionView(data.state, currentCard(data.state)).hold;
+  if (!current || current.complete) return false;
+  const result = holdStep(data.state, current.step, cardId());
+  if (result.error) {
+    notice(result.error);
+    return false;
+  }
+  persist();
+  const hold = actionView(data.state, currentCard(data.state)).hold;
+  refreshHold(hold);
+  tone?.set(hold.step / hold.goal);
+  if (hold.complete) {
+    // The bounded objective is reached: release resolves it once.
+    setTimeout(
+      () => commit("action", { action: hold.action }),
+      reduced() ? 0 : 420,
+    );
+    return false;
+  }
+  return true;
 }
 function begin(options) {
   if (busy || prologueStep !== null) return;
@@ -367,7 +488,25 @@ document.addEventListener("click", (e) => {
     document.querySelector(".public-bulletin")?.remove();
     document.querySelector(".narrative-card")?.focus({ preventScroll: true });
   } else if (action === "choose") commit(value);
-  else if (action === "home") {
+  else if (action === "act") commit("action", { action: value });
+  else if (action === "hold-start") startHoldAction(value);
+  else if (action === "hold-step") stepHoldAction();
+  else if (action === "release") {
+    const hold = data.state?.actions?.pending?.hold;
+    if (hold) commit("action", { action: hold.action });
+  } else if (action === "prepare") prepareAction(value);
+  else if (action === "approach-panel") {
+    approachPanel = approachPanel === value ? null : value;
+    render();
+    document
+      .querySelector(`[data-action=approach-panel][data-value=${value}]`)
+      ?.focus({ preventScroll: true });
+    // On a phone the opened panel may start below the fold.
+    document.querySelector(".approach-panel")?.scrollIntoView({
+      block: "nearest",
+      behavior: reduced() ? "auto" : "smooth",
+    });
+  } else if (action === "home") {
     screen = "home";
     render(true);
   } else if (action === "continue") {

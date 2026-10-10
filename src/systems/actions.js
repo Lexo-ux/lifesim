@@ -26,7 +26,7 @@ import { CLASS_BY_ID } from "../../content/awakening/classes.js";
 import { CARD_BY_ID } from "../../content/moments/index.js";
 import { NPCS } from "../../content/npcs/index.js";
 import { LOCAL_TEMPLATES } from "../../content/social/catalog.js";
-import { apply } from "../engine/state.js";
+import { apply, log } from "../engine/state.js";
 import { lifeContext } from "./life-paths.js";
 import { selfView, lifeStatus } from "./self-context.js";
 import {
@@ -537,6 +537,7 @@ export function resolveAction(s, m, actionId, context = actionContext(s)) {
       steps,
       ally: a.ally || null,
       allyKind: entry.ally?.kind || null,
+      allyName: entry.ally?.name || null,
       strain: a.strain || 0,
       label: option.label,
       source: actionSource(entry),
@@ -598,6 +599,40 @@ export function commitAction(s, m, resolved, at, side) {
     steps: r.steps,
   };
   a.pending = null;
+  // Memorable uses enter the existing history; ordinary approaches stay quiet.
+  const firstClassUse =
+    r.kind === "class" &&
+    a.firstUse?.moment === m.id &&
+    a.firstUse.status === "scheduled";
+  const what = r.label.toLowerCase();
+  if (firstClassUse)
+    log(
+      s,
+      `Usaste tu clase a propósito por primera vez: ${what}.`,
+      true,
+      "spark",
+    );
+  else if (r.steps !== null)
+    log(
+      s,
+      {
+        full: `Sostuviste hasta el final: ${what}.`,
+        partial: `Sostuviste hasta un punto seguro: ${what}.`,
+        early: `Soltaste antes de tiempo: ${what}.`,
+        over: `Sostuviste más allá de tus fuerzas: ${what}.`,
+      }[r.key],
+      true,
+      "spark",
+    );
+  else if (r.ally && ["full", "partial"].includes(r.key))
+    log(
+      s,
+      r.key === "full"
+        ? `${r.allyName} te ayudó cuando se lo pediste.`
+        : `${r.allyName} te ayudó a medias; le debes un favor.`,
+      true,
+      "people",
+    );
 }
 // Any decision on a Moment clears its preparation/hold cursor and closes a first use.
 export function settleMoment(s, m, resolved, at) {
@@ -791,6 +826,19 @@ export function holdView(s, m) {
     goal: h.goal,
     safe: h.safe,
     complete: h.step >= h.goal,
+    // Semantic phase for presentation; never the numeric limit itself.
+    phase:
+      h.step >= h.goal
+        ? "complete"
+        : h.step > h.limit
+          ? "over"
+          : h.step === h.limit
+            ? "limit"
+            : h.step >= h.safe
+              ? "safe"
+              : h.step
+                ? "holding"
+                : "ready",
     text: h.step
       ? a.hold.steps[h.step - 1]
       : "Te colocas. Todavía no has empezado a sostener.",
@@ -820,6 +868,8 @@ export function perceptions(s, m, context = actionContext(s)) {
     for (const key of Object.keys(PERCEPTIONS)) {
       const value = cond[key];
       if (value === undefined || seen.some((x) => x.key === key)) continue;
+      // Once help has been called in, "nobody is here" is no longer what you see.
+      if (key === "team" && prepGrants(s, m).has("ally")) continue;
       if (
         !revealed.has(key) &&
         evaluateRequirement(context, PERCEIVERS[key]) !== true

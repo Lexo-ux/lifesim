@@ -357,7 +357,14 @@ export function choose(
   drawCard(next, nextMeta);
   Object.assign(s, next);
   Object.assign(meta, nextMeta);
-  return { before, after: macroStats(s), outcome: s.story.outcome, unlocked };
+  return {
+    before,
+    after: macroStats(s),
+    outcome: s.story.outcome,
+    unlocked,
+    // The authored side an action continued as (presentation only).
+    ...(resolved ? { side } : {}),
+  };
 }
 // Preparation and Hold steps are bounded transactions on the current Moment. They
 // commit their own costs on a clone and persist like a choice, but never advance time,
