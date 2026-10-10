@@ -61,6 +61,8 @@ export const MOMENT_HOOKS = {
       {
         id: "workload",
         as: "right",
+        // Reorganizing the close is instead of doubling the shift, not on top of it.
+        replace: true,
         conditions: { records: "consistent" },
         verbs: {
           "set-shifts": "Reorganizar el cierre para no doblar turno",
@@ -203,17 +205,22 @@ export const MOMENT_HOOKS = {
     ],
   },
   wa_crossing: {
+    asks: false,
     conditions: { setting: "threshold" },
     hooks: [
       {
         id: "boundary",
         as: { full: "right", partial: "right", costly: "left" },
+        // Holding the boundary or reading the route replaces the danger of walking.
+        replace: true,
         conditions: { boundary: "oscillating", distance: "folded" },
         verbs: { "anchor-boundary": "Fijar el borde mientras cruza el grupo" },
       },
       {
         id: "residue",
         as: { full: "right", partial: "right", costly: "left" },
+        // Holding the boundary or reading the route replaces the danger of walking.
+        replace: true,
         conditions: { residue: "fading" },
         verbs: {
           "borrow-property":
@@ -223,6 +230,8 @@ export const MOMENT_HOOKS = {
       {
         id: "evacuation",
         as: { full: "right", partial: "right", costly: "left" },
+        // Holding the boundary or reading the route replaces the danger of walking.
+        replace: true,
         conditions: { trace: "faint", crowd: "tense", branches: "converging" },
         exclude: [...HOLDS, "make-signage"],
         verbs: {

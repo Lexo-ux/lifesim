@@ -303,11 +303,12 @@ export function momentActionErrors(m, byId) {
     return ["invalid actions"];
   if (
     Object.keys(a).some(
-      (k) => !["hooks", "conditions", "prepare", "prefer"].includes(k),
+      (k) => !["hooks", "conditions", "prepare", "prefer", "asks"].includes(k),
     )
   )
     errors.push("unknown actions key");
   if (a.prefer !== undefined && !own(KINDS, a.prefer)) errors.push("prefer");
+  if (a.asks !== undefined && a.asks !== false) errors.push("asks");
   if (a.conditions !== undefined) errors.push(...conditionErrors(a.conditions));
   if (["awakening", "resolution"].includes(m.system) || m.field || m.mystery)
     errors.push("system-owned Moments cannot take contextual actions");
@@ -329,6 +330,7 @@ export function momentActionErrors(m, byId) {
             "exclude",
             "verbs",
             "text",
+            "replace",
           ].includes(k),
       )
     )

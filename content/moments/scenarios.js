@@ -83,6 +83,8 @@ export const SCENARIO_MOMENTS = [
       { resolve: { knowledge: ["medical", "technical", "engineering"] } },
     ),
     {
+      // Everything happens inside the building: nobody can be phoned in to help.
+      asks: false,
       conditions: { setting: "clinic", team: "absent" },
       hooks: [
         {
@@ -117,7 +119,6 @@ export const SCENARIO_MOMENTS = [
           "arrange-transport",
           "call-team",
           "protect-equipment",
-          "call-ally",
         ],
       },
     },
@@ -283,7 +284,16 @@ export const SCENARIO_MOMENTS = [
             branches: "converging",
           },
         },
-        { id: "conflict", as: "right", conditions: { crowd: "tense" } },
+        {
+          id: "conflict",
+          as: "right",
+          conditions: { crowd: "tense" },
+          only: ["mediate", "steady-presence", "weigh-futures"],
+          verbs: {
+            mediate: "Calmar a los padres sin prometer nada",
+            "steady-presence": "Quedarte con los padres sin llenar el silencio",
+          },
+        },
       ],
       prepare: {
         budget: 1,

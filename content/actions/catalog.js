@@ -98,15 +98,15 @@ export const ACTIONS = [
     practice: "elemental",
     cost: { energy: -6 },
     factors: {
-      full: ["element", "rested"],
-      partial: ["rested", "practiced", "resonance"],
+      full: ["element", ["practiced", "prepared", "scene.severity=moderate"]],
+      partial: ["element", "practiced", "prepared", "resonance"],
       block: ["severe"],
     },
     resonance: ["minerals"],
     effects: {
       full: { happiness: 3 },
-      partial: { stress: 2 },
-      costly: { health: -3, stress: 5 },
+      partial: { stress: 3 },
+      costly: { health: -4, stress: 6, happiness: -3 },
     },
     text: {
       full: "Al contacto con tu energía, {element} cede lo justo y se queda así. Responde; no obedece.",
@@ -130,13 +130,13 @@ export const ACTIONS = [
     resonance: ["organisms"],
     cost: { energy: -6 },
     factors: {
-      full: ["knowledge", "rested"],
-      partial: ["rested", "resonance", "practiced"],
+      full: ["knowledge", ["practiced", "scene.bleeding=contained", "ally"]],
+      partial: ["knowledge", "resonance", "practiced"],
     },
     effects: {
       full: { happiness: 4 },
-      partial: { stress: 2 },
-      costly: { health: -4, stress: 5 },
+      partial: { stress: 3 },
+      costly: { health: -4, stress: 6, happiness: -3 },
     },
     text: {
       full: "El tejido responde bajo tus manos y sabes qué estás sosteniendo. Deja de empeorar mientras llega ayuda.",
@@ -160,14 +160,14 @@ export const ACTIONS = [
     practice: "tracing",
     cost: { energy: -5 },
     factors: {
-      full: ["scene.trace=fresh", "rested"],
-      partial: ["scene.trace=fresh", "practiced", "rested"],
+      full: ["scene.trace=fresh", ["practiced", "calm"]],
+      partial: ["scene.trace=fresh", "practiced"],
       block: ["severe"],
     },
     effects: {
       full: { happiness: 3 },
-      partial: {},
-      costly: { stress: 6 },
+      partial: { stress: 2 },
+      costly: { stress: 6, happiness: -4 },
     },
     text: {
       full: "La huella sigue ahí, nítida, y te lleva sin dudas. Al final hay una respuesta; no toda la historia.",
@@ -192,14 +192,14 @@ export const ACTIONS = [
     knowledge: ["production", "engineering", "technical"],
     cost: { energy: -6 },
     factors: {
-      full: ["knowledge", "rested"],
-      partial: ["rested", "practiced", "prepared"],
+      full: ["knowledge", ["practiced", "prepared"]],
+      partial: ["knowledge", "practiced", "prepared"],
       block: ["severe"],
     },
     effects: {
       full: { happiness: 3, creativity: 1 },
-      partial: {},
-      costly: { stress: 5, health: -2 },
+      partial: { stress: 2 },
+      costly: { stress: 6, health: -3, happiness: -3 },
     },
     text: {
       full: "Encuentras dónde puede cambiar la pieza y cambia. La unión aguanta porque sabías qué estabas haciendo.",
@@ -225,12 +225,12 @@ export const ACTIONS = [
     cost: { energy: -4 },
     factors: {
       full: ["knowledge", ["ally", "prepared", "scene.records=contradictory"]],
-      partial: ["knowledge", "practiced", "rested"],
+      partial: ["knowledge", "practiced", "scene.records=contradictory"],
     },
     effects: {
       full: { intelligence: 2, happiness: 2 },
-      partial: { intelligence: 1 },
-      costly: { stress: 6 },
+      partial: { stress: 2 },
+      costly: { stress: 6, happiness: -4 },
     },
     text: {
       full: "El patrón aparece y otras personas pueden comprobarlo. No lo explica todo, pero ya no es una sospecha.",
@@ -263,14 +263,17 @@ export const ACTIONS = [
     resonance: ["organisms", "signals"],
     cost: { energy: -8 },
     factors: {
-      full: ["rested", ["knowledge", "practiced"], "prepared"],
-      partial: ["rested", "resonance", "experienced"],
+      full: [
+        ["knowledge", "practiced"],
+        ["prepared", "ally"],
+      ],
+      partial: ["knowledge", "practiced", "experienced"],
     },
     domain: "support",
     effects: {
       full: { happiness: 4 },
       partial: { stress: 3 },
-      costly: { stress: 7, health: -3 },
+      costly: { stress: 7, health: -3, happiness: -3 },
     },
     text: {
       full: "Distingues el canal roto entre los demás y lo cierras sin forzar los que funcionan. El Núcleo vuelve a un pulso que reconoces.",
@@ -301,14 +304,11 @@ export const ACTIONS = [
     knowledge: ["medical"],
     resonance: ["organisms", "signals"],
     cost: { energy: -5 },
-    factors: {
-      full: ["knowledge"],
-      partial: ["rested", "resonance"],
-    },
+    factors: { full: ["knowledge"], partial: ["resonance", "practiced"] },
     effects: {
       full: { happiness: 2 },
       partial: { stress: 2 },
-      costly: { stress: 5 },
+      costly: { stress: 5, happiness: -3 },
     },
     text: {
       full: "Sostienes la trama quieta y sabes lo que ves. Por hoy, no hace falta más.",
@@ -334,14 +334,14 @@ export const ACTIONS = [
     resonance: ["spaces"],
     cost: { energy: -5 },
     factors: {
-      full: ["scene.distance=folded", "rested", ["practiced", "resonance"]],
-      partial: ["rested", "practiced", "resonance"],
+      full: ["scene.distance=folded", ["practiced", "resonance"]],
+      partial: ["scene.distance=folded", "practiced"],
       block: ["severe"],
     },
     effects: {
       full: { intelligence: 2, happiness: 2 },
-      partial: {},
-      costly: { stress: 6 },
+      partial: { stress: 2 },
+      costly: { stress: 6, happiness: -3 },
     },
     text: {
       full: "Ves dónde el espacio se pliega y dónde no. Marcas un tramo que se puede cruzar. No conoces los demás, y lo dices.",
@@ -405,8 +405,8 @@ export const ACTIONS = [
     strain: 1,
     cost: { energy: -4 },
     factors: {
-      full: ["scene.residue=recent", "rested"],
-      partial: ["rested", "practiced"],
+      full: ["scene.residue=recent", ["practiced", "rested"]],
+      partial: ["scene.residue=recent", "practiced"],
       block: ["strained"],
     },
     effects: {
@@ -471,13 +471,13 @@ export const ACTIONS = [
     resonance: ["organisms"],
     cost: { energy: -6 },
     factors: {
-      full: ["knowledge", "rested"],
-      partial: ["rested", "resonance", "practiced"],
+      full: ["knowledge", ["practiced", "scene.consent=given"]],
+      partial: ["knowledge", "resonance", "practiced"],
     },
     effects: {
       full: { happiness: 3 },
-      partial: { stress: 2 },
-      costly: { stress: 7 },
+      partial: { stress: 3 },
+      costly: { stress: 7, happiness: -4 },
     },
     text: {
       full: "Con su permiso, ralentizas el proceso lo justo para que llegue ayuda. Sabes qué estás frenando y por qué.",
@@ -499,14 +499,14 @@ export const ACTIONS = [
     domain: "health",
     cost: { energy: -5 },
     factors: {
-      full: ["practiced", "rested"],
-      partial: ["rested", "equipment", "ally"],
+      full: ["practiced", ["equipment", "ally", "scene.bleeding=contained"]],
+      partial: ["practiced", "experienced"],
       block: ["severe"],
     },
     effects: {
       full: { happiness: 3 },
-      partial: { stress: 2 },
-      costly: { stress: 6 },
+      partial: { stress: 3 },
+      costly: { stress: 6, happiness: -4 },
     },
     text: {
       full: "Lo ves enseguida: dónde presionar, qué no mover, qué decir a quien llega. La herida queda controlada.",
@@ -526,13 +526,14 @@ export const ACTIONS = [
     domain: "health",
     cost: { energy: -3 },
     factors: {
-      full: ["practiced", "rested"],
-      partial: ["rested", "practiced"],
+      full: ["practiced", "experienced"],
+      partial: ["practiced"],
+      block: ["severe"],
     },
     effects: {
-      full: { happiness: 3 },
-      partial: { stress: 2 },
-      costly: { stress: 5 },
+      full: { happiness: 2, health: 2 },
+      partial: { stress: 5 },
+      costly: { stress: 8, happiness: -4 },
     },
     text: {
       full: "Reconoces el cuadro antes de que nadie lo nombre. Pides lo que hace falta y se gana tiempo.",
@@ -563,7 +564,7 @@ export const ACTIONS = [
     effects: {
       full: { happiness: 4 },
       partial: { stress: 3 },
-      costly: { stress: 7 },
+      costly: { stress: 7, happiness: -4 },
     },
     text: {
       full: "Ordenas la salida por necesidad, no por quien más grita. El equipo te sigue y nadie queda olvidado.",
@@ -584,12 +585,12 @@ export const ACTIONS = [
     cost: { energy: -4 },
     factors: {
       full: ["practiced", ["prepared", "scene.load=moderate"]],
-      partial: ["rested", "prepared", "practiced"],
+      partial: ["practiced", "prepared"],
     },
     effects: {
       full: { intelligence: 1, happiness: 3 },
-      partial: { stress: 1 },
-      costly: { stress: 5 },
+      partial: { stress: 2 },
+      costly: { stress: 6, happiness: -3 },
     },
     text: {
       full: "Lees la estructura como un plano: la carga ha cambiado de sitio, pero hay un tramo que aguanta. Lo marcas y explicas por qué.",
@@ -610,13 +611,13 @@ export const ACTIONS = [
     cost: { energy: -4 },
     factors: {
       full: ["practiced", ["transport", "prepared"]],
-      partial: ["rested", "practiced", "prepared"],
+      partial: ["practiced", "prepared", "transport"],
       block: ["late"],
     },
     effects: {
       full: { happiness: 3 },
-      partial: {},
-      costly: { stress: 5 },
+      partial: { stress: 2 },
+      costly: { stress: 6, happiness: -3 },
     },
     text: {
       full: "Encuentras un desvío que nadie había considerado y que soporta el paso. La salida se ordena sola.",
@@ -637,13 +638,13 @@ export const ACTIONS = [
     cost: { energy: -4 },
     factors: {
       full: ["practiced", "prepared"],
-      partial: ["rested", "practiced"],
+      partial: ["practiced", "experienced"],
       block: ["severe"],
     },
     effects: {
       full: { happiness: 3 },
-      partial: { stress: 2 },
-      costly: { stress: 5 },
+      partial: { stress: 3 },
+      costly: { stress: 6, happiness: -3 },
     },
     text: {
       full: "Calculas qué puede quedar encendido sin que caiga lo demás. Lo esencial vuelve primero.",
@@ -664,13 +665,13 @@ export const ACTIONS = [
     cost: { energy: -4 },
     factors: {
       full: ["practiced", ["equipment", "prepared", "materials"]],
-      partial: ["rested", "practiced"],
+      partial: ["practiced", "experienced", "materials"],
       block: ["severe"],
     },
     effects: {
       full: { technology: 1, happiness: 3 },
-      partial: { stress: 1 },
-      costly: { stress: 5 },
+      partial: { stress: 2 },
+      costly: { stress: 6, happiness: -3 },
     },
     text: {
       full: "Sigues el fallo hasta su tramo, lo aíslas y el resto vuelve a funcionar. Dejas una nota para quien lo repare del todo.",
@@ -691,12 +692,12 @@ export const ACTIONS = [
     cost: { energy: -5 },
     factors: {
       full: ["practiced", ["ally", "prepared"]],
-      partial: ["rested", "practiced", "ally"],
+      partial: ["practiced", "ally", "experienced"],
     },
     effects: {
       full: { happiness: 4, discipline: 1 },
-      partial: { stress: 2 },
-      costly: { stress: 5 },
+      partial: { stress: 3 },
+      costly: { stress: 6, happiness: -4 },
     },
     text: {
       full: "Listas, turnos, nombres: el reparto deja de depender de quién llega primero. No alcanza para todo, pero nadie se queda sin nada.",
@@ -709,7 +710,7 @@ export const ACTIONS = [
   {
     id: "coordinate-flow",
     kind: "profession",
-    source: "experiencia de servicio",
+    source: "organizar a la gente",
     requires: any(job("service"), cap("logistics"), exp("civic")),
     verbs: { evacuation: "Coordinar la salida de la gente" },
     domain: "civic",
@@ -717,13 +718,13 @@ export const ACTIONS = [
     cost: { energy: -5 },
     factors: {
       full: ["experienced", ["ally", "calm"]],
-      partial: ["rested", "experienced", "trusted"],
+      partial: ["experienced", "trusted", "ally"],
       block: ["late"],
     },
     effects: {
       full: { happiness: 3, charisma: 1 },
-      partial: { stress: 2 },
-      costly: { stress: 6 },
+      partial: { stress: 3 },
+      costly: { stress: 6, happiness: -4 },
     },
     text: {
       full: "Hablas como en un turno lleno: claro, sin prisa visible. La gente sale en orden porque alguien les dice qué hacer.",
@@ -748,12 +749,12 @@ export const ACTIONS = [
     cost: { energy: -3 },
     factors: {
       full: ["practiced", ["prepared", "scene.records=contradictory"]],
-      partial: ["rested", "practiced"],
+      partial: ["practiced", "prepared"],
     },
     effects: {
       full: { intelligence: 2 },
-      partial: {},
-      costly: { stress: 4 },
+      partial: { stress: 2 },
+      costly: { stress: 5, happiness: -3 },
     },
     text: {
       full: "Entre fechas y versiones aparece lo que no encaja. Lo señalas con pruebas, no con intuiciones.",
@@ -766,7 +767,7 @@ export const ACTIONS = [
   {
     id: "make-signage",
     kind: "profession",
-    source: "tu oficio creativo",
+    source: "tu oficio",
     requires: any(job("artist"), cap("production")),
     verbs: {
       missing: "Dibujar un aviso que cualquiera reconozca",
@@ -777,12 +778,12 @@ export const ACTIONS = [
     cost: { energy: -3 },
     factors: {
       full: ["practiced", ["ally", "prepared"]],
-      partial: ["rested", "practiced", "ally"],
+      partial: ["practiced", "ally", "prepared"],
     },
     effects: {
       full: { creativity: 2, happiness: 3 },
-      partial: { creativity: 1 },
-      costly: { stress: 4 },
+      partial: { stress: 2 },
+      costly: { stress: 5, happiness: -3 },
     },
     text: {
       full: "Tu dibujo es tan claro que la gente se para a mirarlo. Alguien reconoce lo que ve y lo cuenta.",
@@ -807,12 +808,12 @@ export const ACTIONS = [
     cost: { energy: -3 },
     factors: {
       full: ["practiced", "prepared"],
-      partial: ["rested", "practiced"],
+      partial: ["practiced", "prepared", "experienced"],
     },
     effects: {
       full: { intelligence: 2 },
-      partial: { intelligence: 1 },
-      costly: { stress: 4 },
+      partial: { stress: 2 },
+      costly: { stress: 5, happiness: -3 },
     },
     text: {
       full: "Tu registro es limpio: qué viste, cuándo, con qué error. Otros podrán usarlo aunque no estén de acuerdo contigo.",
@@ -834,12 +835,12 @@ export const ACTIONS = [
     cost: { energy: -3 },
     factors: {
       full: ["steady", ["experienced", "trusted"]],
-      partial: ["rested", "steady"],
+      partial: ["experienced", "trusted", "self.charisma>=65"],
     },
     effects: {
       full: { charisma: 1, happiness: 2 },
-      partial: {},
-      costly: { stress: 5 },
+      partial: { stress: 3 },
+      costly: { stress: 6, happiness: -4 },
     },
     text: {
       full: "Escuchas antes de hablar y eso basta para que bajen la voz. Nadie gana; todos pueden seguir.",
@@ -885,12 +886,12 @@ export const ACTIONS = [
     cost: { energy: -3 },
     factors: {
       full: ["steady", ["self.finance>=65", "prepared"]],
-      partial: ["rested", "steady"],
+      partial: ["self.finance>=65", "prepared", "practiced"],
     },
     effects: {
       full: { finance: 1, happiness: 2 },
-      partial: {},
-      costly: { stress: 5, cash: -300 },
+      partial: { stress: 3 },
+      costly: { stress: 6, cash: -400 },
     },
     text: {
       full: "Encuentras qué necesita cada parte y por qué. El acuerdo no entusiasma a nadie, pero se firma.",
@@ -950,12 +951,12 @@ export const ACTIONS = [
     cost: { energy: -6 },
     factors: {
       full: ["rested", ["scene.trace=fresh", "ally"]],
-      partial: ["rested", "strong"],
+      partial: ["strong", "scene.trace=fresh"],
     },
     effects: {
       full: { fitness: 1, happiness: 3 },
-      partial: {},
-      costly: { stress: 5, health: -2 },
+      partial: { stress: 2 },
+      costly: { stress: 6, health: -3 },
     },
     text: {
       full: "Cubres en minutos lo que a otros les llevaría una hora. Llegas a tiempo de que sirva.",
@@ -973,12 +974,12 @@ export const ACTIONS = [
     cost: { energy: -3 },
     factors: {
       full: ["self.finance>=70", "steady"],
-      partial: ["rested", "steady"],
+      partial: ["self.finance>=60", "prepared"],
     },
     effects: {
       full: { finance: 1, stress: -3 },
-      partial: {},
-      costly: { stress: 4 },
+      partial: { stress: 2 },
+      costly: { stress: 6, happiness: -3 },
     },
     text: {
       full: "Las cuentas cuadran por primera vez en meses. No sobra nada, pero ya sabes dónde está cada cosa.",
@@ -1000,12 +1001,12 @@ export const ACTIONS = [
     cost: { energy: -3 },
     factors: {
       full: ["self.discipline>=65", ["ally", "prepared"]],
-      partial: ["rested", "steady"],
+      partial: ["self.discipline>=65", "ally", "prepared", "experienced"],
     },
     effects: {
       full: { discipline: 1, happiness: 2 },
-      partial: {},
-      costly: { stress: 5 },
+      partial: { stress: 3 },
+      costly: { stress: 6, happiness: -4 },
     },
     text: {
       full: "Repartes el trabajo según lo que cada cual puede sostener. Nadie hace milagros; nadie se rompe.",
@@ -1024,12 +1025,12 @@ export const ACTIONS = [
     cost: { energy: -3 },
     factors: {
       full: ["materials", "self.technology>=65"],
-      partial: ["rested", "materials"],
+      partial: ["materials", "self.technology>=55"],
     },
     effects: {
       full: { technology: 1, happiness: 2 },
-      partial: {},
-      costly: { stress: 4, health: -2 },
+      partial: { stress: 2 },
+      costly: { stress: 5, health: -3 },
     },
     text: {
       full: "Con lo que hay a mano, haces que vuelva a funcionar. No es elegante; aguanta.",
@@ -1046,12 +1047,12 @@ export const ACTIONS = [
     cost: { energy: -3 },
     factors: {
       full: ["steady", ["trusted", "self.charisma>=70"]],
-      partial: ["rested", "steady"],
+      partial: ["trusted", "self.charisma>=65", "experienced"],
     },
     effects: {
       full: { charisma: 1, happiness: 3 },
-      partial: {},
-      costly: { stress: 5 },
+      partial: { stress: 3 },
+      costly: { stress: 6, happiness: -4 },
     },
     text: {
       full: "Repites lo que cada parte dijo hasta que se oye a sí misma. Encuentran un acuerdo pequeño y real.",
@@ -1074,12 +1075,12 @@ export const ACTIONS = [
     cost: { energy: -6 },
     factors: {
       full: ["rested", ["ally", "trusted"]],
-      partial: ["rested"],
+      partial: ["ally", "trusted", "prepared", "rested"],
     },
     effects: {
       full: { happiness: 5 },
-      partial: { happiness: 2 },
-      costly: { stress: 5, health: -2 },
+      partial: { happiness: 1, stress: 2 },
+      costly: { stress: 6, health: -3, happiness: -3 },
     },
     text: {
       full: "Nadie te espera en otra parte, y hoy eso es una ventaja. Estás cuando hace falta, y se nota.",
@@ -1103,13 +1104,13 @@ export const ACTIONS = [
     domain: "any",
     cost: { energy: -2 },
     factors: {
-      full: ["steady", ["trusted", "experienced"]],
-      partial: ["rested", "steady", "trusted"],
+      full: ["trusted", "experienced"],
+      partial: ["trusted", "experienced"],
     },
     effects: {
       full: { happiness: 5 },
-      partial: { happiness: 2 },
-      costly: { happiness: -2 },
+      partial: { happiness: 1 },
+      costly: { happiness: -4, stress: 3 },
     },
     text: {
       full: "Ya viste algo así hace años y recuerdas qué funcionó. Lo cuentas sin sermones y te hacen caso.",
@@ -1140,13 +1141,13 @@ export const ACTIONS = [
     },
     cost: { energy: -3 },
     factors: {
-      full: ["rested", "prepared"],
-      partial: ["rested", "ally"],
+      full: ["prepared", ["ally", "self.intelligence>=60"]],
+      partial: ["ally", "prepared", "self.intelligence>=60"],
     },
     effects: {
       full: { intelligence: 2, happiness: 2 },
-      partial: { intelligence: 1 },
-      costly: { stress: 4 },
+      partial: { stress: 2 },
+      costly: { stress: 5, happiness: -3 },
     },
     text: {
       full: "Lo estudiaste hace poco y lo recuerdas con claridad. Saberlo no es lo mismo que haberlo hecho, pero hoy basta.",
@@ -1175,13 +1176,13 @@ export const ACTIONS = [
     domain: "health",
     cost: { energy: -3 },
     factors: {
-      full: ["steady", "rested"],
-      partial: ["steady", "experienced", "rested"],
+      full: ["steady", ["experienced", "prepared", "trusted"]],
+      partial: ["experienced", "trusted", "steady"],
     },
     effects: {
       full: { happiness: 4 },
       partial: { happiness: 1 },
-      costly: { stress: 5 },
+      costly: { stress: 5, happiness: -3 },
     },
     text: {
       full: "Has cuidado antes y se nota: sabes cuándo hablar y cuándo solo estar. La persona se calma, y eso cambia lo demás.",
@@ -1215,12 +1216,12 @@ export const ACTIONS = [
     cost: { energy: -4 },
     factors: {
       full: ["trusted", ["prepared", "ally", "time"]],
-      partial: ["trusted", "rested"],
+      partial: ["trusted", "experienced"],
     },
     effects: {
       full: { happiness: 5, charisma: 1 },
-      partial: { happiness: 2 },
-      costly: { stress: 4 },
+      partial: { stress: 2 },
+      costly: { stress: 5, happiness: -3 },
     },
     text: {
       full: "Te conocen, y por eso responden. En una hora hay más ojos y manos de las que hubo en todo el día.",
@@ -1235,39 +1236,31 @@ export const ACTIONS = [
 // Real relationships as playable history. Each ally can be asked about the hooks they
 // would plausibly help with. Canonical historical figures are deliberately absent.
 export const ALLIES = {
-  omar: {
-    kind: "story",
-    role: "tu vecino",
-    hooks: ["structure", "power", "shortage", "missing"],
-  },
+  omar: { kind: "story", role: "tu vecino", hooks: ["structure", "power"] },
   celia: { kind: "story", role: "tu médica", hooks: ["injury", "illness"] },
   ada: {
     kind: "story",
     role: "tu mentora",
     hooks: ["investigation", "workload"],
   },
-  vera: {
-    kind: "story",
-    role: "tu amiga",
-    hooks: ["missing", "conflict", "evacuation", "shortage"],
-  },
+  vera: { kind: "story", role: "tu amiga", hooks: ["missing", "conflict"] },
   noa: {
     kind: "story",
     role: "alguien cercano",
-    hooks: ["conflict", "illness", "missing"],
+    hooks: ["conflict", "illness"],
   },
   rafael: { kind: "story", role: "tu jefe", hooks: ["workload"] },
-  tomas: { kind: "story", role: "tu padre", hooks: ["structure", "power"] },
+  tomas: { kind: "story", role: "tu padre", hooks: ["structure"] },
   salma: { kind: "story", role: "tu profesora", hooks: ["investigation"] },
   local_neighbor: {
     kind: "social",
     role: "del barrio",
-    hooks: ["shortage", "missing", "evacuation"],
+    hooks: ["shortage", "missing"],
   },
   local_colleague: {
     kind: "social",
     role: "colega",
-    hooks: ["structure", "power", "workload"],
+    hooks: ["workload", "power"],
   },
 };
 export const ASK_TEXT = {

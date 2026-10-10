@@ -9,7 +9,7 @@ const fu = (classId, text, left, right, hook, extra = {}) =>
     queued: true,
     months: 1,
     requires: { awakening: { classId } },
-    actions: { prefer: "class", hooks: [hook] },
+    actions: { prefer: "class", asks: false, hooks: [hook] },
     ...extra,
   });
 export const FIRST_USE_MOMENTS = [

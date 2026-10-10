@@ -84,13 +84,14 @@ export function allyState(s, m, id, at = now(s)) {
     )
       return { offered: false };
     const b = bond(s, id);
-    if (b < 50) return { offered: false };
+    // Only people the protagonist is genuinely close to are asked for favours.
+    if (b < 60) return { offered: false };
     return {
       offered: true,
       kind: "story",
       name: npc.name,
       role: speaker(s, id).role.toLowerCase(),
-      close: b >= 70,
+      close: b >= 75,
       acquainted: true,
       pressed,
       reachable: true,
@@ -148,6 +149,8 @@ export function availableActions(s, m, context = actionContext(s)) {
     const cond = hookConditions(m, hook);
     ACTIONS.forEach((action, catalogIndex) => {
       if (!action.verbs[hook.id] || best.has(action.id)) return;
+      // Some scenes happen where nobody else can arrive in time to be asked.
+      if (action.ally && m.actions.asks === false) return;
       if (hook.only && !hook.only.includes(action.id)) return;
       if (hook.exclude?.includes(action.id)) return;
       if (!needsMet(action, cond)) return;
@@ -188,8 +191,8 @@ export function availableActions(s, m, context = actionContext(s)) {
     return 0;
   });
 }
-// One recommended approach plus at most two genuinely different ones: another kind of
-// source or another hook. At most one relationship request. No RNG decides the order.
+// One recommended approach plus at most two genuinely different ones: another basis
+// (source), kind or hook. At most one relationship request. No RNG decides the order.
 export function offeredActions(s, m, context = actionContext(s)) {
   const all = availableActions(s, m, context);
   const shown = [];
@@ -202,7 +205,10 @@ export function offeredActions(s, m, context = actionContext(s)) {
       continue;
     if (
       shown.some(
-        (x) => x.action.kind === e.action.kind && x.hook.id === e.hook.id,
+        (x) =>
+          x.action.kind === e.action.kind &&
+          x.hook.id === e.hook.id &&
+          x.action.source === e.action.source,
       )
     )
       continue;
@@ -363,10 +369,9 @@ export function holdResult(h) {
   if (h.step >= h.safe) return over ? "over" : "partial";
   return "early";
 }
+// Hold keys (early/over) and ask keys (pressed/unanswered) are costly outcomes.
 const outcomeOf = (key) =>
-  ({ full: "full", partial: "partial", early: "costly", over: "costly" })[
-    key
-  ] || key;
+  ({ full: "full", partial: "partial" })[key] || "costly";
 
 // ---------- Text ----------
 function interpolate(text, values) {
@@ -393,6 +398,9 @@ export function actionSource(entry) {
 }
 function outcomeText(m, entry, key, why) {
   const own = entry.hook.text?.[entry.action.id]?.[key];
+  // Scene-authored text already explains its own why; the generic reason is for
+  // catalog text reused across scenes.
+  if (own) why = "";
   const base =
     own ||
     entry.action.textBy?.[entry.hook.id]?.[key] ||
@@ -508,7 +516,13 @@ export function resolveAction(s, m, actionId, context = actionContext(s)) {
     ...(base.behavior ? { behavior: base.behavior } : {}),
     ...(base.bond !== undefined ? { bond: base.bond } : {}),
     label: actionLabel(entry, m),
-    effects: merge(entry.action.hold ? {} : a.cost, a.effects[key]),
+    // An action is a way of living the authored side: its effects add to that side's,
+    // unless the hook declares that the action replaces the side's risk.
+    effects: merge(
+      entry.hook.replace ? {} : base.effects,
+      entry.action.hold ? {} : a.cost,
+      a.effects[key],
+    ),
     consequences,
     result: outcomeText(m, entry, key, why),
   };
