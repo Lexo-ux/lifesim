@@ -48,6 +48,15 @@ export function remember(s, id, event, side, delta = 0) {
   npc.memories.push({ event, side, age: s.age });
   npc.memories = npc.memories.slice(-30);
 }
+// A favour asked outside the person's own scene changes the bond without inventing
+// a shared Moment memory (Task 15 relationship actions).
+export function nudgeBond(s, id, delta) {
+  const npc = s.story.npcs[id];
+  if (!npc) return;
+  npc.bond = clamp(bond(s, id) + delta);
+  const relation = s.relationships.find((r) => r.id === id);
+  if (relation) relation.bond = npc.bond;
+}
 export function npcYear(s) {
   for (const [id, npc] of Object.entries(s.story.npcs)) {
     const spec = NPCS[id];

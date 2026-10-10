@@ -115,10 +115,13 @@ export const SHARED_MEMORIES = {
   revision: ["invited", "refused", "reconciled", "closed"],
   evaluation_boundary: ["explained", "private", "heard", "disputed"],
   evidence: ["shared", "withheld", "corrected", "withdrawn"],
+  // Task 15: a favour asked through a contextual action.
+  favor: ["helped", "compromised", "refused", "unanswered"],
 };
 export const OBLIGATIONS = {
   key: ["open", "kept", "broken", "released"],
   field_return: ["open", "kept", "released"],
+  favor: ["open", "kept", "released"],
 };
 export const INSTITUTION_MEMORIES = {
   attribution: ["shared", "separate", "revised"],

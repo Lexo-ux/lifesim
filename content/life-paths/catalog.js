@@ -24,6 +24,20 @@ export const CAPABILITIES = {
   stabilization: "estabilización local",
   anomaly: "percepción de anomalías",
   field: "preparación de campo",
+  // Task 15: one semantic capability per implemented class, so each class keeps
+  // its identity in eligibility, perception and resolution. Generic tags above stay.
+  reinforcement: "refuerzo físico",
+  elemental: "respuesta de la materia",
+  tissue: "sostén de tejido vivo",
+  tracing: "lectura de rastros",
+  forging: "adaptación de materiales",
+  patterns: "lectura de patrones",
+  "core-surgery": "intervención en Núcleos",
+  cartography: "lectura del espacio inestable",
+  anchoring: "anclaje local",
+  borrowing: "préstamo de propiedades",
+  foresight: "percepción de futuros posibles",
+  bioweaving: "tejido de procesos vivos",
 };
 export const LEVELS = ["familiar", "practiced"];
 export const FACTS = {
@@ -59,6 +73,8 @@ export const FAMILIES = [
   "change",
   "practice",
   "reflection",
+  // Task 15 representative scenarios: occasional, spaced like other opportunities.
+  "scenario",
 ];
 export const EDUCATION_CAPABILITIES = {
   self: ["analysis"],
@@ -98,5 +114,20 @@ export const CLASS_CAPABILITIES = {
   "pattern-analysis": "analysis",
   "unstable-geometry": "anomaly",
   "possible-futures": "anomaly",
+};
+// Distinct identity per class tag (Task 15). Granted alongside the generic mapping.
+export const CLASS_SEMANTICS = {
+  "physical-reinforcement": "reinforcement",
+  "elemental-expression": "elemental",
+  "tissue-support": "tissue",
+  "trace-sensing": "tracing",
+  "material-working": "forging",
+  "pattern-analysis": "patterns",
+  "core-repair": "core-surgery",
+  "unstable-geometry": "cartography",
+  "local-stabilization": "anchoring",
+  "temporary-borrowing": "borrowing",
+  "possible-futures": "foresight",
+  "biological-processes": "bioweaving",
 };
 export const OPPORTUNITY_SPACING = 3; // At least two other decisions between these Moments.

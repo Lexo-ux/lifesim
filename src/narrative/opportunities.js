@@ -8,6 +8,7 @@ import {
   LEVELS,
 } from "../../content/life-paths/catalog.js";
 import { resolutionRequirement } from "../systems/resolution-rules.js";
+import { selfRequirement } from "../systems/self-context.js";
 // A small predicate tree. Missing external context fails closed, even under NOT.
 export function evaluateRequirement(context, rule) {
   if (!rule) return true;
@@ -29,6 +30,7 @@ export function evaluateRequirement(context, rule) {
   if (type?.startsWith("meta-")) return legacyRequirement(context, rule);
   if (type?.startsWith("world-")) return worldRequirement(context, rule);
   if (type?.startsWith("field-")) return fieldRequirement(context, rule);
+  if (type?.startsWith("self-")) return selfRequirement(context, rule);
   const social = socialRequirement(context, rule);
   if (social !== undefined) return social;
   switch (type) {

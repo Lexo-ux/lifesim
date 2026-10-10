@@ -34,6 +34,16 @@ import {
   awakeningMomentId,
 } from "../systems/awakening.js";
 import {
+  resolveAction,
+  resolveOption,
+  commitAction,
+  settleMoment,
+  scheduleFirstUse,
+  prepareMoment,
+  beginHold,
+  stepHold,
+} from "../systems/actions.js";
+import {
   resolutionMomentId,
   reconcileResolutionOperation,
   resolutionOutcome,
@@ -169,15 +179,41 @@ function operate(s, operation) {
   }
   return null;
 }
-export function choose(s, meta, side, expectedId = s.story.current) {
+// `intent.action` commits a contextual action instead of an authored side. The action
+// resolves by named factors and continues as the side its hook declares for that
+// outcome, inside this same cloned transaction. Without an intent nothing changes.
+export function choose(
+  s,
+  meta,
+  side,
+  expectedId = s.story.current,
+  intent = {},
+) {
+  const acting = typeof intent.action === "string";
   if (
     !s.alive ||
     expectedId !== s.story.current ||
-    !["left", "right"].includes(side)
+    !(acting ? side === "action" : ["left", "right"].includes(side))
   )
     return { error: "Esta decisión ya cambió." };
-  const event = currentCard(s),
+  const event = currentCard(s);
+  if (
+    !acting &&
+    s.actions?.pending?.hold &&
+    s.actions.pending.moment === s.story.current
+  )
+    return { error: "Primero termina de sostener o suelta." };
+  let option, resolved;
+  if (acting) {
+    if (!event?.actions) return { error: "No existe esa decisión." };
+    resolved = resolveAction(s, event, intent.action);
+    if (resolved.error) return { error: resolved.error };
+    side = resolved.side;
+    option = resolved.option;
+  } else {
     option = event && socialChoice(s, event, side);
+    if (option?.resolve) option = resolveOption(s, event, side, option);
+  }
   if (!option) return { error: "No existe esa decisión." };
   if (
     event.compatibilityOnly &&
@@ -267,7 +303,10 @@ export function choose(s, meta, side, expectedId = s.story.current) {
   if (event.arc)
     next.story.arcs[event.arc] = { last: event.id, side, age: next.age };
   if (option.milestone) log(next, option.milestone, true, "spark");
+  if (resolved) commitAction(next, event, resolved, timestamp, side);
+  settleMoment(next, event, resolved, timestamp);
   advanceAwakening(next, event, side);
+  scheduleFirstUse(next, event, timestamp);
   next.story.month += next.age < 3 ? 12 : event.months;
   if (next.stats.health <= 0) finishLife(next, "Tu cuerpo no pudo seguir.");
   while (next.story.month >= 12 && next.alive) {
@@ -301,12 +340,54 @@ export function choose(s, meta, side, expectedId = s.story.current) {
     aged: next.age !== startAge,
     secret: event.pool === "meta",
     unlocked: unlocked.map((a) => a.name),
+    ...(resolved
+      ? {
+          action: {
+            id: resolved.record.action,
+            label: resolved.record.label,
+            source: resolved.record.source,
+            kind: resolved.record.kind,
+            outcome: resolved.record.outcome,
+          },
+        }
+      : option.resolved
+        ? { resolved: option.resolved }
+        : {}),
   };
   drawCard(next, nextMeta);
   Object.assign(s, next);
   Object.assign(meta, nextMeta);
   return { before, after: macroStats(s), outcome: s.story.outcome, unlocked };
 }
+// Preparation and Hold steps are bounded transactions on the current Moment. They
+// commit their own costs on a clone and persist like a choice, but never advance time,
+// draw a Moment, settle a year or consume any RNG stream.
+function momentTransaction(s, expectedId, run) {
+  if (!s.alive || expectedId !== s.story.current)
+    return { error: "Esta decisión ya cambió." };
+  const event = currentCard(s);
+  if (!event?.actions) return { error: "No existe esa decisión." };
+  const next = structuredClone(s);
+  const error = run(next, event, now(next));
+  if (error) return { error };
+  Object.assign(s, next);
+  return {};
+}
+export const prepare = (s, prepId, expectedId = s.story.current) =>
+  momentTransaction(s, expectedId, (n, e, at) =>
+    prepareMoment(n, e, prepId, at),
+  );
+export const startHold = (s, actionId, expectedId = s.story.current) =>
+  momentTransaction(s, expectedId, (n, e, at) => beginHold(n, e, actionId, at));
+export const holdStep = (s, expectedStep, expectedId = s.story.current) =>
+  momentTransaction(s, expectedId, (n, e) => stepHold(n, e, expectedStep));
+// Releasing resolves the held action through the ordinary choice transaction.
+export const release = (s, meta, expectedId = s.story.current) =>
+  s.actions?.pending?.hold && s.actions.pending.moment === s.story.current
+    ? choose(s, meta, "action", expectedId, {
+        action: s.actions.pending.hold.action,
+      })
+    : { error: "No estás sosteniendo nada." };
 function outcomeLine(effects, npc) {
   if (effects.health >= 7) return "Tu cuerpo agradece la pausa.";
   if (effects.stress >= 7) return "La decisión sigue contigo al volver a casa.";

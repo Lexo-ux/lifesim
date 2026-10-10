@@ -46,7 +46,8 @@ const values = {
   rarity: RARITIES.map((r) => r.id),
   rank: RANKS.map((r) => r.id),
 };
-export function requirementErrors(r, byId, depth = 0) {
+// `leaf` lets a single owner (Task 15 actions) admit its own finite leaves.
+export function requirementErrors(r, byId, depth = 0, leaf = null) {
   if (!record(r) || depth > 6) return ["malformed/deep requirement"];
   const keys = Object.keys(r);
   for (const op of ["all", "any", "not"])
@@ -58,7 +59,7 @@ export function requirementErrors(r, byId, depth = 0) {
         return ["malformed logical requirement"];
       const children = op === "not" ? [r.not] : r[op];
       const errors = children.flatMap((x) =>
-        requirementErrors(x, byId, depth + 1),
+        requirementErrors(x, byId, depth + 1, leaf),
       );
       if (op === "all") {
         const positive = children.filter((x) => record(x) && x.type);
@@ -94,6 +95,8 @@ export function requirementErrors(r, byId, depth = 0) {
       }
       return errors;
     }
+  const own = leaf?.(r);
+  if (own) return own;
   if (r.type === "resolution-synthesis")
     return ["flow", "boundary", "vein"].includes(r.id) &&
       ["current", "recognized"].includes(r.mode) &&
