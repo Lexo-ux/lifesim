@@ -22,7 +22,7 @@ export function curiosityChoice(s, index = 0) {
   if (m.mystery || m.echo || m.field) return "left";
   return score(m.left) >= score(m.right) ? "left" : "right";
 }
-export function simulateResolution(players = 100, lives = 10) {
+export function simulateResolution(players = 100, lives = 10, first = 1) {
   const report = {
     players,
     lives: 0,
@@ -45,7 +45,7 @@ export function simulateResolution(players = 100, lives = 10) {
     invalid: 0,
     samples: [],
   };
-  for (let p = 1; p <= players; p++) {
+  for (let p = first; p < first + players; p++) {
     const meta = extendMeta(emptyMeta());
     for (let life = 0; life < lives; life++) {
       const seed = (p * 7919 + life * 104729) >>> 0;

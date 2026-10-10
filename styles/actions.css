@@ -1,0 +1,393 @@
+/* Task 15 — contextual approaches inside the Fissure card. Approaches sit at the same
+   visual weight as the two decisions (never a glowing power button); their basis is
+   written, not colour-coded. Holding uses a restrained tactile response. */
+
+/* ---------- Passive perception: a short line seen through the crack ---------- */
+.perceptions {
+  margin-top: 8px;
+  display: grid;
+  gap: 4px;
+}
+.dialogue .perception {
+  position: relative;
+  padding-left: 12px;
+  font: italic 13.5px/1.4 var(--font-story);
+  text-wrap: wrap;
+  color: color-mix(
+    in srgb,
+    var(--k-ink, var(--text-on-paper)) 82%,
+    transparent
+  );
+}
+.dialogue .perception:before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 3px;
+  bottom: 3px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--k1), var(--k2));
+  clip-path: polygon(0 0, 100% 18%, 30% 42%, 100% 66%, 0 100%);
+}
+.perception-mark {
+  font: 600 9px/1 var(--font-ui);
+  font-style: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: color-mix(
+    in srgb,
+    var(--k-ink, var(--text-on-paper)) 70%,
+    transparent
+  );
+}
+
+/* ---------- Approaches: one recommended, others discoverable ---------- */
+.approaches {
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+.approach-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 6px;
+}
+.approach-row.tools-only {
+  grid-template-columns: auto auto;
+  justify-content: end;
+}
+.approach,
+.prep-option,
+.approach-toggle {
+  position: relative;
+  isolation: isolate;
+  min-height: 52px;
+  border: 1px solid var(--obsidian-rim);
+  border-radius: var(--radius-control);
+  background: linear-gradient(165deg, #171926, #0a0b12);
+  color: var(--text-primary);
+  text-align: left;
+  transition:
+    background var(--motion-fast),
+    border-color var(--motion-fast);
+}
+.approach,
+.prep-option {
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  padding: 8px 14px 8px 16px;
+}
+/* A thin seam of the card's own light marks an approach as yours. */
+.approach:before,
+.prep-option:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--k1), var(--k2));
+  opacity: 0.7;
+}
+.approach[data-kind="class"]:before {
+  background: linear-gradient(180deg, var(--k-era), var(--k3), var(--k1));
+  width: 3px;
+}
+.approach[data-kind="social"]:before {
+  opacity: 0.45;
+}
+.prep-option:before {
+  background: repeating-linear-gradient(
+    180deg,
+    var(--k1) 0 4px,
+    transparent 4px 7px
+  );
+}
+.approach-verb {
+  font: 500 13px/1.25 var(--font-ui);
+}
+.approach-source {
+  font: 600 9.5px/1.2 var(--font-ui);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.approach:hover,
+.prep-option:hover:not(:disabled),
+.approach-toggle:hover {
+  background: linear-gradient(165deg, #22253a, #10111a);
+  border-color: var(--border-strong);
+}
+.approach-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 52px;
+  padding: 0 12px;
+  font: 600 10px/1.1 var(--font-ui);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.approach-toggle .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--k1);
+}
+.approach-toggle[aria-expanded="true"] {
+  border-color: var(--k1);
+  color: var(--text-primary);
+}
+.approach-panel {
+  display: grid;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 8px;
+  border: 1px solid var(--night-line);
+  background: #0b0c14e6;
+}
+.prep-note,
+.prep-results p {
+  font: italic 12.5px/1.4 var(--font-ceremony);
+  color: var(--text-secondary);
+}
+.prep-done {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 8px;
+  font: 13px/1.3 var(--font-ui);
+  color: var(--text-primary);
+}
+.prep-done .icon {
+  width: 15px;
+  height: 15px;
+  color: var(--k1);
+}
+.prep-option:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.prep-results {
+  border-top: 1px solid #ffffff1a;
+  padding-top: 6px;
+}
+
+/* ---------- Hold / Release: the card bears weight ---------- */
+.playing .narrative-card[data-holding] {
+  --hold: 0;
+  /* A long press must hold, not scroll, select or open a context menu. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  transform: translateY(calc(var(--hold) * 4px))
+    scale(calc(1 - var(--hold) * 0.012));
+  transition: transform var(--motion-standard);
+}
+.playing .narrative-card[data-holding].pressing {
+  transform: translateY(calc(2px + var(--hold) * 5px))
+    scale(calc(0.994 - var(--hold) * 0.012));
+}
+.hold-strain {
+  position: absolute;
+  z-index: 2;
+  left: 6%;
+  right: 6%;
+  top: 56%;
+  height: 4px;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--k1), #fff, var(--k2));
+  clip-path: polygon(
+    0 60%,
+    14% 20%,
+    27% 80%,
+    41% 30%,
+    55% 90%,
+    68% 10%,
+    82% 70%,
+    100% 40%,
+    100% 60%,
+    82% 100%,
+    68% 40%,
+    55% 100%,
+    41% 60%,
+    27% 100%,
+    14% 50%,
+    0 90%
+  );
+  opacity: calc(0.3 + var(--hold, 0) * 0.7);
+  filter: drop-shadow(0 0 calc(4px + var(--hold, 0) * 8px) var(--k1));
+  transition: opacity var(--motion-standard);
+}
+/* Past the limit a second crack opens: a change of shape, not only of colour. */
+.narrative-card[data-hold-phase="over"] .hold-strain:after {
+  content: "";
+  position: absolute;
+  inset: -14px 18% auto 30%;
+  height: 3px;
+  background: inherit;
+  clip-path: inherit;
+  transform: rotate(-4deg);
+}
+.hold-controls {
+  flex-shrink: 0;
+  display: grid;
+  gap: 8px;
+}
+.hold-title {
+  display: grid;
+  gap: 2px;
+  margin-top: 4px;
+}
+.hold-meter {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 6px;
+  height: 10px;
+}
+.hold-notch {
+  position: relative;
+  border: 1px solid var(--obsidian-rim);
+  background: #0c0d16;
+  clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%);
+}
+.hold-notch.held {
+  background: linear-gradient(90deg, var(--k1), var(--k3));
+  border-color: transparent;
+}
+/* The safe point is marked by a notch shape, so it is legible without colour. */
+.hold-notch.safe {
+  clip-path: polygon(6% 0, 100% 0, 94% 100%, 50% 70%, 0 100%);
+}
+.hold-status {
+  min-height: 2.8em;
+  font: italic 14px/1.4 var(--font-ceremony);
+  color: var(--text-primary);
+}
+.hold-cue {
+  font-style: normal;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--k1) 70%, #fff);
+}
+.hold-buttons {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 10px;
+}
+.hold-buttons .decision {
+  padding: 10px 14px;
+  touch-action: none;
+}
+.hold-buttons .decision .icon {
+  width: 17px;
+  height: 17px;
+}
+.hold-step:disabled {
+  opacity: 0.5;
+}
+.hold-help {
+  font: 11.5px/1.35 var(--font-ui);
+  color: var(--text-secondary);
+}
+
+/* ---------- Immediate response: how the approach went, in words and a mark ---------- */
+.action-outcome {
+  font: 600 10px/1.4 var(--font-ui);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.action-outcome b {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-primary);
+}
+.outcome-mark {
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg);
+  border: 1.5px solid var(--k1);
+}
+[data-outcome="full"] .outcome-mark {
+  background: var(--k1);
+}
+[data-outcome="partial"] .outcome-mark {
+  background: linear-gradient(135deg, var(--k1) 50%, transparent 50%);
+}
+[data-outcome="costly"] .outcome-mark {
+  background: linear-gradient(
+    135deg,
+    transparent 44%,
+    var(--k1) 44% 56%,
+    transparent 56%
+  );
+}
+
+.toggle-short {
+  display: none;
+}
+@media (max-width: 400px) {
+  .toggle-long {
+    display: none;
+  }
+  .toggle-short {
+    display: block;
+    font-size: 8.5px;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  .approach-toggle {
+    flex-direction: column;
+    gap: 3px;
+    padding: 0 3px;
+    width: 62px;
+  }
+  .approach {
+    padding: 7px 10px 7px 13px;
+  }
+  .approach-verb {
+    font-size: 12.5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .playing .narrative-card[data-holding],
+  .playing .narrative-card[data-holding].pressing,
+  .hold-strain {
+    transition: none;
+    transform: none;
+  }
+}
+@media (forced-colors: active) {
+  .approach,
+  .prep-option,
+  .approach-toggle,
+  .approach-panel,
+  .hold-notch {
+    border: 1px solid ButtonText;
+    background: ButtonFace;
+    forced-color-adjust: none;
+    color: ButtonText;
+  }
+  .hold-notch.held {
+    background: Highlight;
+  }
+  .approach:before,
+  .prep-option:before,
+  .perception:before,
+  .hold-strain {
+    display: none;
+  }
+  .outcome-mark {
+    border-color: CanvasText;
+  }
+  [data-outcome] .outcome-mark {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+}

@@ -23,6 +23,11 @@ import {
 } from "../content/catalog.js";
 
 import { validateResolution } from "./validate-resolution.js";
+import {
+  catalogErrors,
+  momentActionErrors,
+} from "../src/narrative/action-schema.js";
+import { FIRST_USE } from "../content/actions/catalog.js";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const record = (v) => !!v && typeof v === "object" && !Array.isArray(v);
 const text = (v) => typeof v === "string" && v.trim().length > 0;
@@ -150,6 +155,7 @@ export function validateContent({
   for (const m of moments) {
     for (const error of legacyContentErrors(m)) report(m.id, error);
     for (const error of opportunityErrors(m, byId)) report(m.id, error);
+    for (const error of momentActionErrors(m, byId)) report(m.id, error);
     if (!text(m.id) || !/^[a-z][a-z0-9_]*$/.test(m.id))
       report(m.id, "invalid Moment ID");
     if (ids.has(m.id)) report(m.id, "duplicate Moment ID");
@@ -226,7 +232,12 @@ export function validateContent({
     }
   }
   for (const m of moments)
-    if (m.queued && !linked.has(m.id))
+    // First-use scenes are queued by the action system after an Awakening evaluation.
+    if (
+      m.queued &&
+      !linked.has(m.id) &&
+      !Object.values(FIRST_USE).includes(m.id)
+    )
       report(m.id, "queued Moment has no incoming follow-up");
   // These finite, once-only chains must terminate. Repeatable families use cooldowns instead.
   const visit = (id, stack = new Set()) => {
@@ -250,6 +261,7 @@ export function validateContent({
     ...validateFieldContent(undefined, moments),
     ...validateMysteries(moments),
     ...validateResolution(moments),
+    ...catalogErrors(byId),
   ];
 }
 if (

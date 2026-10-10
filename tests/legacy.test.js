@@ -452,8 +452,9 @@ test("long player histories retain bounded summaries/provenance without duplicat
   assert.ok(JSON.stringify(d.meta).length < 15000);
 });
 test("career evidence survives changing profession after two annual settlements within eighteen months", () => {
+  // Input seed rediscovered for the Task 15 catalog (4 before): the policy is unchanged.
   const meta = extendMeta(emptyMeta()),
-    state = startLife({ name: "Alex" }, meta, 4);
+    state = startLife({ name: "Alex" }, meta, 6);
   let choices = 0,
     changed = false;
   while (state.alive && choices++ < 230) {

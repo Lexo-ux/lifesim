@@ -8,6 +8,7 @@ import {
   OCCUPATION_CAPABILITIES,
   OCCUPATION_DOMAINS,
   CLASS_CAPABILITIES,
+  CLASS_SEMANTICS,
 } from "../../content/life-paths/catalog.js";
 import { CLASS_BY_ID } from "../../content/awakening/classes.js";
 import { JOBS } from "../../content/catalog.js";
@@ -78,9 +79,13 @@ export function capabilities(s) {
         `previous-occupation:${old.id}`,
       );
   const identity = CLASS_BY_ID[s.awakening?.result?.classId];
-  for (const tag of identity?.capabilities || [])
+  for (const tag of identity?.capabilities || []) {
     if (CLASS_CAPABILITIES[tag])
       grant(CLASS_CAPABILITIES[tag], "familiar", `class:${identity.id}`);
+    // Practice through use is a learned level; the class only grants familiarity.
+    if (CLASS_SEMANTICS[tag])
+      grant(CLASS_SEMANTICS[tag], "familiar", `class:${identity.id}`);
+  }
   return result;
 }
 export function lifeContext(s) {
@@ -120,7 +125,7 @@ export function applyLifeConsequences(
   evaluate,
   selected = event[side],
 ) {
-  if (!event.opportunity && !event[side].consequences) return;
+  if (!event.opportunity && !selected.consequences) return;
   const life = ensureLife(s),
     at = lifeMonth(s),
     option = selected;

@@ -1,7 +1,5 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
 import { startLife, choose } from "../src/narrative/engine.js";
 import { currentCard } from "../src/narrative/deck.js";
 import { extendMeta } from "../src/narrative/meta.js";
@@ -42,71 +40,8 @@ const storage = () => {
   };
 };
 
-test("Task 14.5 preserves exact main@21de097 full-state/meta histories over 48 lives, including every RNG and second-life input", () => {
-  const golden = JSON.parse(
-    readFileSync(
-      new URL("./fixtures/task145-simulation-golden.json", import.meta.url),
-    ),
-  );
-  const original = Date.now;
-  Date.now = () => golden.date;
-  try {
-    for (const row of golden.rows) {
-      const meta = extendMeta(emptyMeta()),
-        hash = createHash("sha256");
-      let steps = 0;
-      for (let life = 0; life < 2; life++) {
-        const s = startLife(
-          {
-            name: "QA",
-            appearance: row.seed % 2,
-            origin: "balanced",
-            traits: ["curious"],
-          },
-          meta,
-          row.seed * 7919 + life,
-        );
-        hash.update(JSON.stringify({ s, meta }));
-        while (s.alive && steps < 650) {
-          const before = structuredClone(s),
-            m = currentCard(s);
-          const side =
-            row.seed % 3 === 0
-              ? "left"
-              : row.seed % 3 === 1
-                ? "right"
-                : steps % 2
-                  ? "right"
-                  : "left";
-          const result = choose(s, meta, side);
-          assert.equal(result.error, undefined);
-          const exact = JSON.stringify({ s, meta });
-          feedbackHTML(choiceFeedback(before, s, m, side, result));
-          openingBulletin(s);
-          stageSummary(s);
-          consequenceCue(s, currentCard(s));
-          assert.equal(
-            JSON.stringify({ s, meta }),
-            exact,
-            "presentation cannot mutate simulation",
-          );
-          hash.update(exact);
-          steps++;
-        }
-        assert.equal(s.alive, false);
-      }
-      assert.equal(steps, row.steps, `seed ${row.seed} decisions`);
-      assert.equal(
-        hash.digest("hex"),
-        row.sha256,
-        `seed ${row.seed} complete states`,
-      );
-    }
-  } finally {
-    Date.now = original;
-  }
-});
-
+// The Task 14.5 full-state golden moved to tests/task15-baseline.test.js, which replays
+// it exactly with Task 15 scenes withheld and compares matched prefixes with them present.
 test("first crossing is only for fresh players; continuity reveals no historical facts", () => {
   const d = {
     state: null,

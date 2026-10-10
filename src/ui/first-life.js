@@ -7,6 +7,7 @@ import { stage } from "../engine/state.js";
 import { reportAvailable, reportText } from "../systems/world.js";
 import { socialChoice } from "../systems/social.js";
 import { esc, button } from "./helpers.js";
+import { outcomeHTML } from "./actions.js";
 
 export const firstCrossing = (data) =>
   !data.state &&
@@ -154,9 +155,12 @@ export function choiceFeedback(before, after, moment, side, result) {
     authored = RESPONSES[moment.id]?.[side === "left" ? 0 : 1];
   const special =
     moment.system || moment.resolution || moment.field || moment.mystery;
-  const text = special
-    ? result.outcome.text
-    : authored || option.result || `Elegiste «${option.label}».`;
+  // Task 15: an approach or a factor-resolved choice reports its own resolved text.
+  const acted = !!(result.outcome.action || result.outcome.resolved);
+  const text =
+    special || acted
+      ? result.outcome.text
+      : authored || option.result || `Elegiste «${option.label}».`;
   const changed = stage(before).id !== stage(after).id;
   const milestone =
     !special &&
@@ -176,15 +180,16 @@ export function choiceFeedback(before, after, moment, side, result) {
       : "";
   return {
     text,
-    generic: !special && !authored && !option.result,
+    generic: !special && !acted && !authored && !option.result,
     milestone: milestone || "",
     stage: changed ? stage(after).name : "",
     observations: changed
       ? stageSummary(after, [text, milestone || "", aftermath])
       : [],
     aftermath,
+    ...(acted ? { outcome: result.outcome } : {}),
   };
 }
 export function feedbackHTML(f) {
-  return `<p class="choice-response">${esc(f.text)}</p>${f.milestone ? `<p class="progress-response">${esc(readableHistory(f.milestone))}</p>` : ""}${f.stage ? `<div class="stage-recap"><strong>Una nueva etapa · ${esc(f.stage)}</strong>${f.observations.map((t) => `<p>${esc(t)}</p>`).join("")}</div>` : ""}${f.aftermath ? `<p class="progress-response">${esc(f.aftermath)}</p>` : ""}`;
+  return `${outcomeHTML(f.outcome)}<p class="choice-response">${esc(f.text)}</p>${f.milestone ? `<p class="progress-response">${esc(readableHistory(f.milestone))}</p>` : ""}${f.stage ? `<div class="stage-recap"><strong>Una nueva etapa · ${esc(f.stage)}</strong>${f.observations.map((t) => `<p>${esc(t)}</p>`).join("")}</div>` : ""}${f.aftermath ? `<p class="progress-response">${esc(f.aftermath)}</p>` : ""}`;
 }

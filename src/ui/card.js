@@ -23,6 +23,8 @@ import {
   fractureMarkup,
   seamMarkup,
 } from "./fissure.js";
+import { actionView } from "../systems/actions.js";
+import { perceptionHTML, approachHTML, holdHTML } from "./actions.js";
 export function portraitFor(s, id) {
   if (id === "self") return playerPortrait(s);
   if (SOCIAL_NPCS[id]) return socialPortrait(s, id) || playerPortrait(s);
@@ -42,7 +44,7 @@ export function portraitFor(s, id) {
   const variant = `${id}${ages[id] ? "-" + ages[id] : ""}`;
   return ART.portraits[variant] || `assets/npcs/${variant}.webp`;
 }
-export function gameScreen(data, moment = currentCard(data.state)) {
+export function gameScreen(data, moment = currentCard(data.state), ui = {}) {
   const s = data.state,
     e = moment,
     actor = e.closureText && !npcAvailable(s, e.npc) ? "self" : e.npc,
@@ -72,17 +74,19 @@ export function gameScreen(data, moment = currentCard(data.state)) {
   const environment = bg === "street" ? "neighborhood" : bg;
   const portrait = portraitFor(s, actor);
   const illustrated = Object.values(ART.portraits).includes(portrait);
+  const view = actionView(s, e),
+    hold = view.hold;
   const light = cardLight(s, e, actor),
     sign = STATE_SIGN[light.state];
   // Custom-property URLs otherwise resolve relative to the consuming stylesheet.
   const scene = new URL(sceneFor(environment), document.baseURI).href;
   return `<section class="play-screen" aria-label="Tu vida" data-state="${light.state}" data-kind="${light.kind}" style="${lightStyle(light)}"><header class="game-top"><button class="wordmark" data-action="home" aria-label="Volver al inicio">LIFE<span>SIM</span><i>III</i></button><div class="top-tools">${button(icon(data.settings.sound ? "volume" : "mute"), "sound", "", "icon-button")}${button(icon("settings"), "settings", "", "icon-button")}</div></header>${indicators(s)}
- ${bulletinHTML(s, data.settings)}<div class="card-stage"><div class="deck-shadow" aria-hidden="true"></div>${light.state === "mystery" ? '<span class="card-loose" aria-hidden="true"></span>' : ""}<article class="narrative-card ${e.pool === "meta" ? "strange" : ""}" tabindex="0" aria-label="Tarjeta de ${esc(npc.name)}${sign ? `. ${sign}` : ""}" aria-describedby="card-dialogue" data-card="${e.id}" data-sequence="${e.system || "ordinary"}" data-kind="${light.kind}" data-state="${light.state}">
+ ${bulletinHTML(s, data.settings)}<div class="card-stage"><div class="deck-shadow" aria-hidden="true"></div>${light.state === "mystery" ? '<span class="card-loose" aria-hidden="true"></span>' : ""}<article class="narrative-card ${e.pool === "meta" ? "strange" : ""}" tabindex="0" aria-label="Tarjeta de ${esc(npc.name)}${sign ? `. ${sign}` : ""}" aria-describedby="card-dialogue" data-card="${e.id}" data-sequence="${e.system || "ordinary"}" data-kind="${light.kind}" data-state="${light.state}"${hold ? ` data-holding="true" data-hold-phase="${hold.phase}" style="--hold:${(hold.step / hold.goal).toFixed(2)}"` : ""}>
  <div class="card-head" aria-hidden="true"><span class="card-corner">${icon(KIND_SIGIL[light.kind])}</span><span class="card-age">${ageNumeral(s.age)}</span><span class="card-sign">${sign}${light.core ? '<b class="card-core"></b>' : ""}</span></div>
  <div class="portrait-window" style="--scene:url('${scene}')"><span class="scene-depth" aria-hidden="true"></span><img class="npc-portrait ${actor === "self" ? "self-portrait veiled" : SOCIAL_NPCS[actor] ? "veiled social-character" : ""} ${illustrated ? "illustrated" : ""}" src="${portrait}" alt="${esc(npc.name)}" draggable="false" fetchpriority="high">${fissureMarkup(light.state, e.id)}${fractureMarkup()}${awakeningMark(s, e)}<div class="speaker"><p>${esc(npc.role)}</p><h1 id="page-title">${esc(npc.name)}</h1></div></div>
- <div class="dialogue">${seamMarkup(light.state)}${consequenceCue(s, e) || newsContext(s, e) ? `<small class="consequence-cue">${esc(consequenceCue(s, e) || newsContext(s, e))}</small>` : ""}<p id="card-dialogue">${esc(cardText(s, data.meta, e))}</p></div><span class="material-light" aria-hidden="true"></span><div class="choice-preview preview-left" aria-hidden="true">${esc(left.label)}</div><div class="choice-preview preview-right" aria-hidden="true">${esc(right.label)}</div></article></div>
+ <div class="dialogue">${seamMarkup(light.state)}${consequenceCue(s, e) || newsContext(s, e) ? `<small class="consequence-cue">${esc(consequenceCue(s, e) || newsContext(s, e))}</small>` : ""}<p id="card-dialogue">${esc(cardText(s, data.meta, e))}</p>${perceptionHTML(view)}</div>${hold ? `<span class="hold-strain" aria-hidden="true"></span>` : ""}<span class="material-light" aria-hidden="true"></span><div class="choice-preview preview-left" aria-hidden="true">${esc(left.label)}</div><div class="choice-preview preview-right" aria-hidden="true">${esc(right.label)}</div></article></div>
  <aside id="moment-flash" class="moment-flash" aria-label="Tu última decisión" hidden></aside>
- <div class="decision-controls">${button(`${icon("arrow")}<span>${esc(left.label)}</span>`, "choose", "left", "decision left")}${button(`<span>${esc(right.label)}</span>${icon("arrow")}`, "choose", "right", "decision right")}</div>
+ ${hold ? holdHTML(view) : `<div class="decision-controls">${button(`${icon("arrow")}<span>${esc(left.label)}</span>`, "choose", "left", "decision left")}${button(`<span>${esc(right.label)}</span>${icon("arrow")}`, "choose", "right", "decision right")}</div>${approachHTML(view, ui.panel)}`}
  <div class="moment"><span>${s.age} ${s.age === 1 ? "año" : "años"}${s.story.month ? ` · ${s.story.month} meses` : ""}</span><span class="chapter">${esc(stage(s).name)}</span></div>
  <div class="onboarding ${data.settings.onboarded ? "learned" : ""}" aria-hidden="${data.settings.onboarded}">${data.settings.onboarded ? "" : "← Desliza la tarjeta o elige una respuesta →"}</div>
  <nav class="quiet-nav" aria-label="Tu historia">${button("Perfil", "profile", "", "nav-link")}${button("Historia", "history", "", "nav-link")}${button("Legado", "legacy", "", "nav-link")}</nav></section>`;
