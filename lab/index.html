@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="noindex" />
+    <title>Laboratorio de dirección artística</title>
+    <link rel="stylesheet" href="../assets/fonts/fonts.css" />
+    <style>
+      /* Página de comparación. No forma parte del juego ni se enlaza desde él. */
+      :root {
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 32px 16px 48px;
+        background: radial-gradient(ellipse at 50% 0%, #15162a, #05060c 60%);
+        color: #ece8f2;
+        font:
+          15px/1.55 "DM Sans",
+          system-ui,
+          sans-serif;
+      }
+      header,
+      .grid,
+      footer {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font:
+          250 clamp(28px, 5vw, 44px) / 1.1 Outfit,
+          sans-serif;
+        letter-spacing: 0.18em;
+      }
+      header p {
+        max-width: 760px;
+        color: #b5b1c4;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 28px;
+        margin-top: 28px;
+      }
+      article {
+        padding: 18px;
+        border: 1px solid #2a2c40;
+        border-radius: 8px;
+        background: #0b0c16cc;
+      }
+      article.chosen {
+        border-color: #ffd9a8;
+        box-shadow:
+          0 0 0 1px #ffd9a855,
+          0 0 40px #ff6ec722;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 10px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: #ffd9a8;
+        margin-bottom: 6px;
+      }
+      h2 {
+        margin: 0 0 10px;
+        font:
+          400 26px/1.1 "Iowan Old Style",
+          "Palatino Linotype",
+          Georgia,
+          serif;
+      }
+      .frame {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 390 / 844;
+        max-height: 620px;
+        margin: 0 auto 14px;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #2f3247;
+        background: #000;
+      }
+      .frame iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+      dl {
+        margin: 0;
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 4px 12px;
+        font-size: 13px;
+      }
+      dt {
+        color: #8f8aa3;
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        padding-top: 3px;
+      }
+      dd {
+        margin: 0;
+      }
+      a {
+        color: #9fdcff;
+      }
+      .open {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin-top: 12px;
+      }
+      footer {
+        margin-top: 32px;
+        color: #b5b1c4;
+        font-size: 13px;
+      }
+      code {
+        color: #ffd9a8;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>LIFESIM · LABORATORIO</h1>
+      <p>
+        Tres conceptos radicalmente distintos para el Umbral y las cartas, cada
+        uno con su propia idea de luz, color, espacio e interacción. Son
+        prototipos jugables aislados: no tocan partidas, motor ni RNG. El
+        concepto A se eligió y se implementó en el juego.
+      </p>
+    </header>
+    <div class="grid">
+      <article class="chosen">
+        <span class="tag">Elegido · implementado</span>
+        <h2>A · Fisura prismática</h2>
+        <div class="frame">
+          <iframe
+            src="fisura/"
+            title="Prototipo A: Fisura"
+            loading="lazy"
+          ></iframe>
+        </div>
+        <dl>
+          <dt>Luz</dt>
+          <dd>
+            No ilumina desde fuera: es otra realidad vista por las grietas de la
+            materia.
+          </dd>
+          <dt>Color</dt>
+          <dd>
+            Prismático y contextual: cada grieta muestra un mundo con su propio
+            tono (era, clase, tipo de carta, legado).
+          </dd>
+          <dt>Espacio</dt>
+          <dd>
+            Monolitos negros, fragmentos que flotan quietos, un portal pesado y
+            una figura diminuta.
+          </dd>
+          <dt>Interacción</dt>
+          <dd>
+            Mantener pulsado el Umbral abre el sello; la luz del portal se
+            convierte en la primera carta. Decidir parte la carta y sus
+            fragmentos se van flotando.
+          </dd>
+        </dl>
+        <a class="open" href="fisura/">Abrir a pantalla completa</a>
+      </article>
+      <article>
+        <span class="tag">Alternativa</span>
+        <h2>B · Espejo negro</h2>
+        <div class="frame">
+          <iframe
+            src="espejo/"
+            title="Prototipo B: Espejo negro"
+            loading="lazy"
+          ></iframe>
+        </div>
+        <dl>
+          <dt>Luz</dt>
+          <dd>No hay fuente: la luz solo existe reflejada en un agua negra.</dd>
+          <dt>Color</dt>
+          <dd>
+            La realidad es gris; el color vive en el reflejo, iridiscente como
+            una película de aceite.
+          </dd>
+          <dt>Espacio</dt>
+          <dd>
+            Un horizonte divide el mundo: arriba lo que es, abajo lo que podría
+            ser. El reflejo no es idéntico.
+          </dd>
+          <dt>Interacción</dt>
+          <dd>
+            Arrastrar el reflejo hacia arriba hasta que voltea y reemplaza al
+            mundo. Decidir posa la carta en el agua y se hunde.
+          </dd>
+        </dl>
+        <a class="open" href="espejo/">Abrir a pantalla completa</a>
+      </article>
+      <article>
+        <span class="tag">Alternativa</span>
+        <h2>C · Astrolabio imposible</h2>
+        <div class="frame">
+          <iframe
+            src="astrolabio/"
+            title="Prototipo C: Astrolabio"
+            loading="lazy"
+          ></iframe>
+        </div>
+        <dl>
+          <dt>Luz</dt>
+          <dd>Estructural: líneas exactas y luminosas sobre la noche.</dd>
+          <dt>Color</dt>
+          <dd>Difracción: cada anillo es una banda distinta del espectro.</dd>
+          <dt>Espacio</dt>
+          <dd>
+            Un instrumento de anillos que se cruzan de forma imposible, flotando
+            sobre un horizonte.
+          </dd>
+          <dt>Interacción</dt>
+          <dd>
+            Girar los anillos hasta alinear sus huecos; el instrumento se pliega
+            en una línea que se despliega en la carta. Decidir encaja un dial.
+          </dd>
+        </dl>
+        <a class="open" href="astrolabio/">Abrir a pantalla completa</a>
+      </article>
+    </div>
+    <footer>
+      <p>
+        Para abrirlo en local: <code>npm start</code> y visita
+        <code>http://127.0.0.1:4173/lab/</code>. Cada prototipo tiene un panel
+        «Laboratorio» para cambiar el estado de la carta (cotidiano, crisis,
+        misterio, eco, despertar, resolución) y, en A, el contexto de la luz y
+        el legado. La justificación de la elección está en
+        <code>docs/ART_DIRECTION.md</code>.
+      </p>
+    </footer>
+  </body>
+</html>

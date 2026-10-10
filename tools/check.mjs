@@ -73,7 +73,8 @@ async function checkStyles(file) {
   visitedStyles.add(file);
   const css = await fs.readFile(file, "utf8");
   for (const match of css.matchAll(/url\(['"]?([^)'" ]+)/g)) {
-    if (/^(?:data:|https?:)/.test(match[1])) continue;
+    // Fragment-only URLs point at SVG paint servers in the same document.
+    if (/^(?:data:|https?:|#)/.test(match[1])) continue;
     const target = path.resolve(path.dirname(file), match[1]);
     await fs.access(target);
     if (target.endsWith(".css")) await checkStyles(target);

@@ -1,6 +1,23 @@
-# Motion — Tasks 03–05.5
+# Motion — Tasks 03–05.5 and Fissure
 
 Motion communicates contact, choice, consequence or narrative emphasis. Task 04 owns the bounded title sequence below. Task 05.5 adds a separate, capped gameplay atmosphere; [GAME_FEEL](GAME_FEEL.md) owns that semantic FX contract. Gameplay transactions resolve and save before visual exit; movement never advances time or consumes randomness.
+
+## Fissure motion (current authority)
+
+Entering a life and choosing are events of the world, never slides. Every sequence below runs after its transaction has already resolved and saved; none advances time or consumes randomness. Tokens live in `styles/tokens.css`.
+
+- **Held charge (title).** `threshold.js` keeps one `requestAnimationFrame` loop only while the charge changes: 1150ms to open while held (`HOLD_MS`), 520ms to heal when released (`HEAL_MS`). Each frame writes one custom property (`--charge`); CSS turns it into fracture growth (`stroke-dashoffset` per slice), light, shard pull and seal parting. A press shorter than 320ms below 30% charge only adds `.hinting` for 1.6s. Hidden documents, dialogs, blur, pointer cancellation and unmount stop the loop and the optional tone. A completed charge calls the owner's `onOpen`, which performs the visible button's transaction; if nothing crosses within 600ms the seal heals.
+- **Crossing (`--motion-threshold-crossing`, 1800ms, linear).** Controls and title recede; the seal halves part; the figure walks into the light (`.threshold-figure`, scaled from its feet); shards rise and fade; the scene pushes 1.5× toward the opening's centre; the night closes while a shaped light (`.veil-light`, `clip-path: inset(... round arch)`) grows from the opening. Skip/Escape, reduced motion, failure or a hidden document finish immediately without a veil.
+- **Handoff (`--motion-threshold-handoff`, 1100ms).** `revealLife()` reads the shaped light's last rectangle, morphs it into the first card's rectangle, fades the night, then lets the light cool into the card (`.emerging` overlay on the scene window). Awaited by the existing transaction lock, exactly as the previous 420ms ivory release.
+- **Card arrival (`--motion-emerge`, 520ms).** `.card-stage:after` animates a registered `@property --seam`: one vertical line splits into two edges travelling outward while the slab fades in (`fissure-arrive`). Awakening incident beats and the handoff disable it.
+- **Pull.** Unchanged contract (`--x`, `--rotation`, `--strength`, `--lean`, `data-direction`). `--strength` now also reveals the pull fracture through `clip-path: inset()` — paint only, zero layouts per move (measured in the presentation suite).
+- **Choice (`--motion-shatter`, 700ms, `--ease-shatter`).** `leaveCard()` clones the card five times (ids, tab stops and names removed; inert, `aria-hidden`), clips each to a shard polygon that follows the pull fracture, hides the original and drifts the shards up and away on individual headings while a blurred breach of the card's light flashes between them. Shards rest at opacity 0, so a finished or cancelled effect can never return them; the next render discards the layer.
+- **Idle title.** Two compositor groups only — the portal light's breath (8500ms) and the separate shard/mote SVG drift (12000ms) — plus the 6800ms glimpse rotation inside the opening. The static environment SVG repaints only while the charge changes.
+- **Reduced motion.** No loop, no drift, no crossing camera, no break or seam: the title is a complete still composition; holding still charges (the fractures fill in) and opens; crossing and choices cut directly to the next stable screen. Drag does not move the card but still shows the fracture and the written preview.
+
+- **Measured (headless Edge, 390×844).** Drag: 0 layouts per pointer move; frame p95 ≈10ms unthrottled, equal to the Arcana build. Under 4× CPU throttling both builds show p95 30–40ms and Fissure spends ~15–20% more time recalculating style during a drag (more SVG nodes per card inherit `--strength`). Production drag with the atmosphere active (presentation suite): p95 10.2ms, paint 36ms.
+
+The sections below are the Task 03–05.5 history; their pointer, keyboard, cleanup and budget rules still apply. Their exit/entrance timings (280ms exit, `arcana-deal`, ivory veil) are replaced by this section.
 
 ## Technology decision
 
@@ -29,7 +46,7 @@ Task 06 keeps the protagonist perceptually in place across the bounded Awakening
 - Intent ramps to full opacity at threshold and includes direction plus action phrase. No consequence probabilities or stat deltas.
 - Vertical intent, pointer cancellation or capture loss returns the card. Below threshold returns in 280ms with no choice. Successful commit keeps its current pose and exits; implicit capture loss cannot snap it back.
 - Arrow keys and visible buttons resolve the same choice once. Held-key repeats are ignored. Modal controls retain keyboard ownership. AbortController removes all gesture listeners on remount, and pointer capture is released.
-- Exit 280ms and entrance 420ms separate visual phases; the Arcana redesign deals the new card (`arcana-deal`: fade, 18px rise, −1.4° → 0°, 0.975 → 1 scale on individual transform properties, so drag transforms never compete). Awakening incident beats keep `animation: none`. Indicators use `scaleX`, not width, and display direction arrows.
+- _Superseded by Fissure (break 700ms, seam 520ms)._ Exit 280ms and entrance 420ms separated visual phases; the Arcana redesign dealt the new card (`arcana-deal`: fade, 18px rise, −1.4° → 0°, 0.975 → 1 scale on individual transform properties, so drag transforms never compete). Awakening incident beats keep `animation: none`. Indicators use `scaleX`, not width, and display direction arrows.
 - Native Web Animations effects cancel after completion, releasing fill styles/targets; rest state lives in CSS. A new outcome cancels the preceding caption timer/effect, and navigation clears it.
 
 ## Reduced motion
@@ -44,7 +61,7 @@ Card interactions use finite CSS/WAAPI motion and no per-move geometry reads. Ta
 
 Task 05.5 supplies shallow parallax, a capped atmosphere owner and an S/SS/SSS presentation harness. See GAME_FEEL.md for lifecycle, fallback, cancellation and measurements. Camera-like zoom/light/character entrances must clean up on navigation and reduce-motion changes. S can quiet the interface; SS can briefly misalign it; SSS may suspend ordinary composition. All restore a readable screen, support skipping, avoid flash and retain mute. No rank logic or new narrative event is implemented by these specifications. Task 04 implements the title portal and crossing below.
 
-## Task 04 — deliberate title-only ambient exception
+## Task 04 — deliberate title-only ambient exception (history; see Fissure motion above)
 
 Native CSS/WAAPI remains sufficient; no GSAP. threshold.js owns reveal, idle, preparing, crossing, complete and hidden states, its AbortController, effects, one timer and audio cancellation. This describes Task 04 only; gameplay atmosphere is owned separately by Task 05.5.
 

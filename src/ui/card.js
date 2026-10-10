@@ -3,7 +3,6 @@ import { lifeContext } from "../systems/life-paths.js";
 import { NPCS } from "../../content/npcs/index.js";
 import { currentCard, cardText } from "../narrative/deck.js";
 import { speaker } from "../narrative/npc.js";
-import { stage } from "../engine/state.js";
 import { esc, icon, button, playerPortrait } from "./helpers.js";
 import { indicators } from "./indicators.js";
 import { ART, sceneFor } from "./art.js";
@@ -13,7 +12,17 @@ import { socialPortrait, socialSpeaker } from "./social.js";
 import { socialChoice, npcAvailable } from "../systems/social.js";
 import { SOCIAL_NPCS } from "../../content/social/catalog.js";
 import { bulletinHTML, consequenceCue, newsContext } from "./first-life.js";
-import { momentKind, KIND_SIGIL, arcanaNumeral } from "./arcana.js";
+import { stage } from "../engine/state.js";
+import {
+  cardLight,
+  lightStyle,
+  STATE_SIGN,
+  KIND_SIGIL,
+  ageNumeral,
+  fissureMarkup,
+  fractureMarkup,
+  seamMarkup,
+} from "./fissure.js";
 export function portraitFor(s, id) {
   if (id === "self") return playerPortrait(s);
   if (SOCIAL_NPCS[id]) return socialPortrait(s, id) || playerPortrait(s);
@@ -63,16 +72,15 @@ export function gameScreen(data, moment = currentCard(data.state)) {
   const environment = bg === "street" ? "neighborhood" : bg;
   const portrait = portraitFor(s, actor);
   const illustrated = Object.values(ART.portraits).includes(portrait);
-  const kind = momentKind(e);
+  const light = cardLight(s, e, actor),
+    sign = STATE_SIGN[light.state];
   // Custom-property URLs otherwise resolve relative to the consuming stylesheet.
   const scene = new URL(sceneFor(environment), document.baseURI).href;
-  return `<section class="play-screen" aria-label="Tu vida"><header class="game-top"><button class="wordmark" data-action="home" aria-label="Volver al inicio">LIFE<span>SIM</span><i>III</i></button><div class="top-tools">${button(icon(data.settings.sound ? "volume" : "mute"), "sound", "", "icon-button")}${button(icon("settings"), "settings", "", "icon-button")}</div></header>${indicators(s)}
- ${bulletinHTML(s, data.settings)}<div class="card-stage"><div class="deck-shadow" aria-hidden="true"></div><article class="narrative-card ${e.pool === "meta" ? "strange" : ""}" tabindex="0" aria-label="Tarjeta de ${esc(npc.name)}" aria-describedby="card-dialogue" data-card="${e.id}" data-sequence="${e.system || "ordinary"}" data-kind="${kind}">
- <span class="arcana-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="arcana-edge" aria-hidden="true"></span>
- <div class="arcana-head" aria-hidden="true"><span class="card-corner">${icon(KIND_SIGIL[kind])}</span><span class="arcana-numeral">${arcanaNumeral(s.age)}</span><span class="arcana-stage">${icon(stage(s).icon)}</span></div>
- <div class="portrait-window" style="--scene:url('${scene}')"><span class="scene-depth" aria-hidden="true"></span><img class="npc-portrait ${actor === "self" ? "self-portrait veiled" : SOCIAL_NPCS[actor] ? "veiled social-character" : ""} ${illustrated ? "illustrated" : ""}" src="${portrait}" alt="${esc(npc.name)}" draggable="false" fetchpriority="high">${awakeningMark(s, e)}</div>
- <div class="speaker"><p>${esc(npc.role)}</p><h1 id="page-title">${esc(npc.name)}</h1></div>
- <div class="dialogue">${consequenceCue(s, e) || newsContext(s, e) ? `<small class="consequence-cue">${esc(consequenceCue(s, e) || newsContext(s, e))}</small>` : ""}<p id="card-dialogue">${esc(cardText(s, data.meta, e))}</p></div><span class="material-light" aria-hidden="true"></span><div class="choice-preview preview-left" aria-hidden="true">${esc(left.label)}</div><div class="choice-preview preview-right" aria-hidden="true">${esc(right.label)}</div></article></div>
+  return `<section class="play-screen" aria-label="Tu vida" data-state="${light.state}" data-kind="${light.kind}" style="${lightStyle(light)}"><header class="game-top"><button class="wordmark" data-action="home" aria-label="Volver al inicio">LIFE<span>SIM</span><i>III</i></button><div class="top-tools">${button(icon(data.settings.sound ? "volume" : "mute"), "sound", "", "icon-button")}${button(icon("settings"), "settings", "", "icon-button")}</div></header>${indicators(s)}
+ ${bulletinHTML(s, data.settings)}<div class="card-stage"><div class="deck-shadow" aria-hidden="true"></div>${light.state === "mystery" ? '<span class="card-loose" aria-hidden="true"></span>' : ""}<article class="narrative-card ${e.pool === "meta" ? "strange" : ""}" tabindex="0" aria-label="Tarjeta de ${esc(npc.name)}${sign ? `. ${sign}` : ""}" aria-describedby="card-dialogue" data-card="${e.id}" data-sequence="${e.system || "ordinary"}" data-kind="${light.kind}" data-state="${light.state}">
+ <div class="card-head" aria-hidden="true"><span class="card-corner">${icon(KIND_SIGIL[light.kind])}</span><span class="card-age">${ageNumeral(s.age)}</span><span class="card-sign">${sign}${light.core ? '<b class="card-core"></b>' : ""}</span></div>
+ <div class="portrait-window" style="--scene:url('${scene}')"><span class="scene-depth" aria-hidden="true"></span><img class="npc-portrait ${actor === "self" ? "self-portrait veiled" : SOCIAL_NPCS[actor] ? "veiled social-character" : ""} ${illustrated ? "illustrated" : ""}" src="${portrait}" alt="${esc(npc.name)}" draggable="false" fetchpriority="high">${fissureMarkup(light.state, e.id)}${fractureMarkup()}${awakeningMark(s, e)}<div class="speaker"><p>${esc(npc.role)}</p><h1 id="page-title">${esc(npc.name)}</h1></div></div>
+ <div class="dialogue">${seamMarkup(light.state)}${consequenceCue(s, e) || newsContext(s, e) ? `<small class="consequence-cue">${esc(consequenceCue(s, e) || newsContext(s, e))}</small>` : ""}<p id="card-dialogue">${esc(cardText(s, data.meta, e))}</p></div><span class="material-light" aria-hidden="true"></span><div class="choice-preview preview-left" aria-hidden="true">${esc(left.label)}</div><div class="choice-preview preview-right" aria-hidden="true">${esc(right.label)}</div></article></div>
  <aside id="moment-flash" class="moment-flash" aria-label="Tu última decisión" hidden></aside>
  <div class="decision-controls">${button(`${icon("arrow")}<span>${esc(left.label)}</span>`, "choose", "left", "decision left")}${button(`<span>${esc(right.label)}</span>${icon("arrow")}`, "choose", "right", "decision right")}</div>
  <div class="moment"><span>${s.age} ${s.age === 1 ? "año" : "años"}${s.story.month ? ` · ${s.story.month} meses` : ""}</span><span class="chapter">${esc(stage(s).name)}</span></div>

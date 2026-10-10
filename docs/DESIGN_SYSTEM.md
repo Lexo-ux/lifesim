@@ -1,35 +1,37 @@
-# Design system — Task 03, superseded chrome: Arcana of Lives
+# Design system — Task 03 foundation, current chrome: Fissure
 
 The runtime remains static HTML + ES modules. `style.css` imports local fonts and thirteen stylesheets using relative URLs. No preprocessor/framework or production dependency.
 
-## Arcana of Lives — current component system
+## Fissure — current component system
 
-`styles/arcana.css` (thirteenth module, loaded after game feel and Awakening) owns the gameplay, memory and dialog chrome; `styles/threshold.css` owns the title. Art direction and the rejected alternatives: [ART_DIRECTION](ART_DIRECTION.md#visual-redesign--arcana-of-lives-current-presentation-authority). Where this section conflicts with the Task 03 notes below, this section wins.
+`styles/fissure.css` (thirteenth module, loaded after game feel and Awakening; it replaced `arcana.css`) owns gameplay, memory and dialog chrome; `styles/threshold.css` owns the title; `styles/game-feel.css` keeps the semantic atmosphere contract in the same matter. Direction, rejected concepts and the superseded-rules register: [ART_DIRECTION](ART_DIRECTION.md#art-redirection--fissure-current-presentation-authority). Where this section conflicts with the Task 03 notes below, this section wins.
 
-| Role                         | Choice                                                                                     |
-| ---------------------------- | ------------------------------------------------------------------------------------------ |
-| Title, names, choices, notes | `--font-ceremony`: Iowan Old Style / Palatino Linotype / Palatino / Book Antiqua → Georgia |
-| Written Moment               | `--font-story`: Georgia, 17px/1.5 (15px/1.42 on short screens), pigment initial letter     |
-| Labels, meters, age, nav     | DM Sans 9–10px uppercase, 0.14–0.24em tracking                                             |
+| Role                            | Choice                                                                                     |
+| ------------------------------- | ------------------------------------------------------------------------------------------ |
+| Wordmark, large numerals        | `--font-mark`: local Outfit 200–300, 0.34–0.42em tracking                                  |
+| Names, notes, secondary actions | `--font-ceremony`: Iowan Old Style / Palatino Linotype / Palatino / Book Antiqua → Georgia |
+| Written Moment                  | `--font-story`: Georgia, 17px/1.5 (15px/1.42 on short screens)                             |
+| Labels, meters, age, nav        | DM Sans 9–12px uppercase, 0.14–0.32em tracking                                             |
 
-- **Title:** full-bleed doorway sized by available height (`--threshold-top/controls/note/overlap`), so every Task 04 layer keeps its percentage position. Static god-rays (screen blend), vignette, a double-hairline ornament frame with four corner flourishes, arch sigil, `LIFE`/`SIM` title and a fleuron rule. Actions rest on the lit floor: vellum plaque CTA with oxblood diamonds, italic secondary actions in one row, uppercase Legado/Ajustes. The first-crossing prologue is a small arched vellum card in the same place.
-- **Moment card:** deckled vellum (existing edge polygon) with engraved double rule and four corner flourishes; head row with material sigil, Roman age numeral (0 for the first year) and stage glyph (all `aria-hidden`); arched miniature for scene and character; a swallowtail ribbon carries role and name (`#page-title`); Georgia text with a pigment initial; fleuron at the foot. Speaker moved below the miniature but remains inside the article for the presentation owner.
-- **Materials:** `data-kind` from `momentKind()` in `src/ui/arcana.js` selects CSS custom properties only (`--k-vellum`, `--k-ink`, `--k-line`, `--k-accent`, `--k-ribbon`, `--k-glow`, `--k-art`). No per-Moment CSS and no saved field.
-- **Decision affordance:** the card edge being pulled warms in proportion to the existing `--strength`; the matching tab answers via `:has()`. Neither suggests a good or bad choice.
-- **Decisions:** two ink tabs whose outer edge points in the swipe direction. The shapes live on pseudo-elements so the focus ring is never clipped; ≥50px (58px normally) and >100px wide.
-- **Meters:** four medallions (pigment-tinted ring, original glyph) above a 2px ink track; still `scaleX`, progressbar values and ↑/↓ direction.
-- **Feedback:** the in-flow response is a dark marginal note with a brass rule; stage recap in small caps; the public bulletin is newsprint with a double rule; achievements use a vellum plaque.
-- **Night:** two faint arches stand behind the card; on wide screens the atmosphere shows the darkened title doorway instead of the legacy park.
-- **Memorial / dialogs:** arched portrait with ring, ceremonial name and fleuron; night panel with inner hairline and vellum primary buttons.
-- **Accessibility:** contrast checked by axe across the suite; forced colors removes ornaments, ribbons' clip shapes and tab pseudo-shapes and restores plain borders; reduced motion keeps every state static; 200% text grows the card/page instead of clipping.
+- **Light as data, not decoration:** `src/ui/fissure.js` derives `{kind, state, k1, k2, k3, era, alab, alab2, ink, core}` at render time from the Moment, the committed state and delivered knowledge (`cardLight`, `knownEra`, `coreLight`, `thresholdLight`). `card.js` writes them as inline custom properties on `.play-screen`; the app copies `--k1/--k2/--k3/--k-era` to `body` so the night atmosphere shares them. Nothing is saved; no system reads them; no PRNG is touched (unit-tested).
+- **Title:** `src/ui/threshold-scene.js` emits three SVG layers (environment, figure, shards+motes) on one 1000² coordinate system (`slice` in portrait, `meet` in landscape, set by the owner via `matchMedia`). `.threshold-scene` is a size container; the HTML opening and hold target are positioned with `--u: max(cqw,cqh)/1000` (`min` in landscape). Charge is one custom property, `--charge`, that drives seal fractures (`stroke-dashoffset` per fracture slice `--a…--b`), runes, glyphs, pool, shards and the seal halves.
+- **Moment card:** `.narrative-card` is the obsidian slab (`--card-shape` clip). `.card-head` (sigil · numeral · sign · optional Core mark), `.portrait-window` (scene, person, per-Moment `.card-fissures`, the two pull fractures and the speaker), `.dialogue` (alabaster with the lit `.card-seam`). Every presentation hook used by the game-feel owner and tests is unchanged (`.scene-depth`, `.npc-portrait`, `.material-light`, `.speaker`, previews, `data-direction`, `--strength`, `#page-title`, `#card-dialogue`).
+- **States:** `data-state` (`everyday`, `crisis`, `mystery`, `echo`, `awakening`, `resolution`) changes shape (`--card-shape`, skew, arch), fractures, light and the visible sign; `data-kind` refines everyday materials (intimate arch window, work ledger, chronicle rules, front soot). Mystery adds `.card-loose`; echo turns `.deck-shadow` into a ghost slab.
+- **Decision affordance:** while pulling, `.fracture-left/right` reveal with `clip-path: inset()` driven by the existing `--strength` (paint only, no layout); the matching shard button brightens via `:has()`. Neither suggests a good or bad choice.
+- **Decisions:** two obsidian shards pointing outward, a seam of the card's light along their edge; shapes on pseudo-elements so the focus ring is never clipped; ≥50px tall (58px normally) and >100px wide.
+- **Meters:** four diamond lozenges with original glyphs above a 2px lit vein; still `scaleX`, progressbar values and ↑/↓ direction.
+- **Feedback:** the in-flow response is an obsidian note with a rule of the card's light; stage recap in small caps; the public bulletin is a pale printed slab; achievements an alabaster plaque with a spectral top seam.
+- **Night:** era-tinted nebula and card-light pigments in the atmosphere; on wide screens two obsidian monoliths with a lit crack stand beside the column.
+- **Memorial / dialogs:** obsidian panels with a spectral top seam, alabaster primary buttons, arched memorial window with a spectral rim, name over a line of light.
+- **Accessibility:** contrast checked by axe across the suite and ink/alabaster ≥ 7:1 by unit test; forced colors drops every shape, fracture and gradient and restores plain system borders; reduced motion keeps every scene static and complete; 200% text grows the card/page instead of clipping.
 
 ## Tokens and typography
 
-`styles/tokens.css` defines semantic surfaces/text, warmth/danger/Convergence, border strengths, three small radii, shadows, 4/8/12/16/24/32 spacing, font roles, motion and depth. Legacy aliases share those tokens rather than define a second theme. Literal colors within components are local material/alpha details, not alternative themes.
+`styles/tokens.css` defines obsidian, alabaster and the default spectral triads (`--l*`, `--k*`), semantic surfaces/text, warmth/danger/Convergence, border strengths, three small radii, shadows, 4/8/12/16/24/32 spacing, font roles, motion and depth. Legacy aliases share those tokens rather than define a second theme. Literal colors within components are local material/alpha details, not alternative themes.
 
 | Role                            | Choice                                   | Reason                                                         |
 | ------------------------------- | ---------------------------------------- | -------------------------------------------------------------- |
-| Speaker / headings              | Local Outfit, medium weight              | Modern human setting; expressive without fantasy ornament.     |
+| Speaker / headings              | Superseded by Fissure (see table above)  | Outfit now serves the wordmark; names use the ceremony serif.  |
 | Decisions / controls / metadata | Local DM Sans                            | Compact readable UI and established licensed local files.      |
 | Moment / literary voice         | System Georgia, Times New Roman fallback | Written-memory contrast with modern UI; no extra font request. |
 

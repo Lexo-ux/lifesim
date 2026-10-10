@@ -1,0 +1,1272 @@
+/* Fissure — the visual system for gameplay, memory and secondary screens.
+   Every Moment is a slab of the Threshold's own obsidian: a window cut into it
+   shows the scene, and the written Moment glows through lit alabaster below.
+   States change silhouette, fracture and light behaviour, never only hue.
+   Presentation only: no state, timing, input or PRNG is owned here. */
+
+/* ---------- Night around the life ---------- */
+body.playing {
+  background: var(--night);
+}
+/* Two distant monoliths beside the column; visible only on wide screens. */
+.play-screen:before,
+.play-screen:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  z-index: -1;
+  width: min(34vw, 440px);
+  height: 74%;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      104deg,
+      transparent 47%,
+      color-mix(in srgb, var(--k1) 50%, transparent) 48%,
+      transparent 49%
+    ),
+    linear-gradient(170deg, #11131d, #05060a 60%);
+}
+.play-screen:before {
+  right: calc(100% + 4vw);
+  clip-path: polygon(18% 100%, 26% 22%, 52% 0, 76% 14%, 88% 100%);
+}
+.play-screen:after {
+  left: calc(100% + 4vw);
+  clip-path: polygon(10% 100%, 20% 30%, 44% 6%, 70% 0, 84% 100%);
+  background:
+    linear-gradient(
+      76deg,
+      transparent 52%,
+      color-mix(in srgb, var(--k2) 50%, transparent) 53%,
+      transparent 54%
+    ),
+    linear-gradient(190deg, #11131d, #05060a 60%);
+}
+
+/* ---------- Header: wordmark, utilities and four veins of light ---------- */
+.wordmark {
+  font: 300 15px/1 var(--font-mark);
+  letter-spacing: 0.34em;
+  color: #e8e4f2;
+}
+.wordmark span {
+  color: #e8e4f2;
+  text-shadow: 0 0 10px var(--k1);
+}
+.wordmark i {
+  font: 400 10px var(--font-ui);
+  letter-spacing: 0.2em;
+  color: #8f8aa6;
+  margin-left: 4px;
+}
+.top-tools .icon-button {
+  border: 1px solid #ffffff1f;
+  color: #d4d0e2;
+}
+.top-tools .icon-button:hover {
+  background: #ffffff0d;
+  border-color: color-mix(in srgb, var(--k1) 60%, transparent);
+}
+.indicators {
+  gap: 14px;
+  padding: 0 6px 8px;
+}
+.indicator.health {
+  --tone: #ff8a8a;
+}
+.indicator.happiness {
+  --tone: #ffd36a;
+}
+.indicator.development {
+  --tone: #7fe3c6;
+}
+.indicator.economy {
+  --tone: #9fb4ff;
+}
+.indicator > span {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 6px;
+  color: var(--tone);
+  background: linear-gradient(160deg, #191b28, #07080d);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+.indicator .icon {
+  width: 15px;
+  height: 15px;
+}
+.stat-direction {
+  right: -6px;
+  bottom: -4px;
+  font: 600 12px var(--font-ui);
+  color: var(--tone);
+}
+.indicator-track {
+  height: 2px;
+  background: #ffffff14;
+  border-radius: 2px;
+  overflow: visible;
+}
+.indicator-track i {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--tone) 35%, transparent),
+    var(--tone)
+  );
+  box-shadow: 0 0 6px color-mix(in srgb, var(--tone) 70%, transparent);
+}
+.indicator small {
+  margin-top: 6px;
+  font: 600 9px/1.2 var(--font-ui);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8f8aa6;
+}
+
+/* ---------- The deck ---------- */
+.playing .card-stage {
+  margin: 4px 0 12px;
+}
+.playing .card-stage:before {
+  inset: 12% 6% -2%;
+  opacity: 0.6;
+  border-radius: 40%;
+  background: #000;
+  box-shadow:
+    0 30px 46px #000,
+    0 0 60px color-mix(in srgb, var(--k1) 16%, transparent);
+}
+/* The slab underneath: the next life's obsidian, slightly turned. */
+.playing .deck-shadow {
+  inset: 10px 4px -9px;
+  background: linear-gradient(165deg, #141622, #06070b);
+  clip-path: var(--card-shape);
+  transform: rotate(-1.6deg);
+  opacity: 0.9;
+}
+.playing .deck-shadow:after {
+  inset: 6px;
+  border: 1px solid #ffffff10;
+  transform: none;
+}
+
+/* ---------- The card: obsidian slab, scene window, lit alabaster ---------- */
+.playing .narrative-card {
+  --card-shape: polygon(
+    2.4% 0,
+    97% 0.5%,
+    100% 2.6%,
+    99.5% 97.4%,
+    97.4% 100%,
+    3% 99.5%,
+    0 97.4%,
+    0.4% 2.4%
+  );
+  display: flex;
+  flex-direction: column;
+  padding: 0 9px 9px;
+  color: var(--text-primary);
+  background:
+    radial-gradient(ellipse 80% 40% at 24% 0%, #252838a8, transparent 70%),
+    radial-gradient(
+      ellipse 70% 30% at 90% 100%,
+      color-mix(in srgb, var(--k1) 14%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(165deg, #1a1c29, #0a0b12 52%, #06070b);
+  clip-path: var(--card-shape);
+  animation: fissure-arrive var(--motion-emerge) var(--ease-settle) both;
+}
+/* A carved bevel: one hairline of the card's own light. */
+.playing .narrative-card:before {
+  inset: 4px;
+  z-index: 4;
+  border: 1px solid color-mix(in srgb, var(--k1) 34%, #2c2f42);
+  border-radius: 0;
+  clip-path: var(--card-shape);
+  opacity: 0.8;
+}
+.card-head {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 2px 8px 0;
+  color: #bdb8cf;
+}
+.playing .card-head .card-corner {
+  position: static;
+  display: flex;
+  justify-self: start;
+  color: var(--k1);
+  opacity: 1;
+  border: 0;
+  transform: none;
+}
+.card-head .icon {
+  width: 14px;
+  height: 14px;
+}
+.card-age {
+  font: 500 12px/1 var(--font-ceremony);
+  letter-spacing: 0.3em;
+  padding-left: 0.3em;
+  color: #e4e0ee;
+}
+.card-sign {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  font: 600 9px/1 var(--font-ui);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--k1);
+}
+/* After an Awakening, the protagonist's own cards carry the Core's light. */
+.card-core {
+  width: 7px;
+  height: 7px;
+  background: var(--k-core);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  box-shadow: 0 0 8px var(--k-core);
+}
+/* The window: a fissure in the slab through which the scene is seen. */
+.playing .portrait-window {
+  flex: 1;
+  min-height: 110px;
+  background: #0b0c13;
+  clip-path: polygon(0 1.6%, 45% 0, 100% 1.2%, 100% 100%, 0 100%);
+}
+.playing .portrait-window:after {
+  background:
+    linear-gradient(transparent 50%, #07080cd9 96%),
+    radial-gradient(
+      ellipse 100% 60% at 50% 112%,
+      color-mix(in srgb, var(--k1) 40%, transparent),
+      transparent 70%
+    );
+}
+.playing .speaker {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 22px;
+  z-index: 4;
+  text-align: left;
+  text-shadow: 0 1px 12px #000;
+}
+.playing .speaker p {
+  margin: 0 0 4px;
+  font: 600 9px/1.3 var(--font-ui);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #e2deee;
+}
+.playing .speaker h1 {
+  font: 500 30px/1.05 var(--font-ceremony);
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  color: #fbf8ff;
+}
+/* Fractures: white core, colored dispersion, soft glow. Strokes never scale. */
+.card-fissures,
+.card-fracture,
+.card-seam {
+  position: absolute;
+  pointer-events: none;
+  overflow: visible;
+}
+.card-fissures,
+.card-fracture {
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+}
+.card-fissures path,
+.card-fracture path,
+.card-seam path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* A cut in the matter first (dark lip), then the light living inside it. */
+.card-fissures .fx-lip,
+.card-fracture .fx-lip {
+  stroke: #000;
+  stroke-width: 3.4;
+  opacity: 0.5;
+}
+.card-seam .fx-lip {
+  display: none;
+}
+.card-fissures .fx-glow,
+.card-fracture .fx-glow,
+.card-seam .fx-glow {
+  stroke: var(--k1);
+  stroke-width: 9;
+  opacity: 0.14;
+}
+.card-fissures .fx-fringe,
+.card-fracture .fx-fringe,
+.card-seam .fx-fringe,
+.card-fissures .fx-fringe-b,
+.card-fracture .fx-fringe-b,
+.card-seam .fx-fringe-b {
+  stroke: var(--k2);
+  stroke-width: 0.9;
+  opacity: 0.9;
+  translate: -0.22px -0.15px;
+}
+.card-fissures .fx-fringe-b,
+.card-fracture .fx-fringe-b,
+.card-seam .fx-fringe-b {
+  stroke: var(--k3);
+  translate: 0.22px 0.15px;
+}
+.card-fissures .fx-core,
+.card-fracture .fx-core,
+.card-seam .fx-core {
+  stroke: #fff;
+  stroke-width: 0.75;
+}
+.card-fissures .fx-echo {
+  stroke: var(--k2);
+  opacity: 0.55;
+}
+/* The fracture you open by pulling grows from that edge with intent, not value. */
+.card-fracture {
+  clip-path: inset(0 100% 0 0);
+}
+.narrative-card[data-direction="left"] .fracture-left {
+  clip-path: inset(0 calc(100% - var(--strength, 0) * 48%) 0 0);
+}
+.narrative-card[data-direction="right"] .fracture-right {
+  clip-path: inset(0 0 0 calc(100% - var(--strength, 0) * 48%));
+}
+/* The written Moment: ink on alabaster lit from behind by the card's light. */
+.playing .dialogue {
+  position: relative;
+  z-index: 1;
+  margin-top: -9px;
+  padding: 22px 18px 16px;
+  min-height: 0;
+  color: var(--k-ink);
+  background:
+    radial-gradient(
+      ellipse 80% 100% at 50% 0%,
+      color-mix(in srgb, var(--k1) 42%, #fff) 0%,
+      transparent 62%
+    ),
+    repeating-linear-gradient(
+      103deg,
+      transparent 0 21px,
+      #ffffff14 21px 22px,
+      transparent 22px 57px
+    ),
+    linear-gradient(var(--k-alab), var(--k-alab-2));
+  border: 0;
+  clip-path: polygon(
+    0 9px,
+    13% 5px,
+    27% 10px,
+    42% 3px,
+    56% 8px,
+    70% 2px,
+    85% 7px,
+    100% 4px,
+    100% 100%,
+    0 100%
+  );
+}
+.playing .dialogue:before {
+  display: none;
+}
+.card-seam {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+}
+.dialogue p {
+  font: 17px/1.5 var(--font-story);
+  color: var(--k-ink, var(--text-on-paper));
+}
+.playing .consequence-cue {
+  display: block;
+  margin-bottom: 6px;
+  font: italic 12px/1.3 var(--font-ceremony);
+  color: color-mix(in srgb, var(--k-ink) 72%, transparent);
+}
+.playing .material-light {
+  background: linear-gradient(
+    118deg,
+    transparent 24%,
+    color-mix(in srgb, var(--k1) 40%, transparent) 46%,
+    transparent 62%
+  );
+}
+/* Drag slips: the chosen words appear written in light over the scene. */
+.playing .choice-preview {
+  top: 54px;
+  max-width: calc(100% - 84px);
+  padding: 10px 14px 11px;
+  color: #fff;
+  background: #05060bd9;
+  border: 0;
+  clip-path: polygon(0 4%, 97% 0, 100% 92%, 3% 100%);
+  font: italic 500 19px/1.2 var(--font-ceremony);
+  text-shadow: 0 0 12px var(--k1);
+  box-shadow: none;
+  z-index: 8;
+}
+.playing .preview-left {
+  border-right: 2px solid var(--k1);
+}
+.playing .preview-right {
+  border-left: 2px solid var(--k1);
+}
+
+/* ---------- Everyday materials: one grammar, different light ---------- */
+.playing .narrative-card[data-kind="intimate"] .portrait-window {
+  clip-path: none;
+  border-radius: 46% 46% 0 0 / 16% 16% 0 0;
+}
+.playing .narrative-card[data-kind="work"] .dialogue {
+  background:
+    linear-gradient(
+      90deg,
+      transparent 12px,
+      color-mix(in srgb, var(--k1) 55%, transparent) 12px,
+      color-mix(in srgb, var(--k1) 55%, transparent) 13px,
+      transparent 13px
+    ),
+    repeating-linear-gradient(transparent 0 24.5px, #13221b14 24.5px 25.5px),
+    linear-gradient(var(--k-alab), var(--k-alab-2));
+}
+.playing .narrative-card[data-kind="chronicle"] .scene-depth,
+.playing .narrative-card[data-kind="chronicle"] .npc-portrait {
+  filter: grayscale(0.6) contrast(1.08);
+}
+.playing .narrative-card[data-kind="chronicle"] .dialogue {
+  background:
+    linear-gradient(var(--k-ink), var(--k-ink)) 18px 14px / calc(100% - 36px)
+      1px no-repeat,
+    linear-gradient(var(--k-ink), var(--k-ink)) 18px 17px / calc(100% - 36px)
+      1px no-repeat,
+    linear-gradient(var(--k-alab), var(--k-alab-2));
+}
+.playing .narrative-card[data-kind="front"] .portrait-window:after {
+  background:
+    linear-gradient(transparent 46%, #0a0604e6 96%),
+    radial-gradient(ellipse 40% 30% at 0% 100%, #ff6a3d66, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 100% 100%, #ffcc6640, transparent 70%);
+}
+
+/* ---------- States ---------- */
+/* Crisis: the silhouette is notched, the alabaster has slipped, light is hot. */
+.playing .narrative-card[data-state="crisis"] {
+  --card-shape: polygon(
+    2.4% 0,
+    37% 0.4%,
+    40% 3.4%,
+    43% 0.2%,
+    97% 0.6%,
+    100% 3%,
+    99.6% 45%,
+    96.6% 48%,
+    99.6% 51%,
+    99.4% 97%,
+    97.6% 100%,
+    64% 99.5%,
+    61% 96.8%,
+    58% 99.6%,
+    3% 99.4%,
+    0 97.4%,
+    0.4% 31%,
+    3.2% 28%,
+    0.3% 25%,
+    0.5% 2.6%
+  );
+}
+.playing .narrative-card[data-state="crisis"] .dialogue {
+  transform: translateX(4px);
+}
+.playing .narrative-card[data-state="crisis"] .portrait-window {
+  clip-path: polygon(
+    0 1.6%,
+    30% 0,
+    34% 4%,
+    38% 0.4%,
+    100% 1.2%,
+    100% 100%,
+    0 100%
+  );
+}
+/* Mystery: geometry is subtly wrong. A corner has come loose and floats apart. */
+.playing .narrative-card[data-state="mystery"] {
+  --card-shape: polygon(
+    2.4% 0,
+    70% 0.4%,
+    77% 8%,
+    100% 12%,
+    99.5% 97.4%,
+    97.4% 100%,
+    3% 99.5%,
+    0 97.4%,
+    0.4% 2.4%
+  );
+  transform: translateX(var(--x, 0px)) rotate(var(--rotation, 0deg))
+    skewX(-1.2deg);
+}
+.playing .narrative-card[data-state="mystery"] .card-age {
+  transform: scaleX(-1);
+}
+.card-loose {
+  position: absolute;
+  top: -6px;
+  right: -12px;
+  z-index: 3;
+  width: 30%;
+  height: 12%;
+  pointer-events: none;
+  background: linear-gradient(165deg, #1e2030, #0a0b12);
+  clip-path: polygon(0 0, 96% 6%, 100% 100%, 24% 66%);
+  transform: rotate(8deg);
+}
+.card-loose:after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  top: 22%;
+  width: 66%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--k2), #fff, var(--k1));
+  transform: rotate(16deg);
+  box-shadow: 0 0 10px var(--k1);
+}
+/* Echo: a ghost of a slab stands behind, out of register; the seam is doubled. */
+.playing .card-stage:has([data-state="echo"]) .deck-shadow {
+  inset: -10px 10px 10px -8px;
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--k1) 10%, transparent),
+    color-mix(in srgb, var(--k2) 6%, transparent)
+  );
+  transform: rotate(-1.2deg);
+  opacity: 1;
+}
+.playing .card-stage:has([data-state="echo"]) .deck-shadow:after {
+  inset: 0;
+  border: 1px solid color-mix(in srgb, var(--k1) 50%, transparent);
+}
+.playing .narrative-card[data-state="echo"] .dialogue p {
+  text-shadow: -3px -2px 0 color-mix(in srgb, var(--k-ink) 14%, transparent);
+}
+.playing .narrative-card[data-state="echo"] .scene-depth {
+  filter: saturate(0.5) brightness(0.9);
+}
+/* Awakening: one spectral fissure splits the whole slab; light leaks at its edges. */
+.playing .card-stage:has([data-state="awakening"]):before {
+  box-shadow:
+    -18px 0 50px color-mix(in srgb, var(--k2) 45%, transparent),
+    18px 0 50px color-mix(in srgb, var(--k3) 45%, transparent),
+    0 30px 46px #000;
+}
+.card-fissures .fx-split.fx-lip {
+  stroke-width: 6;
+  opacity: 0.6;
+}
+.card-fissures .fx-split.fx-glow {
+  stroke-width: 18;
+  opacity: 0.26;
+}
+.card-fissures .fx-split.fx-core {
+  stroke-width: 1.5;
+}
+.card-fissures .fx-split.fx-fringe,
+.card-fissures .fx-split.fx-fringe-b {
+  stroke-width: 1.3;
+}
+.card-fissures .fx-split.fx-fringe {
+  translate: -0.45px 0;
+}
+.card-fissures .fx-split.fx-fringe-b {
+  translate: 0.45px 0;
+}
+/* Resolution: the slab takes the Threshold's own arch, symmetric and calm. */
+.playing .narrative-card[data-state="resolution"] {
+  --card-shape: none;
+  border-radius: 50% 50% 4px 4px / 15% 15% 4px 4px;
+  clip-path: none;
+}
+.playing .narrative-card[data-state="resolution"]:before {
+  clip-path: none;
+  border-radius: inherit;
+}
+.playing .narrative-card[data-state="resolution"] .portrait-window {
+  clip-path: none;
+  border-radius: 50% 50% 0 0 / 22% 22% 0 0;
+}
+.playing .narrative-card[data-state="resolution"] .card-head {
+  justify-content: center;
+}
+.card-fissures .fx-arch.fx-core {
+  opacity: 0.55;
+}
+.card-fissures .fx-arch.fx-fringe {
+  opacity: 0.4;
+}
+
+/* ---------- Decisions: two shards pointing where the card will break ---------- */
+.decision-controls {
+  gap: 10px;
+}
+.decision {
+  position: relative;
+  isolation: isolate;
+  min-height: 58px;
+  padding: 10px 14px 10px 26px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: 500 13px/1.3 var(--font-ui);
+  letter-spacing: 0.02em;
+}
+.decision.right {
+  padding: 10px 26px 10px 14px;
+  background: transparent;
+}
+.decision:before,
+.decision:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  transition: background var(--motion-fast);
+}
+.decision:before {
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--k1) 55%, #2c2f42),
+    color-mix(in srgb, var(--k2) 45%, #2c2f42)
+  );
+}
+.decision:after {
+  inset: 1px 1px 2px;
+  background: linear-gradient(165deg, #1b1d2a, #0a0b12);
+}
+.decision.left:before,
+.decision.left:after {
+  clip-path: polygon(16px 0, 100% 0, 100% 100%, 16px 100%, 0 50%);
+}
+.decision.right:before,
+.decision.right:after {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 16px) 0,
+    100% 50%,
+    calc(100% - 16px) 100%,
+    0 100%
+  );
+}
+.decision .icon {
+  color: var(--k1);
+}
+.decision:hover {
+  background: transparent;
+  color: #fff;
+}
+.decision:hover:after {
+  background: linear-gradient(165deg, #232636, #10111a);
+}
+/* While the card is pulled, the matching shard brightens with the same light. */
+.play-screen:has(.narrative-card[data-direction="left"]) .decision.left:before,
+.play-screen:has(.narrative-card[data-direction="right"])
+  .decision.right:before {
+  background: linear-gradient(90deg, var(--k1), #fff, var(--k2));
+}
+.play-screen:has(.narrative-card[data-direction="left"]) .decision.left,
+.play-screen:has(.narrative-card[data-direction="right"]) .decision.right {
+  color: #fff;
+}
+
+/* ---------- Margins of the page: age, stage, onboarding, navigation ---------- */
+.moment {
+  margin-top: 10px;
+  font: 600 10px/1.2 var(--font-ui);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9a95ad;
+}
+.chapter {
+  font: italic 14px/1.2 var(--font-ceremony);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: color-mix(in srgb, var(--k1) 70%, #fff);
+}
+.onboarding {
+  font: italic 13px/1.2 var(--font-ceremony);
+  color: #aaa5bd;
+}
+.quiet-nav {
+  position: relative;
+  border-top: 0;
+  padding-top: 6px;
+}
+.quiet-nav:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--k1) 60%, transparent),
+    color-mix(in srgb, var(--k2) 60%, transparent),
+    transparent
+  );
+}
+.quiet-nav .nav-link,
+.nav-link {
+  font: 600 10px/1 var(--font-ui);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #aaa5bd;
+}
+.nav-link:hover {
+  color: #fff;
+}
+
+/* ---------- Immediate response: a note written in the card's light ---------- */
+.playing .moment-flash,
+.moment-flash {
+  margin: 0 0 10px;
+  padding: 9px 14px 10px;
+  border: 0;
+  border-left: 2px solid var(--k1);
+  border-radius: 0;
+  box-shadow: 0 8px 22px #0009;
+  background: linear-gradient(90deg, #12131ef5, #0a0b12f0);
+  color: var(--text-primary);
+}
+.moment-flash .choice-response {
+  font: italic 15px/1.45 var(--font-ceremony);
+}
+.moment-flash .progress-response {
+  font: 13px/1.4 var(--font-story);
+  color: color-mix(in srgb, var(--k1) 65%, #fff);
+}
+.stage-recap {
+  padding-top: 8px;
+  border-top: 1px solid #ffffff1a;
+}
+.stage-recap strong {
+  display: block;
+  font: 600 10px/1.4 var(--font-ui);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--k1) 70%, #fff);
+}
+.stage-recap p {
+  font: italic 13px/1.45 var(--font-ceremony);
+  color: #d6d2e2;
+}
+/* A public bulletin is a slab of pale stone with printed rules. */
+.public-bulletin {
+  margin: 0 0 10px;
+  padding: 12px 14px 4px;
+  color: #16182a;
+  background:
+    linear-gradient(#16182a, #16182a) 14px 8px / calc(100% - 28px) 1px no-repeat,
+    linear-gradient(#e8e9f0, #cbcdda);
+  border: 0;
+  box-shadow: 0 10px 24px #0009;
+}
+.public-bulletin strong {
+  font: 700 10px/1.3 var(--font-ui);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #16182a;
+}
+.public-bulletin p {
+  font: 14px/1.45 var(--font-story);
+}
+.public-bulletin .text-button {
+  color: #16182a;
+  font: italic 14px/1.2 var(--font-ceremony);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.notification {
+  border: 0;
+  border-radius: 0;
+  color: var(--alabaster-ink);
+  background:
+    linear-gradient(90deg, var(--l3), var(--l1), var(--l2)) top / 100% 2px
+      no-repeat,
+    radial-gradient(ellipse at 50% 0%, #fff, transparent 70%),
+    linear-gradient(var(--alabaster), var(--alabaster-deep));
+  box-shadow: 0 12px 30px #000c;
+  font: italic 14px/1.4 var(--font-ceremony);
+}
+
+/* ---------- Awakening findings: an obsidian plaque with a spectral edge ---------- */
+.playing .awakening-mark,
+.playing .awakening-mark:not(.rank-mark) {
+  top: auto;
+  bottom: 86px;
+  right: 12px;
+}
+.playing .awakening-mark.rank-mark {
+  top: 14px;
+  bottom: auto;
+}
+.awakening-mark {
+  background: #05060be6;
+  border-left: 2px solid var(--k1);
+  box-shadow: 0 0 26px color-mix(in srgb, var(--k1) 30%, transparent);
+}
+.awakening-mark small {
+  font: 600 9px/1.3 var(--font-ui);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--k1);
+}
+.awakening-mark strong {
+  font: 500 21px/1.15 var(--font-ceremony);
+}
+.rank-mark strong {
+  font: 300 clamp(42px, 12vw, 64px)/1 var(--font-mark);
+  letter-spacing: 0.12em;
+}
+
+/* ---------- Secondary screens: one obsidian-and-alabaster family ---------- */
+dialog {
+  color: var(--text-primary);
+  background:
+    linear-gradient(90deg, var(--l3), var(--l1), var(--l2), var(--l4)) top /
+      100% 1px no-repeat,
+    radial-gradient(ellipse 90% 34% at 50% 0%, #1d1f30, transparent 70%),
+    #0b0c13;
+  border: 1px solid #ffffff1f;
+  border-radius: 2px;
+  box-shadow: var(--shadow-overlay);
+}
+dialog::backdrop {
+  background: radial-gradient(ellipse at 50% 40%, #07080ed9, #020306f2);
+}
+dialog h2 {
+  font: 500 28px/1.15 var(--font-ceremony);
+  color: #f6f2ff;
+}
+dialog .eyebrow,
+.eyebrow {
+  font: 600 10px/1.3 var(--font-ui);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #c4bedc;
+}
+.button {
+  border-radius: 1px;
+  border-color: #ffffff2e;
+  background: #12131d;
+  font: 500 14px/1.2 var(--font-ui);
+  color: var(--text-primary);
+}
+.button:hover {
+  background: #1b1d2b;
+  border-color: color-mix(in srgb, var(--l1) 60%, transparent);
+}
+.button.primary {
+  color: var(--alabaster-ink);
+  border-color: transparent;
+  background:
+    linear-gradient(90deg, var(--l3), var(--l1), var(--l2)) bottom / 100% 2px
+      no-repeat,
+    radial-gradient(ellipse 70% 120% at 50% 0%, #fff, transparent 72%),
+    linear-gradient(var(--alabaster), var(--alabaster-deep));
+  box-shadow: 0 10px 24px #0009;
+  font: 600 12px/1.2 var(--font-ui);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.button.primary:hover {
+  background:
+    linear-gradient(90deg, var(--l3), var(--l1), var(--l2)) bottom / 100% 2px
+      no-repeat,
+    radial-gradient(ellipse 70% 120% at 50% 0%, #fff, transparent 82%),
+    linear-gradient(#fff8ec, var(--alabaster));
+}
+.button.danger {
+  background: #34171a;
+  border-color: #b06a6a;
+  color: #ffdcd6;
+}
+input,
+select {
+  border-radius: 1px;
+  border-color: #4d4a63;
+  background: #07080d;
+  font-family: var(--font-story);
+}
+label {
+  font: 600 10px/1.4 var(--font-ui);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #bcb6d2;
+}
+.creator-modal .identity-preview {
+  background:
+    radial-gradient(
+      ellipse 44% 58% at 50% 54%,
+      color-mix(in srgb, var(--l1) 18%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(165deg, #141622, #07080d);
+  border-radius: 50% 50% 2px 2px / 90px 90px 2px 2px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--l3) 35%, transparent);
+}
+.creator-modal button[type="submit"] {
+  margin-top: 6px;
+}
+.creation-note {
+  font-family: var(--font-ceremony);
+}
+.age-previews button[aria-pressed="true"],
+.appearance.selected {
+  border-color: var(--l1);
+  background: #ffffff10;
+}
+details {
+  border-top-color: #ffffff1a;
+}
+summary {
+  font: italic 15px/1.3 var(--font-ceremony);
+}
+.story-timeline time {
+  font: 500 17px var(--font-ceremony);
+  color: var(--l1);
+}
+.story-timeline li:not(:last-child):before {
+  background: linear-gradient(var(--l3), var(--l2) 60%, transparent);
+  opacity: 0.6;
+}
+.story-timeline p {
+  font: 14px/1.6 var(--font-story);
+}
+.legacy-number strong {
+  font: 200 64px/1 var(--font-mark);
+  color: #fff;
+  text-shadow: 0 0 20px var(--l1);
+}
+
+/* ---------- Memorial: the last window, held open in the Threshold's arch ---------- */
+.death-screen {
+  position: relative;
+}
+.memorial {
+  background: radial-gradient(
+    ellipse 40% 50% at 50% 55%,
+    color-mix(in srgb, var(--l1) 16%, transparent),
+    transparent 70%
+  );
+}
+.memorial img.veiled-portrait {
+  border-radius: 50% 50% 2px 2px / 80px 80px 2px 2px;
+  background:
+    radial-gradient(ellipse at 50% 30%, #23263a, #07080d 75%), #07080d;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--l1) 60%, transparent),
+    0 0 0 5px #05060b,
+    0 0 0 6px color-mix(in srgb, var(--l3) 30%, transparent),
+    0 0 50px color-mix(in srgb, var(--l2) 20%, transparent),
+    0 18px 50px #000;
+}
+.memorial > span {
+  color: var(--lumen);
+  text-shadow: 0 0 14px var(--l1);
+}
+.death-screen h1 {
+  font: 400 42px/1.05 var(--font-ceremony);
+  letter-spacing: 0.04em;
+  color: #f7f3ff;
+}
+.death-screen h1:after {
+  content: "";
+  display: block;
+  width: 150px;
+  height: 1px;
+  margin: 16px auto 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--l3),
+    #fff,
+    var(--l2),
+    transparent
+  );
+}
+.life-age {
+  font: italic 15px/1.4 var(--font-ceremony);
+  color: #c8c3d8;
+}
+.final-story h2 {
+  font: 500 24px/1.2 var(--font-ceremony);
+}
+.final-story > p,
+.final-story > section > p {
+  font-family: var(--font-story);
+}
+.mystery-hint {
+  font: italic 17px/1.6 var(--font-ceremony);
+  color: color-mix(in srgb, var(--l1) 80%, #fff);
+}
+
+/* ---------- Motion: cards emerge from a seam of light and break when chosen ---------- */
+/* One vertical seam opens into two edges of light that travel outward. */
+@property --seam {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+.playing .card-stage:after {
+  content: "";
+  position: absolute;
+  inset: -2% -1%;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(
+      90deg,
+      transparent calc(50% - var(--seam) - 2.4%),
+      color-mix(in srgb, var(--k2) 70%, transparent)
+        calc(50% - var(--seam) - 0.8%),
+      #fff calc(50% - var(--seam)),
+      color-mix(in srgb, var(--k1) 70%, transparent)
+        calc(50% - var(--seam) + 0.8%),
+      transparent calc(50% - var(--seam) + 2.4%)
+    ),
+    linear-gradient(
+      90deg,
+      transparent calc(50% + var(--seam) - 2.4%),
+      color-mix(in srgb, var(--k1) 70%, transparent)
+        calc(50% + var(--seam) - 0.8%),
+      #fff calc(50% + var(--seam)),
+      color-mix(in srgb, var(--k2) 70%, transparent)
+        calc(50% + var(--seam) + 0.8%),
+      transparent calc(50% + var(--seam) + 2.4%)
+    ),
+    radial-gradient(
+      ellipse calc(var(--seam) + 6%) 50% at 50% 50%,
+      color-mix(in srgb, var(--k1) 22%, transparent),
+      transparent 100%
+    );
+  animation: fissure-seam var(--motion-emerge) var(--ease-settle) both;
+}
+@keyframes fissure-seam {
+  0% {
+    --seam: 0%;
+    opacity: 1;
+  }
+  72% {
+    --seam: 50%;
+    opacity: 1;
+  }
+  100% {
+    --seam: 50%;
+    opacity: 0;
+  }
+}
+@keyframes fissure-arrive {
+  0%,
+  12% {
+    opacity: 0;
+  }
+  64% {
+    opacity: 1;
+  }
+}
+/* Continuous incidents and the Threshold handoff own their own entrance. */
+.playing .narrative-card[data-sequence="awakening"],
+.playing .narrative-card.emerging {
+  animation: none;
+}
+.playing .card-stage:has([data-sequence="awakening"]):after,
+.playing .card-stage:has(.emerging):after {
+  animation: none;
+}
+.playing .narrative-card.emerging .portrait-window:before {
+  opacity: 1;
+  background: linear-gradient(115deg, var(--k3), #fff 45%, var(--k2));
+  animation: fissure-cool var(--motion-threshold-handoff) ease-out both;
+}
+@keyframes fissure-cool {
+  0%,
+  45% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.card-shards {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+}
+.card-shards .narrative-card {
+  position: absolute;
+  inset: 0;
+  animation: none;
+  will-change: transform, opacity;
+}
+.card-breach {
+  position: absolute;
+  inset: 4%;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse 34% 26% at 50% 50%, #fff 0%, transparent 100%),
+    radial-gradient(ellipse 70% 60% at 50% 50%, var(--k1), transparent 72%);
+  filter: blur(6px);
+}
+
+/* ---------- Short screens keep every control; ornament yields first ---------- */
+@media (max-height: 700px) {
+  .indicator > span {
+    width: 26px;
+    height: 26px;
+    margin-bottom: 4px;
+  }
+  .indicator .icon {
+    width: 13px;
+    height: 13px;
+  }
+  .card-head {
+    min-height: 22px;
+  }
+  .playing .speaker {
+    bottom: 16px;
+  }
+  .playing .speaker h1 {
+    font-size: 24px;
+  }
+  .playing .dialogue {
+    padding: 18px 14px 10px;
+  }
+  .dialogue p {
+    font-size: 15px;
+    line-height: 1.42;
+  }
+  .decision {
+    min-height: 50px;
+  }
+  .moment {
+    margin-top: 8px;
+  }
+}
+
+/* ---------- Accessibility fallbacks ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .playing .narrative-card,
+  .playing .card-stage:after,
+  .playing .narrative-card.emerging .portrait-window:before {
+    animation: none;
+  }
+  .playing .narrative-card[data-state="mystery"] {
+    transform: none;
+  }
+}
+@media (forced-colors: active) {
+  .play-screen:before,
+  .play-screen:after,
+  .quiet-nav:before,
+  .card-fissures,
+  .card-fracture,
+  .card-seam,
+  .card-loose,
+  .card-core,
+  .death-screen h1:after,
+  .playing .card-stage:after {
+    display: none;
+  }
+  .playing .narrative-card,
+  .playing .narrative-card[data-state] {
+    clip-path: none;
+    border: 1px solid CanvasText;
+    background: Canvas;
+  }
+  .playing .narrative-card:before,
+  .playing .deck-shadow {
+    display: none;
+  }
+  .playing .portrait-window,
+  .playing .narrative-card[data-state] .portrait-window {
+    clip-path: none;
+    border: 1px solid CanvasText;
+  }
+  .playing .dialogue,
+  .playing .narrative-card[data-state] .dialogue {
+    clip-path: none;
+    transform: none;
+    background: Canvas;
+    border-top: 1px solid CanvasText;
+  }
+  .indicator > span {
+    clip-path: none;
+    border: 1px solid CanvasText;
+    background: Canvas;
+  }
+  .decision {
+    border: 1px solid ButtonText;
+  }
+  .decision:before,
+  .decision:after {
+    display: none;
+  }
+  .public-bulletin,
+  .notification,
+  dialog,
+  .moment-flash,
+  .playing .choice-preview,
+  .awakening-mark {
+    background: Canvas;
+    border: 1px solid CanvasText;
+  }
+  :root {
+    --k-ink: CanvasText;
+    --alabaster-ink: CanvasText;
+  }
+  .play-screen,
+  .play-screen *,
+  .death-screen,
+  .death-screen *,
+  dialog,
+  dialog *,
+  .notification {
+    color: CanvasText !important;
+    text-shadow: none !important;
+  }
+  .play-screen button,
+  .death-screen button,
+  dialog button {
+    color: ButtonText !important;
+  }
+  .button.primary {
+    background: ButtonFace;
+    border: 1px solid ButtonText;
+  }
+}

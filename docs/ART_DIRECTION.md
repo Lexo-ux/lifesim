@@ -1,6 +1,90 @@
 # Art direction — LifeSim
 
-## Visual redesign — Arcana of Lives (current presentation authority)
+## Art redirection — Fissure (current presentation authority)
+
+Branch `claude/redireccion-artistica` replaces the Arcana of Lives chrome and the Task 04 doorway painting with a new direction. Gameplay, Moments and their texts, probabilities, both RNG streams, saves, migrations, World, War, Field, Social, Legacy, Resolution and canon are unchanged: this is presentation, interaction feel and optional sound only. Where anything below this section conflicts with it, this section wins; replaced rules are listed in the [register](#superseded-rules-register).
+
+**Central idea.** Light does not fall on matter from outside: it is _another reality seen through the cracks of this one_. Canon defines the Convergence as the progressive failure of the boundaries between worlds ([CONVERGENCE](../lore/CONVERGENCE.md)); Fissure turns that failure into the game's single visual idea. Matter is obsidian — heavy, opaque, still. Where it has failed it is fissured, and through each fissure arrives a different light, decomposed as through a prism. Ordinary life is lit from within; choosing breaks things; the Threshold is where every fissure converges.
+
+### Three concepts explored
+
+Three radically different playable prototypes live in [`lab/`](../lab/index.html) (open `npm start` → `/lab/`). Each has its own idea of light, color, space and interaction and its own state set and decision act.
+
+| Concept                  | Light                                   | Color                                                      | Space                                                                           | Interaction                                                                                     |
+| ------------------------ | --------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| **A · Fissure** (chosen) | Another reality leaking through cracks. | Prismatic and contextual: every crack shows its own world. | Black monoliths, floating shards, an ornate portal-object, a tiny figure.       | Hold the portal to break its seal; its light becomes the first card; choosing breaks the card.  |
+| B · Black mirror         | No source; light exists only reflected. | Reality is grey; color lives in an iridescent reflection.  | A horizon: above what is, below what could be. The reflection is not identical. | Lift the reflection until the world flips; a choice lays the card into the water and it sinks.  |
+| C · Impossible astrolabe | Structural: exact luminous lines.       | Diffraction: each ring a band of the spectrum.             | Rings that intersect impossibly over a horizon.                                 | Rotate rings until their gaps align; the instrument folds into the card; a dial locks a choice. |
+
+**Why Fissure.** It keeps what makes the reference image work — light from inside matter, fragments floating calmly, a tiny figure before an enormous object with weight and ornament, near-total stillness — and goes further where the reference stops: the light is plural, and its color means something. One grammar (matter · fissure · light) scales from the title to every card, dialog and memorial. Its gestures are physical and irreversible-feeling (holding breaks a seal, pulling cracks a card, choosing shatters it), and every transition is an event of that world. B is the most surprising image, but its horizon split eats the portrait card, text over reflections fights reading, flipping on every choice disorients, and color only "in the reflection" leaves everyday reading grey. C is elegant but reads as a sci-fi instrument — cold, "app"-like — its alignment puzzle becomes a chore across hundreds of lives, and hairlines are fragile at 360px.
+
+### Palette and its logic
+
+| Role                   | Values                                                                                     | Rule                                                                                                                        |
+| ---------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| Matter (obsidian)      | `--night #04050a`, `--obsidian #0a0b12`, `--obsidian-hi #191b28`, `--obsidian-rim #2c2f44` | Silhouettes against a lit mist (`#1f2030` haze). Never a colored fill of UI chrome.                                         |
+| Alabaster              | `--alabaster #f1e7d6` → `--alabaster-deep #dccbb0`, tinted per card                        | Translucent stone lit from behind; the only place long text lives. Ink/alabaster ≥ 7:1, tested for every Moment.            |
+| Light (always a triad) | core + two dispersion fringes (`--k1 --k2 --k3`, title `--l1…--l4`)                        | A white core between two colored fringes: dispersion, not a single hue. Color is context, never value, rank or probability. |
+
+Context drives the light, from data the player already has:
+
+- **Card type/state** (`cardLight()` in `src/ui/fissure.js`): life amber–rose, intimate rose–apricot, work jade–gold, chronicle silver–violet, front ember, crisis hot red, mystery ultraviolet–acid green, echo ice–lilac, awakening white core with magenta/cyan fringes, resolution white-gold.
+- **Era**: everyday cards' third light and the night's nebula follow the era the protagonist has _learned_ from delivered reports (`knownEra()`); undelivered world time never tints anything (tested firewall).
+- **Class**: after the Awakening incident resolves, the protagonist's own cards carry a small Core mark in the class family's light, and Awakening cards use it as their core.
+- **Legacy**: the portal's arch has seven carved sockets; each remembered life lights one in the color of that life's direction (≤7). Recognition and intervention depth shift the portal's triad (violet/acid; white-gold) and add an out-of-register ghost arch.
+- **Never**: one hue for "energy" (no blue mana), rainbow as a rarity code, pulsing CTAs, colored panels.
+
+### Materials and grammar
+
+- **Threshold.** Inline SVG layers on one coordinate system (viewBox 1000², portrait slices, landscape meets and reveals extra monoliths): far and near obsidian monoliths with living cracks, a lit floor, an ornate portal (crest with eye, keystone, arch band of glyphs and legacy sockets, grooved pillars with runes), floating shards with their own fissures, ten motes, and a tiny cloaked figure backlit on the floor. HTML layers anchored with container units hold the opening (light, glimpses of possible lives, the two halves of the seal, the seam) and the hold target. The wordmark is cracked between LIFE and SIM; SIM has slipped.
+- **Card.** A slab of the same obsidian with chipped corners. A window cut into it shows the scene and person; a jagged lit seam separates it from the alabaster where the Moment is written. Head: kind sigil, age as an engraved numeral, state sign. Fractures are generated per Moment from its id (stable, varied, unrelated to the game PRNG) and drawn inside the window only, so they never cross text.
+- **States** — silhouette, fracture and light behaviour, plus a written sign that is also part of the card's accessible name:
+
+| State      | Silhouette / object                                                                                                              | Fracture                                       | Light                                                       | Sign      |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------- | --------- |
+| Everyday   | Clean slab; intimate cards arch their window, work cards rule their alabaster, chronicles print a double rule, fronts carry soot | None — only the seam                           | Steady, lit from within                                     | —         |
+| Crisis     | Notched edges; the alabaster has slipped 4px                                                                                     | Network entering from both edges               | Hot red/magenta                                             | Fractura  |
+| Mystery    | Skewed slab, a mirrored numeral, a corner come loose and floating apart                                                          | A fault: the crack stops and resumes displaced | Ultraviolet / acid green                                    | Anomalía  |
+| Echo       | A ghost slab out of register behind it                                                                                           | Doubled crack, doubled seam                    | Ice / lilac, desaturated scene                              | Eco       |
+| Awakening  | Light leaks around the whole slab                                                                                                | One spectral split through the scene           | White core, magenta/cyan fringes (class core once awakened) | Despertar |
+| Resolution | The slab takes the Threshold's own arch                                                                                          | An inner arch of light                         | White-gold, symmetric                                       | Umbral    |
+
+Ranks keep the Task 05.5 semantic escalation on the same grammar: background fissures open with intensity, the slab underneath slips and lights, SSS notches the slab itself.
+
+### Interaction and motion
+
+- **Crossing is an act.** Holding the portal (pointer, or Space/Enter on the focused portal) charges it for ~1.15 s: fissures grow across the floor and frame, shards are pulled, glyphs and sockets light, the seal parts. Releasing heals it. A tap only answers with the instruction. The same transaction always has a visible button alternative (`Continuar` / `Dejarlo al azar`), so nothing depends on holding.
+- **The light becomes the next thing you see.** The camera falls toward the opening, the seal opens, the figure walks into the light; the opening's light survives the render as a shaped veil and morphs into the first card's rectangle, then cools into it.
+- **Cards emerge from a seam**: a vertical line of light splits into two edges that travel outward while the slab appears.
+- **Choosing breaks the card.** Pulling grows a fracture from that edge in proportion to intent (never value). On commit the card splits into five shards along that fracture; they drift up and away like the Threshold's fragments while light escapes between them. Buttons and arrow keys perform the same act.
+- **Stillness**: idle motion on the title is two compositor groups (portal light breath, shard drift) plus the glimpse rotation; play adds the existing bounded atmosphere. Nothing loops while hidden.
+- **Reduced motion**: every scene is a still, complete composition; crossing and choices cut directly; drag never moves the card but still shows the fracture and the written preview.
+
+### Typography
+
+Wordmark and large numerals: local Outfit at weight 200–300, widely tracked. Names: the operating-system ceremony serif. Moments: Georgia. Labels: DM Sans, small caps spacing. No font was added.
+
+### Sound (optional, off by default)
+
+Holding the portal raises a low fifth whose pitch and level follow the charge; crossing plays a detuned prismatic chord; a choice is a short glass shard over a low stone tone; a health loss darkens it. All synthesized with Web Audio, cancelled on skip/hidden, no files or dependencies.
+
+### Superseded rules register
+
+| Previous rule (source)                                                                                                         | Replaced by                                                                                                                                | Why                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Arcana of Lives chrome: vellum, iron-gall ink, brass ornaments, nine vellum materials (this document, DESIGN_SYSTEM)           | Fissure obsidian/alabaster/light grammar and six states                                                                                    | The user commissioned a new direction, not a polish; vellum read as storybook UI, not as matter of this world.                         |
+| "Strong impossible warm light is reserved for the Threshold"; "warm ivory handoff" (Task 04, THRESHOLD, MOTION)                | Spectral, contextual light everywhere a fissure exists; the handoff is the portal's own light becoming the card                            | A single warm color could not carry era, class, card type or legacy; the reference's monochrome was explicitly not wanted.             |
+| "Hand-drawn modern dark fantasy: ink, paper, gouache" as the chrome material (Task 03)                                         | Obsidian and alabaster for chrome; ink/gouache remains only the character-art technique                                                    | Chrome now belongs to the world's matter; Veiled Identity portraits stay as validated.                                                 |
+| "Spectral ivory/desaturated cyan… not a purple aura" for Convergence; "no neon, no rainbow" (Task 03 anti-patterns, VISUAL_QA) | Full-spectrum dispersion allowed, but only inside fissures and always as white core + fringes; still never rarity colors or colored panels | The user asked for maximum chromatic richness without losing mystery; structure, not prohibition, keeps it from turning generic.       |
+| "Primordial energy must not look like blue mana" (earlier task briefs)                                                         | Kept in spirit: energy is never one hue                                                                                                    | The rule's goal survives; its wording is now a palette rule above.                                                                     |
+| "No cinematics on every swipe" (Task 03 anti-patterns)                                                                         | Every choice is a 0.7 s break; it never blocks longer than that and is skipped under reduced motion                                        | Choosing had to feel like an act, not a rectangle leaving the screen.                                                                  |
+| Task 04 title painting `environment_v1`, `person_v1` and the god-ray/vignette layers                                           | Inline SVG Fissure scene; the four `lives_*` glimpses stay inside the opening                                                              | The scene must be lit by context and react to the hold; raster art could not. Files are archived, not deleted (manifests, art review). |
+| Paper-grain texture and deckled paper edges on gameplay (Task 05.5 game feel)                                                  | Obsidian gradients, chipped slab, lit seam; game-feel semantics unchanged                                                                  | Same contract, new matter.                                                                                                             |
+| WORLD_BIBLE / CONVERGENCE "visual direction for a later task: warm light from darkness"                                        | Annotated in lore as superseded presentation guidance; the CANON symbolic direction is untouched                                           | Lore keeps what the Threshold _means_; only how it looks changed.                                                                      |
+
+The sections below are the Task 03–Arcana history. They remain valid for character production, environments, depth order, rank semantics and accessibility; their palette, chrome, title and anti-pattern rules are superseded by the register above.
+
+## Superseded — Arcana of Lives (previous presentation authority)
 
 Branch `codex/visual-redesign-home-and-cards` replaces the Task 03 card chrome and the Task 04 title layout with one direction: **every Moment is a small Threshold**. The title doorway is the first arcana; each gameplay card repeats its arch as a painted miniature set into aged vellum. Gameplay, content, saves, timing and both RNG streams are unchanged; this is presentation only.
 
@@ -12,7 +96,7 @@ Three directions were compared before implementation: _cosmic ink minimalism_ (b
 - **Card materials:** one card grammar with nine variants derived at render time from existing Moment metadata (`src/ui/arcana.js`): life, intimate (warm rose vellum), work (cool ledger with margin rule), awakening (ash-cyan vellum, cold light from the arch), anomaly (inverted night vellum, frame out of register, mirrored numeral), echo (sepia memory), front (soot-darkened field/war), chronicle (newsprint for delivered reports) and threshold (luminous vellum, warm arch light). Variants never encode outcomes, ranks or probabilities and are not saved.
 - **Memorial and dialogs** reuse the arch, vellum plaque and night panel so the whole loop — title, life, death, legacy — reads as one object family.
 
-The Task 03–05.5 rules below remain valid for character art, environments, motion budgets, rank presentation and anti-patterns unless this section explicitly replaces their chrome.
+_Replaced by Fissure; kept as history._ The Task 03–05.5 rules below remain valid for character art, environments, motion budgets, rank presentation and anti-patterns unless this section explicitly replaces their chrome.
 
 Task 03 establishes **hand-drawn modern dark fantasy**. This supersedes the pixel-art direction in ART.md and ART-V3.md, which remain provenance records. The canon in `/lore` governs what exists; art does not invent historical events, powers or identities.
 
@@ -28,7 +112,7 @@ Convergence is spatially wrong, not automatically evil: an interrupted contour, 
 
 The Threshold is the central visual metaphor of birth, death, transition and possibility. Strong impossible warm light is reserved for it. Task 04 implements the portrait title, anonymous modern figure, symbolic lives and crossing; see [THRESHOLD](THRESHOLD.md). It supplies no explanation of repeated lives or future canon.
 
-## Palette, light and material
+## Palette, light and material (Task 03 — superseded by Fissure)
 
 | Context                   | Treatment                                                                                         |
 | ------------------------- | ------------------------------------------------------------------------------------------------- |
@@ -80,7 +164,7 @@ Depth order: background atmosphere → environment image → character → Momen
 
 ## Exceptional Moments and ranks — design only
 
-Marriage/birth: a brief warmer edge and intimate sound. Death: more breathing room and a slower fade. Awakening: alien light arrives before its explanation. Historical catastrophe/NPC loss: reduce normal motion and let text/person dominate. First Threshold: warm light is exceptional. Task 05.5 supplies semantic visual demonstrations for those future events; their gameplay mechanics remain unimplemented.
+Marriage/birth: a brief warmer edge and intimate sound. Death: more breathing room and a slower fade. Awakening: alien light arrives before its explanation. Historical catastrophe/NPC loss: reduce normal motion and let text/person dominate. First Threshold: under Fissure its light is spectral and contextual (legacy, recognition). Task 05.5 supplies semantic visual demonstrations for those future events; their gameplay mechanics remain unimplemented.
 
 Ranks use increasing pressure on the same visual grammar, not loot colors:
 
@@ -117,8 +201,8 @@ Current synthesized optional audio remains a placeholder with persisted mute. No
 
 ## Anti-patterns
 
-No medieval default, Disney-like faces, neon cyberpunk, rainbow rarity, gold everywhere, pulsing CTA, casino flashes, generic vector avatars, admin grids, ornamental tooltip walls, unreadable grain, or cinematics on every swipe. An ordinary Moment must remain ordinary enough for an exceptional Moment to matter.
+No medieval default, Disney-like faces, cyberpunk neon signage, rainbow as rarity, gold everywhere, pulsing CTA, casino flashes, generic vector avatars, admin grids, ornamental tooltip walls, unreadable grain, colored UI panels or a single-hue "energy". Fissure allows spectral dispersion only inside fissures (white core + fringes) and a 0.7 s break per choice; see the register. An ordinary Moment must remain ordinary enough for an exceptional Moment to matter.
 
-## Task 04 — El Umbral
+## Task 04 — El Umbral (archived painting; superseded by the Fissure Threshold)
 
 A weathered stone/aged doorway occupies one portrait composition against blue-black darkness. Its restrained organic carvings stay dark; the ivory opening and ground spill carry the contrast. The anonymous person wears modern civilian clothing and faces away. Four transparent groups contain ten symbolic life concepts. They have no identity, rank, class or predicted outcome. HTML owns every word and action. ImageGen candidates were inspected at source size and in the composed 360px scene; the final pass softened image boundaries, moved fragments entirely inside the aperture and corrected short-screen space. The ink/gouache treatment, ordinary anatomy and limited palette pass the family review; the creator/gameplay age library was legacy at Task 04 and is superseded by the complete Task 05 family. Full provenance, limits and social recommendation: [THRESHOLD](THRESHOLD.md).
