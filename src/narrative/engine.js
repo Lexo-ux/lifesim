@@ -23,6 +23,13 @@ import { evaluateRequirement } from "./opportunities.js";
 import { lifeContext } from "../systems/life-paths.js";
 import { resolveMysteryChoice } from "../systems/mysteries.js";
 import {
+  resolveInteraction,
+  commitInteraction,
+  openInteraction,
+  recordTimer,
+  selectResource,
+} from "../systems/interactions.js";
+import {
   prepareSocialEncounter,
   recordSocialEncounter,
   socialChoice,
@@ -190,10 +197,16 @@ export function choose(
   intent = {},
 ) {
   const acting = typeof intent.action === "string";
+  const interacting = typeof intent.interaction === "string";
   if (
     !s.alive ||
     expectedId !== s.story.current ||
-    !(acting ? side === "action" : ["left", "right"].includes(side))
+    (acting && interacting) ||
+    !(acting
+      ? side === "action"
+      : interacting
+        ? side === "interaction"
+        : ["left", "right"].includes(side))
   )
     return { error: "Esta decisión ya cambió." };
   const event = currentCard(s);
@@ -210,11 +223,17 @@ export function choose(
     if (resolved.error) return { error: resolved.error };
     side = resolved.side;
     option = resolved.option;
-  } else {
+  } else if (!interacting) {
     option = event && socialChoice(s, event, side);
     if (option?.resolve) option = resolveOption(s, event, side, option);
   }
+  const interaction = resolveInteraction(s, event, side, option, intent);
+  if (interaction?.error) return { error: interaction.error };
+  if (interaction) option = interaction.option;
   if (!option) return { error: "No existe esa decisión." };
+  // Third routes return a compatible direction to the existing presentation.
+  // NPC memory and interaction receipts retain their exact authored identity.
+  if (interacting) side = "right";
   if (
     event.compatibilityOnly &&
     s.legacy &&
@@ -285,7 +304,13 @@ export function choose(
   if (option.behavior)
     next.story.personality[option.behavior] =
       (next.story.personality[option.behavior] || 0) + 1;
-  remember(next, event.npc, event.id, side, option.bond);
+  remember(
+    next,
+    event.npc,
+    event.id,
+    interacting ? interaction.receipt.choice : side,
+    option.bond,
+  );
   const timestamp = now(next);
   const follows =
     event.resolution && event.system !== "resolution"
@@ -304,6 +329,7 @@ export function choose(
     next.story.arcs[event.arc] = { last: event.id, side, age: next.age };
   if (option.milestone) log(next, option.milestone, true, "spark");
   if (resolved) commitAction(next, event, resolved, timestamp, side);
+  commitInteraction(next, event, interaction, timestamp);
   settleMoment(next, event, resolved, timestamp);
   advanceAwakening(next, event, side);
   scheduleFirstUse(next, event, timestamp);
@@ -340,6 +366,7 @@ export function choose(
     aged: next.age !== startAge,
     secret: event.pool === "meta",
     unlocked: unlocked.map((a) => a.name),
+    ...(interaction ? { interaction: interaction.receipt } : {}),
     ...(resolved
       ? {
           action: {
@@ -374,6 +401,13 @@ function momentTransaction(s, expectedId, run) {
     return { error: "Esta decisión ya cambió." };
   const event = currentCard(s);
   if (!event?.actions) return { error: "No existe esa decisión." };
+  if (
+    event.interaction?.type === "timed" &&
+    s.interactions?.pending?.moment === event.id &&
+    s.interactions.pending.elapsedMs >= event.interaction.durationMs &&
+    !s.actions?.pending?.hold
+  )
+    return { error: "El plazo terminó. Debes resolver la espera." };
   const next = structuredClone(s);
   const error = run(next, event, now(next));
   if (error) return { error };
@@ -388,6 +422,24 @@ export const startHold = (s, actionId, expectedId = s.story.current) =>
   momentTransaction(s, expectedId, (n, e, at) => beginHold(n, e, actionId, at));
 export const holdStep = (s, expectedStep, expectedId = s.story.current) =>
   momentTransaction(s, expectedId, (n, e) => stepHold(n, e, expectedStep));
+function interactionTransaction(s, expectedId, run) {
+  if (!s.alive || expectedId !== s.story.current)
+    return { error: "Esta decisión ya cambió." };
+  const event = currentCard(s);
+  if (!event?.interaction) return { error: "No existe esa interacción." };
+  const next = structuredClone(s),
+    error = run(next, event);
+  if (error) return { error };
+  Object.assign(s, next);
+  return {};
+}
+export const beginInteraction = (s, expectedId = s.story.current) =>
+  interactionTransaction(s, expectedId, openInteraction);
+// elapsedMs is ABSOLUTE cumulative active time, not a delta. UI clock owns scaling.
+export const checkpointTimer = (s, elapsedMs, expectedId = s.story.current) =>
+  interactionTransaction(s, expectedId, (n, m) => recordTimer(n, m, elapsedMs));
+export const toggleAllocation = (s, id, expectedId = s.story.current) =>
+  interactionTransaction(s, expectedId, (n, m) => selectResource(n, m, id));
 // Releasing resolves the held action through the ordinary choice transaction.
 export const release = (s, meta, expectedId = s.story.current) =>
   s.actions?.pending?.hold && s.actions.pending.moment === s.story.current

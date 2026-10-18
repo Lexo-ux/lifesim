@@ -2,6 +2,10 @@
 
 Vanilla JavaScript con ES modules, HTML y CSS. Sin framework, backend, compilación ni dependencias de producción. Task 01 traslada módulos sin cambiar mecánicas, probabilidades, contenido, CSS ni imágenes. Código: implementación; `/lore`: canon; `/content`: datos; `/docs`: documentación técnica.
 
+## Extensión Task 15 Rebuild
+
+`src/systems/actions.js` conserva las acciones contextuales y Hold (`state.actions`). `src/systems/interactions.js` posee únicamente los compromisos finitos nuevos (`state.interactions`): tiempo activo acumulado, selección de recursos, aplazamientos y última resolución. Ambos resuelven dentro de `narrative/engine.choose`; no hay una segunda simulación. El reloj inyectable de UI en `ui/interaction-clock.js` no conoce World ni RNG. `ui/showcase.js` conecta fixtures explícitos de `src/playtest/` a la misma aplicación con almacenamiento de sesión aislado. Contrato completo: [INTERACTIONS](INTERACTIONS.md).
+
 ## Límites de módulos
 
 | Ubicación                  | Responsabilidad                                                                        |
@@ -22,7 +26,7 @@ Vanilla JavaScript con ES modules, HTML y CSS. Sin framework, backend, compilaci
 | `lore/`                    | Canon futuro de Task 02, con estados y reservas explícitos; no es runtime.             |
 | `tests/`, `tools/`         | Verificación, servidor local, replay y preparación de recursos.                        |
 
-No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. `style.css` es una entrada estática de trece módulos en `styles/` (el último, `fissure.css`, es el sistema visual vigente: obsidiana, alabastro y luz por las fisuras; su vocabulario se deriva en `src/ui/fissure.js` y la escena del Umbral en `src/ui/threshold-scene.js`, sin guardar nada ni tocar el RNG). Los prototipos de dirección viven en `lab/`, fuera del juego; tokens y motion son compartidos por CSS y `src/ui/motion.js`. Los imports y assets CSS resuelven desde cada archivo; la URL de escena dinámica se normaliza contra `document.baseURI` para evitar resolverla desde `/styles/`. Los subcatálogos se dividirán cuando su crecimiento lo justifique.
+No se crea `utils/` vacío: las utilidades del estado y la UI permanecen con sus capas. `style.css` importa los módulos locales de Atlas de vidas. `styles/moments.css` define el folio, `styles/threshold.css` el título y `styles/interactions.css` las superficies nuevas. `fissure.css` conserva el nombre por compatibilidad, pero su material anterior fue reemplazado; `src/ui/fissure.js` sigue proyectando luz desde conocimiento entregado, sin RNG ni persistencia. Los prototipos de dirección viven en `lab/`, fuera del juego; tokens y motion son compartidos por CSS y `src/ui/motion.js`. Los imports y assets CSS resuelven desde cada archivo; la URL de escena dinámica se normaliza contra `document.baseURI` para evitar resolverla desde `/styles/`. Los subcatálogos se dividirán cuando su crecimiento lo justifique.
 
 ## Flujo y propiedad del estado
 

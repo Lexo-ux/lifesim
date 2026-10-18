@@ -43,6 +43,67 @@ export const SPECIFICITY = {
 };
 
 export const ACTIONS = [
+  {
+    id: "restore-records",
+    kind: "profession",
+    source: "desarrollo de software",
+    requires: job("developer"),
+    needs: { setting: ["work"] },
+    verbs: { workload: "Restaurar los pedidos desde una copia verificada" },
+    practice: "analysis",
+    domain: "technical",
+    cost: { energy: -4 },
+    factors: {
+      full: ["prepared", "practiced"],
+      partial: ["practiced", "experienced", "prepared"],
+    },
+    effects: {
+      full: { technology: 2, happiness: 2 },
+      partial: { technology: 1, stress: 2 },
+      costly: { stress: 5, energy: -2 },
+    },
+    text: {
+      full: "Comparas la copia con los pedidos confirmados antes de restaurarla. Vuelve lo esencial sin borrar lo que llegó después del fallo.",
+      partial:
+        "Recuperas los pedidos confirmados. Las últimas entradas deben revisarse a mano; entregas una lista concreta de lo que falta.",
+      costly:
+        "La copia no coincide con el registro actual. Detienes la restauración antes de sobrescribirlo y preparas un procedimiento manual; el cierre se retrasa.",
+    },
+  },
+  {
+    id: "steady-object",
+    kind: "circumstance",
+    source: "ayuda a mano",
+    requires: { type: "age", min: 3 },
+    needs: { load: ["moderate"], materials: ["present"] },
+    verbs: { structure: "Sostener la pieza mientras trabajan" },
+    hold: {
+      goal: 4,
+      safe: 2,
+      limit: ["rested", "steady", "prepared"],
+      steps: [
+        "Colocas las manos y dejas que la otra persona ajuste la pieza.",
+        "La primera sujeción está puesta. Ya puedes pedir que tome el relevo.",
+        "Queda un ajuste. Notas los brazos cansados; no hace falta fingir que no.",
+        "La pieza queda fijada. Puedes retirar las manos.",
+      ],
+      cost: { energy: -1 },
+    },
+    effects: {
+      full: { discipline: 1, happiness: 1 },
+      partial: { happiness: 1 },
+      early: { stress: 1 },
+      over: { energy: -2, stress: 1 },
+    },
+    text: {
+      full: "La pieza queda quieta hasta el último ajuste. Tu ayuda pequeña permitió terminar el trabajo.",
+      partial:
+        "Pides el relevo cuando la primera sujeción ya está puesta. La otra persona termina sin perder lo que avanzasteis.",
+      early:
+        "Sueltas antes de que quede sujeta. La otra persona recoge la pieza y hay que volver a colocarla.",
+      over: "Terminas el ajuste con los brazos agotados. La próxima vez podrías pedir el relevo antes: ayudar no exige aguantarlo todo.",
+    },
+  },
   // ---------- Awakening classes: one recognizable active capability each ----------
   {
     id: "reinforce-hold",

@@ -1,5 +1,7 @@
 # Persistencia y compatibilidad
 
+Task 15 Rebuild conserva las claves y admite los guardados anteriores con `actions.version = 1`, incluida preparación/hold pendientes. La extensión opcional `interactions.version = 1` añade pendientes de tiempo/recursos, aplazamientos acotados y recibo final; su ausencia no fabrica decisiones ni costes. `settings.timing` acepta `normal`, `extended` o `unlimited`; ausente equivale a normal. La carga no consume RNG ni cambia el Moment. Véase [INTERACTIONS](INTERACTIONS.md) para validación y transacciones. La mesa `?playtest=1` pasa un adaptador separado a los mismos load/save/reset y no accede al almacenamiento normal.
+
 Task 14.5 añade únicamente ajustes opcionales: `crossed: true` (prólogo visto/omitido) y `openingLife` (ID de la vida cuyo boletín público cerró el jugador, hasta 80 caracteres). Su ausencia conserva el formato anterior. No se migran estados de personajes, relojes, semillas, recuerdos ni meta; no se fabrican resúmenes anteriores. [FIRST_LIFE_EXPERIENCE](FIRST_LIFE_EXPERIENCE.md).
 
 Task 01 conserva claves, versiones e IDs. Las rutas de módulos no forman parte del guardado: no hace falta migración nueva. `src/config/persistence.js` centraliza claves; ambos adaptadores siguen exportando `SAVE_KEY`.

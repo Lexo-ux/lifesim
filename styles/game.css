@@ -1,158 +1,168 @@
-/* One portrait-sized stage on every display. No dashboard breakpoints. */
+/* Atlas de vidas: a folio on a reading table, not a dashboard. */
 .play-screen {
-  width: min(100%, 440px);
-  height: 100svh;
-  max-height: 940px;
-  min-height: 560px;
+  width: min(100%, 490px);
+  min-height: 100svh;
   margin: 0 auto;
+  padding: 16px 22px max(12px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
-  padding: 12px 22px max(8px, env(safe-area-inset-bottom));
   position: relative;
 }
 .game-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 44px;
-  flex-shrink: 0;
-  margin-bottom: 8px;
+  min-height: 44px;
+  margin-bottom: 12px;
 }
 .wordmark {
-  font: 650 17px var(--heading);
   background: none;
   padding: 8px 0;
-  letter-spacing: 1px;
+  min-height: 44px;
+  font: 700 23px/1 var(--font-mark);
+  letter-spacing: -0.07em;
 }
 .wordmark span {
-  color: var(--ink);
+  color: var(--atlas-rust);
 }
 .wordmark i {
-  font: normal 9px var(--body);
-  color: var(--muted);
-  margin-left: 7px;
-  letter-spacing: 2px;
+  display: none;
 }
 .top-tools {
   display: flex;
-  gap: 7px;
+  gap: 8px;
 }
 .top-tools .icon-button {
-  width: 44px;
-  height: 44px;
-  border: 0;
+  border-radius: 0;
+  border: 1px solid var(--line);
 }
 .top-tools .icon {
-  width: 19px;
-  height: 19px;
-}
-.moment {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin: 13px 0 0;
-  font-size: 11px;
-  color: var(--muted);
-  flex-shrink: 0;
-}
-.moment i {
-  font-style: normal;
-  color: var(--border-strong);
-  padding: 0 6px;
-}
-.chapter {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.onboarding {
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  color: var(--muted);
-  flex-shrink: 0;
-}
-.onboarding.learned {
-  height: 8px;
-}
-.quiet-nav {
-  display: flex;
-  justify-content: space-around;
-  border-top: 1px solid var(--line);
-  flex-shrink: 0;
-}
-.quiet-nav .nav-link {
-  letter-spacing: 0.5px;
-}
-.playing {
-  overflow-x: clip;
-}
-
-.wordmark {
-  min-height: 44px;
+  width: 18px;
+  height: 18px;
 }
 .indicators {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-5);
-  padding: 4px 10px 10px;
+  gap: 16px;
+  padding: 0 0 16px;
   flex-shrink: 0;
 }
 .indicator {
-  text-align: center;
-  --tone: var(--convergence);
+  --tone: var(--atlas-teal);
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  align-items: center;
+  gap: 4px 5px;
 }
 .indicator.health {
-  --tone: var(--danger);
+  --tone: #f0a38d;
 }
 .indicator.happiness {
-  --tone: #d7cdb4;
+  --tone: #e1c58e;
 }
 .indicator.development {
-  --tone: #b5c8d1;
+  --tone: #a6cec4;
 }
 .indicator.economy {
-  --tone: #b9c8b1;
+  --tone: #afc4d4;
 }
 .indicator > span {
-  display: block;
+  grid-row: 1;
   position: relative;
   color: var(--tone);
-  margin-bottom: 7px;
+}
+.indicator .icon {
+  width: 19px;
+  height: 19px;
 }
 .indicator-track {
-  height: 3px;
-  background: #485250;
+  height: 4px;
+  background: #ffffff24;
   overflow: hidden;
 }
 .indicator-track i {
   display: block;
   height: 100%;
-  width: 100%;
   transform: scaleX(var(--value));
   transform-origin: left;
   background: var(--tone);
 }
 .indicator small {
-  overflow-wrap: anywhere;
-  font-size: 10px;
+  grid-column: 1/-1;
   color: var(--muted);
-  display: block;
-  line-height: 1.2;
-  margin-top: 7px;
+  font: 500 10px/1.25 var(--font-ui);
+  overflow-wrap: anywhere;
 }
 .stat-direction {
   position: absolute;
-  right: 0;
-  bottom: -1px;
-  font: 14px var(--body);
+  right: -2px;
+  bottom: -10px;
+  font: 12px var(--body);
 }
 .indicator.rose > span {
   animation: rise var(--motion-deliberate) ease;
 }
 .indicator.fell > span {
   animation: fall var(--motion-deliberate) ease;
+}
+.moment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 0;
+  font: 500 12px/1.4 var(--font-ui);
+  color: var(--muted);
+}
+.chapter {
+  font: italic 16px/1.2 var(--font-story);
+  color: var(--ink);
+}
+.onboarding {
+  padding: 6px 0;
+  text-align: center;
+  font: 12px/1.4 var(--font-ui);
+  color: var(--muted);
+}
+.onboarding.learned {
+  padding: 3px;
+}
+.quiet-nav {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+}
+.quiet-nav .nav-link {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.playing {
+  overflow-x: clip;
+}
+@media (min-width: 1000px) {
+  .play-screen {
+    width: 780px;
+    padding-top: 28px;
+  }
+  .game-top {
+    margin-bottom: 22px;
+  }
+  .indicators {
+    gap: 36px;
+    padding-bottom: 22px;
+  }
+  .indicator {
+    grid-template-columns: 26px 1fr;
+  }
+  .indicator small {
+    font-size: 12px;
+  }
+  .wordmark {
+    font-size: 28px;
+  }
+  .quiet-nav {
+    justify-content: flex-end;
+    gap: 28px;
+  }
 }

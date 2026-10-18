@@ -14,6 +14,7 @@ import { DEEP_MYSTERIES } from "./deep-mysteries.js";
 import { RESOLUTION_MOMENTS } from "./resolution.js";
 import { SCENARIO_MOMENTS } from "./scenarios.js";
 import { FIRST_USE_MOMENTS } from "./first-use.js";
+import { INTERACTION_MOMENTS, MOMENT_INTERACTIONS } from "./interactions.js";
 import { MOMENT_HOOKS } from "../actions/moment-hooks.js";
 export const CARDS = [
   ...RESOLUTION_MOMENTS,
@@ -33,7 +34,12 @@ export const CARDS = [
   // Task 15, appended so earlier selection order is unchanged.
   ...SCENARIO_MOMENTS,
   ...FIRST_USE_MOMENTS,
-];
+  ...INTERACTION_MOMENTS,
+].map((moment) =>
+  MOMENT_INTERACTIONS[moment.id]
+    ? { ...moment, ...MOMENT_INTERACTIONS[moment.id] }
+    : moment,
+);
 export const CARD_BY_ID = Object.fromEntries(CARDS.map((c) => [c.id, c]));
 // Task 15 hooks are declared beside, not inside, the original Moment literals so their
 // authored text and choices stay byte-for-byte identical. Data composition only.

@@ -136,6 +136,34 @@ let browser;
       JSON.parse(localStorage.getItem("lifesim.v3")).state.field?.operations
         .repair.phase === "accepted",
   );
+  const normalSave = await page.evaluate(() =>
+    localStorage.getItem("lifesim.v3"),
+  );
+  await page.goto(base + "?playtest=1");
+  await page
+    .locator("[data-action=showcase-start][data-value=timeout]")
+    .click();
+  await page.locator("[data-action=timeout]").click();
+  await page.waitForFunction(
+    () =>
+      JSON.parse(sessionStorage.getItem("lifesim.playtest.lifesim.v3")).state
+        .story.outcome?.interaction?.choice === "timeout",
+  );
+  assert.equal(
+    await page.evaluate(() => localStorage.getItem("lifesim.v3")),
+    normalSave,
+  );
+  await page
+    .getByRole("link", { name: "Volver al juego", exact: true })
+    .click();
+  assert.equal(new URL(page.url()).pathname, "/lifesim/");
+  assert.equal(new URL(page.url()).search, "");
+  await page.locator("[data-action=continue]").click();
+  await page.waitForSelector(".narrative-card");
+  assert.equal(
+    await page.evaluate(() => localStorage.getItem("lifesim.v3")),
+    normalSave,
+  );
   assert.deepEqual(failures, []);
   console.log(
     "GitHub Pages subpath QA passed: /lifesim/, ES modules, fonts, images, a playable year and publication files.",

@@ -156,7 +156,11 @@ export function choiceFeedback(before, after, moment, side, result) {
   const special =
     moment.system || moment.resolution || moment.field || moment.mystery;
   // Task 15: an approach or a factor-resolved choice reports its own resolved text.
-  const acted = !!(result.outcome.action || result.outcome.resolved);
+  const acted = !!(
+    result.outcome.action ||
+    result.outcome.resolved ||
+    result.outcome.interaction
+  );
   const text =
     special || acted
       ? result.outcome.text

@@ -452,22 +452,33 @@ test("long player histories retain bounded summaries/provenance without duplicat
   assert.ok(JSON.stringify(d.meta).length < 15000);
 });
 test("career evidence survives changing profession after two annual settlements within eighteen months", () => {
-  // Input seed rediscovered for the Task 15 catalog (4 before): the policy is unchanged.
+  // Directed input fixture: the regression is two annual settlements within an
+  // eighteen-month occupation, independent of unrelated catalog weight changes.
   const meta = extendMeta(emptyMeta()),
-    state = startLife({ name: "Alex" }, meta, 6);
-  let choices = 0,
-    changed = false;
-  while (state.alive && choices++ < 230) {
-    const id = state.story.current;
-    choose(state, meta, "right");
-    assert.ok(validLegacyState(state, CARD_BY_ID), id);
-    if (
-      id === "job_founder" &&
-      state.legacy.pending.perspectives.care?.id === "doctor"
-    )
-      changed = true;
+    state = startLife({ name: "Alex" }, meta, 53);
+  state.age = 32;
+  state.story.month = 6;
+  state.education.degrees = ["school", "medicine"];
+  state.stats.intelligence = 90;
+  state.skills.finance = 70;
+  state.skills.charisma = 70;
+  state.cash = 100000;
+  for (const id of ["job_doctor", "quiet_day", "quiet_day", "job_founder"]) {
+    state.story.current = id;
+    const result = choose(state, meta, "right");
+    assert.equal(result.error, undefined, id);
+    assert.ok(validStory(state), id);
   }
-  assert.ok(changed);
+  assert.equal(state.career.id, "founder");
+  const previous = state.life.occupation.previous.find(
+    (p) => p.id === "doctor",
+  );
+  assert.equal(previous.to - previous.from, 18);
+  assert.equal(state.legacy.pending.perspectives.care.id, "doctor");
+  assert.deepEqual(
+    reload({ state, meta, settings: { sound: false } }).state,
+    state,
+  );
 });
 test("multi-life production selection stays sparse, ordinary, valid and free of obsolete Archive content", () => {
   const r = simulateLegacy(3, 4);

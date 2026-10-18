@@ -28,6 +28,7 @@ import {
   momentActionErrors,
 } from "../src/narrative/action-schema.js";
 import { FIRST_USE } from "../content/actions/catalog.js";
+import { momentInteractionErrors } from "../src/narrative/interaction-schema.js";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const record = (v) => !!v && typeof v === "object" && !Array.isArray(v);
 const text = (v) => typeof v === "string" && v.trim().length > 0;
@@ -156,6 +157,7 @@ export function validateContent({
     for (const error of legacyContentErrors(m)) report(m.id, error);
     for (const error of opportunityErrors(m, byId)) report(m.id, error);
     for (const error of momentActionErrors(m, byId)) report(m.id, error);
+    for (const error of momentInteractionErrors(m, byId)) report(m.id, error);
     if (!text(m.id) || !/^[a-z][a-z0-9_]*$/.test(m.id))
       report(m.id, "invalid Moment ID");
     if (ids.has(m.id)) report(m.id, "duplicate Moment ID");
@@ -274,6 +276,6 @@ if (
     process.exitCode = 1;
   } else
     console.log(
-      `Content OK: ${CARDS.length} binary Moments, ${Object.keys(NPCS).length} legacy NPCs and ${Object.keys(SOCIAL_NPCS).length} social identities, references and assets.`,
+      `Content OK: ${CARDS.length} Moments with two authored sides and validated optional interactions, ${Object.keys(NPCS).length} legacy NPCs and ${Object.keys(SOCIAL_NPCS).length} social identities, references and assets.`,
     );
 }

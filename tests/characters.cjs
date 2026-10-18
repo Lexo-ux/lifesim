@@ -154,6 +154,9 @@ const dir = "output/qa/task05";
     await page.waitForSelector(".narrative-card");
     await settled();
     const initial = await read();
+    // This suite isolates artwork/rendering from active timed input; expiry is
+    // exercised through the real clock in rebuild.cjs. No zero-time save mutation.
+    initial.settings.timing = "unlimited";
     assert.equal(initial.state.age, 0);
     assert.equal(initial.state.appearance, 1);
     assert.equal(initial.state.name, fields.name);

@@ -1,8 +1,14 @@
-# Estado real — V3 con Resolución Verdadera y primera vida (Task 14.5)
+# Estado real — Task 15 Rebuild
 
-## Redirección artística — Fisura
+## Implementación actual
 
-Nueva dirección vigente (sustituye a Arcanos de vidas): la luz es otra realidad vista por las grietas de la materia. Umbral en SVG con monolitos, fragmentos flotantes, portal ornamentado con engastes de legado y una figura diminuta; se cruza manteniendo pulsado el portal (con alternativa de botón y teclado) y su luz se convierte en la primera carta. Las cartas son losas de obsidiana con ventana a la escena y alabastro iluminado; seis estados legibles sin depender del color (cotidiano, crisis, misterio, eco, despertar, resolución) y elegir parte la carta en fragmentos. Luz contextual por tipo de carta, era conocida, clase y legado. Tres prototipos en `lab/`. Sin cambios de reglas, Moments, guardados, migraciones, tiempos de transacción, canon ni RNG. Contrato: [ART_DIRECTION](ART_DIRECTION.md), [DESIGN_SYSTEM](DESIGN_SYSTEM.md), [MOTION](MOTION.md) y [THRESHOLD](THRESHOLD.md).
+Atlas de vidas sustituye la presentación Fisura. El motor conserva sus propietarios previos y añade interacciones finitas a los Moments: contador con tercera consecuencia, prioridades, reparto de recursos, decisión autónoma de NPC y aplazamiento con deterioro. Sostener se resuelve al levantar el dedo; cancelar solo pausa. Doce clases y ocho profesiones reutilizan el catálogo contextual, con nuevas oportunidades civiles y diez escenas adultas. Hay 440 Moments registrados, ocho de ellos del Archivo solo para compatibilidad. Los guardados anteriores siguen admitidos; `actions.version=1` y `interactions.version=1` son extensiones distintas.
+
+`?playtest=1` permite probar 39 escenas/perfiles aislados con el motor y validadores reales; nunca lee ni escribe la partida o Legado normales. Contratos: [INTERACTIONS](INTERACTIONS.md), guía [TASK15_PLAYTEST](TASK15_PLAYTEST.md). La rama requiere prueba del usuario antes de fusionar. Las secciones siguientes conservan el contexto histórico de las entregas previas.
+
+## Histórico — redirección artística Fisura
+
+Dirección anterior (sustituida por Atlas de vidas): la luz es otra realidad vista por las grietas de la materia. Umbral en SVG con monolitos, fragmentos flotantes, portal ornamentado con engastes de legado y una figura diminuta; se cruza manteniendo pulsado el portal (con alternativa de botón y teclado) y su luz se convierte en la primera carta. Las cartas son losas de obsidiana con ventana a la escena y alabastro iluminado; seis estados legibles sin depender del color (cotidiano, crisis, misterio, eco, despertar, resolución) y elegir parte la carta en fragmentos. Luz contextual por tipo de carta, era conocida, clase y legado. Tres prototipos en `lab/`. Sin cambios de reglas, Moments, guardados, migraciones, tiempos de transacción, canon ni RNG. Contrato: [ART_DIRECTION](ART_DIRECTION.md), [DESIGN_SYSTEM](DESIGN_SYSTEM.md), [MOTION](MOTION.md) y [THRESHOLD](THRESHOLD.md).
 
 _Histórico — Arcanos de vidas:_ puerta a sangre completa, miniatura en arco sobre pergamino y nueve materiales; reemplazado por Fisura.
 
@@ -63,7 +69,7 @@ Task 02 incorpora la [World Bible](../lore/WORLD_BIBLE.md), sus documentos espec
 
 ## PLANNED — no implementado
 
-Tipos adicionales de Moment, ampliación de clases y desarrollo del Núcleo, ampliación de operaciones de cazadores, criaturas, facciones, cronología canónica fechada, agentes autónomos, catálogos ampliados y metanarrativa futura. No hay backend, cuentas, cloud saves, rankings globales ni nuevas analíticas. Tasks 03–05.5 establecen arte, Umbral, personajes y lenguaje FX. Task 06 implementa Despertar; Task 07 incorpora caminos y oportunidades. Task 08 incorpora personas e instituciones contextuales. Task 09 añade el mundo y noticias limitadas; Task 10 incorpora operaciones de campo; Task 11 incorpora guerra estratégica acotada y desenlaces; Task 12 añade perspectivas y ecos; Task 13 incorpora investigaciones locales y anomalías; Task 14 añade la intervención planetaria documentada arriba. No se ha iniciado Task 15.
+Tipos adicionales de Moment, ampliación de clases y desarrollo del Núcleo, ampliación de operaciones de cazadores, criaturas, facciones, cronología canónica fechada, agentes autónomos, catálogos ampliados y metanarrativa futura. No hay backend, cuentas, cloud saves, rankings globales ni nuevas analíticas. Tasks 03–05.5 establecen arte, Umbral, personajes y lenguaje FX. Task 06 implementa Despertar; Task 07 incorpora caminos y oportunidades. Task 08 incorpora personas e instituciones contextuales. Task 09 añade el mundo y noticias limitadas; Task 10 incorpora operaciones de campo; Task 11 incorpora guerra estratégica acotada y desenlaces; Task 12 añade perspectivas y ecos; Task 13 incorpora investigaciones locales y anomalías; Task 14 añade la intervención planetaria documentada arriba. Task 15 Rebuild añade las interacciones documentadas al principio de este archivo.
 
 ## Entrada a una vida — Task 04
 

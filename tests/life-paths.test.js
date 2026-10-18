@@ -20,6 +20,7 @@ import { lifeProfile, lifeMemory } from "../src/ui/life-paths.js";
 import { inspectOpportunities } from "../tools/inspect-opportunities.js";
 import { simulateOpportunities } from "../tools/simulate-opportunities.mjs";
 import { INSTITUTIONS } from "../content/social/catalog.js";
+import { withOriginalContent } from "./task15-compatibility.js";
 const store = () => {
   const m = new Map();
   return {
@@ -28,37 +29,38 @@ const store = () => {
     removeItem: (k) => m.delete(k),
   };
 };
-test("100 pre-opportunity childhoods match the full-state Task 06 golden from 99779f2", () => {
-  const digest = createHash("sha256");
-  let decisions = 0;
-  for (let seed = 1; seed <= 100; seed++) {
-    const meta = extendMeta(emptyMeta()),
-      state = startLife({ name: "Comparison" }, meta, seed * 7919);
-    state.id = "equivalent";
-    const capture = () => {
-      const plain = structuredClone(state);
-      delete plain.life;
-      delete plain.world;
-      delete plain.worldKnowledge;
-      delete plain.legacy;
-      const oldMeta = structuredClone(meta);
-      delete oldMeta.legacy;
-      oldMeta.version = 2;
-      digest.update(JSON.stringify({ state: plain, meta: oldMeta }));
-    };
-    capture();
-    while (state.age < 16 && state.alive) {
-      choose(state, meta, decisions % 2 ? "left" : "right");
-      decisions++;
+test("100 original-content childhoods match the full-state Task 06 golden from 99779f2", () =>
+  withOriginalContent(() => {
+    const digest = createHash("sha256");
+    let decisions = 0;
+    for (let seed = 1; seed <= 100; seed++) {
+      const meta = extendMeta(emptyMeta()),
+        state = startLife({ name: "Comparison" }, meta, seed * 7919);
+      state.id = "equivalent";
+      const capture = () => {
+        const plain = structuredClone(state);
+        delete plain.life;
+        delete plain.world;
+        delete plain.worldKnowledge;
+        delete plain.legacy;
+        const oldMeta = structuredClone(meta);
+        delete oldMeta.legacy;
+        oldMeta.version = 2;
+        digest.update(JSON.stringify({ state: plain, meta: oldMeta }));
+      };
       capture();
+      while (state.age < 16 && state.alive) {
+        choose(state, meta, decisions % 2 ? "left" : "right");
+        decisions++;
+        capture();
+      }
     }
-  }
-  assert.equal(decisions, 2873);
-  assert.equal(
-    digest.digest("hex"),
-    "da036deac5d3388b8d2fa516807f40375a8f052b6a3565e56124081f8d3ddf18",
-  );
-});
+    assert.equal(decisions, 2873);
+    assert.equal(
+      digest.digest("hex"),
+      "da036deac5d3388b8d2fa516807f40375a8f052b6a3565e56124081f8d3ddf18",
+    );
+  }));
 function act(d, id, side = "left") {
   const m = CARD_BY_ID[id];
   assert.ok(

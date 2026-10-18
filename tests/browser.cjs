@@ -58,6 +58,11 @@ const BASE = process.env.BASE_URL || "http://127.0.0.1:4173";
       await stable();
       await page.screenshot({ path: `output/qa/${name}.png` });
     };
+    // This suite compares exact save snapshots. Real timer progression and
+    // expiry are exercised separately by rebuild.cjs.
+    await page.locator("[data-action=settings]").first().click();
+    await page.locator("[data-action=timing][data-value=unlimited]").click();
+    await page.keyboard.press("Escape");
     const snapshot = await read();
     assert.equal(snapshot.state.name, "Valentina");
     assert.equal(snapshot.state.appearance, 1);

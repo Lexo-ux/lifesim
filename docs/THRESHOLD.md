@@ -1,6 +1,14 @@
-# El Umbral — Task 04, current scene: Fissure
+# El Umbral — current scene: Atlas de vidas
 
-## Fissure Threshold (current authority)
+## Atlas de vidas — Task 15 Rebuild (current scene)
+
+The title is now an editorial composition: oversized LIFE / SIM, an ivory paper aperture and a sparse cartographic drawing. Desktop places title/actions beside the scene; mobile stacks them. This is a metaphorical atlas, not a map of cosmological structure. `threshold-scene.js` uses fixed authored geometry: three SVG layers, 60 bounded registration ticks, seven memory marks and ten dust points. The seven marks preserve the old capped remembered-life display; they do not define seven possible lives or worlds. The circular paths imply no gameplay requirements.
+
+The aperture shares the previous coordinate contract, two glimpse buffers and anonymous silhouette. `mountThreshold` still owns reveal, idle, prepare, hold, cancellation, crossing and disposal. Its reveal targets the atlas orbit instead of obsolete fractures. Press/hold, release, keyboard and explicit button alternatives retain the same transaction. The visual charge illuminates registration lines and opens paper leaves; it never changes the life seed. Reduced motion, hidden-tab cancellation and first-crossing prologue continue through the existing owners.
+
+No raster asset or runtime dependency was added. Existing local glimpse art stays inside the opening. Original Fissure geometry has been replaced rather than hidden behind an additional scene. The sections below document previous scenes and invariant lifecycle contracts; their claims about monoliths, floating stone, prismatic colors and prior measurements are historical, not measurements of this rebuild.
+
+## Fissure Threshold (previous scene)
 
 The title is a still, monumental place: obsidian monoliths standing in a lit mist, fragments floating without explanation, an ornate portal with real weight, and a tiny cloaked figure backlit on the floor before it. Light is not a lamp: it is another reality seen through the fissures, in the triad given by the player's legacy. Direction and the superseded-rules register: [ART_DIRECTION](ART_DIRECTION.md#art-redirection--fissure-current-presentation-authority).
 

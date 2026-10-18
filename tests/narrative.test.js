@@ -3,6 +3,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { CARDS, CARD_BY_ID } from "../content/moments/index.js";
 import { FIRST_USE_MOMENTS } from "../content/moments/first-use.js";
+import { INTERACTION_MOMENTS } from "../content/moments/interactions.js";
 import { NPCS } from "../content/npcs/index.js";
 import { startLife, choose, macroStats } from "../src/narrative/engine.js";
 import { extendMeta } from "../src/narrative/meta.js";
@@ -42,7 +43,8 @@ test("130 original cards: exactly two choices, local speakers, connected arcs an
       (c) =>
         c.system !== "awakening" &&
         !c.opportunity &&
-        !FIRST_USE_MOMENTS.includes(c),
+        !FIRST_USE_MOMENTS.includes(c) &&
+        !INTERACTION_MOMENTS.includes(c),
     ).length,
     130,
   );

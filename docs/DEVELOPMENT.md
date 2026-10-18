@@ -24,6 +24,7 @@ npm test
 npx playwright install chromium
 npm run test:browser
 node tools/first-life-diagnostic.mjs 450
+node tools/simulate-interactions.mjs 1000
 ```
 
 En Windows con Edge: `$env:BROWSER_CHANNEL='msedge'; npm run test:browser`. En Linux CI se usa `npx playwright install --with-deps chromium`. `check` valida sintaxis, imports relativos, separación content/runtime, recursos y contenido. No hay ESLint configurado; no presentar el check como lint semántico. `npm run format` aplica Prettier.
@@ -35,6 +36,10 @@ En Windows con Edge: `$env:BROWSER_CHANNEL='msedge'; npm run test:browser`. En L
 `tests/game.test.js`: contratos de sistemas V2 y cien vidas simuladas. `tests/narrative.test.js`: reglas V3, cadenas, migración, metaprogreso y cien vidas. `tests/content.test.js`: validación positiva/negativa. `browser.cjs`, `accessibility.cjs`, `pages.cjs`: integración real de UI, gestos, guardado/refresh, seis viewports, consola/assets, ocho vistas axe y subruta Pages. Capturas/informe quedan en `output/qa/`, ignorado por Git y adjuntado por CI.
 
 No se mueven las suites pequeñas solo por estética. Al crecer, añadir categorías `unit/`, `simulation/`, `content/`, `integration/` y actualizar descubrimiento y workflow conjuntamente; hoy `npm test` descubre `tests/*.test.js`. No añadir tests vacíos.
+
+## Mesa de prueba Task 15
+
+`?playtest=1` abre escenas/perfiles aislados con los controles normales. [Guía](TASK15_PLAYTEST.md) y [contrato](INTERACTIONS.md). `tests/rebuild.cjs` recorre la mesa por botones, gestos táctiles/ratón/teclado y contador real; guarda capturas, informe axe y traza temporal en `output/qa/task15-rebuild/`. `tests/pages.cjs` verifica también la mesa bajo `/lifesim/` y el regreso al guardado normal. La traza puede abrirse con `npx playwright show-trace output/qa/task15-rebuild/temporal-trace.zip`. No requiere FFmpeg.
 
 ## Debug seguro
 

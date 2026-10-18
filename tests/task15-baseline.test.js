@@ -3,9 +3,10 @@
 //  1. With the Task 15 scenes withheld, every byte of all 48 two-life histories must
 //     still equal main@21de097: hooks, action code and validators are inert for
 //     unmodified choices, and no new RNG call, state field or meta field appears.
-//  2. With everything present, the same choice policy must stay byte-identical until
-//     the first point where Task 15 content can exist (Awakening first use or adult
-//     scenarios), never before age 16, and every later state must stay valid.
+//  2. With Rebuild present, divergence before age 16 must follow a newly authored
+//     childhood interaction (per the approved early-discovery requirement), never
+//     before the existing age-2 mud_shoes eligibility. Every later state must stay
+//     valid. No golden is regenerated.
 // This file runs in its own process (node --test isolates files), so withholding the
 // scenes from the shared catalog cannot leak into other suites.
 import test from "node:test";
@@ -17,10 +18,8 @@ import { currentCard } from "../src/narrative/deck.js";
 import { extendMeta } from "../src/narrative/meta.js";
 import { emptyMeta } from "../src/systems/achievements.js";
 import { validStory } from "../src/persistence/storage.js";
-import { CARDS, CARD_BY_ID } from "../content/moments/index.js";
-import { SCENARIO_MOMENTS } from "../content/moments/scenarios.js";
-import { FIRST_USE_MOMENTS } from "../content/moments/first-use.js";
 import { actionView } from "../src/systems/actions.js";
+import { withOriginalContent } from "./task15-compatibility.js";
 import {
   choiceFeedback,
   feedbackHTML,
@@ -34,25 +33,8 @@ const golden = JSON.parse(
     new URL("./fixtures/task145-simulation-golden.json", import.meta.url),
   ),
 );
-const TASK15 = [...SCENARIO_MOMENTS, ...FIRST_USE_MOMENTS];
 function withheld(run) {
-  const order = CARDS.map((m) => m.id);
-  for (const m of TASK15) {
-    CARDS.splice(CARDS.indexOf(m), 1);
-    delete CARD_BY_ID[m.id];
-  }
-  try {
-    return run();
-  } finally {
-    for (const m of TASK15) {
-      CARDS.push(m);
-      CARD_BY_ID[m.id] = m;
-    }
-    assert.deepEqual(
-      CARDS.map((m) => m.id),
-      order,
-    );
-  }
+  return withOriginalContent(run, { allTask15: true });
 }
 const sideFor = (seed, steps) =>
   seed % 3 === 0
@@ -109,6 +91,7 @@ function replay(row, { checkPresentation = false, validate = false } = {}) {
       hash.update(exact);
       trace.push({
         age: before.age,
+        interaction: !!m?.interaction,
         key: createHash("sha1").update(exact).digest("hex"),
       });
       steps++;
@@ -134,7 +117,7 @@ test("Task 14.5 golden: all 48 two-life histories stay byte-identical with Task 
   }
 });
 
-test("Task 15 content diverges only where it can exist: never before 16, always valid afterwards", () => {
+test("Task 15 Rebuild diverges only after authored childhood interactions or eligible later-life content", () => {
   const original = Date.now;
   Date.now = () => golden.date;
   const report = { rows: 0, diverged: 0, minAge: Infinity, identical: 0 };
@@ -152,7 +135,15 @@ test("Task 15 content diverges only where it can exist: never before 16, always 
       // The step whose result first differs started at this age.
       const age = full.trace[i].age;
       report.minAge = Math.min(report.minAge, age);
-      assert.ok(age >= 16, `seed ${row.seed} diverged at age ${age}`);
+      assert.ok(
+        age >= 2,
+        `seed ${row.seed} diverged before the first permitted interaction at age ${age}`,
+      );
+      if (age < 16)
+        assert.ok(
+          full.trace[i]?.interaction,
+          `seed ${row.seed}: early divergence without an authored interaction`,
+        );
       assert.deepEqual(
         full.trace.slice(0, i).map((t) => t.key),
         base.trace.slice(0, i).map((t) => t.key),

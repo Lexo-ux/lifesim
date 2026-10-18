@@ -11,8 +11,12 @@ import {
   prepare,
   startHold,
   holdStep,
+  checkpointTimer,
+  toggleAllocation,
 } from "../narrative/engine.js";
 import { actionView } from "../systems/actions.js";
+import { interactionView } from "../systems/interactions.js";
+import { createInteractionClock } from "./interaction-clock.js";
 import { mountHold } from "./hold.js";
 import { reduced } from "./motion.js";
 import { holdTone } from "./audio.js";
@@ -54,10 +58,25 @@ import {
 } from "./first-life.js";
 import { CROSSING } from "../../content/presentation/first-life.js";
 
-const data = load(),
+import {
+  playtestStorage,
+  buildPlaytest,
+  showcaseMenu,
+  showcaseToolbar,
+} from "./showcase.js";
+const playtest = new URLSearchParams(location.search).get("playtest") === "1";
+const isolatedStorage = playtest
+  ? playtestStorage(() => sessionStorage)
+  : undefined;
+let showcaseId = isolatedStorage?.getItem("scene") || null;
+const data = load(isolatedStorage),
   app = document.querySelector("#app"),
   modal = document.querySelector("#modal");
-let screen = "home",
+let screen = playtest
+    ? showcaseId && data.state
+      ? "play"
+      : "showcase"
+    : "home",
   busy = false,
   cleanup = () => {},
   appearance = 0,
@@ -72,6 +91,8 @@ let prologueStep = null,
 // Task 15 ephemeral UI: which approach panel is open, and the hold tone if any.
 let approachPanel = null,
   tone = null;
+let interactionClock = null,
+  windowActive = true;
 function announce(text) {
   document.querySelector("#announcer").textContent = text;
 }
@@ -88,9 +109,12 @@ function notice(text, appendAnnouncement = false) {
   notice.timer = setTimeout(() => el.classList.remove("shown"), 4500);
 }
 function persist() {
-  if (!save(data)) notice("No se pudo guardar. Tu vida sigue en esta pestaña.");
+  if (!save(data, isolatedStorage))
+    notice("No se pudo guardar. Tu vida sigue en esta pestaña.");
 }
 function render(focus = false, revealTitle = true) {
+  interactionClock?.destroy();
+  interactionClock = null;
   cleanup();
   titleScene = null;
   clearMomentFeedback();
@@ -100,16 +124,18 @@ function render(focus = false, revealTitle = true) {
     screen === "play" && data.state?.alive,
   );
   const html =
-    screen === "home"
-      ? landing(data, prologueStep)
-      : !data.state?.alive
-        ? deathScreen(data.state, data.meta, revealDeath)
-        : gameScreen(data, undefined, { panel: approachPanel });
+    screen === "showcase"
+      ? showcaseMenu()
+      : screen === "home"
+        ? landing(data, prologueStep)
+        : !data.state?.alive
+          ? deathScreen(data.state, data.meta, revealDeath)
+          : gameScreen(data, undefined, { panel: approachPanel });
   if (screen !== "play" || !data.state?.alive) {
     presentation?.destroy();
     presentation = null;
   }
-  app.innerHTML = `<main id="main">${html}</main>`;
+  app.innerHTML = `<main id="main">${playtest && screen !== "showcase" ? showcaseToolbar(showcaseId, data.state?.story.outcome) : ""}${html}</main>`;
   if (screen === "home") {
     titleScene = mountThreshold(document.querySelector(".threshold"), {
       reveal: revealTitle,
@@ -141,13 +167,16 @@ function render(focus = false, revealTitle = true) {
     const card = document.querySelector(".narrative-card");
     // While a hold is under way the card is held, not swiped.
     if (card?.dataset.holding) {
-      const stopHold = mountHold(card, stepHoldAction);
+      const stopHold = mountHold(card, stepHoldAction, releaseHoldAction, () =>
+        announce("Pausa. Lo que ya sostuviste sigue guardado."),
+      );
       cleanup = () => {
         stopHold();
         tone?.stop();
         tone = null;
       };
     } else cleanup = mountSwipe(card, commit, presentation);
+    mountInteractionClock();
   } else cleanup = () => {};
   document
     .querySelector("[data-action=sound]")
@@ -165,13 +194,15 @@ function render(focus = false, revealTitle = true) {
     target?.setAttribute("tabindex", "-1");
     target?.focus({ preventScroll: true });
   }
-  if (screen === "home" || !data.state?.alive)
+  if (!playtest && (screen === "home" || !data.state?.alive))
     mountAd(
       screen === "home" ? "welcome" : "ending",
       document.querySelector("#main"),
     );
 }
 function open(content, cls = "") {
+  interactionClock?.pause();
+  document.dispatchEvent(new Event("lifesim:pause-input"));
   titleScene?.prepare();
   presentation?.pause();
   opener = document.activeElement;
@@ -189,10 +220,11 @@ function close() {
 // transaction, persistence and feedback path as an authored side.
 async function commit(side, intent = null) {
   if (busy || screen !== "play" || !data.state?.alive || modal.open) return;
+  interactionClock?.pause();
   busy = true;
   document
     .querySelectorAll(
-      ".decision-controls button, .approaches button, .hold-controls button",
+      ".decision-controls button, .approaches button, .hold-controls button, .interaction-panel button",
     )
     .forEach((b) => (b.disabled = true));
   const oldCard = document.querySelector(".narrative-card");
@@ -200,7 +232,13 @@ async function commit(side, intent = null) {
     decidedMoment = currentCard(data.state);
   const wasAwakening = currentCard(data.state).system === "awakening";
   const result = intent
-    ? choose(data.state, data.meta, "action", oldCard?.dataset.card, intent)
+    ? choose(
+        data.state,
+        data.meta,
+        intent.action ? "action" : "interaction",
+        oldCard?.dataset.card,
+        intent,
+      )
     : choose(data.state, data.meta, side, oldCard?.dataset.card);
   tone?.stop();
   tone = null;
@@ -284,6 +322,7 @@ async function commit(side, intent = null) {
     sound("achievement", data.settings.sound);
   }
   busy = false;
+  resumeInteraction();
 }
 const cardId = () => document.querySelector(".narrative-card")?.dataset.card;
 // Preparation is its own small transaction: committed costs persist immediately and
@@ -305,6 +344,16 @@ function prepareAction(id) {
 }
 function startHoldAction(id) {
   if (busy || screen !== "play" || modal.open) return;
+  interactionClock?.pause();
+  const timed = interactionView(data.state, currentCard(data.state));
+  if (
+    timed?.type === "timed" &&
+    timed.remainingMs === 0 &&
+    data.settings.timing !== "unlimited"
+  ) {
+    commit("interaction", { interaction: "timeout" });
+    return;
+  }
   const result = startHold(data.state, id, cardId());
   if (result.error) {
     notice(result.error);
@@ -362,14 +411,7 @@ function stepHoldAction() {
   const hold = actionView(data.state, currentCard(data.state)).hold;
   refreshHold(hold);
   tone?.set(hold.step / hold.goal);
-  if (hold.complete) {
-    // The bounded objective is reached: release resolves it once.
-    setTimeout(
-      () => commit("action", { action: hold.action }),
-      reduced() ? 0 : 420,
-    );
-    return false;
-  }
+  if (hold.complete) return false;
   return true;
 }
 function begin(options) {
@@ -422,6 +464,7 @@ async function enterLife() {
   render(true);
   await revealLife();
   busy = false;
+  resumeInteraction();
 }
 function finishPrologue() {
   if (prologueStep === null || busy) return;
@@ -458,6 +501,7 @@ async function commitNew(options, selectedSeed) {
   render(true);
   await revealLife();
   busy = false;
+  resumeInteraction();
   if (!document.hidden) sound("year", data.settings.sound);
   announce(
     document.querySelector("#card-dialogue")?.textContent ||
@@ -466,7 +510,18 @@ async function commitNew(options, selectedSeed) {
 }
 function settings() {
   open(
-    `<p class="eyebrow">A TU RITMO</p><h2 id="modal-title">Ajustes</h2><div class="settings-row"><span>Sonido</span>${button(data.settings.sound ? "Activado" : "Silenciado", "toggle-sound", "", "button secondary")}</div><div class="settings-row"><span>Atmósfera</span>${button(visualQuality === "auto" ? "Automática" : visualQuality === "low" ? "Sutil" : "Sin efectos", "visual-quality", "", "button secondary")}</div><p class="small muted">Atmósfera: preferencia de esta sesión. El movimiento reducido del sistema tiene prioridad.</p><p class="small muted">La partida se guarda en este navegador.</p><div class="settings-row"><span>Todos los recuerdos</span>${button("Reiniciar", "ask-reset", "", "button danger")}</div>`,
+    `<p class="eyebrow">A TU RITMO</p><h2 id="modal-title">Ajustes</h2><div class="settings-row"><span>Sonido</span>${button(data.settings.sound ? "Activado" : "Silenciado", "toggle-sound", "", "button secondary")}</div><div class="settings-row"><span>Atmósfera</span>${button(visualQuality === "auto" ? "Automática" : visualQuality === "low" ? "Sutil" : "Sin efectos", "visual-quality", "", "button secondary")}</div><p class="small muted">Atmósfera: preferencia de esta sesión. El movimiento reducido del sistema tiene prioridad.</p><fieldset class="timing-settings"><legend>Tiempo para decidir</legend><p>El tiempo se pausa al abrir un menú o salir de la pestaña.</p>${[
+      ["normal", "Normal"],
+      ["extended", "Ampliado · ×3"],
+      ["unlimited", "Sin límite"],
+    ]
+      .map(
+        ([id, label]) =>
+          `<button class="button secondary" data-action="timing" data-value="${id}" aria-pressed="${(data.settings.timing || "normal") === id}">${label}</button>`,
+      )
+      .join(
+        "",
+      )}</fieldset><p class="small muted">La partida se guarda en este navegador.</p><div class="settings-row"><span>Todos los recuerdos</span>${button("Reiniciar", "ask-reset", "", "button danger")}</div>`,
   );
 }
 document.addEventListener("click", (e) => {
@@ -474,7 +529,31 @@ document.addEventListener("click", (e) => {
   if (!target || target.disabled || busy) return;
   const action = target.dataset.action,
     value = target.dataset.value;
-  if (action === "prologue-skip") finishPrologue();
+  if (action === "showcase-start" || action === "showcase-menu") {
+    clearTimeout(notice.timer);
+    document.querySelector("#notification").classList.remove("shown");
+    document.querySelector("#notification").textContent = "";
+    announce("");
+  }
+  if (action === "showcase-start") {
+    interactionClock?.destroy();
+    interactionClock = null;
+    try {
+      const fixture = buildPlaytest(value);
+      Object.assign(data, fixture, { warning: "", migrated: false });
+      showcaseId = value;
+      isolatedStorage.setItem("scene", value);
+      persist();
+      screen = "play";
+      approachPanel = null;
+      render(true);
+    } catch (error) {
+      notice(error.message);
+    }
+  } else if (action === "showcase-menu") {
+    screen = "showcase";
+    render(true);
+  } else if (action === "prologue-skip") finishPrologue();
   else if (action === "prologue-next") {
     if (prologueStep + 1 >= CROSSING.length) finishPrologue();
     else {
@@ -487,14 +566,32 @@ document.addEventListener("click", (e) => {
     persist();
     document.querySelector(".public-bulletin")?.remove();
     document.querySelector(".narrative-card")?.focus({ preventScroll: true });
-  } else if (action === "choose") commit(value);
-  else if (action === "act") commit("action", { action: value });
+  } else if (action === "choose" || action === "priority") commit(value);
+  else if (action === "timeout" || action === "defer")
+    commit("interaction", { interaction: action });
+  else if (action === "allocate") {
+    const result = toggleAllocation(data.state, value, cardId());
+    if (result.error) return notice(result.error);
+    persist();
+    render();
+    document
+      .querySelector(`[data-action=allocate][data-value="${value}"]`)
+      ?.focus({ preventScroll: true });
+  } else if (action === "timing") {
+    interactionClock?.pause();
+    data.settings.timing = value;
+    persist();
+    render();
+    settings();
+  } else if (action === "act") commit("action", { action: value });
   else if (action === "hold-start") startHoldAction(value);
-  else if (action === "hold-step") stepHoldAction();
-  else if (action === "release") {
-    const hold = data.state?.actions?.pending?.hold;
-    if (hold) commit("action", { action: hold.action });
-  } else if (action === "prepare") prepareAction(value);
+  else if (
+    action === "hold-step" ||
+    (action === "hold-press" && e.detail === 0)
+  )
+    stepHoldAction();
+  else if (action === "release") releaseHoldAction();
+  else if (action === "prepare") prepareAction(value);
   else if (action === "approach-panel") {
     approachPanel = approachPanel === value ? null : value;
     render();
@@ -507,7 +604,7 @@ document.addEventListener("click", (e) => {
       behavior: reduced() ? "auto" : "smooth",
     });
   } else if (action === "home") {
-    screen = "home";
+    screen = playtest ? "showcase" : "home";
     render(true);
   } else if (action === "continue") {
     revealDeath = !data.state?.alive;
@@ -552,12 +649,16 @@ document.addEventListener("click", (e) => {
     settings();
   } else if (action === "ask-reset")
     open(
-      `<h2 id="modal-title">¿Borrar todos los recuerdos?</h2><p>Se eliminarán esta vida, el legado, los ajustes y el guardado anterior de V2.</p><div class="modal-actions">${button("Conservarlos", "close")}${button("Borrar todo", "reset", "", "button danger")}</div>`,
+      `<h2 id="modal-title">${playtest ? "¿Reiniciar la prueba?" : "¿Borrar todos los recuerdos?"}</h2><p>${playtest ? "Solo se borrará esta vida de prueba. Tu partida y Legado normales seguirán intactos." : "Se eliminarán esta vida, el legado, los ajustes y el guardado anterior de V2."}</p><div class="modal-actions">${button("Conservarlos", "close")}${button("Borrar todo", "reset", "", "button danger")}</div>`,
     );
   else if (action === "reset") {
-    if (!reset()) {
+    if (!reset(isolatedStorage)) {
       notice("El navegador no permite borrar el guardado.");
       return;
+    }
+    if (playtest) {
+      isolatedStorage.removeItem("scene");
+      showcaseId = null;
     }
     data.state = null;
     data.meta = extendMeta(emptyMeta());
@@ -565,7 +666,7 @@ document.addEventListener("click", (e) => {
     data.warning = "";
     data.migrated = false;
     close();
-    screen = "home";
+    screen = playtest ? "showcase" : "home";
     render(true);
     notice("Un comienzo nuevo.");
   }
@@ -591,6 +692,81 @@ document.addEventListener("submit", (e) => {
 modal.addEventListener("close", () => {
   if (!busy) titleScene?.resume();
   presentation?.resume();
+  resumeInteraction();
   if (opener?.isConnected) opener.focus({ preventScroll: true });
 });
+function releaseHoldAction() {
+  const hold = data.state?.actions?.pending?.hold;
+  if (hold) commit("action", { action: hold.action });
+}
+function resumeInteraction() {
+  if (
+    !busy &&
+    !modal.open &&
+    !document.hidden &&
+    windowActive &&
+    screen === "play" &&
+    data.state?.alive
+  )
+    interactionClock?.resume();
+}
+function mountInteractionClock() {
+  const m = currentCard(data.state),
+    v = interactionView(data.state, m);
+  if (v?.type !== "timed" || data.state.actions?.pending?.hold) return;
+  interactionClock = createInteractionClock({
+    durationMs: v.durationMs,
+    elapsedMs: v.elapsedMs,
+    mode: data.settings.timing || "normal",
+    onTick({ remainingMs, mode }) {
+      const readout = document.querySelector(".timer-readout"),
+        fill = document.querySelector(".timer-fill");
+      if (readout)
+        readout.textContent =
+          mode === "unlimited"
+            ? "Sin límite"
+            : Math.ceil((remainingMs * (mode === "extended" ? 3 : 1)) / 1000) +
+              " s";
+      const panel = document.querySelector(
+        '.interaction-panel[data-interaction="timed"]',
+      );
+      if (panel)
+        panel.dataset.urgency =
+          mode !== "unlimited" && remainingMs / v.durationMs <= 0.3
+            ? "urgent"
+            : "steady";
+      if (fill)
+        fill.style.transform = "scaleX(" + remainingMs / v.durationMs + ")";
+    },
+    onCheckpoint(elapsedMs) {
+      if (
+        !data.state?.alive ||
+        data.state.story.current !== m.id ||
+        (data.state.interactions?.pending &&
+          data.state.interactions.pending.moment !== m.id)
+      )
+        return;
+      if (elapsedMs === (data.state.interactions?.pending?.elapsedMs || 0))
+        return;
+      const result = checkpointTimer(data.state, elapsedMs, m.id);
+      if (!result.error) persist();
+    },
+    onExpire() {
+      commit("interaction", { interaction: "timeout" });
+    },
+  });
+  resumeInteraction();
+}
+window.addEventListener("blur", () => {
+  windowActive = false;
+  interactionClock?.pause();
+});
+window.addEventListener("focus", () => {
+  windowActive = true;
+  resumeInteraction();
+});
+window.addEventListener("pagehide", () => interactionClock?.pause());
+document.addEventListener("visibilitychange", () =>
+  document.hidden ? interactionClock?.pause() : resumeInteraction(),
+);
 render();

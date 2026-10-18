@@ -1,8 +1,16 @@
-# Motion — Tasks 03–05.5 and Fissure
+# Motion — Atlas de vidas and inherited lifecycle contracts
+
+## Atlas de vidas — Task 15 Rebuild motion
+
+The existing bounded presentation owners remain. The title reveal now introduces an ivory paper aperture and cartographic orbit; fixed SVG geometry replaces Fissure's generated cracks. Two ambient groups, fragment rotation, hold cancellation and crossing handoff retain their existing lifecycle. Card pickup/drag remains transform-based and separate from gameplay; the exiting fragments are paper rather than glowing stone. No new permanent animation loop is introduced by the visual redesign.
+
+Interaction timing is not decorative timing. The new countdown and hold owner contracts belong to the Task 15 interaction documentation; CSS only projects their current values. Progress is shown with `scaleX`, hold strain is a restrained translation and ink line, and all essential changes retain text. Reduced motion keeps timing information but removes spatial movement. Forced colors preserves outlines and selection marks. Historical Fissure timing/profile numbers below must not be reported as measurements of this rebuild.
 
 Motion communicates contact, choice, consequence or narrative emphasis. Task 04 owns the bounded title sequence below. Task 05.5 adds a separate, capped gameplay atmosphere; [GAME_FEEL](GAME_FEEL.md) owns that semantic FX contract. Gameplay transactions resolve and save before visual exit; movement never advances time or consumes randomness.
 
-## Fissure motion (current authority)
+<a id="fissure-motion-current-authority"></a>
+
+## Fissure motion (previous visual treatment)
 
 Entering a life and choosing are events of the world, never slides. Every sequence below runs after its transaction has already resolved and saved; none advances time or consumes randomness. Tokens live in `styles/tokens.css`.
 

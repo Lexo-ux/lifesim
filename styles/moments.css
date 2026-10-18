@@ -1,29 +1,24 @@
-/* The illustration is a scene; the pale lower edge is a written memory. */
+/* A printed memory folio: cloth spine, painted scene, warm uncoated paper. */
 .card-stage {
   position: relative;
-  flex: 1;
-  /* Let long/enlarged narrative text grow the page instead of clipping in the card. */
-  min-height: min-content;
-  margin: var(--space-2) 0 var(--space-4);
+  margin: 4px 0 20px;
   isolation: isolate;
+  min-height: min-content;
 }
 .deck-shadow {
   position: absolute;
-  inset: 6px 5px -6px;
-  background: #3c443e url("../assets/ui/paper-grain.svg");
-  border: 1px solid #656d65;
-  border-radius: var(--radius-card);
-  transform: rotate(-1deg);
+  inset: 8px 0 -8px 7px;
+  background: #49655f;
+  transform: rotate(1.3deg);
   opacity: 0.65;
 }
 .narrative-card {
   position: relative;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--surface-card);
-  border: 1px solid #727770;
-  border-radius: var(--radius-card);
+  background: var(--surface-paper);
+  color: var(--text-on-paper);
+  border: 0;
   box-shadow: var(--shadow-card);
   overflow: hidden;
   touch-action: pan-y;
@@ -39,21 +34,63 @@
   box-shadow: var(--shadow-raised);
   cursor: grabbing;
 }
+.card-head {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 5px 20px;
+  background: var(--atlas-paper);
+  border-bottom: 1px solid #213d3528;
+  z-index: 3;
+}
+.card-corner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--atlas-ink);
+  font: 600 9px var(--font-ui);
+  letter-spacing: 0.13em;
+}
+.card-corner .icon {
+  width: 15px;
+  height: 15px;
+}
+.card-age {
+  font: italic 14px var(--font-story);
+  letter-spacing: 0.14em;
+  color: var(--atlas-ink);
+}
+.card-sign {
+  justify-self: end;
+  font: 600 9px/1.3 var(--font-ui);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #614236;
+}
+.card-core {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 5px;
+  background: #315c53;
+  border-radius: 50%;
+}
 .portrait-window {
   position: relative;
-  flex: 1;
-  min-height: 80px;
+  min-height: 180px;
+  height: clamp(180px, 30svh, 280px);
+  flex-shrink: 0;
   overflow: hidden;
-  background:
-    linear-gradient(#10171918, #10171940),
-    var(--scene) center/cover;
+  background: var(--atlas-teal);
 }
 .portrait-window:after {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: var(--z-moment);
-  background: linear-gradient(transparent 50%, #10171966 72%, #101719ed 100%);
+  z-index: 2;
+  background: linear-gradient(transparent 32%, #142a2e24 50%, #0e252ddd 100%);
   pointer-events: none;
 }
 .npc-portrait {
@@ -66,90 +103,81 @@
   object-fit: contain;
   object-position: center bottom;
   image-rendering: pixelated;
-  z-index: var(--z-character);
+  z-index: 1;
 }
 .npc-portrait.self-portrait {
-  height: 86%;
-  bottom: 26px;
+  height: 100%;
+  bottom: 0;
 }
 .npc-portrait.illustrated {
   image-rendering: auto;
-  height: 130%;
+  height: 125%;
   width: 100%;
-  bottom: -30%;
+  bottom: -25%;
   object-fit: cover;
   object-position: center top;
-}
-.card-corner {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  z-index: var(--z-fx);
-  color: var(--spectral-ivory);
-  opacity: 0.8;
-}
-.card-corner .icon {
-  width: 17px;
-  height: 17px;
 }
 .speaker {
   position: absolute;
   bottom: 16px;
-  left: 20px;
-  right: 20px;
-  z-index: var(--z-fx);
+  left: 22px;
+  right: 22px;
+  z-index: 4;
   text-align: left;
 }
 .speaker h1 {
-  font-size: 31px;
-  font-weight: 500;
-  letter-spacing: -0.5px;
+  font: 500 32px/1.08 var(--font-ceremony);
+  letter-spacing: -0.03em;
+  color: #fff5e2;
+  overflow-wrap: anywhere;
 }
 .speaker p {
-  font-size: 10px;
-  letter-spacing: 1.1px;
+  font: 500 11px/1.3 var(--font-ui);
+  letter-spacing: 0.08em;
+  color: #f1eadb;
   margin-bottom: 5px;
-  color: var(--text-primary);
 }
 .dialogue {
   position: relative;
-  padding: 22px 24px 24px;
-  min-height: 116px;
+  padding: 23px 24px 25px;
   flex-shrink: 0;
   color: var(--text-on-paper);
   background: var(--surface-paper) url("../assets/ui/paper-grain.svg");
-  border-top: 3px double #b8b39f;
+  border-top: 0;
 }
 .dialogue:before {
   content: "";
   display: block;
-  width: 26px;
-  height: 1px;
-  margin-bottom: 10px;
-  background: #7e8274;
+  width: 30px;
+  height: 3px;
+  margin-bottom: 13px;
+  background: var(--atlas-rust);
 }
 .dialogue p {
-  font: 17px/1.48 var(--font-story);
+  font: 18px/1.53 var(--font-story);
   text-wrap: pretty;
 }
 .decision-controls {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
   flex-shrink: 0;
 }
 .decision {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  min-height: 56px;
-  padding: 12px;
-  font-size: 12px;
+  gap: 9px;
+  min-height: 58px;
+  padding: 13px 14px;
+  color: var(--ink);
+  background: #163239;
+  border: 1px solid #63847e;
+  border-bottom-width: 3px;
+  border-radius: 0;
+  font: 500 14px/1.35 var(--font-ui);
   text-align: left;
-  background: #292a29;
-  border: 1px solid #6b6961;
-  border-radius: var(--radius-control);
   transition:
     background var(--motion-fast),
     transform var(--motion-fast);
@@ -158,41 +186,45 @@
   width: 19px;
   height: 19px;
   flex-shrink: 0;
+  color: #c0ddd4;
 }
 .decision.left .icon {
   rotate: 180deg;
 }
 .decision.right {
-  background: #202d30;
-  border-color: #5e7c7e;
+  background: #292e2b;
+  border-color: #a39072;
+}
+.decision.right .icon {
+  color: #e2c7a2;
 }
 .decision:hover {
-  background: var(--surface-hover);
+  background: #294a4d;
 }
 .decision:active {
   transform: translateY(2px);
 }
 .choice-preview {
   position: absolute;
-  top: 24px;
-  max-width: calc(100% - 96px);
+  top: 56px;
+  max-width: calc(100% - 50px);
   padding: 12px 16px;
-  color: var(--text-on-paper);
-  background: var(--surface-paper) url("../assets/ui/paper-grain.svg");
-  font: 600 20px/1.2 var(--font-display);
-  border: 1px solid #8a9286;
+  color: var(--atlas-ink);
+  background: var(--atlas-paper);
+  font: 600 19px/1.3 var(--font-story);
+  border: 2px solid var(--atlas-rust);
   box-shadow: 0 5px 12px #0004;
   opacity: 0;
-  z-index: var(--z-fx);
+  z-index: 6;
   pointer-events: none;
 }
 .preview-left {
   right: 18px;
-  transform: rotate(-3deg);
+  transform: rotate(-4deg);
 }
 .preview-right {
   left: 18px;
-  transform: rotate(3deg);
+  transform: rotate(4deg);
 }
 .preview-left:before {
   content: "← ";
@@ -204,14 +236,36 @@
 [data-direction="right"] .preview-right {
   opacity: var(--strength, 0);
 }
-.strange {
-  border-color: var(--convergence);
-}
-.strange .dialogue {
-  border-top-color: #779a98;
-  background-color: #dfe5d8;
-}
-.strange .card-corner {
-  border-bottom: 1px solid currentColor;
-  transform: skewY(-12deg);
+@media (min-width: 1000px) {
+  .narrative-card {
+    display: grid;
+    grid-template-columns: 46% 54%;
+  }
+  .card-head {
+    grid-column: 1/-1;
+  }
+  .portrait-window {
+    height: auto;
+    min-height: 365px;
+  }
+  .dialogue {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 35px;
+  }
+  .dialogue p {
+    font-size: 21px;
+    line-height: 1.55;
+  }
+  .dialogue:before {
+    margin-bottom: 20px;
+  }
+  .speaker h1 {
+    font-size: 36px;
+  }
+  .decision {
+    min-height: 64px;
+    font-size: 16px;
+  }
 }
