@@ -1,0 +1,474 @@
+/* Interaction vocabulary. These surfaces communicate only persisted scene state. */
+.interaction-panel {
+  margin: 0 0 14px;
+  padding: 17px;
+  color: var(--ink);
+  background: #183632;
+  border-left: 3px solid var(--atlas-teal);
+}
+.interaction-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  font: 500 16px/1.4 var(--font-story);
+  margin-bottom: 12px;
+}
+.interaction-note {
+  color: var(--muted);
+  font: 13px/1.5 var(--font-ui);
+  margin-top: 9px;
+}
+.interaction-panel[data-interaction="timed"] {
+  background: #342d27;
+  border-left-color: #db9b73;
+}
+.timer-readout {
+  flex-shrink: 0;
+  font: 600 22px/1.2 var(--font-mark);
+  font-variant-numeric: tabular-nums;
+  color: #f1cf9b;
+}
+.timer-track {
+  height: 7px;
+  background: #b5a79435;
+  overflow: hidden;
+}
+.interaction-panel[data-urgency="urgent"] {
+  border-left: 5px double #edaf96;
+  background: #442e29;
+}
+.interaction-panel[data-urgency="urgent"] .timer-readout {
+  color: #ffe0c6;
+  font-weight: 800;
+}
+.play-screen:has([data-urgency="urgent"]) .narrative-card {
+  border-left-color: #bb5c47;
+}
+.timer-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #e0a877;
+  transform-origin: left;
+}
+.timer-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.timer-controls .text-button {
+  margin: 0;
+  padding-left: 0;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.timing-settings {
+  margin: 16px 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+}
+.timing-settings legend {
+  padding: 0 6px;
+}
+.timing-settings label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  text-transform: none;
+}
+.timing-settings input {
+  width: 20px;
+  height: 20px;
+  min-height: 20px;
+  margin: 0;
+}
+.priority-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.priority-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  background: var(--atlas-paper);
+  color: var(--atlas-ink);
+  border-top: 4px solid #aa7255;
+  box-shadow: 3px 4px 0 #0003;
+}
+.priority-card + .priority-card {
+  border-top-color: #537d73;
+}
+.priority-card h2 {
+  font: 500 24px/1.15 var(--font-story);
+  margin: 0;
+}
+.priority-card p {
+  font: 16px/1.5 var(--font-story);
+}
+.priority-card .decision {
+  margin-top: auto;
+  justify-content: center;
+  min-height: 54px;
+}
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 14px;
+}
+.resource-choice {
+  position: relative;
+  padding: 14px 12px 14px 35px;
+  text-align: left;
+  background: #24443e;
+  color: var(--ink);
+  border: 1px solid #708b7d;
+  min-height: 86px;
+}
+.resource-choice:before {
+  content: "";
+  position: absolute;
+  top: 17px;
+  left: 12px;
+  width: 13px;
+  height: 13px;
+  border: 1px solid #c8d4bb;
+}
+.resource-choice[aria-pressed="true"] {
+  background: var(--atlas-paper);
+  color: var(--atlas-ink);
+  border-color: var(--atlas-paper);
+}
+.resource-choice[aria-pressed="true"]:before {
+  content: "✓";
+  display: grid;
+  place-items: center;
+  color: #1f4235;
+  border-color: #365241;
+  font: 700 12px var(--font-ui);
+}
+.resource-choice strong {
+  display: block;
+  font: 600 14px/1.35 var(--font-ui);
+  margin-bottom: 5px;
+}
+.resource-choice span {
+  display: block;
+  font: 13px/1.4 var(--font-story);
+}
+.allocation-budget {
+  font: 500 19px var(--font-mark);
+  flex-shrink: 0;
+}
+.autonomy-voice {
+  padding: 4px 0 4px 18px;
+  border-left: 1px solid #bdb790;
+  font: italic 17px/1.5 var(--font-story);
+}
+.interaction-panel[data-interaction="autonomy"] {
+  background: transparent;
+  border: 0;
+  padding-block: 4px;
+}
+.interaction-panel[data-interaction="deferred"] {
+  background: #35392e;
+  border-left-style: dashed;
+  border-left-color: #c1b68c;
+}
+.interaction-panel[data-interaction="deferred"][data-deferrals="0"] {
+  border-left-style: solid;
+  background: #243c32;
+}
+.interaction-panel[data-interaction="deferred"][data-deferrals="2"] {
+  border-left-style: double;
+  border-left-width: 5px;
+  background: #3d3229;
+}
+.deferral-mark {
+  font: italic 18px/1.45 var(--font-story);
+  margin-bottom: 14px;
+}
+/* The hold is a material grip, with a marked safe point and explicit alternatives. */
+.hold-controls {
+  padding: 16px;
+  background: #27382f;
+  border-top: 3px solid #c2a477;
+  margin-bottom: 12px;
+}
+.hold-touch-button {
+  min-height: 58px;
+  width: 100%;
+  padding: 15px;
+  font: 600 15px/1.35 var(--font-ui);
+  background: #e2d1ac;
+  color: #263b31;
+  border: 1px solid #c4ab7b;
+  border-bottom-width: 4px;
+  touch-action: none;
+  user-select: none;
+}
+.hold-touch-button:hover,
+.hold-touch-button:active {
+  background: #efdfbb;
+}
+.hold-help {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.hold-status {
+  font-size: 16px;
+}
+.hold-strain {
+  background: var(--atlas-rust);
+  filter: none;
+  top: auto;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+.hold-notch {
+  background: #132c29;
+  border-color: #849a7a;
+}
+.hold-notch.held {
+  background: #d8c18e;
+}
+.hold-cue {
+  color: #eccea1;
+}
+/* Isolated playable scenes: an index of situations, not a development console. */
+.showcase-menu {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 60px 28px;
+}
+.showcase-menu h1 {
+  font: 500 clamp(40px, 6.8vw, 80px)/1.04 var(--font-ceremony);
+  letter-spacing: -0.035em;
+  color: var(--atlas-paper);
+}
+.showcase-menu > p:not(.eyebrow) {
+  max-width: 620px;
+  margin: 24px 0;
+  font: 17px/1.55 var(--font-story);
+  color: var(--muted);
+}
+.showcase-menu > a {
+  text-decoration: none;
+}
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 38px;
+}
+.showcase-scenario {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 24px;
+  text-align: left;
+  background: #193733;
+  color: var(--ink);
+  border: 1px solid #617966;
+  border-top: 3px solid #b36d4f;
+  box-shadow: 4px 5px 0 #0002;
+  min-height: 190px;
+  transition: background 140ms;
+}
+.showcase-scenario:nth-child(3n + 2) {
+  border-top-color: #849f87;
+}
+.showcase-scenario:nth-child(3n) {
+  border-top-color: #c6b684;
+}
+.showcase-scenario > span {
+  font: italic 23px var(--font-story);
+  color: #c6af82;
+}
+.showcase-scenario > strong {
+  font: 500 23px/1.2 var(--font-ceremony);
+}
+.showcase-scenario > small {
+  font: 13px/1.5 var(--font-ui);
+  color: var(--muted);
+}
+.showcase-scenario:hover {
+  background: #2b4b41;
+}
+.showcase-toolbar {
+  max-width: 736px;
+  margin: 18px auto 0;
+  padding: 14px 18px;
+  background: #e2d4b5;
+  color: #263b32;
+  border-left: 4px solid var(--atlas-rust);
+}
+.showcase-toolbar > strong {
+  font: 600 12px/1.4 var(--font-ui);
+}
+.showcase-toolbar > div:not(.showcase-result) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+}
+.showcase-toolbar .text-button {
+  margin: 0;
+  padding: 10px 0;
+  color: #284439;
+  font-size: 12px;
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.showcase-result {
+  padding-top: 12px;
+  margin-top: 8px;
+  border-top: 1px solid #79836b;
+}
+.showcase-result > b {
+  font: 600 13px var(--font-ui);
+}
+.showcase-result > p {
+  font: 17px/1.5 var(--font-story);
+  margin: 8px 0;
+}
+.showcase-result > small {
+  font: 12px/1.5 var(--font-ui);
+}
+@media (max-width: 700px) {
+  .play-screen:has([data-interaction="timed"]) .portrait-window,
+  .play-screen:has(.hold-controls) .portrait-window {
+    min-height: 105px;
+    height: 105px;
+  }
+  .play-screen:has([data-interaction="timed"]) .speaker h1,
+  .play-screen:has(.hold-controls) .speaker h1 {
+    font-size: 26px;
+  }
+  .play-screen:has([data-interaction="timed"]) .dialogue,
+  .play-screen:has(.hold-controls) .dialogue {
+    padding-block: 15px;
+  }
+  .play-screen:has([data-interaction="timed"]) .dialogue p,
+  .play-screen:has(.hold-controls) .dialogue p {
+    font-size: 16px;
+  }
+  .showcase-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .showcase-menu {
+    padding: 36px 20px;
+  }
+  .showcase-scenario {
+    padding: 17px;
+  }
+  .showcase-scenario > strong {
+    font-size: 20px;
+  }
+  .showcase-toolbar {
+    margin: 12px 16px 0;
+  }
+  .priority-grid {
+    gap: 10px;
+  }
+  .priority-card {
+    padding: 13px;
+  }
+  .priority-card h2 {
+    font-size: 21px;
+  }
+}
+@media (max-width: 430px) {
+  .priority-grid {
+    grid-template-columns: 1fr;
+  }
+  .priority-card {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .showcase-grid {
+    grid-template-columns: 1fr;
+  }
+  .showcase-scenario {
+    min-height: 0;
+  }
+  .showcase-scenario > span {
+    position: absolute;
+    right: 17px;
+    top: 14px;
+    font-size: 18px;
+  }
+  .showcase-scenario > strong {
+    padding-right: 30px;
+  }
+  .resource-choice {
+    padding: 12px 9px 12px 29px;
+  }
+  .resource-choice:before {
+    left: 9px;
+  }
+  .interaction-panel {
+    padding: 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .timer-fill,
+  .showcase-scenario {
+    transition: none;
+  }
+}
+@media (forced-colors: active) {
+  .interaction-panel,
+  .priority-card,
+  .resource-choice,
+  .showcase-scenario,
+  .showcase-toolbar,
+  .hold-controls {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+  .resource-choice[aria-pressed="true"] {
+    outline: 3px solid Highlight;
+    outline-offset: -4px;
+    background: Canvas;
+    color: CanvasText;
+  }
+  .resource-choice:before {
+    border-color: CanvasText;
+  }
+  .resource-choice[aria-pressed="true"]:before {
+    color: CanvasText;
+  }
+  .timer-fill {
+    background: Highlight;
+    forced-color-adjust: none;
+  }
+  .timer-track {
+    border: 1px solid CanvasText;
+  }
+  .showcase-menu *,
+  .showcase-toolbar * {
+    color: CanvasText;
+  }
+  .hold-touch-button,
+  .hold-touch-button:hover,
+  .hold-touch-button:active {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+  }
+}

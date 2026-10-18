@@ -1,89 +1,52 @@
-@media (min-width: 700px) {
-  body.playing {
-    background-image:
-      linear-gradient(#101719df, #101719ed),
-      url("../assets/backgrounds/bg_park_normal_v1.webp");
-    background-position: center;
-    background-size: cover;
-    background-attachment: fixed;
-  }
-  .play-screen {
-    padding-top: 20px;
-    padding-bottom: 14px;
-  }
-  .card-stage {
-    margin-top: 10px;
-  }
-  .portrait-window {
-    min-height: 140px;
-  }
-  .game-top {
-    margin-bottom: 12px;
-  }
-  .dialogue {
-    padding: 22px 27px 27px;
-  }
-  .quiet-nav {
-    margin-top: 7px;
-  }
-}
+/* Short screens reduce the painting, never the narrative or touch targets. */
 @media (max-height: 700px) {
   .play-screen {
-    padding-top: 5px;
-    padding-inline: 18px;
+    padding: 8px 16px max(8px, env(safe-area-inset-bottom));
   }
   .game-top {
-    margin-bottom: 2px;
-    height: 44px;
+    margin-bottom: 4px;
   }
   .indicators {
-    padding-block: 3px 10px;
-    gap: 24px;
+    padding-bottom: 10px;
+    gap: 10px;
   }
   .indicator small {
-    display: none;
+    font-size: 10px;
   }
-  .card-stage {
-    margin-bottom: 12px;
+  .portrait-window {
+    min-height: 150px;
+    height: 25svh;
   }
-  .speaker h1 {
-    font-size: 24px;
+  .card-head {
+    min-height: 28px;
   }
   .speaker {
-    bottom: 10px;
+    bottom: 12px;
   }
-  .speaker p {
-    font-size: 10px;
+  .speaker h1 {
+    font-size: 27px;
   }
   .dialogue {
-    min-height: 96px;
-    padding: 14px 16px 16px;
+    padding: 16px 19px 19px;
   }
   .dialogue p {
-    font-size: 15px;
-    line-height: 1.4;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+  .dialogue:before {
+    margin-bottom: 9px;
+  }
+  .card-stage {
+    margin-bottom: 14px;
   }
   .decision {
-    min-height: 49px;
-    font-size: 12px;
-    padding: 10px;
+    min-height: 54px;
+    font-size: 13px;
   }
   .moment {
-    margin-top: 9px;
+    margin-top: 10px;
   }
-  .onboarding {
-    height: 21px;
-    font-size: 10px;
-  }
-  .onboarding.learned {
-    height: 5px;
-  }
-  .quiet-nav .nav-link {
-    min-height: 44px;
-  }
-  .creation-portrait {
-    height: 125px;
-  }
+  .creation-portrait,
   .creation-portrait > img {
     height: 125px;
   }
@@ -92,21 +55,22 @@
     margin-block: 12px 18px;
   }
 }
-@media (max-height: 500px) and (orientation: landscape) {
+@media (max-width: 350px) {
   .play-screen {
-    height: auto;
-    min-height: 660px;
+    padding-inline: 12px;
   }
-  .card-stage {
-    min-height: 330px;
+  .indicators {
+    gap: 8px;
+  }
+  .decision-controls {
+    gap: 8px;
   }
 }
-
-@media (max-height: 700px) {
-  .dialogue:before {
-    display: none;
+@media (max-height: 500px) and (orientation: landscape) {
+  .play-screen {
+    min-height: 660px;
   }
-  .indicator > span {
-    margin-bottom: 4px;
+  .portrait-window {
+    min-height: 190px;
   }
 }

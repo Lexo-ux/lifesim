@@ -620,7 +620,7 @@ test("knowledge firewall: projections are pure and ignore private World truth; n
     assert.doesNotMatch(text, /Convergencia|causa/);
 });
 
-test("content: six scenarios (three or more ordinary life), two or more with preparation, 30–40 hooked Moments, original choices untouched", () => {
+test("content: original scenarios and choices retained, at least 30 contextual Moments with expanded interaction coverage", () => {
   assert.equal(SCENARIO_MOMENTS.length, 6);
   const ordinary = SCENARIO_MOMENTS.filter(
     (m) =>
@@ -630,7 +630,7 @@ test("content: six scenarios (three or more ordinary life), two or more with pre
   assert.ok(ordinary.length >= 3);
   assert.ok(SCENARIO_MOMENTS.filter((m) => m.actions.prepare).length >= 2);
   const hooked = CARDS.filter((m) => m.actions);
-  assert.ok(hooked.length >= 30 && hooked.length <= 42, `${hooked.length}`);
+  assert.ok(hooked.length >= 30, `${hooked.length}`);
   assert.equal(FIRST_USE_MOMENTS.length, 12);
   for (const [id, declaration] of Object.entries(MOMENT_HOOKS)) {
     assert.ok(CARD_BY_ID[id], id);

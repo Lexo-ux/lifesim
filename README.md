@@ -1,8 +1,10 @@
 # LifeSim III
 
-Juego narrativo web en español: una persona, un Moment y dos respuestas. Desliza, arrastra, usa las flechas o pulsa una decisión; el tiempo avanza al elegir. La simulación de educación, carrera, economía y vínculos continúa detrás de la historia.
+Juego narrativo web en español: una vida que cambia con tus decisiones. Desliza, elige una respuesta, prepara un enfoque propio o participa en interacciones de sostener, tiempo, prioridades y oportunidades que vuelven años después.
 
-**Estado:** V3 jugable con El Umbral (Task 04), Veiled Identity (Task 05), Mystic Card/atmósfera (Task 05.5), Despertar (Task 06), caminos/oportunidades (Task 07) y personas/instituciones (Task 08), sobre la arquitectura de Task 01. Hay 183 Moments binarios (130 originales, 14 del Despertar, 24 oportunidades de trayectoria y 15 sociales), doce NPCs heredados, cuatro identidades canónicas, tres plantillas locales y seis etapas del protagonista. Las decisiones pueden cambiar capacidades, orientación y consecuencias años después; clases y rango no imponen carrera. Task 02 establece la biblia del mundo futuro en `/lore`. Los sistemas posteriores siguen pendientes y el contenido V3 original se conserva.
+**Estado:** Task 15 Rebuild, dirección visual **Atlas de vidas**, 440 Moments registrados. Despertar, caminos, personas, mundo, operaciones, guerra, Legado, misterios y Resolución conservan sus propietarios y contratos. Doce clases y profesiones civiles abren acciones distintas; el rango no garantiza una vida mejor. Sin backend ni dependencias de producción.
+
+**Prueba inmediata:** abre `?playtest=1` tras iniciar el servidor. La mesa ofrece 39 escenas/perfiles con el motor real, aislados de tu partida y Legado. [Guía de prueba](docs/TASK15_PLAYTEST.md) · [Contrato de interacciones](docs/INTERACTIONS.md).
 
 ## Ejecutar
 
@@ -54,7 +56,7 @@ En Windows se puede usar Edge instalado: `$env:BROWSER_CHANNEL='msedge'; npm run
 
 ## Desarrollo y documentación
 
-Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 08 usa `codex/relationships-institutions`, desde `3037867`; no se fusiona con main ni inicia Task 09. Ver [personas e instituciones](docs/SOCIAL_SYSTEM.md). Ver [caminos y oportunidades](docs/LIFE_PATHS.md) y [sistema de Despertar](docs/AWAKENING_SYSTEM.md).
+Leer [AGENTS.md](AGENTS.md) antes de contribuir. Inspeccionar código y canon; no añadir sistemas fuera del alcance de la tarea ni cambiar rarezas silenciosamente. Usar la rama indicada por cada tarea, o `codex/` por defecto. Task 15 Rebuild usa `codex/task15-complete-rebuild`; el PR se mantiene sin fusionar para la prueba del usuario. Ver [personas e instituciones](docs/SOCIAL_SYSTEM.md). Ver [caminos y oportunidades](docs/LIFE_PATHS.md) y [sistema de Despertar](docs/AWAKENING_SYSTEM.md).
 
 - [Estado real: implementado y planificado](docs/CURRENT_STATE.md)
 - [Arquitectura](docs/ARCHITECTURE.md) · [Desarrollo y pruebas](docs/DEVELOPMENT.md)

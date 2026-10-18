@@ -200,7 +200,7 @@ const dir = "output/qa/task15";
       type: "touchStart",
       touchPoints: [point],
     });
-    // Hold until the first paced step is saved, then lift.
+    // Hold until the first paced step is saved, then simulate an OS cancellation.
     await page.waitForFunction(
       () =>
         JSON.parse(localStorage.getItem("lifesim.v3")).state.actions.pending
@@ -209,14 +209,14 @@ const dir = "output/qa/task15";
       { timeout: 10000 },
     );
     await client.send("Input.dispatchTouchEvent", {
-      type: "touchEnd",
+      type: "touchCancel",
       touchPoints: [],
     });
     const touched = (await saved()).state.actions.pending.hold.step;
     assert.ok(touched >= 1 && touched <= 2, `touch steps ${touched}`);
     for (let i = 0; i < touched; i++) engine.holdStep(hold.state, i);
     await sameMechanics(hold);
-    // Lifting the finger paused; nothing advances on its own.
+    // Cancellation paused; intentional pointerup is tested in rebuild.cjs.
     await page.waitForTimeout(1200);
     await sameMechanics(hold);
     await shot("hold-touch");
@@ -250,26 +250,28 @@ const dir = "output/qa/task15";
     assert.equal(await page.locator(".hold-controls").count(), 0);
     await shot("hold-released");
     report.checks.push(
-      `touch press-and-hold (${touched} paced steps), pause on lift, reload mid-hold, keyboard step and release reproduce the pure engine exactly`,
+      `touch press-and-hold (${touched} paced steps), pause on cancellation, reload mid-hold, keyboard step and release reproduce the pure engine exactly`,
     );
 
     // 4. Mouse press-and-hold on the "Sostener" button reaches the bounded goal and
-    //    resolves automatically; the trailing click does not add a step.
+    //    resolves on deliberate release; the trailing click does not add a step.
     const mouse = civilianFixture("athlete", "sc_bridge");
     await restore(mouse);
     await page
       .locator("[data-action=hold-start][data-value=carry-hold]")
       .click();
     await page.waitForSelector(".hold-controls");
-    const button = await page.locator("[data-action=hold-step]").boundingBox();
+    const button = await page.locator("[data-action=hold-press]").boundingBox();
     await page.mouse.move(
       button.x + button.width / 2,
       button.y + button.height / 2,
     );
     await page.mouse.down();
-    // Keep pressing until the bounded objective completes and resolves itself.
+    // At the bounded goal no extra step is charged; release commits.
     await page.waitForFunction(
-      () => !document.querySelector(".hold-controls"),
+      () =>
+        document.querySelector(".hold-meter")?.getAttribute("aria-valuenow") ===
+        "4",
       null,
       { timeout: 15000 },
     );

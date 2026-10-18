@@ -82,6 +82,13 @@ export function matches(s, meta, r = {}) {
   return true;
 }
 export function eligible(s, meta, event, { queued = false } = {}) {
+  const deferred = s.interactions?.deferred?.[event.id];
+  if (event.interaction?.type === "deferred" && deferred) {
+    if (deferred.status !== "pending") return false;
+    // Only a committed, queued return can bypass original age/cooldown limits.
+    // The bounded receipt prevents pool repeats and guarantees authored closure.
+    return queued;
+  }
   if (event.resolution && resolutionReasons(s, event).length) return false;
   if (event.system === "resolution") return event.id === resolutionMomentId(s);
   if (event.compatibilityOnly)

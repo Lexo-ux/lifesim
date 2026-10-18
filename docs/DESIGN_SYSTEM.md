@@ -1,8 +1,18 @@
-# Design system — Task 03 foundation, current chrome: Fissure
+# Design system — Atlas de vidas
+
+## Atlas de vidas — Task 15 Rebuild
+
+Current visual authority: [ART_DIRECTION](ART_DIRECTION.md). `styles/tokens.css` defines petrol world (`#091e24`), ivory paper (`#eee2c8`), green-black ink (`#20372f`), muted green and cinnabar. `game.css` owns the compact HUD and page flow; `moments.css` owns the cut-corner folio and decisions; the compatibility filename `fissure.css` now contains only Atlas state treatment, secondary surfaces and existing transition hooks. The former Fissure stylesheet was replaced, not layered underneath another override theme. `threshold.css` and `threshold-scene.js` own the newly composed title. `interactions.css` owns the additional playable interaction surfaces and isolated scenario index.
+
+Local Outfit carries the memorable title and utility numbers. The ceremony serif carries names and headings; Georgia carries narrative; DM Sans carries controls. Player text is Spanish. Mobile prose is 16–18px, desktop prose 21px; controls keep at least 44px hit areas. The four indicators keep labels visible even on short displays. At desktop widths the painting/prose share a horizontal folio; smaller viewports stack them. Height grows with long narrative, results or enlarged text, rather than hiding controls behind fixed chrome.
+
+Hold, timed, priority, resource, autonomy and deferred scenes are not cosmetic variants of one rectangular panel: their semantic controls have distinct structures and explicit written state. Resource selection includes check marks; timing includes seconds and a no-limit route; holding includes discrete buttons. Forced colors uses system borders/labels and removes decorative layers. Reduced motion removes spatial response while retaining all wording and selection states.
+
+Historical Fissure component tables below no longer prescribe the current palette, silhouette or type hierarchy. Their read-only contextual-light and accessibility boundaries remain in force.
 
 The runtime remains static HTML + ES modules. `style.css` imports local fonts and thirteen stylesheets using relative URLs. No preprocessor/framework or production dependency.
 
-## Fissure — current component system
+## Fissure — previous component system
 
 `styles/fissure.css` (thirteenth module, loaded after game feel and Awakening; it replaced `arcana.css`) owns gameplay, memory and dialog chrome; `styles/threshold.css` owns the title; `styles/game-feel.css` keeps the semantic atmosphere contract in the same matter. Direction, rejected concepts and the superseded-rules register: [ART_DIRECTION](ART_DIRECTION.md#art-redirection--fissure-current-presentation-authority). Where this section conflicts with the Task 03 notes below, this section wins.
 

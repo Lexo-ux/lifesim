@@ -1,6 +1,24 @@
 # Art direction — LifeSim
 
-## Art redirection — Fissure (current presentation authority)
+## Atlas de vidas — Task 15 Rebuild (current presentation authority)
+
+The rebuild replaces Fissure's visual composition. It does not replace the canon, the Veiled Identity families, knowledge boundaries or semantic presentation controller. An atlas is a **visual metaphor for a life being written**, not a canonical diagram of worlds, nodes or the repeated-life explanation.
+
+Three distinct treatments were considered: **the vellum theatre** (spotlit portraits and theatrical curtains), **the mineral reliquary** (sculptural black objects and silver inlay), and **Atlas de vidas** (editorial typography, printed memory folios and cartographic space). The theatre overemphasized spectacle and fixed staging; the reliquary repeated Fissure's heavy material. The atlas was selected because paper leaves naturally accommodate ordinary prose, simultaneous responsibilities, limited resources and notes returned after time has passed.
+
+The title juxtaposes oversized local Outfit lettering with a narrow ivory paper aperture suspended in a restrained circular drawing. The circles and contour lines are authored decorative geometry, never cosmological totals. The human silhouette and glimpse illustrations remain metaphors. Desktop composes title/actions to the left and the aperture to the right; mobile stacks them without reducing the desktop layout into tiny type.
+
+The gameplay object is a warm uncoated **memory folio** with a cinnabar cloth edge and a clipped upper corner. A portrait and its environmental painting form one half; narrative is printed on the other. Mobile stacks portrait and prose. Desktop opens the folio horizontally. Secondary surfaces use the same petrol, ivory, muted green and cinnabar material; no rainbow rarity or permanent glow. Readability takes precedence over simulated damage.
+
+Interactions carry their own composition: holding has a broad tactile grip and notched progress, urgency has a shrinking rule plus seconds, priorities use two actual paper surfaces, preparation uses selectable checked resource slips, another person's agency uses a separate italic voice, and deferred requests use a worn/dashed margin. Written labels always carry the meaning. None of these decorative forms determines outcomes.
+
+Existing contextual-light projection remains read-only. Existing known-era/class/Legacy inputs may tint background accents but never disclose undelivered truth. Warm Threshold paper light remains distinct from routine gameplay. All twelve protagonist age portraits and existing validated NPC families are preserved. No new raster art, external font, framework or production dependency is introduced.
+
+The former Fissure sections below are historical design rationale. Their obsolete monoliths, prismatic chrome, lit-alabaster cards and small widely tracked title are superseded; lifecycle, input, cancellation, deterministic mechanics and accessibility contracts remain authoritative in their technical documents.
+
+<a id="art-redirection--fissure-current-presentation-authority"></a>
+
+## Art redirection — Fissure (previous presentation)
 
 Branch `claude/redireccion-artistica` replaces the Arcana of Lives chrome and the Task 04 doorway painting with a new direction. Gameplay, Moments and their texts, probabilities, both RNG streams, saves, migrations, World, War, Field, Social, Legacy, Resolution and canon are unchanged: this is presentation, interaction feel and optional sound only. Where anything below this section conflicts with it, this section wins; replaced rules are listed in the [register](#superseded-rules-register).
 

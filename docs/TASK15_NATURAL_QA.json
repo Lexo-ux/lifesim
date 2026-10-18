@@ -1,0 +1,170 @@
+{
+  "lives": 1000,
+  "decisions": 169883,
+  "completedLives": 1000,
+  "deadEnds": 0,
+  "invalidSaves": 0,
+  "neverNewMechanic": 0,
+  "offered": {
+    "priorities": 2163,
+    "timed": 3201,
+    "circumstance": 6447,
+    "autonomy": 2763,
+    "allocation": 2958,
+    "deferred": 3845,
+    "training": 13298,
+    "preparation": 2198,
+    "profession": 10039,
+    "social": 3192,
+    "class": 869
+  },
+  "played": {
+    "priorities": 2163,
+    "timed": 3179,
+    "hold": 2440,
+    "circumstance": 3817,
+    "autonomy": 2763,
+    "allocation": 2747,
+    "deferred": 3845,
+    "training": 5477,
+    "profession": 4668,
+    "preparation": 1118,
+    "social": 1176,
+    "class": 456
+  },
+  "classOffered": {
+    "elementalist": 146,
+    "mana_surgeon": 10,
+    "warrior": 44,
+    "healer": 184,
+    "tracker": 51,
+    "analyst": 217,
+    "forger": 115,
+    "void_cartographer": 4,
+    "fractured_oracle": 31,
+    "devourer": 8,
+    "blood_weaver": 38,
+    "anchor": 21
+  },
+  "classPlayed": {
+    "mana_surgeon": 10,
+    "elementalist": 66,
+    "warrior": 34,
+    "healer": 122,
+    "tracker": 28,
+    "analyst": 85,
+    "forger": 46,
+    "void_cartographer": 4,
+    "fractured_oracle": 13,
+    "devourer": 8,
+    "blood_weaver": 25,
+    "anchor": 15
+  },
+  "professionOffered": {
+    "service": 3306,
+    "developer": 2459,
+    "technician": 1193,
+    "trained": 390,
+    "artist": 1236,
+    "engineer": 543,
+    "doctor": 568,
+    "founder": 119,
+    "retired": 225
+  },
+  "professionPlayed": {
+    "service": 1397,
+    "technician": 596,
+    "trained": 143,
+    "developer": 1063,
+    "artist": 602,
+    "engineer": 300,
+    "doctor": 377,
+    "founder": 56,
+    "retired": 134
+  },
+  "holdLives": 1000,
+  "timedLives": 1000,
+  "civilianLivesOffered": 1000,
+  "civilianLivesPlayed": 1000,
+  "first": {
+    "nonbinary": {
+      "n": 1000,
+      "min": 3,
+      "p10": 3,
+      "median": 4,
+      "p90": 5,
+      "max": 6
+    },
+    "timed": {
+      "n": 1000,
+      "min": 3,
+      "p10": 3,
+      "median": 5,
+      "p90": 6,
+      "max": 7
+    },
+    "hold": {
+      "n": 1000,
+      "min": 7,
+      "p10": 7,
+      "median": 8,
+      "p90": 8,
+      "max": 11
+    },
+    "profession": {
+      "n": 998,
+      "min": 35,
+      "p10": 43,
+      "median": 58,
+      "p90": 89,
+      "max": 158
+    },
+    "classAfterEvaluation": {
+      "n": 235,
+      "min": 3,
+      "p10": 3,
+      "median": 3,
+      "p90": 3,
+      "max": 3
+    },
+    "civilian": {
+      "n": 1000,
+      "min": 7,
+      "p10": 7,
+      "median": 8,
+      "p90": 8,
+      "max": 11
+    }
+  },
+  "distinct": {
+    "n": 1000,
+    "min": 7,
+    "p10": 8,
+    "median": 8,
+    "p90": 8,
+    "max": 8
+  },
+  "distinctPlayed": {
+    "n": 1000,
+    "min": 7,
+    "p10": 7,
+    "median": 8,
+    "p90": 8,
+    "max": 8
+  },
+  "ordinary": {
+    "lives": 765,
+    "offered": 765,
+    "played": 765
+  },
+  "deferredClosed": 963,
+  "outcomes": {
+    "partial": 9140,
+    "full": 4383,
+    "costly": 2071
+  },
+  "errors": [],
+  "unexposedClasses": [],
+  "command": "node tools/simulate-interactions.mjs 1000",
+  "policy": "Fresh production lives; seed = life * 7919. Deterministic player policy uses offered production actions only; no fixture/state injection. Counts are observations, not target probabilities."
+}

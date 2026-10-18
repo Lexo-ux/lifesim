@@ -1,20 +1,22 @@
-/* Shared by static CSS and src/ui/motion.js. No build step.
-   Fissure direction: obsidian matter, alabaster lit from within, and light that
-   is another reality seen through the cracks. Light colors come from context. */
+/* Atlas de vidas. Shared by static CSS and the existing motion owner. */
 :root {
   color-scheme: dark;
+  --atlas-paper: #eee2c8;
+  --atlas-ink: #20372f;
+  --atlas-teal: #729e91;
+  --atlas-rust: #c26d51;
   /* Obsidian: the matter around every life. */
-  --night: #04050a;
-  --night-raised: #0b0c14;
-  --night-panel: #10111b;
-  --night-line: #262838;
+  --night: #091e24;
+  --night-raised: #10292e;
+  --night-panel: #173438;
+  --night-line: #3a5555;
   --obsidian: #0a0b12;
   --obsidian-hi: #191b28;
   --obsidian-rim: #2c2f44;
   /* Alabaster: translucent stone, readable because the light is behind it. */
-  --alabaster: #f1e7d6;
-  --alabaster-deep: #dccbb0;
-  --alabaster-ink: #22170e;
+  --alabaster: #eee2c8;
+  --alabaster-deep: #daccac;
+  --alabaster-ink: #20372f;
   /* Default spectral triad; components receive contextual ones inline. */
   --l1: #fff4e6;
   --l2: #ff8fd0;
@@ -33,8 +35,8 @@
   --surface-raised: #161826;
   --surface-hover: #1f2233;
   --surface-paper: var(--alabaster);
-  --text-primary: #f1ece4;
-  --text-secondary: #aeaabd;
+  --text-primary: #f0e8d5;
+  --text-secondary: #bac9bf;
   --text-on-paper: var(--alabaster-ink);
   --human-warmth: #ffc583;
   --danger: #ff8f84;
@@ -42,8 +44,8 @@
   --convergence: #b9e9ff;
   --spectral-ivory: #f6f3ff;
   --lumen: #fff6dd;
-  --border-subtle: #2c2f42;
-  --border-strong: #6d6a86;
+  --border-subtle: #43615f;
+  --border-strong: #96aa94;
   --radius-card: 3px;
   --radius-control: 2px;
   --radius-overlay: 4px;
@@ -80,7 +82,7 @@
   --motion-threshold-cycle: 6800ms;
   --motion-threshold-breath: 8500ms;
   --motion-threshold-drift: 12000ms;
-  --threshold-night: #05060b;
+  --threshold-night: #071e24;
   --ease-settle: cubic-bezier(0.2, 0.75, 0.25, 1);
   --ease-commit: cubic-bezier(0.4, 0, 0.75, 0.4);
   --z-environment: 0;

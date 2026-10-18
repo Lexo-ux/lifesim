@@ -109,6 +109,10 @@ export function drawCard(s, meta) {
 }
 export const currentCard = (s) => CARD_BY_ID[s.story.current];
 export function cardText(s, meta, event = currentCard(s)) {
+  if (event.interaction?.type === "deferred") {
+    const count = s.interactions?.deferred?.[event.id]?.count || 0;
+    return event.interaction.stages[count] || event.text;
+  }
   if (event.resolution && resolutionText(s, event))
     return resolutionText(s, event);
   if (event.id === "rs_result")

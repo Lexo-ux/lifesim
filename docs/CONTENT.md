@@ -1,6 +1,6 @@
 # Moments y contenido ejecutable
 
-**Moment**: unidad de gameplay narrativo. V3 implementa únicamente decisiones binarias. Múltiples opciones, elecciones cronometradas, mantener/arriesgar, asignación de recursos y observación son posibilidades futuras, no APIs existentes.
+**Moment**: unidad de gameplay narrativo. Conserva dos respuestas base; Task 15 incorpora enfoques contextuales, percepción pasiva, sostener/soltar y la extensión declarativa `interaction` para tiempo, prioridades, recursos, autonomía y aplazamiento. Las terceras resoluciones cronometradas/aplazadas son intenciones explícitas dentro de la misma transacción. Contrato y restricciones de autoría: [INTERACTIONS](INTERACTIONS.md). No existe un lenguaje de scripting general ni una segunda baraja.
 
 ## Formato actual y registro
 

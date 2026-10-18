@@ -667,7 +667,9 @@ export function scheduleFirstUse(s, event, at) {
     outcome: null,
   };
   if (!s.story.queue.some((q) => q.id === id))
-    s.story.queue.push({ id, due: at });
+    // One first-use demonstration immediately follows the completed evaluation.
+    // Existing due obligations remain queued; no random draw or deadline changes.
+    s.story.queue.unshift({ id, due: at });
 }
 
 // ---------- Preparation ----------

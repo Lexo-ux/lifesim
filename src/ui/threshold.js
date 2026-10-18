@@ -300,7 +300,7 @@ export function mountThreshold(
     startAmbient();
     if (focus) query(".threshold-primary").focus({ preventScroll: true });
   }
-  // From darkness: one seam of light, then the fissures, then the world.
+  // From darkness: a paper aperture, then the atlas, then the human silhouette.
   function revealTitle() {
     enter("revealing");
     const ticket = epoch,
@@ -316,7 +316,7 @@ export function mountThreshold(
         tier,
       ),
       run(
-        query(".fx-cracks"),
+        query(".atlas-orbit"),
         [
           { opacity: 0 },
           { opacity: 0, offset: 0.14 },
